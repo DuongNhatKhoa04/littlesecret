@@ -5,6 +5,7 @@
   const { removeDiacritics } = TW.domain.text;
 
   const FALLBACK_NAME = 'anh-ticket';
+  const PDF_FALLBACK_NAME = 'anh - ticket';
   const MAX_NAME_LENGTH = 80;
   const MIN_INDEX_DIGITS = 2;   // 01, 02… để Explorer sắp đúng thứ tự nội dung
   const DEFAULT_EXTENSION = 'png';
@@ -20,9 +21,8 @@
 
   const pad2 = (value) => String(value).padStart(2, '0');
 
-  /** MMDDYYYYHHmm theo giờ máy: tải nhiều lần cùng ticket không đè tên file cũ. */
-  const toStamp = (date) => pad2(date.getMonth() + 1) + pad2(date.getDate()) + date.getFullYear()
-    + pad2(date.getHours()) + pad2(date.getMinutes());
+  /** `MMDD - HHmm` theo giờ máy, đặt đầu tên: Explorer sắp file theo ngày giờ tải, tải lại không đè file cũ. */
+  const toStamp = (date) => `${pad2(date.getMonth() + 1)}${pad2(date.getDate())} - ${pad2(date.getHours())}${pad2(date.getMinutes())}`;
 
   /**
    * @param {{ title: string, images: { image: StoredImage, label: string }[] }} input
@@ -44,7 +44,7 @@
    */
   function buildImageReport({ title, images, now }) {
     return {
-      fileName: `${toFileName(title) || FALLBACK_NAME} - ${toStamp(now)}.pdf`,
+      fileName: `${toStamp(now)} - ${toFileName(title) || PDF_FALLBACK_NAME}.pdf`,
       report: { title, entries: images.map(({ image, label }) => ({ label, blob: image.blob })) }
     };
   }

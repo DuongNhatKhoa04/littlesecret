@@ -140,11 +140,11 @@
       images: [{ image: png, label: 'Cần setup – Check MID – ảnh 1' }, { image: jpg, label: 'Hiện trạng – ảnh 1' }],
       now
     });
-    assertEqual(fileName, 'ABC - Loi in- -bill-- - 110120261408.pdf');
+    assertEqual(fileName, '1101 - 1408 - ABC - Loi in- -bill--.pdf');
     assertEqual(report.title, 'ABC - Lỗi in: "bill"?');
     assertEqual(report.entries.map(e => e.label), ['Cần setup – Check MID – ảnh 1', 'Hiện trạng – ảnh 1']);
     assert(report.entries[0].blob === png.blob && report.entries[1].blob === jpg.blob, 'giữ nguyên file gốc');
     assertEqual(D.imageArchive.buildImageReport({ title: '', images: [], now: new Date(2026, 0, 9, 5, 3) }).fileName,
-      'anh-ticket - 010920260503.pdf');
+      '0109 - 0503 - anh - ticket.pdf');
   });
 })(window.TW);
