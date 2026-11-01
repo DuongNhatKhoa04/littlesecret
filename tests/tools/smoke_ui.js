@@ -44,7 +44,8 @@
   window.alert = (m) => alerts.push(m);
   window.confirm = () => true;
   // Không ghi đè clipboard thật của máy đang chạy test (cả đường dự phòng execCommand)
-  if (navigator.clipboard) Object.defineProperty(navigator.clipboard, 'writeText', { value: async () => {} });
+  const copiedTexts = [];
+  if (navigator.clipboard) Object.defineProperty(navigator.clipboard, 'writeText', { value: async (text) => { copiedTexts.push(text); } });
   document.execCommand = () => true;
 
   try {
@@ -89,6 +90,61 @@
     key(document, { key: '2', altKey: true });
     key(document, { key: '1', altKey: true });
     check('Alt+2 / Alt+1 => bấm Copy nội dung / Copy title', copyClicks.join('|') === '#copyBody|#copyTitle', copyClicks);
+
+    // Copy để điền + bookmarklet "Điền ticket": chạy đúng link bookmark trên form giả giống trang ticket thật
+    $('#copyFill').click();
+    await until(() => $('#copyFill').textContent === 'Đã copy ✓', 5000);
+    const fillPayload = copiedTexts[copiedTexts.length - 1];
+    const ticketForm = document.createElement('form');
+    const subjectInput = document.createElement('input');
+    subjectInput.name = 'subject';
+    const descriptionArea = document.createElement('textarea');
+    descriptionArea.name = 'description';
+    const commentInput = document.createElement('input');   // như trang thật: không có name, chỉ có placeholder
+    commentInput.placeholder = 'Enter Required Comment *';
+    const uploadButton = document.createElement('button');
+    uploadButton.type = 'button';
+    uploadButton.append(Object.assign(document.createElement('p'), { className: 'button-text', textContent: 'Upload File(s)' }));
+    const fillEvents = [];
+    [subjectInput, descriptionArea, commentInput].forEach(node => node.addEventListener('input', () => fillEvents.push(node.name || 'comment')));
+    uploadButton.addEventListener('click', () => fillEvents.push('upload'));
+    ticketForm.append(subjectInput, descriptionArea, commentInput, uploadButton);
+    document.body.append(ticketForm);
+    Object.defineProperty(navigator.clipboard, 'readText', { value: async () => fillPayload, configurable: true });
+    const bookmarklet = decodeURIComponent($('#fillBookmarklet').getAttribute('href').slice('javascript:'.length));
+    (0, eval)(bookmarklet);
+    await wait(300);   // gán value không đổi DOM nên until() không bắt được
+    check('Điền ticket: Title → Subject, Nội dung → Description, done → Required Comment, rồi bấm Upload File(s)',
+      subjectInput.value === $('#outTitle').textContent && descriptionArea.value === $('#outBody').textContent && commentInput.value === 'done' &&
+      fillEvents.join('|') === 'subject|description|comment|upload', { subject: subjectInput.value, comment: commentInput.value, events: fillEvents });
+    // Trang thật: ô Required Comment chỉ hiện ra sau khi bấm Upload File(s)
+    [subjectInput, descriptionArea, commentInput].forEach(node => { node.value = ''; });
+    fillEvents.length = 0;
+    commentInput.remove();
+    const showComment = () => setTimeout(() => ticketForm.append(commentInput), 400);
+    uploadButton.addEventListener('click', showComment);
+    (0, eval)(bookmarklet);
+    await wait(1200);
+    check('Điền ticket: ô Comment hiện sau khi bấm Upload => bấm trước, đợi rồi điền done',
+      subjectInput.value === $('#outTitle').textContent && commentInput.value === 'done' &&
+      fillEvents.join('|') === 'subject|description|upload|comment', { comment: commentInput.value, events: fillEvents });
+    uploadButton.removeEventListener('click', showComment);
+    [subjectInput, descriptionArea, commentInput].forEach(node => { node.value = ''; });
+    fillEvents.length = 0;
+    uploadButton.remove();
+    (0, eval)(bookmarklet);
+    await wait(300);
+    check('Điền ticket: thiếu nút Upload File(s) => báo thiếu, không điền gì', subjectInput.value === '' && fillEvents.length === 0 &&
+      String(alerts[alerts.length - 1]).includes('Không thấy Upload File(s)'), alerts[alerts.length - 1]);
+    Object.defineProperty(navigator.clipboard, 'readText', { value: async () => 'chữ thường', configurable: true });
+    (0, eval)(bookmarklet);
+    await wait(300);
+    check('Điền ticket: clipboard không phải của Ticket Writer => báo, không điền', subjectInput.value === '' &&
+      String(alerts[alerts.length - 1]).includes('Clipboard chưa có ticket'), alerts[alerts.length - 1]);
+    ticketForm.remove();
+    $('#fillHelp').click();
+    check('hộp hướng dẫn bookmark mở, nút kéo là link javascript:', $('#fillDlg').open && $('#fillBookmarklet').href.startsWith('javascript:'));
+    $('#fillClose').click();
 
     // Ô Loại
     const cat = $('#f_category');

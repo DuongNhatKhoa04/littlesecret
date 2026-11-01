@@ -210,6 +210,7 @@ setShipping({   // const { setShipping } = registry;
 | `autoCapitalize` | Tự viết hoa chữ đầu mỗi dòng |
 | `debounceMs` | Độ trễ cập nhật Kết quả |
 | `storageKey`, `templateKey`, `categoryKey` | Key localStorage. **Không đổi** |
+| `ticketFill` | Bookmark `Điền ticket`: selector ô `subject` / `description` / `comment` (Required Comment), `commentText` (`done`), `commentWaitMs` (đợi ô Comment hiện ra sau khi bấm Upload), nút bấm sau khi điền = phần tử `uploadLabel` có chữ `uploadText`. Đổi thì người dùng phải kéo lại bookmark |
 | `categories` | Loại có sẵn (`ABC`, `CLOVER`, `PAX`, `INTERNET`) |
 | `marks` | Ký hiệu checklist trong nội dung: `[x]`, `[ ]`, `[N/A]` |
 | `langs` | `ENG`, `VIE` |

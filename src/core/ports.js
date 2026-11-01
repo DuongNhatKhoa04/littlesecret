@@ -26,6 +26,13 @@
  */
 
 /**
+ * Điền Subject / Description / Required Comment rồi bấm Upload File(s) trên trang ticket (hệ thống ngoài) qua clipboard + bookmarklet.
+ * @typedef {Object} TicketFill
+ * @property {(title: string, body: string) => string} payload   chữ để copy; bookmarklet đọc lại từ clipboard
+ * @property {() => string} bookmarkletUrl   link javascript: để kéo lên thanh bookmark
+ */
+
+/**
  * @typedef {Object} FileAdapter
  * @property {(file: File) => Promise<string | null>} readAsDataUrl   null = không đọc được
  * @property {(file: File) => Promise<any>} readJson                  undefined = không phải JSON hợp lệ

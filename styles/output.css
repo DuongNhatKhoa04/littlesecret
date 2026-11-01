@@ -17,6 +17,8 @@
 .out:empty::before { content: attr(data-empty); color: var(--muted); }
 .warn { background: var(--warn-bg); color: var(--warn-ink); padding: 8px 12px; border-radius: var(--radius); margin: 0 0 12px; font-size: 14px; }
 .warn[hidden] { display: none; }
+.fillbar { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; }
+.fillbar .copy { margin-left: 0; }
 
 .icard { display: flex; align-items: center; gap: 10px; padding: 8px; margin: 0 0 8px; background: var(--out-bg); border: 1px solid var(--line); border-radius: var(--radius); }
 .icard img { height: 72px; max-width: 140px; object-fit: cover; border: 1px solid var(--line); border-radius: 6px; flex: none; cursor: zoom-in; }

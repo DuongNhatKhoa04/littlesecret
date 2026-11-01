@@ -35,6 +35,10 @@
       <div class="inner">
         <div class="warn" id="warn" hidden></div>
         <div id="titleBlock">
+          <div class="fillbar">
+            <button type="button" class="copy" id="copyFill" title="Copy Title + Nội dung để bookmark &quot;Điền ticket&quot; điền vào Subject / Description">Copy để điền</button>
+            <button type="button" class="ghost" id="fillHelp">Cài bookmark "Điền ticket"</button>
+          </div>
           <div class="outhead">
             <h2>Title</h2><span class="status" id="stTitle"></span>
             <button type="button" class="copy" id="copyTitle">Copy title (Alt+1)</button>
@@ -86,6 +90,27 @@
     <span class="spacer"></span>
     <button type="button" class="ghost" id="tplExport">Xuất JSON</button>
     <label class="ghost" style="cursor:pointer">Nhập JSON<input type="file" id="tplImport" accept="application/json,.json" hidden></label>
+  </div>
+</dialog>
+
+<dialog id="fillDlg" aria-label="Điền ticket">
+  <div class="dhead">
+    <b>Điền ticket: Subject, Description, Required Comment rồi bấm Upload File(s)</b><span class="spacer"></span>
+    <button type="button" class="ghost" id="fillClose">Đóng</button>
+  </div>
+  <div class="fill-guide">
+    <h3>Cài 1 lần</h3>
+    <ol>
+      <li>Bật thanh bookmark: <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd>.</li>
+      <li>Kéo nút này thả lên thanh bookmark (đừng bấm): <a class="bm-link" id="fillBookmarklet" title="Kéo lên thanh bookmark">Điền ticket</a></li>
+    </ol>
+    <h3>Mỗi lần tạo ticket</h3>
+    <ol>
+      <li>Ở Ticket Writer bấm <b>Copy để điền</b>.</li>
+      <li>Chuyển sang tab ticket, bấm bookmark <b>Điền ticket</b>: Title vào Subject, Nội dung vào Description, rồi tự bấm <b>Upload File(s)</b> và điền <b>done</b> vào Required Comment (ô này hiện sau khi bấm Upload thì tự đợi tối đa 5 giây). Lần đầu Chrome hỏi quyền xem clipboard → <b>Allow</b>.</li>
+      <li>Trang thiếu Subject / Description / nút Upload File(s) thì không điền gì và báo thiếu cái nào.</li>
+    </ol>
+    <p class="status">Bản Ticket Writer mới có sửa phần điền ticket thì kéo lại nút ở trên (xóa bookmark cũ).</p>
   </div>
 </dialog>
 
@@ -146,6 +171,7 @@
 <script src="src/infrastructure/storage.js"></script>
 <script src="src/infrastructure/clipboard.js"></script>
 <script src="src/infrastructure/screen-capture.js"></script>
+<script src="src/infrastructure/ticket-fill.js"></script>
 <script src="src/infrastructure/zip.js"></script>
 <script src="src/infrastructure/pdf-image.js"></script>
 <script src="src/infrastructure/pdf.js"></script>
@@ -165,6 +191,7 @@
 <script src="src/ui/output-view.js"></script>
 <script src="src/ui/image-viewer.js"></script>
 <script src="src/ui/template-dialog.js"></script>
+<script src="src/ui/fill-dialog.js"></script>
 <script src="src/ui/header.js"></script>
 <script src="src/ui/paste-handler.js"></script>
 

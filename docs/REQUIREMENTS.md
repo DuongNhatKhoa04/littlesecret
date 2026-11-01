@@ -169,6 +169,16 @@ Việc cần làm tiếp:
 - **Copy nội dung**: khóa khi (a) nội dung rỗng, (b) thiếu mục đề xuất bắt buộc, hoặc (c) checklist còn mục thiếu ảnh. (b)/(c) hiện dòng cảnh báo vàng nói rõ lý do.
 - Copy xong nút đổi thành `Đã copy ✓` trong 1.5s; lỗi thì báo copy tay.
 - Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS không có Title nên `Alt+1` không làm gì.
+- **Điền vào trang ticket** (chỉ loại ticket có Title; SMS không có):
+  - Nút `Copy để điền` (trên khối Title): copy Title + Nội dung vào clipboard (JSON có đánh dấu của Ticket Writer). Khóa khi Copy title hoặc Copy nội dung đang khóa. Không gửi ảnh.
+  - Nút `Cài bookmark "Điền ticket"`: hộp hướng dẫn, có nút `Điền ticket` để kéo lên thanh bookmark (bấm ở Ticket Writer thì không làm gì).
+  - Bookmark `Điền ticket` chạy trên tab đang đứng: đọc clipboard (lần đầu Chrome hỏi quyền; bị chặn thì hiện ô để tự dán), rồi:
+    1. Điền Title vào `input[name="subject"]`, Nội dung vào `textarea[name="description"]`. Phát sự kiện `input` + `change` để form nhận giá trị.
+    2. Ô `Enter Required Comment *` (không có name, tìm theo placeholder) đã có trên trang → điền `done`, rồi bấm nút có chữ `Upload File(s)` (`p.button-text`, bấm vào button chứa nó).
+    3. Chưa có ô Comment → bấm `Upload File(s)` trước, đợi tối đa `commentWaitMs` (5 giây) cho ô hiện ra rồi điền `done`; hết giờ vẫn không thấy → báo điền tay.
+    - Selector, chữ `done`, chữ trên nút: `ticketFill` trong `config/app.js`.
+  - Clipboard không phải dữ liệu `Copy để điền` → báo `Clipboard chưa có ticket…`, không điền. Thiếu Subject / Description / nút `Upload File(s)` → báo thiếu cái nào, **không điền gì** (tránh điền nửa chừng trên nhầm trang).
+  - Ticket Writer không tự chuyển tab được (trình duyệt cấm trang web điều khiển tab khác): người dùng tự chuyển. Ảnh: dùng `Copy ảnh` từng ảnh rồi Ctrl+V tay.
 
 ## 10. Ảnh
 
@@ -289,6 +299,7 @@ Chỉ thêm thao tác và cách tải ảnh; Title, Nội dung, điều kiện c
 | `Alt+1` / `Alt+2`: Copy title / Copy nội dung; nút đang khóa thì báo lý do | §9 |
 | Nút `Tải PDF`: mọi ảnh thành 1 file PDF, mỗi trang 1 ảnh kèm nhãn mục, giữ nguyên độ nét | §10 |
 | Nút `Chụp màn hình kia` / `⇄ Chụp màn hình này` ở mọi ô dán ảnh: chụp rồi tự thêm ảnh vào mục | §10 |
+| `Copy để điền` + bookmark `Điền ticket`: điền Subject / Description / Required Comment (`done`) rồi bấm `Upload File(s)` trên trang ticket | §9 |
 | Nhãn ảnh gọn (khối Ảnh, ZIP, PDF): bỏ ghi chú trong ngoặc ở nhóm, không lặp tên nhóm, chỉ đánh số khi ≥ 2 ảnh | §10 |
 
 Đổi config checklist sau bản gốc (Nội dung khác bản gốc đúng ở chỗ này; test golden ghi rõ từng ca trong `CHANGED_SINCE_ORIGINAL`):

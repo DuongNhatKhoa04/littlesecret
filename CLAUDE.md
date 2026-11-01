@@ -55,10 +55,10 @@ ticket-writer/
 │  ├─ application/             USE CASE: store + service, điều phối domain và port
 │  │                           context · store · session · session-repository · ticket/navigation/view/image/
 │  │                           output/category/template/sms/shipping-service
-│  ├─ infrastructure/          ADAPTER: storage (localStorage) · clipboard · screen-capture (chụp màn hình) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
+│  ├─ infrastructure/          ADAPTER: storage (localStorage) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
 │  ├─ ui/                      GIAO DIỆN: dom (helper) · picker · ticket-form · category-combo · idea-list ·
 │  │                           checklist-view · image-zone · output-view · image-panel · image-viewer ·
-│  │                           template-dialog · header · paste-handler · sms-form · shipping-form
+│  │                           template-dialog · fill-dialog · header · paste-handler · sms-form · shipping-form
 │  └─ main.js                  COMPOSITION ROOT: tạo adapter, inject vào service, gắn UI
 ├─ tests/                      xem tests/README.md
 │  ├─ index.html               double-click để chạy test
@@ -126,7 +126,7 @@ File config:
 - **S — Single Responsibility**: 1 file = 1 trách nhiệm. Ví dụ ghép title, ghép nội dung, kiểm tra điều kiện copy là 3 file domain riêng; ô chọn Loại, checklist, khối ảnh là 3 view riêng.
 - **O — Open/Closed**: thêm loại ticket hoặc checklist = **thêm 1 file config**, không sửa `src/`. Hiện có 2 kiểu mục (nhập ý / Kết luận). Khi cần kiểu thứ 3: tách thành bảng renderer + composer theo `kind`, không nối thêm `if/else`.
 - **L — Liskov**: mọi loại ticket và checklist theo cùng 1 schema (docs/CONFIG.md); code xử lý loại nào cũng không cần biết đang là loại gì. Adapter thay thế được nhau (vd storage thật ↔ storage giả trong test).
-- **I — Interface Segregation**: port nhỏ, chỉ đúng hàm cần: `KeyValueStore { read(key), write(key, value) }`, `TextClipboard { writeText }`, `ImageClipboard { writeImage, readImages }`, `ScreenCapture { capture }`, `FileAdapter { readAsDataUrl, readJson, download, downloadZip, downloadPdf }`. Typedef đặt ở `src/core/ports.js`.
+- **I — Interface Segregation**: port nhỏ, chỉ đúng hàm cần: `KeyValueStore { read(key), write(key, value) }`, `TextClipboard { writeText }`, `ImageClipboard { writeImage, readImages }`, `ScreenCapture { capture }`, `TicketFill { payload, bookmarkletUrl }`, `FileAdapter { readAsDataUrl, readJson, download, downloadZip, downloadPdf }`. Typedef đặt ở `src/core/ports.js`.
 - **D — Dependency Inversion**: service nhận port qua tham số factory, không tự tạo. Chỉ `main.js` biết adapter cụ thể nào được dùng.
 
 ## Clean code

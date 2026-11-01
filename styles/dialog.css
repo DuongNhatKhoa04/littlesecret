@@ -14,6 +14,12 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 .v-body.full { align-items: flex-start; justify-content: flex-start; }
 .v-body.full img { max-width: none; max-height: none; cursor: zoom-out; }
 
+/* Hướng dẫn bookmark Điền ticket */
+.fill-guide { overflow: auto; padding: 4px 16px 12px; }
+.fill-guide h3 { font-size: 14px; margin: 12px 0 4px; }
+.fill-guide li { margin: 4px 0; }
+.bm-link { display: inline-block; margin-left: 6px; padding: 4px 12px; background: var(--accent); color: var(--accent-ink); border-radius: var(--radius); font-weight: 600; text-decoration: none; cursor: grab; }
+
 /* Template */
 .tlist { flex: 1; min-height: 120px; overflow: auto; padding: 10px 12px; }
 .titem { display: flex; gap: 6px; margin-bottom: 6px; }

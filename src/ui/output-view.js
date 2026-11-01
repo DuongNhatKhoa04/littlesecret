@@ -1,4 +1,4 @@
-// src/ui/output-view.js — Khu Kết quả: Title, Nội dung, cảnh báo, nút Copy. Cập nhật trễ (debounce) khi đang gõ.
+// src/ui/output-view.js — Khu Kết quả: Title, Nội dung, cảnh báo, nút Copy (kể cả Copy để điền ticket). Cập nhật trễ (debounce) khi đang gõ.
 (function (TW) {
   'use strict';
 
@@ -19,7 +19,7 @@
     return '';
   }
 
-  function createOutputView({ context, outputService, clipboard, imagePanel }) {
+  function createOutputView({ context, outputService, clipboard, ticketFill, imagePanel }) {
     let timer = null;
     let last = outputService.compute();
 
@@ -35,6 +35,7 @@
       $('#warn').hidden = !warning;
       $('#copyTitle').disabled = !last.canCopyTitle;
       $('#copyBody').disabled = !last.canCopyBody;
+      $('#copyFill').disabled = !last.canCopyTitle || !last.canCopyBody;
       imagePanel.render();
     }
 
@@ -68,6 +69,7 @@
 
     wireCopy('#copyTitle', () => last.title);
     wireCopy('#copyBody', () => last.body);
+    wireCopy('#copyFill', () => ticketFill.payload(last.title, last.body));
     document.addEventListener('keydown', onShortcut);
 
     return { render, schedule };

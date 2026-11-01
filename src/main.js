@@ -10,6 +10,7 @@
   const clipboard = I.clipboard.createClipboard();
   const files = I.files.createFileAdapter();
   const screenCapture = I.screenCapture.createScreenCapture();
+  const ticketFill = I.ticketFill.createTicketFill(registry.app().ticketFill);
 
   // Application
   const context = A.context.createContext(registry);
@@ -43,9 +44,10 @@
   };
   const picker = U.picker.createPicker({ root: $('#picker'), context, session, navigationService });
   const imagePanel = U.imagePanel.createImagePanel({ outputService, images, clipboard, openViewer: viewer.open });
-  const output = U.outputView.createOutputView({ context, outputService, clipboard, imagePanel });
+  const output = U.outputView.createOutputView({ context, outputService, clipboard, ticketFill, imagePanel });
   const header = U.header.createHeader({ context, session, viewService, ticketService, smsService, shippingService, images, onShowOutput: output.render });
   const templateDialog = U.templateDialog.createTemplateDialog({ templateService, files });
+  U.fillDialog.createFillDialog({ ticketFill });
   U.pasteHandler.installPasteHandler({ outputService, imageZone });
 
   store.subscribe((change) => {

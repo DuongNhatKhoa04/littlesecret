@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-01.4',     // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-01.9',     // hiện cạnh tên app để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
 
@@ -13,6 +13,16 @@
     storageKey: 'ticketWriter.v1',
     templateKey: 'ticketWriter.templates.v1',
     categoryKey: 'ticketWriter.categories.v1',
+
+    // Bookmark "Điền ticket" trên trang ticket: ô cần điền, chữ điền vào Required Comment, nút bấm sau khi điền.
+    // Đổi ở đây thì phải kéo lại bookmark.
+    ticketFill: {
+      subject: 'input[name="subject"]',
+      description: 'textarea[name="description"]',
+      comment: 'input[placeholder^="Enter Required Comment"]', commentText: 'done',   // ô này không có name
+      commentWaitMs: 5000,                                                               // ô chưa có thì đợi tối đa sau khi bấm Upload
+      uploadLabel: 'p.button-text', uploadText: 'Upload File(s)'                        // nút tìm theo chữ trên nút
+    },
 
     // Loại có sẵn trong ô Loại. Người dùng gõ thêm loại mới thì lưu riêng trên máy họ.
     categories: ['ABC', 'CLOVER', 'PAX', 'INTERNET', "VALOR"],
