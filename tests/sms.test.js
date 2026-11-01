@@ -28,7 +28,7 @@
     'Price per SMS: $0.02',
     'Estimate Total: $63.56',
     '',
-    "Reply YES to confirm and we'll send it right away or let us know if you'd like any changes."
+    'Please carefully review the content of the Promotion message, and only when you are sure that there are no further changes should you text "OK" to this phone number. Have a nice day.'
   ].join('\n');
 
   const build = (raw) => D.smsMessage.buildSmsMessage({ sms: D.sms.sanitizeSms(raw, config), config });
@@ -64,7 +64,7 @@
   test('sms: sanitize bỏ dữ liệu hỏng, số thiếu lấy mặc định', () => {
     const sms = D.sms.sanitizeSms({ shop: 1, customerTypes: { lastVisit: { on: 'yes', values: { days: 30 } }, old: { on: true } } }, config);
     assertEqual([sms.shop, sms.customerTypes.lastVisit, Object.keys(sms.customerTypes)],
-      ['', { on: false, values: { days: '365' } }, ['lastVisit', 'visitTimes']]);
+      ['', { on: false, values: { days: '365' } }, ['lastVisit', 'lastVisitAtLeast', 'visitTimes']]);
   });
 
   test('sms: option tự thêm in sau mục có sẵn, bỏ option trống; chỉ có option tự thêm vẫn đủ Type Customer', () => {

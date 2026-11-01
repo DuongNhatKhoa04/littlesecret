@@ -10,10 +10,8 @@
     sections: [
       { key: 's1', label: 'Vấn đề',            ph: 'Merchant cần support gì: lỗi gì / yêu cầu gì, từ khi nào…' },
       { key: 's2', label: 'Đã support',        ph: 'Đã kiểm tra / làm những gì…' },
-      { key: 's3', label: 'Nguyên nhân',       ph: 'Nguyên nhân tìm ra (để trống thì không in)…' },
-      { key: 's4', label: 'Kết quả',           ph: 'Sau khi support thì thế nào…' },
       { key: 'c',  label: 'Kết luận', kind: 'conclusion' },
-      { key: 's5', label: 'Việc cần làm tiếp', ph: 'Việc còn lại cần follow-up (để trống thì không in)…', actionFor: true },
+      { key: 's5', label: 'Việc cần làm tiếp', ph: 'Việc còn lại cần follow-up (chỉ hiện khi Pending)…', actionFor: true },
       NOTE
     ]
   });

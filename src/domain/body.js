@@ -4,7 +4,7 @@
 
   const { cleanItems, bulletize } = TW.domain.text;
   const { checkOf, itemLabel, isTouched } = TW.domain.checklist;
-  const { isConclusionSection, findConclusion } = TW.domain.ticket;
+  const { isConclusionSection, findConclusion, isSectionHidden } = TW.domain.ticket;
   const BLOCK_GAP = '\n\n';
 
   function contactBlock({ type, ticket, model, app }) {
@@ -32,6 +32,7 @@
       const conclusion = findConclusion(app, ticket.conclusion);
       return conclusion && conclusion.showInBody ? `${section.label}: ${ticket.conclusion}` : '';
     }
+    if (isSectionHidden(section, findConclusion(app, ticket.conclusion))) return '';
     const items = cleanItems(ticket.blocks[section.key] || []);
     return items.length ? `${section.label}:\n` + items.map(bulletize).join('\n') : '';
   }

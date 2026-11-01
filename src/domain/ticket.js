@@ -41,6 +41,9 @@
 
   const findConclusion = (app, value) => app.conclusions.find(c => c.value === value) || null;
 
+  /** Mục actionFor bị ẩn (không hiện trên form, không in) khi kết luận có hidesAction. */
+  const isSectionHidden = (section, conclusion) => !!section.actionFor && !!conclusion && !!conclusion.hidesAction;
+
   /** Dữ liệu đọc từ storage có thể cũ/hỏng: giữ phần hợp lệ, còn lại lấy mặc định. */
   function sanitizeTicket(raw, { app, blockKeys }) {
     const ticket = createEmptyTicket({ app, blockKeys });
@@ -57,6 +60,6 @@
     blockKeys.some(key => cleanItems(ticket.blocks[key] || []).length));
 
   TW.domain.ticket = {
-    isConclusionSection, collectBlockKeys, copyBlocks, createEmptyTicket, sanitizeTicket, findConclusion, hasAnyContent
+    isConclusionSection, collectBlockKeys, copyBlocks, createEmptyTicket, sanitizeTicket, findConclusion, isSectionHidden, hasAnyContent
   };
 })(window.TW);

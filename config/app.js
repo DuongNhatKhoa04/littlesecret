@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-01.9',     // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-01.14',     // hiện cạnh tên app để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
 
@@ -14,13 +14,12 @@
     templateKey: 'ticketWriter.templates.v1',
     categoryKey: 'ticketWriter.categories.v1',
 
-    // Bookmark "Điền ticket" trên trang ticket: ô cần điền, chữ điền vào Required Comment, nút bấm sau khi điền.
+    // Bookmark "Điền ticket" trên trang ticket: ô cần điền, chữ điền vào ô Comment ở khung Checklist, nút bấm sau khi điền.
     // Đổi ở đây thì phải kéo lại bookmark.
     ticketFill: {
       subject: 'input[name="subject"]',
       description: 'textarea[name="description"]',
-      comment: 'input[placeholder^="Enter Required Comment"]', commentText: 'done',   // ô này không có name
-      commentWaitMs: 5000,                                                               // ô chưa có thì đợi tối đa sau khi bấm Upload
+      comment: '.checklist .comment input', commentText: 'done',   // ô Comment ở khung Checklist: không có name / placeholder
       uploadLabel: 'p.button-text', uploadText: 'Upload File(s)'                        // nút tìm theo chữ trên nút
     },
 
@@ -33,8 +32,9 @@
 
     // requiresAction: bắt buộc có mục actionFor · showInBody: ghi dòng Kết luận vào nội dung
     // relaxWhenInitial: mới ở bước đầu (chỉ có mục đầu + Note) thì chưa bắt buộc mục actionFor
+    // hidesAction: ẩn mục actionFor trên form và không in vào nội dung (chữ đã nhập vẫn giữ, đổi kết luận là hiện lại)
     conclusions: [
-      { value: 'Resolved', hint: 'Đã xong → Done ticket trên system', requiresAction: false },
+      { value: 'Resolved', hint: 'Đã xong → Done ticket trên system', requiresAction: false, hidesAction: true },
       { value: 'Pending - Needs to follow up', hint: 'Chưa xong → để ticket mở, chờ follow-up', requiresAction: false, showInBody: true }
     ],
 

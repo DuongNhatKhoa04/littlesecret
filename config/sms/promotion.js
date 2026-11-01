@@ -11,6 +11,7 @@
     // id lưu trong state => không đổi id đang có.
     customerTypes: [
       { id: 'lastVisit',  text: 'Last Visit <= {days}',              values: { days: '365' } },
+      { id: 'lastVisitAtLeast', text: 'Last Visit >= {days}',        values: { days: '90' } },
       { id: 'visitTimes', text: 'Times visit between {min} - {max}', values: { min: '1', max: '10000' } }
     ],
 
@@ -33,7 +34,7 @@
           message: 'Message:',
           price: 'Price per SMS: ${price}',
           total: 'Estimate Total: ${total}',
-          outro: "Reply YES to confirm and we'll send it right away or let us know if you'd like any changes."
+          outro: 'Please carefully review the content of the Promotion message, and only when you are sure that there are no further changes should you text "OK" to this phone number. Have a nice day.'
         }
       },
       {
@@ -46,10 +47,11 @@
           message: 'Nội dung tin nhắn:',
           price: 'Giá mỗi SMS: ${price}',
           total: 'Tổng chi phí dự kiến: ${total}',
-          outro: 'Anh/chị trả lời YES để xác nhận, bên em sẽ gửi ngay, hoặc báo em nếu muốn chỉnh sửa gì nhé.'
+          outro: 'Anh/chị vui lòng xem kỹ nội dung tin nhắn Promotion, khi chắc chắn không cần chỉnh sửa gì thêm thì nhắn "OK" về số điện thoại này. Chúc anh/chị một ngày tốt lành.'
         },
         customerTypes: {
           lastVisit: 'Lần ghé gần nhất <= {days} ngày',
+          lastVisitAtLeast: 'Lần ghé gần nhất >= {days} ngày',
           visitTimes: 'Số lần ghé từ {min} - {max}'
         }
       }

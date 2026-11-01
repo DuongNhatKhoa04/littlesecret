@@ -58,6 +58,17 @@
       ['', 'x', 'ENG', 'Resolved', [''], { done: false, na: false }]);
   });
 
+  test('Hỗ trợ merchant: Việc cần làm tiếp chỉ in khi Pending, Resolved thì bỏ (chữ vẫn giữ)', () => {
+    const type = context.typeOf('incident');
+    const body = (conclusion) => D.body.buildBody({
+      type, ticket: D.ticket.sanitizeTicket({ conclusion, blocks: { s1: ['A'], s5: ['Gọi lại'] } }, context),
+      imageCounts: {}, model: '', app: context.app
+    });
+    assertEqual(type.sections.map(s => s.label), ['Vấn đề', 'Đã support', 'Kết luận', 'Việc cần làm tiếp', 'Note']);
+    assertEqual(body('Resolved'), 'Vấn đề:\n- A');
+    assertEqual(body('Pending - Needs to follow up'), 'Vấn đề:\n- A\n\nKết luận: Pending - Needs to follow up\n\nViệc cần làm tiếp:\n- Gọi lại');
+  });
+
   test('template: không lưu phone; áp vào giữ phone, ngôn ngữ, checklist', () => {
     const ticket = D.ticket.sanitizeTicket({ category: 'ABC ', summary: 'x', phone: '1', blocks: { s1: [' a ', ''] } }, context);
     const template = D.template.createTemplate({ name: 'ABC - X', typeKey: 'incident', ticket, blockKeys: context.blockKeys, now: 1 });

@@ -26,7 +26,7 @@
  */
 
 /**
- * Điền Subject / Description / Required Comment rồi bấm Upload File(s) trên trang ticket (hệ thống ngoài) qua clipboard + bookmarklet.
+ * Điền Subject / Description / Comment (Checklist) rồi bấm Upload File(s) trên trang ticket (hệ thống ngoài) qua clipboard + bookmarklet.
  * @typedef {Object} TicketFill
  * @property {(title: string, body: string) => string} payload   chữ để copy; bookmarklet đọc lại từ clipboard
  * @property {() => string} bookmarkletUrl   link javascript: để kéo lên thanh bookmark

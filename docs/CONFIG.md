@@ -21,8 +21,6 @@ Sau khi thêm file mới: thêm `<script src="...">` vào **`index.html` và `te
     sections: [
       { key: 's1', label: 'Vấn đề', ph: 'Merchant cần support gì…' },
       { key: 's2', label: 'Đã support', ph: 'Đã kiểm tra / làm những gì…' },
-      { key: 's3', label: 'Nguyên nhân', ph: '…' },
-      { key: 's4', label: 'Kết quả', ph: 'Sau khi support thì thế nào…' },
       { key: 'c',  label: 'Kết luận', kind: 'conclusion' },
       { key: 's5', label: 'Việc cần làm tiếp', ph: '…', actionFor: true },
       NOTE
@@ -48,7 +46,7 @@ Mọi file config theo đúng khuôn này: IIFE nhận `registry`, lấy hàm c�
 | `label` | Tiêu đề mục, in ra nội dung dạng `<label>:` |
 | `ph` | Gợi ý trong ô nhập đầu tiên |
 | `kind: 'conclusion'` | Mục chọn Kết luận thay vì nhập ý |
-| `actionFor: true` | Bắt buộc khi Kết luận có `requiresAction` |
+| `actionFor: true` | Bắt buộc khi Kết luận có `requiresAction`; ẩn (không hiện, không in) khi Kết luận có `hidesAction` |
 | `note: true` | Mục ghi chú: không tính là "đã có bước xử lý" |
 
 `NOTE` = mục Note dùng chung (`{ key: 's6', label: 'Note', ph: 'Ghi chú thêm (tùy chọn)…', note: true }`).
@@ -61,8 +59,8 @@ Cùng key giữa các loại = cùng dữ liệu → đổi loại ticket vẫn 
 |---|---|---|
 | `s1` | Đầu vào: merchant báo / yêu cầu gì | Vấn đề, Yêu cầu (Chuyển CS/MKT) |
 | `s2` | Đã làm gì | Đã support |
-| `s3` | Nguyên nhân | Nguyên nhân |
-| `s4` | Kết quả sau khi support | Kết quả |
+| `s3` | Nguyên nhân | (đã bỏ — không dùng lại key cho ý nghĩa khác) |
+| `s4` | Kết quả sau khi support | (đã bỏ — không dùng lại key cho ý nghĩa khác) |
 | `c` | Kết luận (không lưu ý, lưu giá trị chọn) | Kết luận |
 | `s5` | Việc cần làm tiếp | Việc cần làm tiếp |
 | `s6` | Ghi chú | Note |
@@ -167,6 +165,7 @@ setSms({   // const { setSms } = registry;
   prices: ['0.02', '0.04', '0.06', '0.08'],
   customerTypes: [
     { id: 'lastVisit',  text: 'Last Visit <= {days}',              values: { days: '365' } },
+    { id: 'lastVisitAtLeast', text: 'Last Visit >= {days}',        values: { days: '90' } },
     { id: 'visitTimes', text: 'Times visit between {min} - {max}', values: { min: '1', max: '10000' } }
   ],
   labels: { language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message', price: 'Price per SMS ($)' },
@@ -190,15 +189,18 @@ setSms({   // const { setSms } = registry;
 
 ```js
 setShipping({   // const { setShipping } = registry;
-  labels: { merchant: 'Tên merchant', tracking: 'Tracking Number' },
-  lines: ['Dear {merchant},', '', 'We wanted to inform you ...', '', 'Tracking Number: {tracking}', '', 'Important: ...']
+  labels: { merchant: 'Tên merchant', tracking: 'Tracking Number', delivery: 'Estimated Delivery' },
+  dateLocale: 'en-US',
+  dateFormat: { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' },
+  lines: ['Dear {merchant},', '', 'We wanted to inform you ...', '', 'Tracking Number: {tracking}', 'Estimated Delivery: {delivery}', '', 'Important: ...']
 });
 ```
 
 | Trường | Ý nghĩa |
 |---|---|
 | `labels` | Nhãn trường trên form, cũng dùng trong cảnh báo "Còn thiếu" |
-| `lines` | Từng dòng tin nhắn, `''` = dòng trống. `{merchant}`, `{tracking}` thay bằng dữ liệu form (đã trim) |
+| `dateLocale`, `dateFormat` | Cách in ngày `{delivery}` (tham số của `Intl.DateTimeFormat`), mặc định `Wednesday, November 4, 2026` |
+| `lines` | Từng dòng tin nhắn, `''` = dòng trống. `{merchant}`, `{tracking}`, `{delivery}` thay bằng dữ liệu form (đã trim; `{delivery}` đã định dạng ngày) |
 
 ---
 
@@ -210,12 +212,12 @@ setShipping({   // const { setShipping } = registry;
 | `autoCapitalize` | Tự viết hoa chữ đầu mỗi dòng |
 | `debounceMs` | Độ trễ cập nhật Kết quả |
 | `storageKey`, `templateKey`, `categoryKey` | Key localStorage. **Không đổi** |
-| `ticketFill` | Bookmark `Điền ticket`: selector ô `subject` / `description` / `comment` (Required Comment), `commentText` (`done`), `commentWaitMs` (đợi ô Comment hiện ra sau khi bấm Upload), nút bấm sau khi điền = phần tử `uploadLabel` có chữ `uploadText`. Đổi thì người dùng phải kéo lại bookmark |
+| `ticketFill` | Bookmark `Điền ticket`: selector ô `subject` / `description` / `comment` (ô Comment ở khung Checklist), `commentText` (`done`), nút bấm sau khi điền = phần tử `uploadLabel` có chữ `uploadText`. Đổi thì người dùng phải kéo lại bookmark |
 | `categories` | Loại có sẵn (`ABC`, `CLOVER`, `PAX`, `INTERNET`) |
 | `marks` | Ký hiệu checklist trong nội dung: `[x]`, `[ ]`, `[N/A]` |
 | `langs` | `ENG`, `VIE` |
 | `defaultConclusion` | Kết luận mặc định |
-| `conclusions` | `{ value, hint, requiresAction, showInBody, relaxWhenInitial }` — xem REQUIREMENTS §6.3 |
+| `conclusions` | `{ value, hint, requiresAction, showInBody, relaxWhenInitial, hidesAction }` — xem REQUIREMENTS §6.3 |
 | `groups` | Nhóm ở cấp 1: `ticket`, `setup`, `sms` |
 | `smsKinds` | Cấp con của nhóm SMS: `promotion`, `shipping`; mục đầu là mặc định. `id` lưu trong state: không đổi id đang có. Thêm loại SMS mới cần thêm cả config + domain + form (như Shipping), không chỉ 1 dòng ở đây |
 | `labels` | Nhãn các trường chung |

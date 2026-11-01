@@ -3,7 +3,7 @@
   'use strict';
 
   const { $$, el, button, choiceGroup, autoGrow, isComposing, focusNext } = TW.ui.dom;
-  const { isConclusionSection } = TW.domain.ticket;
+  const { isConclusionSection, isSectionHidden } = TW.domain.ticket;
 
   const IDEA_HINT = 'Enter: ý mới · Shift+Enter: xuống dòng · Tab: field kế tiếp · Ctrl+V: dán ảnh';
 
@@ -61,6 +61,7 @@
       const box = el('div', 'sec');
       const heading = el('h3', '', section.label);
       if (section.actionFor) {
+        box.dataset.actionBox = '1';
         const badge = el('span', 'req', 'Bắt buộc');
         badge.dataset.reqBadge = '1';
         heading.append(badge);
@@ -83,14 +84,16 @@
       return box;
     }
 
-    function syncRequired() {
+    /** Mục actionFor: hiện / ẩn và nhãn Bắt buộc theo Kết luận đang chọn. */
+    function syncAction() {
       const conclusion = session.conclusion();
       const need = !!(conclusion && conclusion.requiresAction);
       $$('[data-req-badge]', root).forEach(badge => { badge.hidden = !need; });
+      $$('[data-action-box]', root).forEach(box => { box.hidden = isSectionHidden({ actionFor: true }, conclusion); });
     }
 
     function sync() {
-      syncRequired();
+      syncAction();
       checklistView.sync();
     }
 

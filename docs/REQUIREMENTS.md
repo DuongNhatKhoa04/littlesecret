@@ -58,12 +58,12 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 | Key | Nhãn nút | Các mục (theo thứ tự) |
 |---|---|---|
-| `incident` | Hỗ trợ merchant | Vấn đề (`s1`) · Đã support (`s2`) · Nguyên nhân (`s3`) · Kết quả (`s4`) · **Kết luận** · Việc cần làm tiếp (`s5`) · Note (`s6`) |
+| `incident` | Hỗ trợ merchant | Vấn đề (`s1`) · Đã support (`s2`) · **Kết luận** · Việc cần làm tiếp (`s5`, chỉ hiện khi Pending) · Note (`s6`) |
 | `transfer` | Chuyển CS/MKT | Yêu cầu (`s1`). Có Ngôn ngữ merchant. Cuối nội dung luôn có câu: `Nhờ team help merchant ạ. Many thanks team!` |
 
 Mục cùng key giữa các loại (`s1`, `s2`, …) dùng chung dữ liệu → **đổi loại ticket vẫn giữ nội dung đã nhập**.
 
-`Hỗ trợ merchant` gộp 2 loại cũ `Xử lý vấn đề` và `Xử lý yêu cầu` (`request`). Mục nào để trống thì không in (vd không tìm ra Nguyên nhân). Ticket đang nhập và template cũ của `request` mở bằng `Hỗ trợ merchant`, nội dung các mục giữ nguyên theo key (§14.5).
+`Hỗ trợ merchant` gộp 2 loại cũ `Xử lý vấn đề` và `Xử lý yêu cầu` (`request`). Mục nào để trống thì không in. Không có Nguyên nhân / Kết quả riêng (trùng với Đã support / Kết luận). Ticket đang nhập và template cũ của `request` mở bằng `Hỗ trợ merchant`, nội dung các mục giữ nguyên theo key (§14.5).
 
 ### 6.2 Nhập một mục
 
@@ -77,10 +77,12 @@ Mục cùng key giữa các loại (`s1`, `s2`, …) dùng chung dữ liệu →
 
 Kết luận khớp trạng thái ticket trên system:
 
-| Giá trị | Gợi ý | Bắt buộc Việc cần làm tiếp (`s5`) | Ghi vào nội dung |
+| Giá trị | Gợi ý | Việc cần làm tiếp (`s5`) | Ghi vào nội dung |
 |---|---|---|---|
-| `Resolved` (mặc định) | Đã xong → Done ticket trên system | Không | Không |
-| `Pending - Needs to follow up` | Chưa xong → để ticket mở, chờ follow-up | Không (tạm thời) | **Có** (`Kết luận: Pending - Needs to follow up`) |
+| `Resolved` (mặc định) | Đã xong → Done ticket trên system | **Ẩn** trên form, không in (`hidesAction`) | Không |
+| `Pending - Needs to follow up` | Chưa xong → để ticket mở, chờ follow-up | Hiện, không bắt buộc (tạm thời) | **Có** (`Kết luận: Pending - Needs to follow up`) |
+
+- Đổi Pending → Resolved: chữ đã nhập ở Việc cần làm tiếp vẫn giữ (chỉ ẩn), đổi lại Pending là hiện lại.
 
 - Kết luận nào cũng copy được nội dung (không khóa copy theo Kết luận).
 
@@ -142,7 +144,7 @@ Các khối cách nhau **1 dòng trống**, theo thứ tự:
 
 Không có Phone và không có nội dung nào (checklist chưa đụng tới, các mục trống) → nội dung rỗng, không in footer.
 
-Ví dụ `incident` (Hỗ trợ merchant), kết luận Pending - Needs to follow up, không ghi Nguyên nhân:
+Ví dụ `incident` (Hỗ trợ merchant), kết luận Pending - Needs to follow up:
 ```
 Phone: 0901234567
 
@@ -152,9 +154,6 @@ Vấn đề:
 
 Đã support:
 - Restart router
-
-Kết quả:
-- Kết nối lại được nhưng chập chờn
 
 Kết luận: Pending - Needs to follow up
 
@@ -173,11 +172,10 @@ Việc cần làm tiếp:
   - Nút `Copy để điền` (trên khối Title): copy Title + Nội dung vào clipboard (JSON có đánh dấu của Ticket Writer). Khóa khi Copy title hoặc Copy nội dung đang khóa. Không gửi ảnh.
   - Nút `Cài bookmark "Điền ticket"`: hộp hướng dẫn, có nút `Điền ticket` để kéo lên thanh bookmark (bấm ở Ticket Writer thì không làm gì).
   - Bookmark `Điền ticket` chạy trên tab đang đứng: đọc clipboard (lần đầu Chrome hỏi quyền; bị chặn thì hiện ô để tự dán), rồi:
-    1. Điền Title vào `input[name="subject"]`, Nội dung vào `textarea[name="description"]`. Phát sự kiện `input` + `change` để form nhận giá trị.
-    2. Ô `Enter Required Comment *` (không có name, tìm theo placeholder) đã có trên trang → điền `done`, rồi bấm nút có chữ `Upload File(s)` (`p.button-text`, bấm vào button chứa nó).
-    3. Chưa có ô Comment → bấm `Upload File(s)` trước, đợi tối đa `commentWaitMs` (5 giây) cho ô hiện ra rồi điền `done`; hết giờ vẫn không thấy → báo điền tay.
+    1. Điền Title vào `input[name="subject"]`, Nội dung vào `textarea[name="description"]`, `done` vào ô `Comment *` ở khung Checklist (`.checklist .comment input`; ô không có name, placeholder trống, chữ `Comment *` là label đè lên). Phát sự kiện `input` + `change` để form nhận giá trị.
+    2. Bấm nút có chữ `Upload File(s)` (`p.button-text`, bấm vào button chứa nó).
     - Selector, chữ `done`, chữ trên nút: `ticketFill` trong `config/app.js`.
-  - Clipboard không phải dữ liệu `Copy để điền` → báo `Clipboard chưa có ticket…`, không điền. Thiếu Subject / Description / nút `Upload File(s)` → báo thiếu cái nào, **không điền gì** (tránh điền nửa chừng trên nhầm trang).
+  - Clipboard không phải dữ liệu `Copy để điền` → báo `Clipboard chưa có ticket…`, không điền. Thiếu ô / nút nào trong 4 thứ trên → báo thiếu cái nào, **không điền gì** (tránh điền nửa chừng trên nhầm trang).
   - Ticket Writer không tự chuyển tab được (trình duyệt cấm trang web điều khiển tab khác): người dùng tự chuyển. Ảnh: dùng `Copy ảnh` từng ảnh rồi Ctrl+V tay.
 
 ## 10. Ảnh
@@ -299,7 +297,7 @@ Chỉ thêm thao tác và cách tải ảnh; Title, Nội dung, điều kiện c
 | `Alt+1` / `Alt+2`: Copy title / Copy nội dung; nút đang khóa thì báo lý do | §9 |
 | Nút `Tải PDF`: mọi ảnh thành 1 file PDF, mỗi trang 1 ảnh kèm nhãn mục, giữ nguyên độ nét | §10 |
 | Nút `Chụp màn hình kia` / `⇄ Chụp màn hình này` ở mọi ô dán ảnh: chụp rồi tự thêm ảnh vào mục | §10 |
-| `Copy để điền` + bookmark `Điền ticket`: điền Subject / Description / Required Comment (`done`) rồi bấm `Upload File(s)` trên trang ticket | §9 |
+| `Copy để điền` + bookmark `Điền ticket`: điền Subject / Description / Comment ở Checklist (`done`) rồi bấm `Upload File(s)` trên trang ticket | §9 |
 | Nhãn ảnh gọn (khối Ảnh, ZIP, PDF): bỏ ghi chú trong ngoặc ở nhóm, không lặp tên nhóm, chỉ đánh số khi ≥ 2 ảnh | §10 |
 
 Đổi config checklist sau bản gốc (Nội dung khác bản gốc đúng ở chỗ này; test golden ghi rõ từng ca trong `CHANGED_SINCE_ORIGINAL`):
@@ -319,9 +317,8 @@ Theo góp ý người dùng: viết ticket theo 1 mạch "vấn đề → đã s
 | 2 loại `incident` (Xử lý vấn đề), `request` (Xử lý yêu cầu) | 1 loại `incident`, nhãn `Hỗ trợ merchant`; `request` khai báo trong `formerKeys` |
 | Hiện trạng / Yêu cầu (`s1`) | Vấn đề |
 | Troubleshoot / Action (`s2`) | Đã support |
-| Nguyên nhân phát hiện (`s3`) | Nguyên nhân (để trống thì không in) |
-| — | Kết quả (`s4`, mới) |
-| Hướng khắc phục đề xuất / Hành động đề xuất (`s5`) | Việc cần làm tiếp (không bắt buộc) |
+| Nguyên nhân phát hiện (`s3`) | Bỏ (trùng Đã support); dữ liệu cũ ở mục này không còn hiện / in |
+| Hướng khắc phục đề xuất / Hành động đề xuất (`s5`) | Việc cần làm tiếp (không bắt buộc; chỉ hiện khi Pending) |
 | Kết luận `Resolved` / `Workaround applied` / `Not resolved` | `Resolved` (mặc định) / `Pending - Needs to follow up` (§6.3) |
 
 Dữ liệu cũ: state đang mở `request` → mở `Hỗ trợ merchant`; template `type: 'request'` vẫn hiện, dùng được, giữ nguyên key trong file lưu. Kết luận cũ không còn → `Resolved` (mặc định).
@@ -343,7 +340,7 @@ Nhóm `SMS` → `Promotion`. Soạn tin nhắn gửi tiệm xác nhận trước
 | **Ngôn ngữ tin nhắn** | Chọn 1: `English` (mặc định) / `Tiếng Việt`. Đổi ngôn ngữ chỉ đổi câu chữ tin nhắn, dữ liệu form giữ nguyên. |
 | **Tên tiệm** | Ô text. In ra đúng như gõ (đã trim). |
 | **Recipients** | Ô text (bàn phím số trên mobile). |
-| **Type Customer** | Chọn nhiều. Mỗi lựa chọn là 1 ô tick kèm ô số sửa được, vd `Last Visit <= [365]`, `Times visit between [1] - [10000]`. Danh sách + số mặc định ở `config/sms/promotion.js`. Thêm điều kiện khác bằng `+ Thêm option` (ô text tự gõ, có ×; Enter thêm option mới, Backspace ở ô trống xóa option). Option tự thêm chỉ thuộc promotion đang soạn, không thành lựa chọn cố định. Có ảnh như mục ticket (§10): nút `+ Thêm ảnh (Ctrl+V)`, ô dán ảnh, kéo thả; Ctrl+V ảnh khi đang đứng trong khối Type Customer cũng vào đây. |
+| **Type Customer** | Chọn nhiều. Mỗi lựa chọn là 1 ô tick kèm ô số sửa được, vd `Last Visit <= [365]`, `Last Visit >= [90]`, `Times visit between [1] - [10000]`. Danh sách + số mặc định ở `config/sms/promotion.js`. Thêm điều kiện khác bằng `+ Thêm option` (ô text tự gõ, có ×; Enter thêm option mới, Backspace ở ô trống xóa option). Option tự thêm chỉ thuộc promotion đang soạn, không thành lựa chọn cố định. Có ảnh như mục ticket (§10): nút `+ Thêm ảnh (Ctrl+V)`, ô dán ảnh, kéo thả; Ctrl+V ảnh khi đang đứng trong khối Type Customer cũng vào đây. |
 | **Message** | Ô nhập nhiều dòng. Không tự viết hoa. |
 | **Price per SMS** | Chọn 1 trong `0.02` / `0.04` / `0.06` / `0.08`, mặc định `0.02`. |
 
@@ -363,7 +360,7 @@ Message:
 Price per SMS: $<giá>
 Estimate Total: $<giá × Recipients>
 
-Reply YES to confirm and we'll send it right away or let us know if you'd like any changes.
+Please carefully review the content of the Promotion message, and only when you are sure that there are no further changes should you text "OK" to this phone number. Have a nice day.
 ```
 
 - Type Customer: mục có sẵn đã tick theo thứ tự config (không theo thứ tự tick, số đã trim), rồi tới option tự thêm (bỏ option trống).
@@ -394,6 +391,7 @@ Nhóm `SMS` → `Shipping`. Soạn tin nhắn báo tiệm thiết bị đã gử
 |---|---|
 | **Tên merchant** | Ô text, gõ cả cách xưng hô (vd `Ms Terri`). In ra đúng như gõ (đã trim). |
 | **Tracking Number** | Ô text. In ra đúng như gõ (đã trim). |
+| **Estimated Delivery** | Ô chọn ngày (lưu `YYYY-MM-DD`). In ra dạng tiếng Anh Mỹ có thứ, vd `Wednesday, November 4, 2026` (`dateLocale` / `dateFormat` trong config; tính theo UTC nên không lệch ngày theo múi giờ máy). Bản trước chưa có → để trống. |
 
 ### 17.2 Tin nhắn (output)
 
@@ -403,8 +401,11 @@ Dear <Tên merchant>,
 We wanted to inform you that your equipment has been shipped via UPS. Below are the details for your reference:
 
 Tracking Number: <Tracking Number>
+Estimated Delivery: <Estimated Delivery>
 
 Important: Once your equipment arrives, please call us at +1 888-873-7799 at least 24 hours in advance to schedule your setup & training appointment. This allows our technician to prepare and ensures your terminal is ready to use as soon as possible. If you have any questions or need further assistance, please do not hesitate to reach out to us.
+
+Have a good day!
 ```
 
 - Không có dòng Shipment Date.
@@ -415,7 +416,7 @@ Important: Once your equipment arrives, please call us at +1 888-873-7799 at lea
 
 - Ẩn khối Title; có khối Nội dung + `Copy nội dung`. Không có khối Ảnh; Ctrl+V ảnh không làm gì.
 - `Alt+2` = Copy nội dung (§9); `Alt+1` không làm gì vì không có Title.
-- **Copy nội dung** khóa khi tin nhắn rỗng hoặc còn thiếu Tên merchant / Tracking Number. Dòng cảnh báo vàng: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.`
+- **Copy nội dung** khóa khi tin nhắn rỗng hoặc còn thiếu Tên merchant / Tracking Number / Estimated Delivery. Dòng cảnh báo vàng: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.`
 - `+ Lưu template` bị khóa.
 - `Ticket mới`: hỏi xác nhận → xóa form SMS Shipping, không đụng ticket và form SMS Promotion.
 - Form SMS Shipping, SMS Promotion và ticket lưu riêng: chuyển qua lại giữa các nhóm không mất dữ liệu bên nào.

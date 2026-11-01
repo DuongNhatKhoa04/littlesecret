@@ -12,15 +12,15 @@
   // Cố ý khác bản gốc vì config đổi sau này (REQUIREMENTS §14.4). Chỉ ghi đè đúng trường bị ảnh hưởng;
   // nội dung chỉ được NỐI THÊM vào sau bản gốc (appendBody), phần gốc vẫn phải giống hệt.
   // Ngoại lệ duy nhất được ghi đè cả nội dung (body): loại Hỗ trợ merchant (REQUIREMENTS §6, §14.5).
-  const merged = (body) => ({ body, missingAction: false });   // gộp incident + request, Kết luận cũ => mặc định Resolved (không in), không khóa copy
+  const merged = (body) => ({ body, missingAction: false });   // gộp incident + request, Kết luận cũ => mặc định Resolved (không in, ẩn Việc cần làm tiếp), không khóa copy; bỏ Nguyên nhân
   const CHANGED_SINCE_ORIGINAL = {
     'incident đủ mục, Workaround, ý nhiều dòng': merged('Phone: 0901234567\n\nVấn đề:\n- Terminal không kết nối được\n  Từ sáng nay\n\n' +
-      'Đã support:\n- Restart router\n- Đổi dây LAN\n\nNguyên nhân:\n- Router lỗi\n\nViệc cần làm tiếp:\n- Thay router mới\n\nNote:\n- Gọi lại sau 2h'),
+      'Đã support:\n- Restart router\n- Đổi dây LAN\n\nNote:\n- Gọi lại sau 2h'),
     'incident Not resolved bước đầu (Phone + Hiện trạng)': merged('Phone: 123\n\nVấn đề:\n- Máy in không ra giấy\n\nNote:\n- note'),
     'incident Not resolved đã troubleshoot, thiếu đề xuất': merged('Vấn đề:\n- A\n\nĐã support:\n- B'),
-    'incident Resolved, không phone': merged('Vấn đề:\n- Wifi rớt\n\nĐã support:\n- Đổi kênh\n\nNguyên nhân:\n- Nhiễu sóng'),
+    'incident Resolved, không phone': merged('Vấn đề:\n- Wifi rớt\n\nĐã support:\n- Đổi kênh'),
     'request Workaround thiếu hành động đề xuất': merged('Phone: 555\n\nVấn đề:\n- Đổi giá dịch vụ\n\nĐã support:\n- Đã đổi 1 phần'),
-    'request Resolved đủ': merged('Phone: 777\n\nVấn đề:\n- Thêm 2 nhân viên\n\nĐã support:\n- Đã thêm\n\nViệc cần làm tiếp:\n- x\n\nNote:\n- Line 1\n  Line 2'),
+    'request Resolved đủ': merged('Phone: 777\n\nVấn đề:\n- Thêm 2 nhân viên\n\nĐã support:\n- Đã thêm\n\nNote:\n- Line 1\n  Line 2'),
     'setup POS: tick, N/A, thiếu ảnh, Firewall có cha': { missingImgs: 15 },   // 7 mục chưa đụng tới đã chuyển sang không cần ảnh
     'newDb: Pricing có cha, đủ ảnh 1 phần': {
       missingImgs: 5,                                                         // Appointment, Tạo OneDrive đã chuyển sang không cần ảnh

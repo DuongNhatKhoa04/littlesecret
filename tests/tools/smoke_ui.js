@@ -73,18 +73,25 @@
 
     check('Kết luận chỉ có Resolved / Pending - Needs to follow up', $$('input[name="conclusion"]').map(r => r.value).join('|') === 'Resolved|Pending - Needs to follow up');
     type($('textarea[data-key="s2"]'), 'restart');
-    type($('textarea[data-key="s4"]'), 'chạy lại bình thường');
     $$('input[name="conclusion"]').find(r => r.value === 'Resolved').click();
     await settle();
-    check('Resolved: có Kết quả, không in dòng Kết luận, copy được', !$('#copyBody').disabled && $('#warn').hidden &&
-      $('#outBody').textContent.endsWith('Đã support:\n- Restart\n\nKết quả:\n- Chạy lại bình thường'), $('#outBody').textContent);
+    check('Resolved: không có Nguyên nhân / Kết quả, ẩn Việc cần làm tiếp, không in dòng Kết luận, copy được', !$('#copyBody').disabled && $('#warn').hidden &&
+      !$('textarea[data-key="s3"]') && !$('textarea[data-key="s4"]') && $('[data-action-box]').hidden &&
+      $('#outBody').textContent.endsWith('Đã support:\n- Restart'), $('#outBody').textContent);
     $$('input[name="conclusion"]').find(r => r.value === 'Pending - Needs to follow up').click();
     await settle();
-    check('Pending chưa có Việc cần làm tiếp: vẫn copy được, không nhãn Bắt buộc', !$('#copyBody').disabled && $('#warn').hidden &&
-      $('[data-req-badge]').hidden && $('#outBody').textContent.endsWith('Kết quả:\n- Chạy lại bình thường\n\nKết luận: Pending - Needs to follow up'), $('#outBody').textContent);
+    check('Pending: hiện Việc cần làm tiếp, chưa điền vẫn copy được, không nhãn Bắt buộc', !$('#copyBody').disabled && $('#warn').hidden &&
+      !$('[data-action-box]').hidden && $('[data-req-badge]').hidden &&
+      $('#outBody').textContent.endsWith('Đã support:\n- Restart\n\nKết luận: Pending - Needs to follow up'), $('#outBody').textContent);
     type($('textarea[data-key="s5"]'), 'gọi lại check');
     await settle();
     check('Việc cần làm tiếp in sau Kết luận', $('#outBody').textContent.endsWith('Kết luận: Pending - Needs to follow up\n\nViệc cần làm tiếp:\n- Gọi lại check'), $('#outBody').textContent);
+    $$('input[name="conclusion"]').find(r => r.value === 'Resolved').click();
+    await settle();
+    check('đổi lại Resolved: ẩn + không in Việc cần làm tiếp, chữ đã nhập vẫn giữ', $('[data-action-box]').hidden &&
+      $('#outBody').textContent.endsWith('Đã support:\n- Restart') && $('textarea[data-key="s5"]').value === 'Gọi lại check', $('#outBody').textContent);
+    $$('input[name="conclusion"]').find(r => r.value === 'Pending - Needs to follow up').click();
+    await settle();
     const copyClicks = [];   // chỉ kiểm tra phím tắt bấm đúng nút; clipboard thật trong headless trả kết quả theo giờ thật
     ['#copyTitle', '#copyBody'].forEach(id => $(id).addEventListener('click', () => copyClicks.push(id)));
     key(document, { key: '2', altKey: true });
@@ -100,35 +107,26 @@
     subjectInput.name = 'subject';
     const descriptionArea = document.createElement('textarea');
     descriptionArea.name = 'description';
-    const commentInput = document.createElement('input');   // như trang thật: không có name, chỉ có placeholder
-    commentInput.placeholder = 'Enter Required Comment *';
+    const commentInput = document.createElement('input');   // như trang thật: không có name / placeholder, nằm trong khung Checklist
+    const checklistBox = Object.assign(document.createElement('div'), { className: 'checklist' });
+    const commentBox = Object.assign(document.createElement('div'), { className: 'form-input comment' });
+    commentBox.append(commentInput);
+    checklistBox.append(commentBox);
     const uploadButton = document.createElement('button');
     uploadButton.type = 'button';
     uploadButton.append(Object.assign(document.createElement('p'), { className: 'button-text', textContent: 'Upload File(s)' }));
     const fillEvents = [];
     [subjectInput, descriptionArea, commentInput].forEach(node => node.addEventListener('input', () => fillEvents.push(node.name || 'comment')));
     uploadButton.addEventListener('click', () => fillEvents.push('upload'));
-    ticketForm.append(subjectInput, descriptionArea, commentInput, uploadButton);
+    ticketForm.append(subjectInput, descriptionArea, checklistBox, uploadButton);
     document.body.append(ticketForm);
     Object.defineProperty(navigator.clipboard, 'readText', { value: async () => fillPayload, configurable: true });
     const bookmarklet = decodeURIComponent($('#fillBookmarklet').getAttribute('href').slice('javascript:'.length));
     (0, eval)(bookmarklet);
     await wait(300);   // gán value không đổi DOM nên until() không bắt được
-    check('Điền ticket: Title → Subject, Nội dung → Description, done → Required Comment, rồi bấm Upload File(s)',
+    check('Điền ticket: Title → Subject, Nội dung → Description, done → Comment ở Checklist, rồi bấm Upload File(s)',
       subjectInput.value === $('#outTitle').textContent && descriptionArea.value === $('#outBody').textContent && commentInput.value === 'done' &&
       fillEvents.join('|') === 'subject|description|comment|upload', { subject: subjectInput.value, comment: commentInput.value, events: fillEvents });
-    // Trang thật: ô Required Comment chỉ hiện ra sau khi bấm Upload File(s)
-    [subjectInput, descriptionArea, commentInput].forEach(node => { node.value = ''; });
-    fillEvents.length = 0;
-    commentInput.remove();
-    const showComment = () => setTimeout(() => ticketForm.append(commentInput), 400);
-    uploadButton.addEventListener('click', showComment);
-    (0, eval)(bookmarklet);
-    await wait(1200);
-    check('Điền ticket: ô Comment hiện sau khi bấm Upload => bấm trước, đợi rồi điền done',
-      subjectInput.value === $('#outTitle').textContent && commentInput.value === 'done' &&
-      fillEvents.join('|') === 'subject|description|upload|comment', { comment: commentInput.value, events: fillEvents });
-    uploadButton.removeEventListener('click', showComment);
     [subjectInput, descriptionArea, commentInput].forEach(node => { node.value = ''; });
     fillEvents.length = 0;
     uploadButton.remove();
@@ -333,15 +331,17 @@
     check('Shipping: SMS → Shipping, ẩn Title, khóa Lưu template', pressed().join('|') === 'SMS|Shipping' && $('#titleBlock').hidden && $('#tplSave').disabled, pressed());
     type($('#ship_merchant'), 'Ms Terri');
     await settle();
-    check('Shipping thiếu Tracking => cảnh báo + khóa copy', $('#copyBody').disabled && $('#warn').textContent.startsWith('Còn thiếu: Tracking Number.'), $('#warn').textContent);
+    check('Shipping thiếu Tracking + ngày => cảnh báo + khóa copy', $('#copyBody').disabled && $('#warn').textContent.startsWith('Còn thiếu: Tracking Number, Estimated Delivery.'), $('#warn').textContent);
     type($('#ship_tracking'), '1Z96F3E30394641579');
+    check('Shipping: Estimated Delivery là ô chọn ngày', $('#ship_delivery').type === 'date', $('#ship_delivery').type);
+    type($('#ship_delivery'), '2026-11-04');
     await settle();
     check('Shipping: tin nhắn đúng + mở copy', !$('#copyBody').disabled && $('#warn').hidden &&
-      $('#outBody').textContent.startsWith('Dear Ms Terri,\n\nWe wanted to inform you') && $('#outBody').textContent.includes('\n\nTracking Number: 1Z96F3E30394641579\n\nImportant:'),
+      $('#outBody').textContent.startsWith('Dear Ms Terri,\n\nWe wanted to inform you') && $('#outBody').textContent.includes('\n\nTracking Number: 1Z96F3E30394641579\nEstimated Delivery: Wednesday, November 4, 2026\n\nImportant:'),
       $('#outBody').textContent);
     $('#resetBtn').click();
     await settle();
-    check('Shipping: Ticket mới chỉ xóa form Shipping', $('#outBody').textContent === '' && $('#ship_merchant').value === '', $('#outBody').textContent);
+    check('Shipping: Ticket mới chỉ xóa form Shipping', $('#outBody').textContent === '' && $('#ship_merchant').value === '' && $('#ship_delivery').value === '', $('#outBody').textContent);
     clickText('#picker', 'Promotion');
     await settle();
     check('Shipping: form SMS Promotion vẫn giữ', $('#sms_shop').value === 'GIỮ LẠI', $('#sms_shop').value);
