@@ -134,14 +134,17 @@
   test('PDF ảnh: tên file ASCII, nhãn giữ tiếng Việt, giữ nguyên file gốc theo thứ tự', () => {
     const png = { blob: new Blob([], { type: 'image/png' }) };
     const jpg = { blob: new Blob([], { type: 'image/jpeg' }) };
+    const now = new Date(2026, 10, 1, 14, 8);
     const { fileName, report } = D.imageArchive.buildImageReport({
       title: 'ABC - Lỗi in: "bill"?',
-      images: [{ image: png, label: 'Cần setup – Check MID – ảnh 1' }, { image: jpg, label: 'Hiện trạng – ảnh 1' }]
+      images: [{ image: png, label: 'Cần setup – Check MID – ảnh 1' }, { image: jpg, label: 'Hiện trạng – ảnh 1' }],
+      now
     });
-    assertEqual(fileName, 'ABC - Loi in- -bill--.pdf');
+    assertEqual(fileName, 'ABC - Loi in- -bill-- - 110120261408.pdf');
     assertEqual(report.title, 'ABC - Lỗi in: "bill"?');
     assertEqual(report.entries.map(e => e.label), ['Cần setup – Check MID – ảnh 1', 'Hiện trạng – ảnh 1']);
     assert(report.entries[0].blob === png.blob && report.entries[1].blob === jpg.blob, 'giữ nguyên file gốc');
-    assertEqual(D.imageArchive.buildImageReport({ title: '', images: [] }).fileName, 'anh-ticket.pdf');
+    assertEqual(D.imageArchive.buildImageReport({ title: '', images: [], now: new Date(2026, 0, 9, 5, 3) }).fileName,
+      'anh-ticket - 010920260503.pdf');
   });
 })(window.TW);

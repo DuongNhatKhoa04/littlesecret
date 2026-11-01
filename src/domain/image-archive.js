@@ -18,6 +18,12 @@
 
   const extensionOf = (mimeType) => EXTENSIONS[mimeType] || mimeType.split('/')[1] || DEFAULT_EXTENSION;
 
+  const pad2 = (value) => String(value).padStart(2, '0');
+
+  /** MMDDYYYYHHmm theo giờ máy: tải nhiều lần cùng ticket không đè tên file cũ. */
+  const toStamp = (date) => pad2(date.getMonth() + 1) + pad2(date.getDate()) + date.getFullYear()
+    + pad2(date.getHours()) + pad2(date.getMinutes());
+
   /**
    * @param {{ title: string, images: { image: StoredImage, label: string }[] }} input
    * @returns {{ fileName: string, entries: ZipEntry[] }}
@@ -33,12 +39,12 @@
 
   /**
    * Chỉ tên file phải ASCII; nhãn in trên trang PDF giữ nguyên tiếng Việt.
-   * @param {{ title: string, images: { image: StoredImage, label: string }[] }} input
+   * @param {{ title: string, images: { image: StoredImage, label: string }[], now: Date }} input
    * @returns {{ fileName: string, report: ImageReport }}
    */
-  function buildImageReport({ title, images }) {
+  function buildImageReport({ title, images, now }) {
     return {
-      fileName: `${toFileName(title) || FALLBACK_NAME}.pdf`,
+      fileName: `${toFileName(title) || FALLBACK_NAME} - ${toStamp(now)}.pdf`,
       report: { title, entries: images.map(({ image, label }) => ({ label, blob: image.blob })) }
     };
   }

@@ -88,7 +88,7 @@
 
     /** Mọi ảnh đang hiện thành 1 file PDF, mỗi trang 1 ảnh kèm nhãn mục. false = không tạo được. */
     function downloadImageReport() {
-      const { fileName, report } = buildImageReport({ title: compute().title, images: imageList() });
+      const { fileName, report } = buildImageReport({ title: compute().title, images: imageList(), now: new Date() });
       return files.downloadPdf(fileName, report);
     }
 
