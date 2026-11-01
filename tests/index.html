@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ticket Writer — Test</title>
+<style>
+  body { margin: 0; padding: 16px; font: 14px/1.5 system-ui, "Segoe UI", sans-serif; background: #f4f6f8; color: #1b2430; }
+  #summary { font-size: 20px; font-weight: 700; margin: 0 0 12px; }
+  .pass { color: #1f7a4d; }
+  .fail { color: #b3261e; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { white-space: pre-wrap; padding: 4px 0; border-bottom: 1px solid #d9dee5; font-family: ui-monospace, Consolas, monospace; }
+</style>
+</head>
+<body>
+<h1 id="summary">Đang chạy…</h1>
+<ul id="results"></ul>
+
+<script src="catch-errors.js"></script>
+
+<!-- Cùng thứ tự với ../index.html (bỏ infrastructure và ui) -->
+<script src="../src/core/namespace.js"></script>
+<script src="../src/core/registry.js"></script>
+
+<script src="../config/app.js"></script>
+<script src="../config/tickets/incident.js"></script>
+<script src="../config/tickets/transfer.js"></script>
+<script src="../config/setup/catalog.js"></script>
+<script src="../config/setup/pos/abc/new/create-db.js"></script>
+<script src="../config/setup/pos/abc/new/setup.js"></script>
+<script src="../config/setup/terminal/pax/new/setup.js"></script>
+<script src="../config/setup/terminal/valor/new/training.js"></script>
+<script src="../config/setup/terminal/valor/replace/setup.js"></script>
+<script src="../config/sms/promotion.js"></script>
+<script src="../config/sms/shipping.js"></script>
+
+<script src="../src/domain/text.js"></script>
+<script src="../src/domain/title.js"></script>
+<script src="../src/domain/ticket.js"></script>
+<script src="../src/domain/checklist.js"></script>
+<script src="../src/domain/body.js"></script>
+<script src="../src/domain/validation.js"></script>
+<script src="../src/domain/navigation.js"></script>
+<script src="../src/domain/image-slots.js"></script>
+<script src="../src/domain/image-archive.js"></script>
+<script src="../src/domain/template.js"></script>
+<script src="../src/domain/sms.js"></script>
+<script src="../src/domain/sms-message.js"></script>
+<script src="../src/domain/shipping.js"></script>
+<script src="../src/domain/shipping-message.js"></script>
+
+<script src="../src/application/context.js"></script>
+<script src="../src/application/store.js"></script>
+<script src="../src/application/session-repository.js"></script>
+<script src="../src/application/session.js"></script>
+<script src="../src/application/ticket-service.js"></script>
+<script src="../src/application/navigation-service.js"></script>
+<script src="../src/application/view-service.js"></script>
+<script src="../src/application/image-service.js"></script>
+<script src="../src/application/output-service.js"></script>
+<script src="../src/application/category-service.js"></script>
+<script src="../src/application/template-service.js"></script>
+<script src="../src/application/sms-service.js"></script>
+<script src="../src/application/shipping-service.js"></script>
+
+<script src="runner.js"></script>
+<script src="golden-cases.js"></script>
+<script src="golden-expected.js"></script>
+<script src="golden.test.js"></script>
+<script src="domain.test.js"></script>
+<script src="sms.test.js"></script>
+<script src="shipping.test.js"></script>
+<script src="navigation.test.js"></script>
+<script src="config.test.js"></script>
+<script src="application.test.js"></script>
+<script src="run.js"></script>
+</body>
+</html>

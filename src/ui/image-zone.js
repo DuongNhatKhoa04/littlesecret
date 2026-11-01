@@ -1,0 +1,115 @@
+// src/ui/image-zone.js — Gắn ảnh vào 1 mục: nút "+ Thêm ảnh", nút chụp màn hình, ô dán ảnh (Ctrl+V) có thumbnail, kéo thả.
+(function (TW) {
+  'use strict';
+
+  const { $$, el, button, fileInput, flash, acceptImageDrop } = TW.ui.dom;
+
+  const ZONE_HINT = 'Click vào đây rồi Ctrl+V để dán ảnh';
+  const zoneHintWith = (count) => `✓ Đã có ${count} ảnh. Click vào đây rồi Ctrl+V để dán thêm`;
+  const ADD_TITLE = 'Dán ảnh đang copy trong clipboard. Clipboard không có ảnh thì mở chọn file.';
+  const SHOT_TITLE = 'Lần đầu chọn màn hình trong hộp thoại của Chrome; các lần sau bấm là chụp ngay, ảnh tự vào mục này.';
+  const SHOT_FAILED = 'Chưa chụp được màn hình';
+  const SCREENS = {
+    other: { label: 'Chụp màn hình kia', switchTitle: 'Đang chụp màn hình kia. Bấm để đổi sang màn hình đang mở Ticket Writer' },
+    current: { label: 'Chụp màn hình này', switchTitle: 'Đang chụp màn hình đang mở Ticket Writer. Bấm để đổi sang màn hình kia' }
+  };
+  const DEFAULT_SCREEN = 'other';
+
+  function createImageZone({ images, clipboard, screenCapture, openViewer }) {
+    let screen = DEFAULT_SCREEN;   // chung cho mọi mục, chỉ trong phiên: tải lại trang thì về mặc định
+
+    async function addFiles(key, files) {
+      const { failed } = await images.add(key, files);
+      if (failed) alert('Không đọc được một ảnh, đã bỏ qua.');
+    }
+
+    function fillThumbs(container, key) {
+      container.textContent = '';
+      images.list(key).forEach((image, i) => {
+        const thumb = el('div', 'thumb');
+        const img = el('img');
+        img.src = image.src;
+        img.alt = 'Ảnh ' + (i + 1);
+        img.title = 'Bấm để xem ảnh lớn';
+        img.addEventListener('click', () => openViewer(image));
+        thumb.append(img, button('', '×', {
+          title: 'Xóa ảnh', ariaLabel: 'Xóa ảnh ' + (i + 1), skipTab: true, onClick: () => images.remove(key, i)
+        }));
+        container.append(thumb);
+      });
+    }
+
+    function paint(zone) {
+      const key = zone.dataset.imgKey;
+      const count = images.list(key).length;
+      zone.classList.toggle('has', count > 0);
+      zone.querySelector('.pz-hint').textContent = count ? zoneHintWith(count) : ZONE_HINT;
+      fillThumbs(zone.querySelector('.thumbs'), key);
+    }
+
+    /** Ô dán ảnh: click rồi Ctrl+V; ảnh đã dán hiện ngay bên trong. */
+    function zone(key) {
+      const node = el('div', 'pzone');
+      node.tabIndex = -1;   // không nhận Tab: đứng trong ô nhập của mục rồi Ctrl+V cũng vào đúng mục này
+      node.dataset.imgKey = key;
+      node.append(el('div', 'pz-hint', ZONE_HINT), el('div', 'thumbs'));
+      paint(node);
+      return node;
+    }
+
+    /** key = null => vẽ lại mọi ô. */
+    function refresh(key) {
+      $$('.pzone').filter(node => key === null || node.dataset.imgKey === key).forEach(paint);
+    }
+
+    // Đọc ảnh trong clipboard như Ctrl+V; không có ảnh / bị từ chối quyền => mở chọn file.
+    async function pasteFromClipboard(key, input, trigger) {
+      const files = await clipboard.readImages();
+      if (files && files.length) { addFiles(key, files); return; }
+      if (files) flash(trigger, 'Clipboard chưa có ảnh');
+      input.click();
+    }
+
+    /** Trả về [nút, input file ẩn] — phải gắn cả hai vào DOM. */
+    function addButton(key) {
+      const input = fileInput({ accept: 'image/*', multiple: true, onFiles: (files) => addFiles(key, files) });
+      const trigger = button('add', '+ Thêm ảnh (Ctrl+V)', { title: ADD_TITLE, skipTab: true });
+      trigger.addEventListener('click', () => pasteFromClipboard(key, input, trigger));
+      return [trigger, input];
+    }
+
+    function paintShot(group) {
+      const [take, toggle] = group.children;
+      take.textContent = SCREENS[screen].label;
+      take.dataset.label = SCREENS[screen].label;   // flash() trả về đúng chữ của màn hình vừa đổi
+      toggle.title = SCREENS[screen].switchTitle;
+    }
+
+    function switchScreen() {
+      screen = screen === DEFAULT_SCREEN ? 'current' : DEFAULT_SCREEN;
+      $$('.shot').forEach(paintShot);
+    }
+
+    async function takeShot(key, trigger) {
+      const file = await screenCapture.capture(screen);
+      if (file) addFiles(key, [file]);
+      else flash(trigger, SHOT_FAILED);
+    }
+
+    /** Nút chụp màn hình rồi tự thêm ảnh vào mục, kèm nút ⇄ đổi màn hình kia / màn hình này (đổi chung mọi mục). */
+    function shotButton(key) {
+      const group = el('span', 'shot');
+      const take = button('add', '', { title: SHOT_TITLE, skipTab: true });
+      take.addEventListener('click', () => takeShot(key, take));
+      group.append(take, button('add shot-switch', '⇄', { ariaLabel: 'Đổi màn hình chụp', skipTab: true, onClick: switchScreen }));
+      paintShot(group);
+      return group;
+    }
+
+    const acceptDrop = (target, key) => acceptImageDrop(target, (files) => addFiles(key, files));
+
+    return { addFiles, zone, refresh, addButton, shotButton, acceptDrop };
+  }
+
+  TW.ui.imageZone = { createImageZone };
+})(window.TW);

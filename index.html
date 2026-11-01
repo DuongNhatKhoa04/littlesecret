@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ticket Writer</title>
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/layout.css">
+<link rel="stylesheet" href="styles/form.css">
+<link rel="stylesheet" href="styles/checklist.css">
+<link rel="stylesheet" href="styles/output.css">
+<link rel="stylesheet" href="styles/dialog.css">
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Ticket Writer</h1><span class="ver" id="ver"></span>
+    <div class="spacer"></div>
+    <div class="seg" id="modeSeg" role="group" aria-label="Chế độ hiển thị">
+      <button type="button" data-mode="split" class="wide-only" title="Alt+M để đổi chế độ">Chia đôi</button>
+      <button type="button" data-mode="input">Nhập</button>
+      <button type="button" data-mode="output">Kết quả</button>
+    </div>
+    <button type="button" class="ghost" id="tplOpen" title="Tìm và dùng template (Alt+T)">Template</button>
+    <button type="button" class="ghost" id="tplSave" title="Lưu ticket hiện tại làm template, tên = title">+ Lưu template</button>
+    <button type="button" class="ghost wide-only" id="swapBtn" title="Đổi vị trí Nhập / Kết quả (chỉ ở chế độ Chia đôi)">⇄ Đổi bên</button>
+    <button type="button" class="ghost" id="resetBtn">Ticket mới</button>
+  </header>
+
+  <nav class="picker" id="picker" aria-label="Chọn loại ticket"></nav>
+
+  <main id="main">
+    <section class="pane" id="inPane" aria-label="Nhập nội dung"><div class="inner" id="form"></div></section>
+    <section class="pane" id="outPane" aria-label="Kết quả để copy">
+      <div class="inner">
+        <div class="warn" id="warn" hidden></div>
+        <div id="titleBlock">
+          <div class="outhead">
+            <h2>Title</h2><span class="status" id="stTitle"></span>
+            <button type="button" class="copy" id="copyTitle">Copy title (Alt+1)</button>
+          </div>
+          <pre class="out" id="outTitle" data-empty="Nhập loại hoặc tóm tắt để tạo title"></pre>
+        </div>
+
+        <div class="outhead">
+          <h2>Nội dung</h2><span class="status" id="stBody"></span>
+          <button type="button" class="copy" id="copyBody">Copy nội dung (Alt+2)</button>
+        </div>
+        <pre class="out" id="outBody" data-empty="Nội dung ticket sẽ hiện ở đây"></pre>
+
+        <div id="imgPanel" hidden>
+          <div class="outhead">
+            <h2>Ảnh</h2><span class="status" id="imgStatus"></span>
+            <button type="button" class="copy" id="imgZip" title="Tải mọi ảnh dưới đây thành 1 file .zip, tên ảnh theo thứ tự nội dung">Tải tất cả (ZIP)</button>
+            <button type="button" class="copy" id="imgPdf" title="Tải mọi ảnh dưới đây thành 1 file .pdf: mỗi trang 1 ảnh, đầu trang ghi ảnh của mục nào. Ảnh giữ nguyên độ phân giải gốc.">Tải PDF</button>
+          </div>
+          <div id="imgList"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog id="imgDlg" class="viewer" aria-label="Xem ảnh">
+  <div class="dhead">
+    <b id="vCap"></b><span class="spacer"></span><span class="status" id="vCount"></span>
+    <button type="button" class="ghost" id="vClose">Đóng</button>
+  </div>
+  <div class="v-body" id="vBody"><img id="vImg" alt=""></div>
+  <div class="dfoot">
+    <button type="button" class="ghost" id="vPrev">‹ Trước</button>
+    <button type="button" class="ghost" id="vSize">Xem kích thước gốc</button>
+    <button type="button" class="ghost" id="vNext">Sau ›</button>
+    <span class="spacer"></span><span class="status">← → chuyển ảnh · Esc đóng</span>
+  </div>
+</dialog>
+
+<dialog id="tplDlg" aria-label="Template">
+  <div class="dhead">
+    <input class="text" id="tplSearch" type="search" placeholder="Tìm template theo tóm tắt…" autocomplete="off">
+    <button type="button" class="ghost" id="tplClose">Đóng</button>
+  </div>
+  <div class="tlist" id="tplList"></div>
+  <div class="dfoot">
+    <span class="status" id="tplCount"></span>
+    <span class="spacer"></span>
+    <button type="button" class="ghost" id="tplExport">Xuất JSON</button>
+    <label class="ghost" style="cursor:pointer">Nhập JSON<input type="file" id="tplImport" accept="application/json,.json" hidden></label>
+  </div>
+</dialog>
+
+<!-- Thứ tự = thứ tự chạy: core → config → domain → application → infrastructure → ui → main. Thêm file mới thì thêm dòng ở đúng nhóm. -->
+
+<!-- core -->
+<script src="src/core/namespace.js"></script>
+<script src="src/core/registry.js"></script>
+
+<!-- config: cấu hình chung -->
+<script src="config/app.js"></script>
+<!-- config: Viết ticket (thứ tự = thứ tự nút) -->
+<script src="config/tickets/incident.js"></script>
+<script src="config/tickets/transfer.js"></script>
+<!-- config: Setup / Training -->
+<script src="config/setup/catalog.js"></script>
+<script src="config/setup/pos/abc/new/create-db.js"></script>
+<script src="config/setup/pos/abc/new/setup.js"></script>
+<script src="config/setup/terminal/pax/new/setup.js"></script>
+<script src="config/setup/terminal/valor/new/training.js"></script>
+<script src="config/setup/terminal/valor/replace/setup.js"></script>
+<!-- config: SMS (Promotion, Shipping) -->
+<script src="config/sms/promotion.js"></script>
+<script src="config/sms/shipping.js"></script>
+
+<!-- domain -->
+<script src="src/domain/text.js"></script>
+<script src="src/domain/title.js"></script>
+<script src="src/domain/ticket.js"></script>
+<script src="src/domain/checklist.js"></script>
+<script src="src/domain/body.js"></script>
+<script src="src/domain/validation.js"></script>
+<script src="src/domain/navigation.js"></script>
+<script src="src/domain/image-slots.js"></script>
+<script src="src/domain/image-archive.js"></script>
+<script src="src/domain/template.js"></script>
+<script src="src/domain/sms.js"></script>
+<script src="src/domain/sms-message.js"></script>
+<script src="src/domain/shipping.js"></script>
+<script src="src/domain/shipping-message.js"></script>
+
+<!-- application -->
+<script src="src/application/context.js"></script>
+<script src="src/application/store.js"></script>
+<script src="src/application/session-repository.js"></script>
+<script src="src/application/session.js"></script>
+<script src="src/application/ticket-service.js"></script>
+<script src="src/application/navigation-service.js"></script>
+<script src="src/application/view-service.js"></script>
+<script src="src/application/image-service.js"></script>
+<script src="src/application/output-service.js"></script>
+<script src="src/application/category-service.js"></script>
+<script src="src/application/template-service.js"></script>
+<script src="src/application/sms-service.js"></script>
+<script src="src/application/shipping-service.js"></script>
+
+<!-- infrastructure -->
+<script src="src/infrastructure/storage.js"></script>
+<script src="src/infrastructure/clipboard.js"></script>
+<script src="src/infrastructure/screen-capture.js"></script>
+<script src="src/infrastructure/zip.js"></script>
+<script src="src/infrastructure/pdf-image.js"></script>
+<script src="src/infrastructure/pdf.js"></script>
+<script src="src/infrastructure/files.js"></script>
+
+<!-- ui -->
+<script src="src/ui/dom.js"></script>
+<script src="src/ui/category-combo.js"></script>
+<script src="src/ui/idea-list.js"></script>
+<script src="src/ui/image-zone.js"></script>
+<script src="src/ui/checklist-view.js"></script>
+<script src="src/ui/ticket-form.js"></script>
+<script src="src/ui/sms-form.js"></script>
+<script src="src/ui/shipping-form.js"></script>
+<script src="src/ui/picker.js"></script>
+<script src="src/ui/image-panel.js"></script>
+<script src="src/ui/output-view.js"></script>
+<script src="src/ui/image-viewer.js"></script>
+<script src="src/ui/template-dialog.js"></script>
+<script src="src/ui/header.js"></script>
+<script src="src/ui/paste-handler.js"></script>
+
+<!-- composition root: luôn cuối cùng -->
+<script src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+/* styles/dialog.css — Hộp thoại: xem ảnh lớn, danh sách template. */
+dialog { width: min(640px, 92vw); max-height: 80dvh; padding: 0; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius); }
+dialog[open] { display: flex; flex-direction: column; }
+dialog::backdrop { background: rgba(0, 0, 0, .4); }
+.dhead, .dfoot { display: flex; align-items: center; gap: 8px; padding: 12px; }
+.dhead { border-bottom: 1px solid var(--line); }
+.dfoot { border-top: 1px solid var(--line); }
+
+/* Xem ảnh */
+.viewer { width: min(1100px, 96vw); }
+.viewer .dhead b { overflow-wrap: anywhere; }
+.v-body { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: auto; background: var(--bg); }
+.v-body img { max-width: 100%; max-height: 72dvh; object-fit: contain; cursor: zoom-in; }
+.v-body.full { align-items: flex-start; justify-content: flex-start; }
+.v-body.full img { max-width: none; max-height: none; cursor: zoom-out; }
+
+/* Template */
+.tlist { flex: 1; min-height: 120px; overflow: auto; padding: 10px 12px; }
+.titem { display: flex; gap: 6px; margin-bottom: 6px; }
+.pick { flex: 1; min-width: 0; text-align: left; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 10px; cursor: pointer; }
+.pick:hover { border-color: var(--accent); }
+.pick b { display: block; overflow-wrap: anywhere; }
+.pick span { color: var(--muted); font-size: 13px; }
+.del { width: 36px; background: transparent; border: 1px solid var(--line); border-radius: var(--radius); color: var(--muted); cursor: pointer; }
+.del:hover { color: var(--ink); border-color: var(--accent); }
+.empty { color: var(--muted); padding: 8px 2px; }

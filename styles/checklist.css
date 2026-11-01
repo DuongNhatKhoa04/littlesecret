@@ -1,0 +1,25 @@
+/* styles/checklist.css — Khối checklist: nhóm, mục, trạng thái ảnh. */
+.chk { max-height: min(68dvh, 640px); overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 18px; }
+.chk-head { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px; background: var(--panel); border-bottom: 1px solid var(--line); font-weight: 650; }
+.chk-hint { margin: 0; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.chk-group { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 12px; background: var(--bg); border-bottom: 1px solid var(--line); font-size: 13px; font-weight: 650; color: var(--muted); }
+.chk-gna { display: flex; align-items: center; gap: 4px; font-weight: 400; cursor: pointer; }
+.chk-parent { padding: 8px 12px 0; font-weight: 650; border-bottom: 0; }
+
+.ci { padding: 10px 12px; border-bottom: 1px solid var(--line); outline: none; }
+.ci:focus-within { background: var(--accent-soft); }
+.ci.child { padding-left: 28px; }
+.ci.na .ci-text { color: var(--muted); text-decoration: line-through; }
+.ci.dropping { outline: 2px dashed var(--accent); outline-offset: -2px; }
+.ci-row { display: flex; align-items: flex-start; gap: 12px; }
+.ci-done { flex: 1; min-width: 0; display: flex; gap: 8px; cursor: pointer; }
+.ci-na { flex: none; display: flex; gap: 4px; align-items: center; color: var(--muted); font-size: 13px; cursor: pointer; }
+.ci-text a { color: var(--accent); }
+.ci-sub { margin: 4px 0 0 26px; padding-left: 16px; color: var(--muted); font-size: 13px; }
+.ci-warn { margin: 4px 0 0 26px; font-size: 13px; color: var(--warn-ink); }
+.ci-warn a { color: var(--accent); }
+.ci-tools { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 6px 0 0 26px; }
+.ci-state { font-size: 12px; padding: 1px 8px; border-radius: 99px; color: var(--muted); }
+.ci.missing .ci-state { color: var(--warn-ink); background: var(--warn-bg); }
+.ci .pzone { margin-left: 26px; }
+.pzone .thumbs { margin-top: 8px; }

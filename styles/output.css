@@ -1,0 +1,25 @@
+/* styles/output.css — Khu Kết quả: title, nội dung, cảnh báo, khối ảnh. */
+.outhead { display: flex; align-items: center; gap: 10px; margin: 0 0 6px; }
+.outhead h2 { font-size: 14px; margin: 0; font-weight: 650; }
+.status { color: var(--muted); font-size: 12px; }
+.copy {
+  margin-left: auto; background: var(--accent); color: var(--accent-ink);
+  border: 0; border-radius: var(--radius); padding: 6px 14px; cursor: pointer; font-weight: 600;
+}
+.copy:disabled { opacity: .4; cursor: not-allowed; }
+.copy.done { background: var(--ok); color: #fff; }
+.copy + .copy { margin-left: 0; }   /* nhiều nút cạnh nhau (ZIP, PDF): chỉ nút đầu đẩy sang phải */
+.out {
+  margin: 0 0 20px; padding: 12px; background: var(--out-bg); border: 1px solid var(--line);
+  border-radius: var(--radius); white-space: pre-wrap; overflow-wrap: anywhere;
+  font: 14px/1.55 ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace; min-height: 44px;
+}
+.out:empty::before { content: attr(data-empty); color: var(--muted); }
+.warn { background: var(--warn-bg); color: var(--warn-ink); padding: 8px 12px; border-radius: var(--radius); margin: 0 0 12px; font-size: 14px; }
+.warn[hidden] { display: none; }
+
+.icard { display: flex; align-items: center; gap: 10px; padding: 8px; margin: 0 0 8px; background: var(--out-bg); border: 1px solid var(--line); border-radius: var(--radius); }
+.icard img { height: 72px; max-width: 140px; object-fit: cover; border: 1px solid var(--line); border-radius: 6px; flex: none; cursor: zoom-in; }
+.icard .meta { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.icard .tick { color: var(--ok); font-weight: 650; }
+.icard .copy { margin-left: 0; flex: none; }

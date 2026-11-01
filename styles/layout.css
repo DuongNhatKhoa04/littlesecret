@@ -1,0 +1,49 @@
+/* styles/layout.css — Khung trang: header, thanh chọn loại, 2 khu Nhập / Kết quả. */
+.app { display: flex; flex-direction: column; height: 100dvh; }
+
+header {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+  padding: 10px 16px; background: var(--panel); border-bottom: 1px solid var(--line);
+}
+header h1 { font-size: 16px; margin: 0 4px 0 0; font-weight: 650; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.seg button {
+  background: transparent; border: 0; padding: 6px 12px; cursor: pointer;
+  border-right: 1px solid var(--line);
+}
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.ver { color: var(--muted); font-size: 12px; margin-left: -8px; }
+.spacer { flex: 1; }
+.ghost {
+  background: transparent; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 6px 12px; cursor: pointer;
+}
+.ghost:hover { border-color: var(--accent); }
+.ghost:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Thanh chọn theo cấp */
+.picker {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+  padding: 8px 16px; background: var(--panel); border-bottom: 1px solid var(--line);
+}
+.picker-level { display: inline-flex; align-items: center; gap: 6px; }
+.picker-label { color: var(--muted); font-size: 12px; font-weight: 600; }
+.picker-sep { width: 1px; align-self: stretch; background: var(--line); }
+
+main { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; }
+main[data-mode="input"], main[data-mode="output"] { grid-template-columns: 1fr; }
+main[data-mode="input"] #outPane, main[data-mode="output"] #inPane { display: none; }
+.pane { min-height: 0; overflow: auto; padding: 16px; }
+#inPane { border-right: 1px solid var(--line); }
+main[data-mode="input"] #inPane, main[data-mode="output"] #inPane { border-right: 0; }
+main[data-swap="1"] #inPane { order: 2; border-right: 0; border-left: 1px solid var(--line); }
+main[data-swap="1"][data-mode="input"] #inPane, main[data-swap="1"][data-mode="output"] #inPane { border-left: 0; }
+.inner { max-width: 760px; margin: 0 auto; }
+
+@media (max-width: 799px) {
+  .wide-only { display: none; }
+  .pane { padding: 12px; }
+  #inPane { border-right: 0; }
+  .picker-sep { display: none; }
+}
