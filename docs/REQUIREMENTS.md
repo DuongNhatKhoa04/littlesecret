@@ -205,7 +205,7 @@ Việc cần làm tiếp:
   - **Giữ nguyên độ nét**: JPEG nhúng nguyên file gốc; PNG và định dạng khác giữ đủ từng pixel (nén không mất dữ liệu, giữ cả vùng trong suốt). Ảnh không bị thu nhỏ trong file; trang chỉ quyết định cỡ hiển thị, phóng to trong trình xem PDF vẫn nét như ảnh gốc.
   - Ảnh vừa khung trang, không phóng to quá cỡ gốc (1 pixel = 1 point) để ảnh nhỏ không vỡ hạt.
   - Ảnh điện thoại có hướng xoay EXIF hiện đúng chiều như trên trình duyệt.
-  - Tên file như ZIP, thêm ` - ` + ngày giờ tải theo giờ máy dạng `MMDDYYYYHHmm`, đuôi `.pdf`: vd `ABC - Loi in - 110120261448.pdf` (01/11/2026 14:48); title trống → `anh-ticket - 110120261448.pdf`. Title ticket ghi vào thuộc tính Title của file PDF.
+  - Tên file = ngày giờ tải theo giờ máy dạng `MMDD - HHmm` + ` - ` + tên như ZIP, đuôi `.pdf`: vd `1101 - 1448 - ABC - Loi in.pdf` (01/11 lúc 14:48); title trống → `1101 - 1448 - anh - ticket.pdf`. Title ticket ghi vào thuộc tính Title của file PDF.
   - Tải xong nút đổi thành `Đã tải ✓` trong 1.5s; lỗi (vd ảnh không đọc được) → `Không tạo được file PDF`.
 - Bấm thumbnail → xem ảnh lớn: ‹ Trước / Sau › (phím ← →), `Xem kích thước gốc` / `Vừa khung` (hoặc bấm vào ảnh), Esc hoặc bấm nền để đóng.
 
