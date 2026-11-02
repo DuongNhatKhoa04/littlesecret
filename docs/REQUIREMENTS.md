@@ -391,7 +391,7 @@ Nhóm `SMS` → `Shipping`. Soạn tin nhắn báo tiệm thiết bị đã gử
 |---|---|
 | **Tên merchant** | Ô text, gõ cả cách xưng hô (vd `Ms Terri`). In ra đúng như gõ (đã trim). |
 | **Tracking Number** | Ô text. In ra đúng như gõ (đã trim). |
-| **Estimated Delivery** | Ô chọn ngày (lưu `YYYY-MM-DD`). In ra dạng tiếng Anh Mỹ có thứ, vd `Wednesday, November 4, 2026` (`dateLocale` / `dateFormat` trong config; tính theo UTC nên không lệch ngày theo múi giờ máy). Bản trước chưa có → để trống. |
+| **Estimated Delivery** | Ô text, dán nguyên nội dung (vd `November 02 , 9:30 A.M. - 12:30 P.M.`). In ra đúng như gõ (đã trim). Bản trước chưa có → để trống; bản trước lưu ngày dạng `YYYY-MM-DD` thì hiện nguyên chuỗi đó. |
 
 ### 17.2 Tin nhắn (output)
 

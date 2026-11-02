@@ -333,11 +333,11 @@
     await settle();
     check('Shipping thiếu Tracking + ngày => cảnh báo + khóa copy', $('#copyBody').disabled && $('#warn').textContent.startsWith('Còn thiếu: Tracking Number, Estimated Delivery.'), $('#warn').textContent);
     type($('#ship_tracking'), '1Z96F3E30394641579');
-    check('Shipping: Estimated Delivery là ô chọn ngày', $('#ship_delivery').type === 'date', $('#ship_delivery').type);
-    type($('#ship_delivery'), '2026-11-04');
+    check('Shipping: Estimated Delivery là ô text', $('#ship_delivery').type === 'text', $('#ship_delivery').type);
+    type($('#ship_delivery'), 'November 02 , 9:30 A.M. - 12:30 P.M.');
     await settle();
     check('Shipping: tin nhắn đúng + mở copy', !$('#copyBody').disabled && $('#warn').hidden &&
-      $('#outBody').textContent.startsWith('Dear Ms Terri,\n\nWe wanted to inform you') && $('#outBody').textContent.includes('\n\nTracking Number: 1Z96F3E30394641579\nEstimated Delivery: Wednesday, November 4, 2026\n\nImportant:'),
+      $('#outBody').textContent.startsWith('Dear Ms Terri,\n\nWe wanted to inform you') && $('#outBody').textContent.includes('\n\nTracking Number: 1Z96F3E30394641579\nEstimated Delivery: November 02 , 9:30 A.M. - 12:30 P.M.\n\nImportant:'),
       $('#outBody').textContent);
     $('#resetBtn').click();
     await settle();

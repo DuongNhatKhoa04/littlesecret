@@ -1,9 +1,9 @@
-// src/ui/shipping-form.js — Khu Nhập của SMS Shipping: Tên merchant, Tracking Number, Estimated Delivery (chọn ngày).
+// src/ui/shipping-form.js — Khu Nhập của SMS Shipping: Tên merchant, Tracking Number, Estimated Delivery.
 (function (TW) {
   'use strict';
 
   const { el } = TW.ui.dom;
-  const { FIELDS, DATE_FIELDS } = TW.domain.shipping;
+  const { FIELDS } = TW.domain.shipping;
 
   function createShippingForm({ root, context, session, shippingService }) {
     const { labels } = context.shipping;
@@ -11,8 +11,7 @@
     function field(name) {
       const wrap = el('div', 'field');
       const input = el('input', 'text');
-      const type = DATE_FIELDS.includes(name) ? 'date' : 'text';
-      Object.assign(input, { id: 'ship_' + name, type, value: session.shipping()[name], autocomplete: 'off' });
+      Object.assign(input, { id: 'ship_' + name, type: 'text', value: session.shipping()[name], autocomplete: 'off' });
       input.addEventListener('input', () => shippingService.setField(name, input.value));
       const label = el('label', '', labels[name]);
       label.htmlFor = input.id;

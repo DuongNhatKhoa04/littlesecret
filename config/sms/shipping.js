@@ -7,10 +7,6 @@
   setShipping({
     labels: { merchant: 'Tên merchant', tracking: 'Tracking Number', delivery: 'Estimated Delivery' },
 
-    // Ngày Estimated Delivery in ra tin nhắn, vd "Wednesday, November 4, 2026"
-    dateLocale: 'en-US',
-    dateFormat: { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' },
-
     // Từng dòng tin nhắn, '' = dòng trống. {merchant} {tracking} {delivery} lấy từ form.
     lines: [
       'Dear {merchant},',

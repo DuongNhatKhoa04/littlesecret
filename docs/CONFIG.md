@@ -190,8 +190,6 @@ setSms({   // const { setSms } = registry;
 ```js
 setShipping({   // const { setShipping } = registry;
   labels: { merchant: 'Tên merchant', tracking: 'Tracking Number', delivery: 'Estimated Delivery' },
-  dateLocale: 'en-US',
-  dateFormat: { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' },
   lines: ['Dear {merchant},', '', 'We wanted to inform you ...', '', 'Tracking Number: {tracking}', 'Estimated Delivery: {delivery}', '', 'Important: ...']
 });
 ```
@@ -199,8 +197,7 @@ setShipping({   // const { setShipping } = registry;
 | Trường | Ý nghĩa |
 |---|---|
 | `labels` | Nhãn trường trên form, cũng dùng trong cảnh báo "Còn thiếu" |
-| `dateLocale`, `dateFormat` | Cách in ngày `{delivery}` (tham số của `Intl.DateTimeFormat`), mặc định `Wednesday, November 4, 2026` |
-| `lines` | Từng dòng tin nhắn, `''` = dòng trống. `{merchant}`, `{tracking}`, `{delivery}` thay bằng dữ liệu form (đã trim; `{delivery}` đã định dạng ngày) |
+| `lines` | Từng dòng tin nhắn, `''` = dòng trống. `{merchant}`, `{tracking}`, `{delivery}` thay bằng dữ liệu form (đã trim) |
 
 ---
 
