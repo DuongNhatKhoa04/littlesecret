@@ -215,6 +215,6 @@ setShipping({   // const { setShipping } = registry;
 | `langs` | `ENG`, `VIE` |
 | `defaultConclusion` | Kết luận mặc định |
 | `conclusions` | `{ value, hint, requiresAction, showInBody, relaxWhenInitial, hidesAction }` — xem REQUIREMENTS §6.3 |
-| `groups` | Nhóm ở cấp 1: `ticket`, `setup`, `sms` |
+| `groups` | Nhóm ở cấp 1: `ticket`, `setup`, `sms`. `hidden: true` = tạm ẩn nút của nhóm (dữ liệu, checklist giữ nguyên); xóa `hidden` là hiện lại |
 | `smsKinds` | Cấp con của nhóm SMS: `promotion`, `shipping`; mục đầu là mặc định. `id` lưu trong state: không đổi id đang có. Thêm loại SMS mới cần thêm cả config + domain + form (như Shipping), không chỉ 1 dòng ở đây |
 | `labels` | Nhãn các trường chung |

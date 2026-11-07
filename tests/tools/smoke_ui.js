@@ -129,6 +129,15 @@
       fillEvents.join('|') === 'subject|description|comment|upload', { subject: subjectInput.value, comment: commentInput.value, events: fillEvents });
     [subjectInput, descriptionArea, commentInput].forEach(node => { node.value = ''; });
     fillEvents.length = 0;
+    const alertCount = alerts.length;
+    checklistBox.remove();
+    (0, eval)(bookmarklet);
+    await wait(300);
+    check('Điền ticket: trang không có ô Comment => bỏ qua, vẫn điền Subject / Description rồi bấm Upload, không báo',
+      subjectInput.value === $('#outTitle').textContent && fillEvents.join('|') === 'subject|description|upload' && alerts.length === alertCount,
+      { events: fillEvents, alerts: alerts.slice(alertCount) });
+    [subjectInput, descriptionArea].forEach(node => { node.value = ''; });
+    fillEvents.length = 0;
     uploadButton.remove();
     (0, eval)(bookmarklet);
     await wait(300);
@@ -164,7 +173,8 @@
     clickText('#picker', 'Hỗ trợ merchant');
     await settle();
 
-    // Setup
+    // Setup: nút đang tạm ẩn (config/app.js) nhưng vẫn nằm trong DOM nên kịch bản bấm được
+    check('nhóm Setup / Training không hiện', $$('#picker button').find(x => x.textContent === 'Setup / Training').offsetParent === null);
     clickText('#picker', 'Setup / Training');
     await settle();
     const labels = $$('#picker .picker-label').map(x => x.textContent);

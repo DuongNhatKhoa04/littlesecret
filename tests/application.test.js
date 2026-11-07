@@ -6,14 +6,17 @@
   const A = TW.application;
   const context = A.context.createContext(TW.registry);
 
+  const withGroups = (groups) => ({ ...context, app: { ...context.app, groups } });
+  const allGroupsVisible = withGroups(context.app.groups.map(({ hidden, ...group }) => group));
+
   function fakeStorage(initial) {
     const data = { ...initial };
     return { data, read: (key) => key in data ? JSON.parse(JSON.stringify(data[key])) : null, write: (key, value) => { data[key] = value; return true; } };
   }
 
-  function setup(saved) {
+  function setup(saved, ctx = context) {
     const storage = fakeStorage(saved ? { [context.app.storageKey]: saved } : {});
-    const repository = A.sessionRepository.createSessionRepository({ storage, context });
+    const repository = A.sessionRepository.createSessionRepository({ storage, context: ctx });
     const store = A.store.createStore(repository.load());
     const session = A.session.createSession({ context, store });
     return { storage, repository, store, session, ticket: A.ticketService.createTicketService({ context, store }) };
@@ -48,6 +51,12 @@
     assertEqual([session.activeTypeKey(), store.get().mode], ['incident', 'split']);
   });
 
+  test('state đang ở nhóm bị ẩn => mở nhóm mặc định, giữ ticket', () => {
+    const groups = [{ id: 'ticket', label: 'T' }, { id: 'setup', label: 'S', hidden: true }];
+    const { session, store } = setup({ nav: { group: 'setup' }, ticket: { phone: '1' } }, withGroups(groups));
+    assertEqual([store.get().nav.group, session.ticket().phone], ['ticket', '1']);
+  });
+
   test('lưu kèm key loại đang mở để bản cũ vẫn đọc được', () => {
     const { storage, repository, store } = setup(null);
     A.navigationService.createNavigationService({ context, store }).selectGroup('setup');
@@ -77,7 +86,7 @@
   });
 
   test('output: nhánh chưa có checklist => rỗng, không copy được', () => {
-    const { store, session } = setup({ nav: { group: 'setup', setupPath: { device: 'terminal', brand: 'clover', flow: 'replace' } } });
+    const { store, session } = setup({ nav: { group: 'setup', setupPath: { device: 'terminal', brand: 'clover', flow: 'replace' } } }, allGroupsVisible);
     const images = A.imageService.createImageService({ files: {}, onChecklistImage: () => {} });
     const output = A.outputService.createOutputService({ context, session, images }).compute();
     assertEqual([output.title, output.body, output.canCopyBody, store.get().nav.setupPath.model], ['', '', false, 'Clover Flex']);

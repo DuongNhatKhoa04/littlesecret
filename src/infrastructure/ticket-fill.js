@@ -19,13 +19,16 @@
     const found = {
       Subject: document.querySelector(config.subject),
       Description: document.querySelector(config.description),
-      'Comment (Checklist)': document.querySelector(config.comment),
       [config.uploadText]: label ? label.closest('button, [role="button"], a') || label : null
     };
     const missing = Object.keys(found).filter(name => !found[name]);
     // Thiếu ô nào thì không điền gì: tránh điền nửa chừng trên nhầm trang
     if (missing.length) { fail(`Không thấy ${missing.join(', ')}. Mở đúng tab ticket rồi bấm lại.`); return; }
-    [[found.Subject, data.subject], [found.Description, data.description], [found['Comment (Checklist)'], config.commentText]].forEach(([node, value]) => {
+    // Ô Comment chỉ có khi ticket có khung Checklist: không có thì bỏ qua, không báo
+    const comment = document.querySelector(config.comment);
+    const fields = [[found.Subject, data.subject], [found.Description, data.description]];
+    if (comment) fields.push([comment, config.commentText]);
+    fields.forEach(([node, value]) => {
       // Form React giữ giá trị riêng: gán qua setter gốc rồi phát sự kiện thì form mới nhận
       Object.getOwnPropertyDescriptor(Object.getPrototypeOf(node), 'value').set.call(node, value);
       node.dispatchEvent(new Event('input', { bubbles: true }));

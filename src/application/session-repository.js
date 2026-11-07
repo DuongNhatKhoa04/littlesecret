@@ -5,7 +5,7 @@
   const { createEmptyTicket, sanitizeTicket } = TW.domain.ticket;
   const { createEmptySms, sanitizeSms } = TW.domain.sms;
   const { createEmptyShipping, sanitizeShipping } = TW.domain.shipping;
-  const { GROUPS, createNavigation, navigationForType, normalizeSetupPath, normalizeSmsKind, resolveTypeKey } = TW.domain.navigation;
+  const { createNavigation, navigationForType, normalizeSetupPath, normalizeSmsKind, resolveTypeKey } = TW.domain.navigation;
   const MODES = ['split', 'input', 'output'];
 
   /** @param {{ storage: KeyValueStore, context: object }} deps */
@@ -19,7 +19,7 @@
 
     function sanitizeNav(nav, base) {
       return {
-        group: Object.values(GROUPS).includes(nav.group) ? nav.group : base.group,
+        group: app.groups.some(g => g.id === nav.group && !g.hidden) ? nav.group : base.group,   // nhóm đang ẩn => về mặc định
         ticketType: typeof nav.ticketType === 'string' ? nav.ticketType : base.ticketType,
         setupPath: normalizeSetupPath(catalog, nav.setupPath),
         setupType: typeof nav.setupType === 'string' ? nav.setupType : '',

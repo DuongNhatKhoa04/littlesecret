@@ -89,6 +89,7 @@
     options.forEach(option => {
       const node = button('', option.label, { onClick: () => onSelect(option.id) });
       node.setAttribute('aria-pressed', String(option.id === value));
+      node.hidden = !!option.hidden;
       wrap.append(node);
     });
     return wrap;

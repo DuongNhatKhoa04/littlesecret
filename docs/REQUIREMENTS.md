@@ -172,10 +172,10 @@ Việc cần làm tiếp:
   - Nút `Copy để điền` (trên khối Title): copy Title + Nội dung vào clipboard (JSON có đánh dấu của Ticket Writer). Khóa khi Copy title hoặc Copy nội dung đang khóa. Không gửi ảnh.
   - Nút `Cài bookmark "Điền ticket"`: hộp hướng dẫn, có nút `Điền ticket` để kéo lên thanh bookmark (bấm ở Ticket Writer thì không làm gì).
   - Bookmark `Điền ticket` chạy trên tab đang đứng: đọc clipboard (lần đầu Chrome hỏi quyền; bị chặn thì hiện ô để tự dán), rồi:
-    1. Điền Title vào `input[name="subject"]`, Nội dung vào `textarea[name="description"]`, `done` vào ô `Comment *` ở khung Checklist (`.checklist .comment input`; ô không có name, placeholder trống, chữ `Comment *` là label đè lên). Phát sự kiện `input` + `change` để form nhận giá trị.
+    1. Điền Title vào `input[name="subject"]`, Nội dung vào `textarea[name="description"]`, `done` vào ô `Comment *` ở khung Checklist (`.checklist .comment input`; ô không có name, placeholder trống, chữ `Comment *` là label đè lên). Phát sự kiện `input` + `change` để form nhận giá trị. Trang không có ô Comment (ticket không có khung Checklist) → bỏ qua ô này, không báo.
     2. Bấm nút có chữ `Upload File(s)` (`p.button-text`, bấm vào button chứa nó).
     - Selector, chữ `done`, chữ trên nút: `ticketFill` trong `config/app.js`.
-  - Clipboard không phải dữ liệu `Copy để điền` → báo `Clipboard chưa có ticket…`, không điền. Thiếu ô / nút nào trong 4 thứ trên → báo thiếu cái nào, **không điền gì** (tránh điền nửa chừng trên nhầm trang).
+  - Clipboard không phải dữ liệu `Copy để điền` → báo `Clipboard chưa có ticket…`, không điền. Thiếu Subject / Description / nút Upload → báo thiếu cái nào, **không điền gì** (tránh điền nửa chừng trên nhầm trang).
   - Ticket Writer không tự chuyển tab được (trình duyệt cấm trang web điều khiển tab khác): người dùng tự chuyển. Ảnh: dùng `Copy ảnh` từng ảnh rồi Ctrl+V tay.
 
 ## 10. Ảnh
@@ -248,6 +248,8 @@ Việc cần làm tiếp:
 ### 14.2 Chọn loại ticket theo cấp (thay hàng nút phẳng)
 
 **Cấp 1 — Nhóm**: `Viết ticket` | `Setup / Training` | `SMS`.
+
+`Setup / Training` đang **tạm ẩn** (`hidden: true` trong `config/app.js`): không hiện nút; phiên đã lưu ở nhóm này mở lại về `Viết ticket`, chữ đã nhập vẫn giữ. Dùng template loại setup thì vẫn mở checklist.
 
 **SMS** → chọn loại tin nhắn: `Promotion` (mặc định, xem §16) | `Shipping` (xem §17). Nhớ loại đang chọn (`nav.smsKind`); bản trước chưa có thì mở `Promotion`.
 
