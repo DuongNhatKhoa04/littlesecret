@@ -20,6 +20,7 @@
   const ticketService = A.ticketService.createTicketService({ context, store });
   const smsService = A.smsService.createSmsService({ context, store });
   const shippingService = A.shippingService.createShippingService({ store });
+  const reviewService = A.reviewService.createReviewService({ context, store });
   const navigationService = A.navigationService.createNavigationService({ context, store });
   const viewService = A.viewService.createViewService({ store });
   const images = A.imageService.createImageService({ files, onChecklistImage: ticketService.markDoneByImage });
@@ -38,11 +39,15 @@
     ideaList: U.ideaList.createIdeaList({ context, session, ticketService })
   });
   const shippingForm = U.shippingForm.createShippingForm({ root: $('#form'), context, session, shippingService });
-  const activeForm = () => (session.isShipping() ? shippingForm : form);   // 2 form dùng chung khu Nhập
+  const reviewForm = U.reviewForm.createReviewForm({ root: $('#form'), context, session, reviewService });
+  const activeForm = () => {   // 3 form dùng chung khu Nhập
+    if (session.isReview()) return reviewForm;
+    return session.isShipping() ? shippingForm : form;
+  };
   const picker = U.picker.createPicker({ root: $('#picker'), context, session, navigationService });
   const imagePanel = U.imagePanel.createImagePanel({ outputService, images, clipboard, openViewer: viewer.open });
   const output = U.outputView.createOutputView({ context, outputService, clipboard, ticketFill, imagePanel });
-  const header = U.header.createHeader({ context, session, viewService, ticketService, smsService, shippingService, images, onShowOutput: output.render });
+  const header = U.header.createHeader({ context, session, viewService, ticketService, smsService, shippingService, reviewService, images, onShowOutput: output.render });
   const templateDialog = U.templateDialog.createTemplateDialog({ templateService, files });
   U.fillDialog.createFillDialog({ ticketFill });
   U.pasteHandler.installPasteHandler({ outputService, imageZone });

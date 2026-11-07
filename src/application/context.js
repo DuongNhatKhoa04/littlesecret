@@ -10,6 +10,7 @@
       catalog: registry.catalog(),
       sms: registry.sms(),
       shipping: registry.shipping(),
+      review: registry.review(),
       tickets: registry.types('ticket'),
       setups: registry.types('setup'),
       blockKeys: collectBlockKeys(registry.types()),

@@ -9,13 +9,13 @@
   const config = context.sms;
 
   const EXAMPLE = {
-    shop: ' ARIA NAIL BAR ', recipients: '3178', price: '0.02',
+    shop: ' ARIA NAIL BAR ', shopPhone: ' (555) 123-4567 ', recipients: '3178', price: '0.02',
     message: 'This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18',
     customerTypes: { lastVisit: { on: true, values: { days: '365' } }, visitTimes: { on: true, values: { min: '1', max: '10000' } } }
   };
 
   const EXPECTED = [
-    'Hi ARIA NAIL BAR,',
+    'Greeting,',
     '',
     'Please confirm the details below before we send your SMS promotion:',
     '',
@@ -24,7 +24,7 @@
     '- Last Visit <= 365',
     '- Times visit between 1 - 10000',
     'Message:',
-    '"This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18"',
+    '"ARIA NAIL BAR (555) 123-4567 This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout."',
     'Price per SMS: $0.02',
     'Estimate Total: $63.56',
     '',
@@ -51,19 +51,25 @@
       ...EXAMPLE, message: '"Sale 10%"',
       customerTypes: { lastVisit: { on: false, values: { days: '365' } }, visitTimes: { on: true, values: { min: ' 2 ', max: '50' } } }
     });
-    assertEqual(body.includes('Type Customer:\n- Times visit between 2 - 50\nMessage:\n"Sale 10%"\n'), true, body);
+    assertEqual(body.includes('Type Customer:\n- Times visit between 2 - 50\nMessage:\n"ARIA NAIL BAR (555) 123-4567 Sale 10% Reply STOP To Optout."\n'), true, body);
     assertEqual(body.includes('Last Visit'), false);
   });
 
   test('sms: Type Customer All không có ô số, tick là đủ; tiếng Việt in Tất cả', () => {
     const all = { ...EXAMPLE, customerTypes: { all: { on: true } } };
-    assertEqual(build(all).includes('Type Customer:\n- All\nMessage:'), true, build(all));
+    assertEqual(build(all).includes('Type Customer:\n- All customers\nMessage:'), true, build(all));
     assertEqual(build({ ...all, lang: 'vi' }).includes('Nhóm khách:\n- Tất cả\nNội dung tin nhắn:'), true);
     assertEqual(missing(all), []);
   });
 
+  test('sms: Phone tiệm in dạng (555) 123-4567 dù gõ kiểu nào; không đúng dạng thì in như đã gõ', () => {
+    const phoneIn = (shopPhone) => build({ ...EXAMPLE, shop: 'A', message: 'B', shopPhone }).match(/"A (.*) B Reply STOP/)[1];
+    assertEqual(['5551234567', '555-123-4567', '555.123.4567', '(555) 123-4567', '+1 555 123 4567', '15551234567'].map(phoneIn), Array(6).fill('(555) 123-4567'));
+    assertEqual([' 555-1234 ', '555-123-4567 ext 2'].map(phoneIn), ['555-1234', '555-123-4567 ext 2']);
+  });
+
   test('sms: trường còn thiếu', () => {
-    assertEqual(missing({ shop: 'A' }), ['Recipients', 'Type Customer', 'Message']);
+    assertEqual(missing({ shop: 'A' }), ['Phone tiệm', 'Recipients', 'Type Customer', 'Message']);
     const emptyNumber = { ...EXAMPLE, customerTypes: { lastVisit: { on: true, values: { days: ' ' } } } };
     assertEqual(missing(emptyNumber), ['Type Customer']);
   });
@@ -91,9 +97,9 @@
 
   test('sms: tin nhắn tiếng Việt; ngôn ngữ lạ / bản cũ chưa có => tiếng Anh', () => {
     const body = build({ ...EXAMPLE, lang: 'vi' });
-    assertEqual(body.split('\n').slice(0, 3), ['Chào ARIA NAIL BAR,', '', 'Anh/chị vui lòng xác nhận thông tin dưới đây trước khi bên em gửi SMS promotion:']);
+    assertEqual(body.split('\n').slice(0, 3), ['Xin chào,', '', 'Anh/chị vui lòng xác nhận thông tin dưới đây trước khi bên em gửi SMS promotion:']);
     assertEqual(body.includes('Số khách nhận: 3178 khách\nNhóm khách:\n- Lần ghé gần nhất <= 365 ngày\n- Số lần ghé từ 1 - 10000\n' +
-      'Nội dung tin nhắn:\n"This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18"\n' +
+      'Nội dung tin nhắn:\n"ARIA NAIL BAR (555) 123-4567 This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout."\n' +
       'Giá mỗi SMS: $0.02\nTổng chi phí dự kiến: $63.56\n\n'), true, body);
     assertEqual([D.sms.sanitizeSms({ lang: 'fr' }, config).lang, D.sms.sanitizeSms(EXAMPLE, config).lang], ['en', 'en']);
   });
@@ -192,7 +198,7 @@
     assertEqual(output.compute().sms, { body: '', missingFields: [], canCopy: false });
     sms.setField('shop', 'ARIA NAIL BAR');
     assertEqual([pick(output.compute()), output.compute().sms.canCopy, output.compute().sms.missingFields],
-      [before, false, ['Recipients', 'Type Customer', 'Message']]);
+      [before, false, ['Phone tiệm', 'Recipients', 'Type Customer', 'Message']]);
     store.update(state => { state.sms = D.sms.sanitizeSms({ ...EXAMPLE, enabled: true }, config); });
     assertEqual([pick(output.compute()), output.compute().sms], [before, { body: EXPECTED, missingFields: [], canCopy: true }]);
     assertEqual(output.compute().body.includes('ARIA'), false);

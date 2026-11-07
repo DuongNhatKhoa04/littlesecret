@@ -9,6 +9,7 @@
   const { buildImageArchive, buildImageReport } = TW.domain.imageArchive;
   const { buildSmsMessage, missingSmsFields } = TW.domain.smsMessage;
   const { buildShippingMessage, missingShippingFields } = TW.domain.shippingMessage;
+  const { buildReviewMessage, missingReviewFields } = TW.domain.reviewMessage;
   const SMS_IMAGE_KEY = TW.domain.sms.IMAGE_KEY;
 
   const EMPTY = Object.freeze({
@@ -39,8 +40,15 @@
       return messageResult(body, body ? missingShippingFields({ shipping, config }) : []);
     }
 
+    function computeReview() {
+      const review = session.review();
+      const config = context.review;
+      return messageResult(buildReviewMessage({ review, config }), missingReviewFields({ review, config }));
+    }
+
     function compute() {
       if (session.isShipping()) return computeShipping();
+      if (session.isReview()) return computeReview();
       const type = session.activeType();
       if (!type) return EMPTY;
       const ticket = session.ticket();

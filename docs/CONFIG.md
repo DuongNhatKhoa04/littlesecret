@@ -169,9 +169,10 @@ setSms({   // const { setSms } = registry;
     { id: 'lastVisitAtLeast', text: 'Last Visit >= {days}',        values: { days: '90' } },
     { id: 'visitTimes', text: 'Times visit between {min} - {max}', values: { min: '1', max: '10000' } }
   ],
-  labels: { toggle: 'SMS Promotion', language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message', price: 'Price per SMS ($)' },
+  labels: { toggle: 'SMS Promotion', language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', shopPhone: 'Phone tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message', price: 'Price per SMS ($)' },
+  promoText: '{shop} {shopPhone} {message} Reply STOP To Optout.',
   languages: [
-    { id: 'en', label: 'English', lines: { greeting: 'Hi {shop},', /* intro, recipients, customerTypes, message, price, total, outro */ } },
+    { id: 'en', label: 'English', lines: { greeting: 'Greeting,', /* intro, recipients, customerTypes, message, price, total, outro */ } },
     { id: 'vi', label: 'Tiếng Việt', lines: { /* ... */ }, customerTypes: { lastVisit: 'Lần ghé gần nhất <= {days} ngày', /* ... */ } }
   ]
 });
@@ -182,8 +183,9 @@ setSms({   // const { setSms } = registry;
 | `prices` | Giá mỗi SMS được chọn (chuỗi, in nguyên văn sau `$`). Giá đầu là mặc định |
 | `customerTypes` | Lựa chọn Type Customer theo thứ tự hiện + in ra. `{tên}` trong `text` = ô số trên form; `values` = số mặc định (chuỗi). **Thêm lựa chọn = thêm 1 dòng.** `id` lưu trong state: không đổi id đang có |
 | `labels` | Nhãn trường trên form, cũng dùng trong cảnh báo "Còn thiếu". `toggle` = chữ cạnh ô tick mở khối SMS |
+| `promoText` | Mẫu tin khách nhận, in trong ngoặc kép dưới dòng Message, giống nhau ở mọi ngôn ngữ. `{shop}`, `{shopPhone}`, `{message}` thay bằng dữ liệu form |
 | `languages` | Ngôn ngữ tin nhắn, theo thứ tự hiện trên form; ngôn ngữ đầu là mặc định. `id` lưu trong state: không đổi id đang có |
-| `languages[].lines` | Câu chữ từng dòng tin nhắn. `{shop}`, `{recipients}`, `{price}` thay bằng dữ liệu form, `{total}` = giá × Recipients (dòng `total` tự bỏ khi Recipients không phải số) |
+| `languages[].lines` | Câu chữ từng dòng tin nhắn. `{recipients}`, `{price}` thay bằng dữ liệu form, `{total}` = giá × Recipients (dòng `total` tự bỏ khi Recipients không phải số) |
 | `languages[].customerTypes` | Câu Type Customer theo ngôn ngữ, key = `id` của `customerTypes`, cùng chỗ `{tên}`. Thiếu id nào thì in `text` gốc |
 
 ## 4b. SMS Shipping — `config/sms/shipping.js`
@@ -199,6 +201,25 @@ setShipping({   // const { setShipping } = registry;
 |---|---|
 | `labels` | Nhãn trường trên form, cũng dùng trong cảnh báo "Còn thiếu" |
 | `lines` | Từng dòng tin nhắn, `''` = dòng trống. `{merchant}`, `{tracking}`, `{delivery}` thay bằng dữ liệu form (đã trim) |
+
+## 4c. SMS Xin review — `config/sms/review.js`
+
+```js
+setReview({   // const { setReview } = registry;
+  labels: { state: 'Bang', language: 'Ngôn ngữ tin nhắn', branch: 'Chi nhánh', invalidState: 'Bang hợp lệ' },
+  links: { Arlington: 'https://g.page/r/…/review', Atlanta: '…', Houston: '…' },
+  states: [{ code: 'TX', name: 'Texas', branch: 'Arlington' } /* … */],
+  languages: [{ id: 'en', label: 'English', lines: ['Greeting,', '', '… on Google: {link}', '', 'Have a nice day'] } /* … */]
+});
+```
+
+| Trường | Ý nghĩa |
+|---|---|
+| `labels` | Nhãn trên form. `invalidState` dùng trong cảnh báo "Còn thiếu" khi gõ bang không có trong danh sách |
+| `links` | Link Google review của từng chi nhánh, key = `branch`. **Đổi link = sửa 1 dòng ở đây** |
+| `states` | Bang → chi nhánh. Chuyển bang sang chi nhánh khác = sửa `branch`. `branch` phải có trong `links` (test `review.test.js` báo nếu thiếu) |
+| `languages` | Ngôn ngữ tin nhắn, theo thứ tự hiện trên form; ngôn ngữ đầu là mặc định. `id` lưu trong state: không đổi id đang có |
+| `languages[].lines` | Từng dòng tin nhắn, `''` = dòng trống. `{link}` thay bằng link của chi nhánh phụ trách bang |
 
 ---
 
@@ -217,5 +238,5 @@ setShipping({   // const { setShipping } = registry;
 | `defaultConclusion` | Kết luận mặc định |
 | `conclusions` | `{ value, hint, requiresAction, showInBody, relaxWhenInitial, hidesAction }` — xem REQUIREMENTS §6.3 |
 | `groups` | Nhóm ở cấp 1: `ticket`, `setup`, `sms`. `hidden: true` = tạm ẩn nút của nhóm (dữ liệu, checklist giữ nguyên); xóa `hidden` là hiện lại |
-| `smsKinds` | Cấp con của nhóm SMS: `shipping`; mục đầu là mặc định. Không dùng lại id `promotion`: state cũ mang id đó được chuyển sang khối SMS của `Hỗ trợ merchant`. `id` lưu trong state: không đổi id đang có. Thêm loại SMS mới cần thêm cả config + domain + form (như Shipping), không chỉ 1 dòng ở đây |
+| `smsKinds` | Cấp con của nhóm SMS: `shipping`, `review`; mục đầu là mặc định. Không dùng lại id `promotion`: state cũ mang id đó được chuyển sang khối SMS của `Hỗ trợ merchant`. `id` lưu trong state: không đổi id đang có. Thêm loại SMS mới cần thêm cả config + domain + form (như Shipping), không chỉ 1 dòng ở đây |
 | `labels` | Nhãn các trường chung |

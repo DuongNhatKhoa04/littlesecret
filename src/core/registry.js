@@ -11,6 +11,7 @@
   let catalogConfig = null;
   let smsConfig = null;
   let shippingConfig = null;
+  let reviewConfig = null;
 
   function claimItemIds(key, checklist) {
     checklist.groups.forEach(group => group.items.forEach(item => {
@@ -34,12 +35,14 @@
     setCatalog(config) { catalogConfig = config; },
     setSms(config) { smsConfig = config; },
     setShipping(config) { shippingConfig = config; },
+    setReview(config) { reviewConfig = config; },
     addTicket(key, definition) { addType('ticket', key, definition); },
     addSetup(key, definition) { addType('setup', key, definition); },
     app: () => appConfig,
     catalog: () => catalogConfig,
     sms: () => smsConfig,
     shipping: () => shippingConfig,
+    review: () => reviewConfig,
     type: (key) => types.get(key) || types.get(formerKeys.get(key)) || null,
     types: (group) => [...types.values()].filter(type => !group || type.group === group)
   };

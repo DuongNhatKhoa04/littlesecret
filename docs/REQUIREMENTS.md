@@ -222,7 +222,7 @@ Việc cần làm tiếp:
 
 | Key | Nội dung |
 |---|---|
-| `ticketWriter.v1` | Loại đang chọn, chế độ xem, đổi bên, ticket đang nhập (Loại, Tóm tắt, Phone, ngôn ngữ, variant, kết luận, các mục, tick/N/A checklist), form SMS Promotion (trường `sms`, gồm ô tick `enabled`, ngôn ngữ tin nhắn `lang` và option tự thêm `customOptions`; ảnh không lưu), form SMS Shipping (trường `shipping`) |
+| `ticketWriter.v1` | Loại đang chọn, chế độ xem, đổi bên, ticket đang nhập (Loại, Tóm tắt, Phone, ngôn ngữ, variant, kết luận, các mục, tick/N/A checklist), form SMS Promotion (trường `sms`, gồm ô tick `enabled`, ngôn ngữ tin nhắn `lang` và option tự thêm `customOptions`; ảnh không lưu), form SMS Shipping (trường `shipping`), form SMS Xin review (trường `review`: bang `usState`, ngôn ngữ `lang`) |
 | `ticketWriter.templates.v1` | Danh sách template |
 | `ticketWriter.categories.v1` | Loại tự thêm |
 
@@ -251,7 +251,7 @@ Việc cần làm tiếp:
 
 `Setup / Training` đang **tạm ẩn** (`hidden: true` trong `config/app.js`): không hiện nút; phiên đã lưu ở nhóm này mở lại về `Viết ticket`, chữ đã nhập vẫn giữ. Dùng template loại setup thì vẫn mở checklist.
 
-**SMS** → chọn loại tin nhắn: `Shipping` (xem §17). SMS Promotion nằm trong `Hỗ trợ merchant` (xem §16), không còn tab riêng.
+**SMS** → chọn loại tin nhắn: `Shipping` (xem §17) | `Xin review` (xem §18). SMS Promotion nằm trong `Hỗ trợ merchant` (xem §16), không còn tab riêng.
 
 **Viết ticket** → chọn loại: `Hỗ trợ merchant` | `Chuyển CS/MKT`.
 
@@ -347,15 +347,16 @@ Khối tùy chọn ở cuối form `Viết ticket` → `Hỗ trợ merchant` (c�
 |---|---|
 | **Ngôn ngữ tin nhắn** | Chọn 1: `English` (mặc định) / `Tiếng Việt`. Đổi ngôn ngữ chỉ đổi câu chữ tin nhắn, dữ liệu form giữ nguyên. |
 | **Tên tiệm** | Ô text. In ra đúng như gõ (đã trim). |
+| **Phone tiệm** | Ô text (bàn phím số điện thoại trên mobile). Số Mỹ 10 số (có thể có `1` / `+1` đầu) gõ kiểu nào cũng in ra `(555) 123-4567`; không đúng dạng đó thì in như đã gõ (đã trim). Ô nhập giữ nguyên chữ đã gõ. |
 | **Recipients** | Ô text (bàn phím số trên mobile). |
-| **Type Customer** | Chọn nhiều. Mỗi lựa chọn là 1 ô tick kèm ô số sửa được, vd `Last Visit <= [365]`, `Last Visit >= [90]`, `Times visit between [1] - [10000]`; `All` chỉ có ô tick, không có ô số. Danh sách + số mặc định ở `config/sms/promotion.js`. Thêm điều kiện khác bằng `+ Thêm option` (ô text tự gõ, có ×; Enter thêm option mới, Backspace ở ô trống xóa option). Option tự thêm chỉ thuộc promotion đang soạn, không thành lựa chọn cố định. Có ảnh như mục ticket (§10): nút `+ Thêm ảnh (Ctrl+V)`, ô dán ảnh, kéo thả; Ctrl+V ảnh khi đang đứng trong khối Type Customer cũng vào đây. |
+| **Type Customer** | Chọn nhiều. Mỗi lựa chọn là 1 ô tick kèm ô số sửa được, vd `Last Visit <= [365]`, `Last Visit >= [90]`, `Times visit between [1] - [10000]`; `All customers` chỉ có ô tick, không có ô số. Danh sách + số mặc định ở `config/sms/promotion.js`. Thêm điều kiện khác bằng `+ Thêm option` (ô text tự gõ, có ×; Enter thêm option mới, Backspace ở ô trống xóa option). Option tự thêm chỉ thuộc promotion đang soạn, không thành lựa chọn cố định. Có ảnh như mục ticket (§10): nút `+ Thêm ảnh (Ctrl+V)`, ô dán ảnh, kéo thả; Ctrl+V ảnh khi đang đứng trong khối Type Customer cũng vào đây. |
 | **Message** | Ô nhập nhiều dòng. Không tự viết hoa. |
 | **Price per SMS** | Chọn 1 trong `0.02` / `0.04` / `0.06` / `0.08`, mặc định `0.02`. |
 
 ### 16.2 Tin nhắn (output)
 
 ```
-Hi <Tên tiệm>,
+Greeting,
 
 Please confirm the details below before we send your SMS promotion:
 
@@ -364,7 +365,7 @@ Type Customer:
 - <lựa chọn đã tick 1>
 - <lựa chọn đã tick 2>
 Message:
-"<Message>"
+"<Tên tiệm> <Phone tiệm> <Message> Reply STOP To Optout."
 Price per SMS: $<giá>
 Estimate Total: $<giá × Recipients>
 
@@ -372,16 +373,16 @@ Please carefully review the content of the Promotion message, and only when you 
 ```
 
 - Type Customer: mục có sẵn đã tick theo thứ tự config (không theo thứ tự tick, số đã trim), rồi tới option tự thêm (bỏ option trống).
-- Message đã có sẵn cặp ngoặc kép bao ngoài thì không thêm cặp nữa.
-- Chưa nhập gì (Tên tiệm, Recipients, Message trống, chưa tick Type Customer) → tin nhắn rỗng.
+- Dòng trong ngoặc kép là tin khách nhận, ghép theo mẫu `promoText` trong config, giống nhau ở cả 2 ngôn ngữ. Message đã có sẵn cặp ngoặc kép bao ngoài thì bỏ cặp đó, chỉ giữ cặp bao cả dòng.
+- Chưa nhập gì (Tên tiệm, Phone tiệm, Recipients, Message trống, chưa tick Type Customer) → tin nhắn rỗng.
 - **Estimate Total** = Price per SMS × Recipients, 2 số lẻ, có dấu phẩy hàng nghìn (vd `3178` × `0.02` → `$63.56`, `50000` × `0.08` → `$4,000.00`). Recipients gõ `3,178` vẫn tính được. Recipients trống hoặc không phải số nguyên → bỏ dòng này.
-- **Tiếng Việt**: cùng bố cục, câu chữ tiếng Việt (vd `Chào <Tên tiệm>,`, `Số khách nhận: <Recipients> khách`, `Nhóm khách:`, `Lần ghé gần nhất <= 365 ngày`, `Giá mỗi SMS: $<giá>`, `Tổng chi phí dự kiến: $<tổng>`). Option tự thêm in nguyên văn ở cả 2 ngôn ngữ.
+- **Tiếng Việt**: cùng bố cục, câu chữ tiếng Việt (vd `Xin chào,`, `Số khách nhận: <Recipients> khách`, `Nhóm khách:`, `Lần ghé gần nhất <= 365 ngày`, `Giá mỗi SMS: $<giá>`, `Tổng chi phí dự kiến: $<tổng>`). Option tự thêm in nguyên văn ở cả 2 ngôn ngữ.
 - Câu chữ từng dòng của từng ngôn ngữ nằm trong config (`languages[].lines`), sửa không cần đụng `src/`.
 
 ### 16.3 Khu Kết quả & Copy
 
 - Khi tick: khối `SMS Promotion` hiện dưới khối Nội dung, có nút `Copy SMS (Alt+3)` riêng. Title, Nội dung, `Copy title`, `Copy nội dung`, `Copy để điền` giữ nguyên như khi chưa tick.
-- **Copy SMS** khóa khi tin nhắn rỗng hoặc còn thiếu: Tên tiệm, Recipients, Type Customer (chưa tick mục nào và chưa có option tự thêm, hoặc mục đã tick còn ô số trống), Message. Dòng cảnh báo vàng trong khối SMS: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.` SMS thiếu trường không khóa các nút copy của ticket.
+- **Copy SMS** khóa khi tin nhắn rỗng hoặc còn thiếu: Tên tiệm, Phone tiệm, Recipients, Type Customer (chưa tick mục nào và chưa có option tự thêm, hoặc mục đã tick còn ô số trống), Message. Dòng cảnh báo vàng trong khối SMS: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.` SMS thiếu trường không khóa các nút copy của ticket.
 - Khối **Ảnh**: ảnh Type Customer (nhãn `Type Customer`, từ 2 ảnh thì `Type Customer – ảnh n`) hiện sau ảnh ticket khi đang tick, nên cũng nằm trong `Tải tất cả (ZIP)` và `Tải PDF` (§10). Ảnh không ảnh hưởng điều kiện copy.
 - Ctrl+V ảnh khi đứng trong khối Type Customer → vào ảnh Type Customer; không đứng ở ô nào → mục focus gần nhất, không thì mục đầu của ticket.
 - `Ticket mới`: hỏi xác nhận → xóa cả ticket, form SMS (kể cả option tự thêm và ảnh Type Customer) và bỏ tick.
@@ -427,3 +428,44 @@ Have a good day!
 - `+ Lưu template` bị khóa.
 - `Ticket mới`: hỏi xác nhận → xóa form SMS Shipping, không đụng ticket và khối SMS Promotion.
 - Form SMS Shipping và ticket (kể cả khối SMS Promotion) lưu riêng: chuyển qua lại giữa các nhóm không mất dữ liệu bên nào.
+
+
+## 18. SMS Xin review
+
+Nhóm `SMS` → `Xin review`. Soạn tin mời merchant đánh giá trên Google, link theo chi nhánh phụ trách bang của merchant. Không phải loại ticket: không có Title, không lưu template, không có ảnh.
+
+### 18.1 Form
+
+| Trường | Mô tả |
+|---|---|
+| **Bang** | Ô text có gợi ý. Gõ chữ viết tắt của bang (vd `TX`), không phân biệt hoa thường; tên đầy đủ (`Texas`) không nhận. Gợi ý chỉ lọc theo chữ viết tắt bắt đầu bằng phần đã gõ (gõ `t` → `TN`, `TX`; gõ `b` → không có), xếp A→Z, có kèm tên bang để tra. Tìm thấy thì hiện `Chi nhánh: <tên>` ngay dưới ô. |
+| **Ngôn ngữ tin nhắn** | Chọn 1: `English` (mặc định) / `Tiếng Việt`. |
+
+### 18.2 Tin nhắn (output)
+
+```
+Greeting,
+
+Thank you for contacting MAC USA. If you have a moment, we’d appreciate hearing about your experience on Google: <link>
+
+Have a nice day
+```
+
+```
+Xin chào,
+
+Cảm ơn anh/chị đã liên hệ MAC USA. Nếu có thời gian, anh/chị có thể chia sẻ trải nghiệm của mình trên Google tại đây: <link>
+
+Chúc một ngày tốt lành
+```
+
+- `<link>` = link của chi nhánh phụ trách bang đó. Bảng 51 bang (50 bang + DC) → 3 chi nhánh Arlington / Atlanta / Houston, cùng câu mời, nằm trong `config/sms/review.js`, sửa không cần đụng `src/`.
+- Chưa nhập bang hoặc bang không có trong danh sách → tin nhắn rỗng.
+
+### 18.3 Khu Kết quả & Copy
+
+- Ẩn khối Title; có khối Nội dung + `Copy nội dung`. Không có khối Ảnh; Ctrl+V ảnh không làm gì.
+- `Alt+2` = Copy nội dung (§9); `Alt+1` không làm gì vì không có Title.
+- **Copy nội dung** khóa khi tin nhắn rỗng. Gõ bang không có trong danh sách thì có dòng cảnh báo vàng: `Còn thiếu: Bang hợp lệ. Điền đủ rồi mới copy được.`
+- `+ Lưu template` bị khóa.
+- `Ticket mới`: hỏi xác nhận → xóa form SMS Xin review, không đụng ticket và các form SMS khác.

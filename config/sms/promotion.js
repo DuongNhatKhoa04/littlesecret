@@ -13,22 +13,25 @@
       { id: 'lastVisit',  text: 'Last Visit <= {days}',              values: { days: '365' } },
       { id: 'lastVisitAtLeast', text: 'Last Visit >= {days}',        values: { days: '90' } },
       { id: 'visitTimes', text: 'Times visit between {min} - {max}', values: { min: '1', max: '10000' } },
-      { id: 'all',        text: 'All',                               values: {} }
+      { id: 'all',        text: 'All customers',                               values: {} }
     ],
 
     labels: {
-      toggle: 'SMS Promotion', language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message',
+      toggle: 'SMS Promotion', language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', shopPhone: 'Phone tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message',
       price: 'Price per SMS ($)'
     },
 
+    // Tin khách nhận, in trong ngoặc kép dưới dòng Message, giống nhau ở mọi ngôn ngữ. {shop} {shopPhone} {message} lấy từ form.
+    promoText: '{shop} {shopPhone} {message} Reply STOP To Optout.',
+
     // Ngôn ngữ tin nhắn, ngôn ngữ đầu là mặc định. id lưu trong state => không đổi id đang có.
-    // lines: từng dòng của tin nhắn. {shop} {recipients} {price} lấy từ form, {total} = giá × Recipients.
+    // lines: từng dòng của tin nhắn. {recipients} {price} lấy từ form, {total} = giá × Recipients.
     // customerTypes: câu Type Customer theo ngôn ngữ (cùng {tên} như trên); thiếu id nào thì in `text` ở trên.
     languages: [
       {
         id: 'en', label: 'English',
         lines: {
-          greeting: 'Hi {shop},',
+          greeting: 'Greeting,',
           intro: 'Please confirm the details below before we send your SMS promotion:',
           recipients: 'Recipients: {recipients} customers',
           customerTypes: 'Type Customer:',
@@ -41,7 +44,7 @@
       {
         id: 'vi', label: 'Tiếng Việt',
         lines: {
-          greeting: 'Chào {shop},',
+          greeting: 'Xin chào,',
           intro: 'Anh/chị vui lòng xác nhận thông tin dưới đây trước khi bên em gửi SMS promotion:',
           recipients: 'Số khách nhận: {recipients} khách',
           customerTypes: 'Nhóm khách:',

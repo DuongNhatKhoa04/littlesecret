@@ -317,10 +317,11 @@
     check('SMS: khối ở khu Kết quả, sau Nội dung', !!$('#outPane #smsBlock') && !!($('#outBody').compareDocumentPosition($('#smsBlock')) & Node.DOCUMENT_POSITION_FOLLOWING));
     type($('#sms_shop'), 'ARIA NAIL BAR');
     await settle();
-    check('SMS thiếu trường => cảnh báo riêng + khóa Copy SMS, ticket vẫn copy được', $('#copySms').disabled && $('#smsWarn').textContent.startsWith('Còn thiếu: Recipients, Type Customer, Message') &&
+    check('SMS thiếu trường => cảnh báo riêng + khóa Copy SMS, ticket vẫn copy được', $('#copySms').disabled && $('#smsWarn').textContent.startsWith('Còn thiếu: Phone tiệm, Recipients, Type Customer, Message') &&
       $('#warn').hidden && !$('#copyBody').disabled && !$('#copyFill').disabled, $('#smsWarn').textContent);
     key(document, { key: '3', altKey: true });
-    check('Alt+3 khi khóa => báo lý do', String(alerts[alerts.length - 1]).startsWith('Còn thiếu: Recipients'), alerts);
+    check('Alt+3 khi khóa => báo lý do', String(alerts[alerts.length - 1]).startsWith('Còn thiếu: Phone tiệm'), alerts);
+    type($('#sms_shopPhone'), '5551234567');
     type($('#sms_recipients'), '3178');
     $('.sms-type[data-type="lastVisit"] input[type=checkbox]').click();
     $('.sms-type[data-type="visitTimes"] input[type=checkbox]').click();
@@ -332,11 +333,12 @@
     type($('input[data-option="0"]'), 'Birthday in October');
     await settle();
     check('SMS: tin nhắn đúng + option tự thêm + mở copy', !$('#copySms').disabled && $('#outSms').textContent.includes(
-      'Recipients: 3178 customers\nType Customer:\n- Last Visit <= 365\n- Times visit between 1 - 5000\n- Birthday in October\nMessage:\n"Sale 15%"\nPrice per SMS: $0.06\nEstimate Total: $190.68'),
+      'Recipients: 3178 customers\nType Customer:\n- Last Visit <= 365\n- Times visit between 1 - 5000\n- Birthday in October\nMessage:\n"ARIA NAIL BAR (555) 123-4567 Sale 15% Reply STOP To Optout."\nPrice per SMS: $0.06\nEstimate Total: $190.68') &&
+      $('#outSms').textContent.startsWith('Greeting,\n'),
       $('#outSms').textContent);
     $$('input[name="smsLang"]').find(r => r.value === 'vi').click();
     await settle();
-    check('SMS: chọn Tiếng Việt => tin nhắn tiếng Việt', $('#outSms').textContent.startsWith('Chào ARIA NAIL BAR,') &&
+    check('SMS: chọn Tiếng Việt => tin nhắn tiếng Việt', $('#outSms').textContent.startsWith('Xin chào,') &&
       $('#outSms').textContent.includes('Giá mỗi SMS: $0.06\nTổng chi phí dự kiến: $190.68'), $('#outSms').textContent);
     check('SMS: Title + Nội dung ticket không đổi', $('#outTitle').textContent === plainTicket[0] && $('#outBody').textContent === plainTicket[1], $('#outBody').textContent);
     check('SMS: Copy SMS chỉ copy tin nhắn', (await copyAndGet('#copySms')) === $('#outSms').textContent);
@@ -375,6 +377,35 @@
     $('#resetBtn').click();
     await settle();
     check('Shipping: Ticket mới chỉ xóa form Shipping', $('#outBody').textContent === '' && $('#ship_merchant').value === '' && $('#ship_delivery').value === '', $('#outBody').textContent);
+
+    // SMS Xin review
+    clickText('#picker', 'Xin review');
+    await settle();
+    check('Xin review: ẩn Title, khóa Lưu template, chưa nhập thì chưa báo', pressed().join('|') === 'SMS|Xin review' && $('#titleBlock').hidden && $('#tplSave').disabled &&
+      $('#copyBody').disabled && $('#warn').hidden, pressed());
+    const suggested = () => $$('#review_states option').map(x => x.value).join('|');
+    check('Xin review: chưa gõ => gợi ý đủ 51 bang', $$('#review_states option').length === 51);
+    type($('#review_state'), 'b');
+    await settle();
+    check('Xin review: gõ b => không gợi ý theo tên bang', suggested() === '', suggested());
+    type($('#review_state'), 't');
+    await settle();
+    check('Xin review: gõ t => gợi ý TN, TX kèm tên bang', suggested() === 'TN|TX' && $('#review_states option').label === 'Tennessee', suggested());
+    type($('#review_state'), 'ZZ');
+    await settle();
+    check('Xin review: bang sai => cảnh báo + khóa copy', $('#copyBody').disabled && $('#outBody').textContent === '' && $('#warn').textContent.startsWith('Còn thiếu: Bang hợp lệ'), $('#warn').textContent);
+    type($('#review_state'), 'tx');
+    await settle();
+    check('Xin review: TX => link Arlington, hiện chi nhánh, mở copy', !$('#copyBody').disabled && $('#warn').hidden && $('#review_branch').textContent === 'Chi nhánh: Arlington' &&
+      $('#outBody').textContent.startsWith('Greeting,\n\nThank you for contacting MAC USA.') && $('#outBody').textContent.includes('on Google: https://g.page/r/CSNU0_lEme3rEBM/review\n\nHave a nice day'), $('#outBody').textContent);
+    $$('input[name="reviewLang"]').find(r => r.value === 'vi').click();
+    type($('#review_state'), 'LA');
+    await settle();
+    check('Xin review: Tiếng Việt + LA => link Houston', $('#review_branch').textContent === 'Chi nhánh: Houston' &&
+      $('#outBody').textContent.startsWith('Xin chào,\n\nCảm ơn anh/chị đã liên hệ MAC USA.') && $('#outBody').textContent.includes('tại đây: https://g.page/r/CXbRhObNeE8NEBM/review\n\nChúc một ngày tốt lành'), $('#outBody').textContent);
+    $('#resetBtn').click();
+    await settle();
+    check('Xin review: Ticket mới xóa form', $('#outBody').textContent === '' && $('#review_state').value === '' && $('#review_branch').textContent === '', $('#outBody').textContent);
     clickText('#picker', 'Viết ticket');
     await settle();
     check('về Viết ticket: hiện lại Title, mở Lưu template', !$('#titleBlock').hidden && !$('#tplSave').disabled);

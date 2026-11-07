@@ -1,4 +1,4 @@
-// src/ui/sms-form.js — Khối SMS Promotion trong form ticket: ô tick mở khối, Ngôn ngữ tin nhắn, Tên tiệm, Recipients, Type Customer (chọn nhiều, sửa số), Message, Price.
+// src/ui/sms-form.js — Khối SMS Promotion trong form ticket: ô tick mở khối, Ngôn ngữ tin nhắn, Tên tiệm, Phone tiệm, Recipients, Type Customer (chọn nhiều, sửa số), Message, Price.
 (function (TW) {
   'use strict';
 
@@ -134,7 +134,7 @@
       const message = messageInput();
       fields = el('div', 'sms-fields');
       fields.hidden = !session.sms().enabled;
-      fields.append(languageField(), textInput('shop'), textInput('recipients', 'numeric'), customerTypesField(), message, priceField());
+      fields.append(languageField(), textInput('shop'), textInput('shopPhone', 'tel'), textInput('recipients', 'numeric'), customerTypesField(), message, priceField());
       const box = el('div', 'sec sms-box');
       box.append(toggle(), fields);
       // Giữ sẵn ô Message: tới lúc frame chạy, khu Nhập có thể đã đổi sang form khác

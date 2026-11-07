@@ -8,6 +8,8 @@
   const WRAPPING_QUOTES = /^"([\s\S]*)"$/;
   const DIGIT_GROUPING = /[,\s]/g;   // "3,178" vẫn tính được Estimate Total
   const WHOLE_NUMBER = /^\d+$/;
+  const PHONE_PUNCTUATION = /[\s().+-]/g;
+  const US_PHONE = /^1?(\d{3})(\d{3})(\d{4})$/;
   const MONEY_FORMAT = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
 
   const isBlank = (value) => !value.trim();
@@ -24,10 +26,19 @@
     return (cents / 100).toLocaleString('en-US', MONEY_FORMAT);
   }
 
-  /** Dán cả dấu ngoặc kép từ tin mẫu thì bỏ đi, tránh ra ""…"". */
-  const quoteMessage = (message) => `"${message.trim().replace(WRAPPING_QUOTES, '$1')}"`;
+  /** Số Mỹ 10 số (có thể có 1 hoặc +1 đầu), gõ kiểu nào cũng ra (555) 123-4567; không đúng dạng đó thì in như đã gõ. */
+  function formatPhone(phone) {
+    const match = phone.replace(PHONE_PUNCTUATION, '').match(US_PHONE);
+    return match ? `(${match[1]}) ${match[2]}-${match[3]}` : phone.trim();
+  }
 
-  const hasInput = (sms) => !isBlank(sms.shop) || !isBlank(sms.recipients) || !isBlank(sms.message) ||
+  /** Tin khách nhận theo mẫu promoText, bọc ngoặc kép. Message dán cả dấu ngoặc kép từ tin mẫu thì bỏ đi, tránh ngoặc lồng nhau. */
+  function promoMessage(sms, config) {
+    const message = sms.message.trim().replace(WRAPPING_QUOTES, '$1');
+    return `"${fillTemplate(config.promoText, { shop: sms.shop.trim(), shopPhone: formatPhone(sms.shopPhone), message })}"`;
+  }
+
+  const hasInput = (sms) => !isBlank(sms.shop) || !isBlank(sms.shopPhone) || !isBlank(sms.recipients) || !isBlank(sms.message) ||
     Object.values(sms.customerTypes).some(type => type.on) || cleanItems(sms.customOptions).length > 0;
 
   /**
@@ -40,17 +51,17 @@
     const language = findLanguage(sms, config);
     const { lines } = language;
     const total = estimateTotal(sms);
-    const fill = (line) => fillTemplate(line, { shop: sms.shop.trim(), recipients: sms.recipients.trim(), price: sms.price, total });
+    const fill = (line) => fillTemplate(line, { recipients: sms.recipients.trim(), price: sms.price, total });
     const typeText = (type) => (language.customerTypes || {})[type.id] || type.text;
     const customerTypes = [
       ...pickedTypes(sms, config).map(type => fillTemplate(typeText(type), trimValues(sms.customerTypes[type.id].values))),
       ...cleanItems(sms.customOptions)
     ].map(text => '- ' + text);
     const details = [
-      fill(lines.recipients), lines.customerTypes, ...customerTypes, lines.message, quoteMessage(sms.message), fill(lines.price),
+      fill(lines.recipients), lines.customerTypes, ...customerTypes, lines.message, promoMessage(sms, config), fill(lines.price),
       ...(total ? [fill(lines.total)] : [])
     ].join('\n');
-    return [fill(lines.greeting), lines.intro, details, lines.outro].join(BLOCK_GAP);
+    return [lines.greeting, lines.intro, details, lines.outro].join(BLOCK_GAP);
   }
 
   /** Nhãn các trường còn thiếu, theo thứ tự trên form. Type Customer thiếu khi chưa tick / chưa thêm option nào, hoặc mục đã tick còn ô số trống. */
@@ -59,7 +70,7 @@
     const nothingChosen = !picked.length && !cleanItems(sms.customOptions).length;
     const typesMissing = nothingChosen || picked.some(type => Object.values(sms.customerTypes[type.id].values).some(isBlank));
     return [
-      ['shop', isBlank(sms.shop)], ['recipients', isBlank(sms.recipients)],
+      ['shop', isBlank(sms.shop)], ['shopPhone', isBlank(sms.shopPhone)], ['recipients', isBlank(sms.recipients)],
       ['customerTypes', typesMissing], ['message', isBlank(sms.message)]
     ].filter(([, missing]) => missing).map(([field]) => config.labels[field]);
   }

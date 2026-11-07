@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const TEXT_FIELDS = ['shop', 'recipients', 'message'];
+  const TEXT_FIELDS = ['shop', 'shopPhone', 'recipients', 'message'];
   const IMAGE_KEY = 'sms:customerTypes';   // chỗ dán ảnh của Type Customer (ảnh chỉ giữ trong bộ nhớ)
   const PLACEHOLDER = /\{(\w+)\}/g;
 
@@ -22,7 +22,7 @@
   function createEmptySms(config) {
     return {
       enabled: false,   // ô tick mở khối SMS trong ticket
-      lang: config.languages[0].id, shop: '', recipients: '', message: '', price: config.prices[0],
+      lang: config.languages[0].id, shop: '', shopPhone: '', recipients: '', message: '', price: config.prices[0],
       customerTypes: createCustomerTypes(config), customOptions: []
     };
   }

@@ -46,19 +46,19 @@ ticket-writer/
 │  ├─ setup/                   SETUP / TRAINING
 │  │  ├─ catalog.js            danh mục Thiết bị → Hãng → Model, Quy trình (thêm model mới ở đây)
 │  │  └─ <device>/<brand>/<flow>/<checklist>.js
-│  └─ sms/                     promotion.js (giá, Type Customer, câu chữ) · shipping.js (câu chữ tin báo ship thiết bị)
+│  └─ sms/                     promotion.js (giá, Type Customer, câu chữ) · shipping.js (câu chữ tin báo ship thiết bị) · review.js (bang → chi nhánh → link review, câu mời)
 ├─ src/
 │  ├─ core/                    namespace.js (TW) · registry.js (config đăng ký vào) · ports.js (typedef port)
 │  ├─ domain/                  QUY TẮC NGHIỆP VỤ: hàm thuần, không DOM, không storage
 │  │                           text · title · ticket · checklist · body · validation · navigation · image-slots · image-archive · template ·
-│  │                           sms · sms-message · shipping · shipping-message
+│  │                           sms · sms-message · shipping · shipping-message · review · review-message
 │  ├─ application/             USE CASE: store + service, điều phối domain và port
 │  │                           context · store · session · session-repository · ticket/navigation/view/image/
-│  │                           output/category/template/sms/shipping-service
+│  │                           output/category/template/sms/shipping/review-service
 │  ├─ infrastructure/          ADAPTER: storage (localStorage) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
 │  ├─ ui/                      GIAO DIỆN: dom (helper) · picker · ticket-form · category-combo · idea-list ·
 │  │                           checklist-view · image-zone · output-view · image-panel · image-viewer ·
-│  │                           template-dialog · fill-dialog · header · paste-handler · sms-form · shipping-form
+│  │                           template-dialog · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form
 │  └─ main.js                  COMPOSITION ROOT: tạo adapter, inject vào service, gắn UI
 ├─ tests/                      xem tests/README.md
 │  ├─ index.html               double-click để chạy test
