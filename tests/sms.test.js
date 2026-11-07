@@ -1,4 +1,4 @@
-// tests/sms.test.js — SMS Promotion: ghép tin nhắn, trường còn thiếu, đọc/lưu state, Kết quả không có title.
+// tests/sms.test.js — SMS Promotion: ghép tin nhắn, trường còn thiếu, đọc/lưu state, khối SMS trong Hỗ trợ merchant không đụng kết quả ticket.
 (function (TW) {
   'use strict';
 
@@ -55,6 +55,13 @@
     assertEqual(body.includes('Last Visit'), false);
   });
 
+  test('sms: Type Customer All không có ô số, tick là đủ; tiếng Việt in Tất cả', () => {
+    const all = { ...EXAMPLE, customerTypes: { all: { on: true } } };
+    assertEqual(build(all).includes('Type Customer:\n- All\nMessage:'), true, build(all));
+    assertEqual(build({ ...all, lang: 'vi' }).includes('Nhóm khách:\n- Tất cả\nNội dung tin nhắn:'), true);
+    assertEqual(missing(all), []);
+  });
+
   test('sms: trường còn thiếu', () => {
     assertEqual(missing({ shop: 'A' }), ['Recipients', 'Type Customer', 'Message']);
     const emptyNumber = { ...EXAMPLE, customerTypes: { lastVisit: { on: true, values: { days: ' ' } } } };
@@ -64,7 +71,7 @@
   test('sms: sanitize bỏ dữ liệu hỏng, số thiếu lấy mặc định', () => {
     const sms = D.sms.sanitizeSms({ shop: 1, customerTypes: { lastVisit: { on: 'yes', values: { days: 30 } }, old: { on: true } } }, config);
     assertEqual([sms.shop, sms.customerTypes.lastVisit, Object.keys(sms.customerTypes)],
-      ['', { on: false, values: { days: '365' } }, ['lastVisit', 'lastVisitAtLeast', 'visitTimes']]);
+      ['', { on: false, values: { days: '365' } }, ['lastVisit', 'lastVisitAtLeast', 'visitTimes', 'all']]);
   });
 
   test('sms: option tự thêm in sau mục có sẵn, bỏ option trống; chỉ có option tự thêm vẫn đủ Type Customer', () => {
@@ -108,7 +115,7 @@
   }
 
   test('sms: thêm / sửa / xóa option tự thêm, focus đúng ô', () => {
-    const { store, session, sms } = setup({ nav: { group: 'sms' } });
+    const { store, session, sms } = setup(null);
     const changes = [];
     store.subscribe(change => changes.push(change));
     sms.insertOption(0);
@@ -120,14 +127,16 @@
     assertEqual([changes[0].focus, changes[4].focus], [{ key: 'smsOption', index: 0 }, { key: 'smsOption', index: 0 }]);
   });
 
-  test('sms: ảnh Type Customer hiện ở khối Ảnh, Ctrl+V không đứng ở mục nào thì vào Type Customer', () => {
-    const { session } = setup({ nav: { group: 'sms' } });
+  test('sms: ảnh Type Customer chỉ hiện khi bật khối SMS, nằm sau ảnh ticket; Ctrl+V ngoài các mục vẫn vào mục ticket đầu', () => {
+    const { session, sms } = setup(null);
     const key = D.sms.IMAGE_KEY;
-    const stored = { [key]: [{ src: 'data:', copied: false }], s1: [{ src: 'data:', copied: false }] };   // ảnh ticket không được hiện
+    const stored = { [key]: [{ src: 'data:', copied: false }], s1: [{ src: 'data:', copied: false }] };
     const images = { list: (k) => stored[k] || [], counts: () => ({}) };
     const output = A.outputService.createOutputService({ context, session, images });
-    assertEqual(output.imageList().map(x => x.label), ['Type Customer']);
-    assertEqual([output.pasteTarget('s1'), output.pasteTarget(key)], [key, key]);
+    assertEqual([output.imageList().map(x => x.label), output.pasteTarget(key)], [['Vấn đề'], 's1']);
+    sms.setEnabled(true);
+    assertEqual(output.imageList().map(x => x.label), ['Vấn đề', 'Type Customer']);
+    assertEqual([output.pasteTarget(key), output.pasteTarget(null)], [key, 's1']);
   });
 
   test('sms: state bản trước (chưa có sms) => form SMS mặc định, ticket giữ nguyên', () => {
@@ -135,9 +144,20 @@
     assertEqual([session.sms().shop, session.sms().price, session.sms().lang, session.ticket().summary], ['', '0.02', 'en', 'cũ']);
   });
 
-  test('sms: sửa form, lưu và đọc lại; không phải loại ticket nên type rỗng', () => {
+  test('sms: state bản trước đang ở tab Promotion => mở Hỗ trợ merchant, bật khối SMS, giữ dữ liệu', () => {
+    const { session, store } = setup({ nav: { group: 'sms', smsKind: 'promotion', ticketType: 'transfer' }, ticket: { summary: 'cũ' }, sms: { shop: 'ARIA' } });
+    assertEqual([store.get().nav.group, session.activeTypeKey(), session.smsActive(), session.sms().shop, session.ticket().summary],
+      ['ticket', 'incident', true, 'ARIA', 'cũ']);
+  });
+
+  test('sms: state bản trước không ở tab Promotion => giữ dữ liệu SMS, khối SMS tắt', () => {
+    const { session } = setup({ nav: { group: 'ticket' }, sms: { shop: 'ARIA' } });
+    assertEqual([session.smsActive(), session.sms().shop], [false, 'ARIA']);
+  });
+
+  test('sms: sửa form, lưu và đọc lại', () => {
     const { storage, repository, store, sms } = setup(null);
-    A.navigationService.createNavigationService({ context, store }).selectGroup('sms');
+    sms.setEnabled(true);
     sms.setField('shop', 'ARIA');
     sms.setField('price', '0.06');
     sms.setField('lang', 'vi');
@@ -145,20 +165,37 @@
     sms.setCustomerValue('visitTimes', 'max', '500');
     repository.save(store.get());
     const saved = storage.data[context.app.storageKey];
-    assertEqual([saved.type, saved.nav.group, saved.sms.shop, saved.sms.price, saved.sms.lang, saved.sms.customerTypes.visitTimes],
-      ['', 'sms', 'ARIA', '0.06', 'vi', { on: true, values: { min: '1', max: '500' } }]);
-    assertEqual(setup(saved).session.sms().customerTypes.visitTimes.values.max, '500');
+    assertEqual([saved.type, saved.nav.group, saved.sms.enabled, saved.sms.shop, saved.sms.price, saved.sms.lang, saved.sms.customerTypes.visitTimes],
+      ['incident', 'ticket', true, 'ARIA', '0.06', 'vi', { on: true, values: { min: '1', max: '500' } }]);
+    const reopened = setup(saved).session;
+    assertEqual([reopened.smsActive(), reopened.sms().customerTypes.visitTimes.values.max], [true, '500']);
   });
 
-  test('sms: Kết quả ẩn title, khóa copy tới khi đủ trường; reset về mặc định', () => {
-    const { store, output, sms } = setup({ nav: { group: 'sms' }, ticket: { summary: 'không hiện' } });
-    assertEqual(output.compute().body, '');
+  test('sms: chưa tick => không có kết quả SMS dù đã có dữ liệu', () => {
+    const { output } = setup({ sms: EXAMPLE });
+    assertEqual(output.compute().sms, null);
+  });
+
+  test('sms: khối SMS chỉ có ở Hỗ trợ merchant', () => {
+    const { store, session, output, sms } = setup(null);
+    sms.setEnabled(true);
+    assertEqual([session.smsActive(), output.compute().sms === null], [true, false]);
+    A.navigationService.createNavigationService({ context, store }).selectTicketType('transfer');
+    assertEqual([session.smsActive(), output.compute().sms], [false, null]);
+  });
+
+  test('sms: bật khối SMS không đổi title, nội dung, điều kiện copy của ticket; SMS khóa copy tới khi đủ trường', () => {
+    const { store, output, sms } = setup({ ticket: { summary: 'đổi giá', phone: '0901', blocks: { s1: ['Đổi giá'], s2: ['Đã đổi'] } } });
+    const pick = ({ title, body, canCopyTitle, canCopyBody, missingFields, showTitle }) => ({ title, body, canCopyTitle, canCopyBody, missingFields, showTitle });
+    const before = pick(output.compute());
+    sms.setEnabled(true);
+    assertEqual(output.compute().sms, { body: '', missingFields: [], canCopy: false });
     sms.setField('shop', 'ARIA NAIL BAR');
-    const partial = output.compute();
-    assertEqual([partial.showTitle, partial.title, partial.canCopyTitle, partial.canCopyBody, partial.missingFields],
-      [false, '', false, false, ['Recipients', 'Type Customer', 'Message']]);
-    store.update(state => { state.sms = D.sms.sanitizeSms(EXAMPLE, config); });
-    assertEqual([output.compute().body, output.compute().canCopyBody], [EXPECTED, true]);
+    assertEqual([pick(output.compute()), output.compute().sms.canCopy, output.compute().sms.missingFields],
+      [before, false, ['Recipients', 'Type Customer', 'Message']]);
+    store.update(state => { state.sms = D.sms.sanitizeSms({ ...EXAMPLE, enabled: true }, config); });
+    assertEqual([pick(output.compute()), output.compute().sms], [before, { body: EXPECTED, missingFields: [], canCopy: true }]);
+    assertEqual(output.compute().body.includes('ARIA'), false);
     sms.reset();
     assertEqual(store.get().sms, D.sms.createEmptySms(config));
   });

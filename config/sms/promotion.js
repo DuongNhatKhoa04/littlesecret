@@ -12,11 +12,12 @@
     customerTypes: [
       { id: 'lastVisit',  text: 'Last Visit <= {days}',              values: { days: '365' } },
       { id: 'lastVisitAtLeast', text: 'Last Visit >= {days}',        values: { days: '90' } },
-      { id: 'visitTimes', text: 'Times visit between {min} - {max}', values: { min: '1', max: '10000' } }
+      { id: 'visitTimes', text: 'Times visit between {min} - {max}', values: { min: '1', max: '10000' } },
+      { id: 'all',        text: 'All',                               values: {} }
     ],
 
     labels: {
-      language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message',
+      toggle: 'SMS Promotion', language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message',
       price: 'Price per SMS ($)'
     },
 
@@ -52,7 +53,8 @@
         customerTypes: {
           lastVisit: 'Lần ghé gần nhất <= {days} ngày',
           lastVisitAtLeast: 'Lần ghé gần nhất >= {days} ngày',
-          visitTimes: 'Số lần ghé từ {min} - {max}'
+          visitTimes: 'Số lần ghé từ {min} - {max}',
+          all: 'Tất cả'
         }
       }
     ]

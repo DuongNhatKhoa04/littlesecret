@@ -5,8 +5,11 @@
   const { createEmptyTicket, sanitizeTicket } = TW.domain.ticket;
   const { createEmptySms, sanitizeSms } = TW.domain.sms;
   const { createEmptyShipping, sanitizeShipping } = TW.domain.shipping;
-  const { createNavigation, navigationForType, normalizeSetupPath, normalizeSmsKind, resolveTypeKey } = TW.domain.navigation;
+  const { GROUPS, SMS_KINDS, createNavigation, navigationForType, normalizeSetupPath, normalizeSmsKind, resolveTypeKey } = TW.domain.navigation;
   const MODES = ['split', 'input', 'output'];
+
+  /** Bản trước có tab SMS Promotion riêng: nhóm SMS mà không phải Shipping nghĩa là đang ở tab đó. */
+  const wasOnPromotion = (raw) => !!raw.nav && raw.nav.group === GROUPS.sms && raw.nav.smsKind !== SMS_KINDS.shipping;
 
   /** @param {{ storage: KeyValueStore, context: object }} deps */
   function createSessionRepository({ storage, context }) {
@@ -23,7 +26,7 @@
         ticketType: typeof nav.ticketType === 'string' ? nav.ticketType : base.ticketType,
         setupPath: normalizeSetupPath(catalog, nav.setupPath),
         setupType: typeof nav.setupType === 'string' ? nav.setupType : '',
-        smsKind: normalizeSmsKind(app.smsKinds, nav.smsKind)   // bản trước chưa có => Promotion
+        smsKind: normalizeSmsKind(app.smsKinds, nav.smsKind)
       };
     }
 
@@ -43,6 +46,10 @@
       const source = raw.ticket || (raw.data && raw.data[raw.type]);   // bản rất cũ lưu riêng từng loại
       if (source) state.ticket = sanitizeTicket(source, { app, blockKeys });
       state.sms = sanitizeSms(raw.sms, context.sms);   // bản trước chưa có sms => mặc định
+      if (wasOnPromotion(raw)) {
+        state.nav = { ...state.nav, group: GROUPS.ticket, ticketType: context.tickets.find(type => type.smsPromotion).key };
+        state.sms.enabled = true;
+      }
       state.shipping = sanitizeShipping(raw.shipping);
       return state;
     }

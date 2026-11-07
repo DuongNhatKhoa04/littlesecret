@@ -3,7 +3,7 @@
   'use strict';
 
   const GROUPS = Object.freeze({ ticket: 'ticket', setup: 'setup', sms: 'sms' });
-  const SMS_KINDS = Object.freeze({ promotion: 'promotion', shipping: 'shipping' });   // cấp con của nhóm SMS, nhãn ở config/app.js
+  const SMS_KINDS = Object.freeze({ shipping: 'shipping' });   // cấp con của nhóm SMS, nhãn ở config/app.js
 
   const byIdOrFirst = (list, id) => list.find(x => x.id === id) || list[0];
 

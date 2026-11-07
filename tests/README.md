@@ -22,7 +22,7 @@ Double-click `tests/index.html`. Dòng đầu hiện `PASS x/x` (xanh) hoặc `F
 | `domain.test.js`, `navigation.test.js` | Quy tắc nghiệp vụ. |
 | `config.test.js` | Config hợp lệ: key loại cũ còn đủ, meta khớp catalog, id mục duy nhất. |
 | `application.test.js` | Đọc state bản cũ, lưu state, thao tác sửa ticket (storage giả). |
-| `sms.test.js` | SMS Promotion: tin nhắn đúng mẫu, trường còn thiếu, đọc/lưu state, Kết quả không có title. |
+| `sms.test.js` | SMS Promotion: tin nhắn đúng mẫu, trường còn thiếu, đọc/lưu state, khối SMS trong Hỗ trợ merchant không đụng kết quả ticket. |
 | `shipping.test.js` | SMS Shipping: tin nhắn đúng mẫu, trường còn thiếu, đọc/lưu state, Kết quả không có title. |
 
 ## Thêm test

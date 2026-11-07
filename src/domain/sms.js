@@ -21,6 +21,7 @@
 
   function createEmptySms(config) {
     return {
+      enabled: false,   // ô tick mở khối SMS trong ticket
       lang: config.languages[0].id, shop: '', recipients: '', message: '', price: config.prices[0],
       customerTypes: createCustomerTypes(config), customOptions: []
     };
@@ -45,6 +46,7 @@
   function sanitizeSms(raw, config) {
     const sms = createEmptySms(config);
     if (!raw || typeof raw !== 'object') return sms;
+    sms.enabled = raw.enabled === true;
     TEXT_FIELDS.forEach(field => { if (typeof raw[field] === 'string') sms[field] = raw[field]; });
     if (config.prices.includes(raw.price)) sms.price = raw.price;
     if (config.languages.some(language => language.id === raw.lang)) sms.lang = raw.lang;

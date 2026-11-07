@@ -35,10 +35,9 @@
       },
       remove(key, index) { (images[key] || []).splice(index, 1); notify(key); },
       markCopied(image) { image.copied = true; notify(null); },
-      /** key = chỉ xóa ảnh của mục đó (vd Ticket mới ở SMS Promotion); không truyền = xóa hết. */
-      clear(key) {
-        if (key) delete images[key]; else images = {};
-        notify(key || null);
+      clear() {
+        images = {};
+        notify(null);
       },
       /** listener(key): key = mục vừa đổi, null = nhiều mục */
       subscribe(listener) { listeners.add(listener); return () => listeners.delete(listener); }

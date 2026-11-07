@@ -1,9 +1,8 @@
-// src/ui/header.js — Header: version, chế độ xem (Alt+M), đổi bên, Ticket mới (ở nhóm SMS: chỉ xóa form SMS đang mở).
+// src/ui/header.js — Header: version, chế độ xem (Alt+M), đổi bên, Ticket mới (ở SMS Shipping: chỉ xóa form Shipping).
 (function (TW) {
   'use strict';
 
   const { $, $$ } = TW.ui.dom;
-  const SMS_IMAGE_KEY = TW.domain.sms.IMAGE_KEY;
   const NARROW_QUERY = '(max-width: 799px)';
 
   function createHeader({ context, session, viewService, ticketService, smsService, shippingService, images, onShowOutput }) {
@@ -20,18 +19,13 @@
     }
 
     function reset() {
-      if (session.isPromotion()) {
-        if (!confirm('Xóa toàn bộ nội dung SMS?')) return;
-        images.clear(SMS_IMAGE_KEY);
-        smsService.reset();
-        return;
-      }
       if (session.isShipping()) {
         if (confirm('Xóa toàn bộ nội dung SMS Shipping?')) shippingService.reset();
         return;
       }
       if (!confirm('Xóa toàn bộ nội dung ticket?')) return;
       images.clear();
+      smsService.reset();
       ticketService.reset();
     }
 

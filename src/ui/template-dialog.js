@@ -69,7 +69,7 @@
         (result.newCategories ? `, thêm ${result.newCategories} loại mới.` : '.'));
     }
 
-    /** Gọi khi đổi loại: không có loại ticket để lưu (SMS Promotion, nhánh setup chưa có checklist) thì khóa nút. */
+    /** Gọi khi đổi loại: không có loại ticket để lưu (nhóm SMS, nhánh setup chưa có checklist) thì khóa nút. */
     function render() { $('#tplSave').disabled = !templateService.canSave(); }
 
     $('#tplOpen').addEventListener('click', open);

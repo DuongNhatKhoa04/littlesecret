@@ -7,6 +7,7 @@
   addTicket('incident', {
     label: 'Hỗ trợ merchant', tag: 'Incident',
     formerKeys: ['request'],   // loại "Xử lý yêu cầu" đã gộp vào đây: state / template cũ của nó mở bằng loại này
+    smsPromotion: true,        // có khối tùy chọn SMS Promotion ở cuối form
     sections: [
       { key: 's1', label: 'Vấn đề',            ph: 'Merchant cần support gì: lỗi gì / yêu cầu gì, từ khi nào…' },
       { key: 's2', label: 'Đã support',        ph: 'Đã kiểm tra / làm những gì…' },

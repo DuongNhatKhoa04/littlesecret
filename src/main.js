@@ -31,17 +31,14 @@
   const viewer = U.imageViewer.createImageViewer({ outputService });
   const imageZone = U.imageZone.createImageZone({ images, clipboard, screenCapture, openViewer: viewer.open });
   const checklistView = U.checklistView.createChecklistView({ session, ticketService, images, imageZone });
+  const smsForm = U.smsForm.createSmsForm({ context, session, smsService, imageZone });
   const form = U.ticketForm.createTicketForm({
-    root: $('#form'), context, session, ticketService, imageZone, checklistView,
+    root: $('#form'), context, session, ticketService, imageZone, checklistView, smsForm,
     categoryCombo: U.categoryCombo.createCategoryCombo({ context, session, ticketService, categories }),
     ideaList: U.ideaList.createIdeaList({ context, session, ticketService })
   });
-  const smsForm = U.smsForm.createSmsForm({ root: $('#form'), context, session, smsService, imageZone });
   const shippingForm = U.shippingForm.createShippingForm({ root: $('#form'), context, session, shippingService });
-  const activeForm = () => {   // 3 form dùng chung khu Nhập
-    if (session.isPromotion()) return smsForm;
-    return session.isShipping() ? shippingForm : form;
-  };
+  const activeForm = () => (session.isShipping() ? shippingForm : form);   // 2 form dùng chung khu Nhập
   const picker = U.picker.createPicker({ root: $('#picker'), context, session, navigationService });
   const imagePanel = U.imagePanel.createImagePanel({ outputService, images, clipboard, openViewer: viewer.open });
   const output = U.outputView.createOutputView({ context, outputService, clipboard, ticketFill, imagePanel });

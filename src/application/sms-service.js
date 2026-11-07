@@ -15,6 +15,7 @@
         if (!EDITABLE_FIELDS.includes(field)) throw new Error(`Không sửa được trường "${field}"`);
         edit(sms => { sms[field] = value; });
       },
+      setEnabled(on) { edit(sms => { sms.enabled = on; }); },
       setCustomerType(id, on) { edit(sms => { sms.customerTypes[id].on = on; }); },
       setCustomerValue(id, name, value) { edit(sms => { sms.customerTypes[id].values[name] = value; }); },
 

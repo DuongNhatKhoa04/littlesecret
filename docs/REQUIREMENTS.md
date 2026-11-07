@@ -58,7 +58,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 | Key | Nhãn nút | Các mục (theo thứ tự) |
 |---|---|---|
-| `incident` | Hỗ trợ merchant | Vấn đề (`s1`) · Đã support (`s2`) · **Kết luận** · Việc cần làm tiếp (`s5`, chỉ hiện khi Pending) · Note (`s6`) |
+| `incident` | Hỗ trợ merchant | Vấn đề (`s1`) · Đã support (`s2`) · **Kết luận** · Việc cần làm tiếp (`s5`, chỉ hiện khi Pending) · Note (`s6`). Cuối form có khối tùy chọn **SMS Promotion** (§16) |
 | `transfer` | Chuyển CS/MKT | Yêu cầu (`s1`). Có Ngôn ngữ merchant. Cuối nội dung luôn có câu: `Nhờ team help merchant ạ. Many thanks team!` |
 
 Mục cùng key giữa các loại (`s1`, `s2`, …) dùng chung dữ liệu → **đổi loại ticket vẫn giữ nội dung đã nhập**.
@@ -167,8 +167,8 @@ Việc cần làm tiếp:
 - **Copy title**: khóa khi title rỗng.
 - **Copy nội dung**: khóa khi (a) nội dung rỗng, (b) thiếu mục đề xuất bắt buộc, hoặc (c) checklist còn mục thiếu ảnh. (b)/(c) hiện dòng cảnh báo vàng nói rõ lý do.
 - Copy xong nút đổi thành `Đã copy ✓` trong 1.5s; lỗi thì báo copy tay.
-- Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS không có Title nên `Alt+1` không làm gì.
-- **Điền vào trang ticket** (chỉ loại ticket có Title; SMS không có):
+- Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung, `Alt+3` = Copy SMS khi khối SMS Promotion đang bật (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS Shipping không có Title nên `Alt+1` không làm gì.
+- **Điền vào trang ticket** (chỉ loại ticket có Title; SMS Shipping không có; tin nhắn SMS Promotion không đi kèm):
   - Nút `Copy để điền` (trên khối Title): copy Title + Nội dung vào clipboard (JSON có đánh dấu của Ticket Writer). Khóa khi Copy title hoặc Copy nội dung đang khóa. Không gửi ảnh.
   - Nút `Cài bookmark "Điền ticket"`: hộp hướng dẫn, có nút `Điền ticket` để kéo lên thanh bookmark (bấm ở Ticket Writer thì không làm gì).
   - Bookmark `Điền ticket` chạy trên tab đang đứng: đọc clipboard (lần đầu Chrome hỏi quyền; bị chặn thì hiện ô để tự dán), rồi:
@@ -194,7 +194,7 @@ Việc cần làm tiếp:
 - Ảnh hiện thumbnail trong ô dán, có × để xóa; ô dán đổi màu `✓ Đã có n ảnh`.
 - Khu Kết quả có khối **Ảnh**: liệt kê mọi ảnh theo thứ tự nội dung (checklist trước, rồi các mục), nhãn `<nhóm> – <mục>` (mục ticket: `<mục>`), thêm ` – ảnh n` khi mục có từ 2 ảnh. Nhãn ảnh được rút gọn: bỏ ghi chú trong ngoặc ở tên nhóm / `parent` (vd `(nếu có)`, `(làm theo thứ tự)`); tên mục trùng tên nhóm thì chỉ ghi 1 lần (vd `Setup terminal`). Ngoặc trong tên mục vẫn giữ (vd `Terminal (Dual Pricing)`). Nội dung ticket không đổi. Mỗi ảnh nút `Copy ảnh` (copy PNG vào clipboard) → đánh dấu `✓ Đã copy`, đếm `x/y đã copy`.
 - Nút `Tải tất cả (ZIP)` ở đầu khối Ảnh: tải mọi ảnh đang hiện thành 1 file `.zip` (không nén, giữ nguyên file gốc).
-  - Tên file ZIP = title ticket; title trống (vd SMS Promotion) → `anh-ticket.zip`.
+  - Tên file ZIP = title ticket; title trống → `anh-ticket.zip`.
   - Tên ảnh bên trong = `<số thứ tự> <nhãn>.<đuôi>`, vd `01 Can setup - Check MID.png`, `03 Setup terminal - anh 1.png`. Số thứ tự theo thứ tự trong khối Ảnh, tối thiểu 2 chữ số.
   - Tên file bỏ dấu, chỉ giữ ASCII (Explorer Windows bản cũ hiện sai tên tiếng Việt trong ZIP); ký tự Windows cấm (`\ / : * ? " < > |`) và ký tự ngoài ASCII (vd `–`) đổi thành `-`; tối đa 80 ký tự.
   - Đuôi theo loại ảnh (`image/jpeg` → `jpg`, còn lại lấy phần sau `image/`).
@@ -222,7 +222,7 @@ Việc cần làm tiếp:
 
 | Key | Nội dung |
 |---|---|
-| `ticketWriter.v1` | Loại đang chọn, chế độ xem, đổi bên, ticket đang nhập (Loại, Tóm tắt, Phone, ngôn ngữ, variant, kết luận, các mục, tick/N/A checklist), form SMS Promotion (trường `sms`, gồm ngôn ngữ tin nhắn `lang` và option tự thêm `customOptions`; ảnh không lưu), form SMS Shipping (trường `shipping`) |
+| `ticketWriter.v1` | Loại đang chọn, chế độ xem, đổi bên, ticket đang nhập (Loại, Tóm tắt, Phone, ngôn ngữ, variant, kết luận, các mục, tick/N/A checklist), form SMS Promotion (trường `sms`, gồm ô tick `enabled`, ngôn ngữ tin nhắn `lang` và option tự thêm `customOptions`; ảnh không lưu), form SMS Shipping (trường `shipping`) |
 | `ticketWriter.templates.v1` | Danh sách template |
 | `ticketWriter.categories.v1` | Loại tự thêm |
 
@@ -251,7 +251,7 @@ Việc cần làm tiếp:
 
 `Setup / Training` đang **tạm ẩn** (`hidden: true` trong `config/app.js`): không hiện nút; phiên đã lưu ở nhóm này mở lại về `Viết ticket`, chữ đã nhập vẫn giữ. Dùng template loại setup thì vẫn mở checklist.
 
-**SMS** → chọn loại tin nhắn: `Promotion` (mặc định, xem §16) | `Shipping` (xem §17). Nhớ loại đang chọn (`nav.smsKind`); bản trước chưa có thì mở `Promotion`.
+**SMS** → chọn loại tin nhắn: `Shipping` (xem §17). SMS Promotion nằm trong `Hỗ trợ merchant` (xem §16), không còn tab riêng.
 
 **Viết ticket** → chọn loại: `Hỗ trợ merchant` | `Chuyển CS/MKT`.
 
@@ -333,7 +333,13 @@ Dữ liệu cũ: state đang mở `request` → mở `Hỗ trợ merchant`; temp
 
 ## 16. SMS Promotion
 
-Nhóm `SMS` → `Promotion`. Soạn tin nhắn gửi tiệm xác nhận trước khi chạy SMS promotion. Không phải loại ticket: không có Title, không lưu template.
+Khối tùy chọn ở cuối form `Viết ticket` → `Hỗ trợ merchant` (cờ `smsPromotion` của loại). Soạn tin nhắn gửi tiệm xác nhận trước khi chạy SMS promotion.
+
+- Có ô tick `SMS Promotion`. Chưa tick: các ô SMS ẩn, ticket như thường. Tick: mở các ô bên dưới và khối SMS ở Kết quả; bỏ tick thì ẩn lại, dữ liệu vẫn giữ.
+- Khối ở khu Nhập và khối tin nhắn ở khu Kết quả có màu riêng (`--sms-bg`, `--sms-line`) để tách khỏi phần ticket.
+- Không có ở loại khác: đổi sang `Chuyển CS/MKT` thì ẩn khối, về lại `Hỗ trợ merchant` thì hiện như cũ.
+- Không phải một phần của ticket: không vào Title, Nội dung, `Copy để điền`; không lưu vào template.
+- Bản trước có tab `SMS` → `Promotion` riêng: phiên đã lưu đang ở tab đó mở lại ở `Hỗ trợ merchant` với ô tick đã bật; phiên khác giữ dữ liệu SMS, ô tick tắt.
 
 ### 16.1 Form
 
@@ -342,7 +348,7 @@ Nhóm `SMS` → `Promotion`. Soạn tin nhắn gửi tiệm xác nhận trước
 | **Ngôn ngữ tin nhắn** | Chọn 1: `English` (mặc định) / `Tiếng Việt`. Đổi ngôn ngữ chỉ đổi câu chữ tin nhắn, dữ liệu form giữ nguyên. |
 | **Tên tiệm** | Ô text. In ra đúng như gõ (đã trim). |
 | **Recipients** | Ô text (bàn phím số trên mobile). |
-| **Type Customer** | Chọn nhiều. Mỗi lựa chọn là 1 ô tick kèm ô số sửa được, vd `Last Visit <= [365]`, `Last Visit >= [90]`, `Times visit between [1] - [10000]`. Danh sách + số mặc định ở `config/sms/promotion.js`. Thêm điều kiện khác bằng `+ Thêm option` (ô text tự gõ, có ×; Enter thêm option mới, Backspace ở ô trống xóa option). Option tự thêm chỉ thuộc promotion đang soạn, không thành lựa chọn cố định. Có ảnh như mục ticket (§10): nút `+ Thêm ảnh (Ctrl+V)`, ô dán ảnh, kéo thả; Ctrl+V ảnh khi đang đứng trong khối Type Customer cũng vào đây. |
+| **Type Customer** | Chọn nhiều. Mỗi lựa chọn là 1 ô tick kèm ô số sửa được, vd `Last Visit <= [365]`, `Last Visit >= [90]`, `Times visit between [1] - [10000]`; `All` chỉ có ô tick, không có ô số. Danh sách + số mặc định ở `config/sms/promotion.js`. Thêm điều kiện khác bằng `+ Thêm option` (ô text tự gõ, có ×; Enter thêm option mới, Backspace ở ô trống xóa option). Option tự thêm chỉ thuộc promotion đang soạn, không thành lựa chọn cố định. Có ảnh như mục ticket (§10): nút `+ Thêm ảnh (Ctrl+V)`, ô dán ảnh, kéo thả; Ctrl+V ảnh khi đang đứng trong khối Type Customer cũng vào đây. |
 | **Message** | Ô nhập nhiều dòng. Không tự viết hoa. |
 | **Price per SMS** | Chọn 1 trong `0.02` / `0.04` / `0.06` / `0.08`, mặc định `0.02`. |
 
@@ -374,13 +380,12 @@ Please carefully review the content of the Promotion message, and only when you 
 
 ### 16.3 Khu Kết quả & Copy
 
-- Ẩn khối Title; có khối Nội dung + `Copy nội dung`, và khối **Ảnh** (nhãn `Type Customer`, từ 2 ảnh thì `Type Customer – ảnh n`, `Copy ảnh` từng ảnh, `Tải tất cả (ZIP)`, `Tải PDF` như §10) khi đã dán ảnh. Ảnh không ảnh hưởng điều kiện copy.
-- `Alt+2` = Copy nội dung (§9); `Alt+1` không làm gì vì không có Title.
-- Ctrl+V ảnh khi không đứng ở ô nào → vào ảnh Type Customer.
-- **Copy nội dung** khóa khi tin nhắn rỗng hoặc còn thiếu: Tên tiệm, Recipients, Type Customer (chưa tick mục nào và chưa có option tự thêm, hoặc mục đã tick còn ô số trống), Message. Dòng cảnh báo vàng: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.`
-- `+ Lưu template` bị khóa (cũng khóa ở nhánh setup chưa có checklist, vì không có loại ticket để lưu).
-- `Ticket mới`: hỏi xác nhận → xóa form SMS về mặc định (kể cả option tự thêm và ảnh Type Customer), không đụng ticket đang nhập.
-- Form SMS và ticket lưu riêng: chuyển qua lại giữa các nhóm không mất dữ liệu bên nào.
+- Khi tick: khối `SMS Promotion` hiện dưới khối Nội dung, có nút `Copy SMS (Alt+3)` riêng. Title, Nội dung, `Copy title`, `Copy nội dung`, `Copy để điền` giữ nguyên như khi chưa tick.
+- **Copy SMS** khóa khi tin nhắn rỗng hoặc còn thiếu: Tên tiệm, Recipients, Type Customer (chưa tick mục nào và chưa có option tự thêm, hoặc mục đã tick còn ô số trống), Message. Dòng cảnh báo vàng trong khối SMS: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.` SMS thiếu trường không khóa các nút copy của ticket.
+- Khối **Ảnh**: ảnh Type Customer (nhãn `Type Customer`, từ 2 ảnh thì `Type Customer – ảnh n`) hiện sau ảnh ticket khi đang tick, nên cũng nằm trong `Tải tất cả (ZIP)` và `Tải PDF` (§10). Ảnh không ảnh hưởng điều kiện copy.
+- Ctrl+V ảnh khi đứng trong khối Type Customer → vào ảnh Type Customer; không đứng ở ô nào → mục focus gần nhất, không thì mục đầu của ticket.
+- `Ticket mới`: hỏi xác nhận → xóa cả ticket, form SMS (kể cả option tự thêm và ảnh Type Customer) và bỏ tick.
+- Dùng template không đụng form SMS.
 
 
 ## 17. SMS Shipping
@@ -420,5 +425,5 @@ Have a good day!
 - `Alt+2` = Copy nội dung (§9); `Alt+1` không làm gì vì không có Title.
 - **Copy nội dung** khóa khi tin nhắn rỗng hoặc còn thiếu Tên merchant / Tracking Number / Estimated Delivery. Dòng cảnh báo vàng: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.`
 - `+ Lưu template` bị khóa.
-- `Ticket mới`: hỏi xác nhận → xóa form SMS Shipping, không đụng ticket và form SMS Promotion.
-- Form SMS Shipping, SMS Promotion và ticket lưu riêng: chuyển qua lại giữa các nhóm không mất dữ liệu bên nào.
+- `Ticket mới`: hỏi xác nhận → xóa form SMS Shipping, không đụng ticket và khối SMS Promotion.
+- Form SMS Shipping và ticket (kể cả khối SMS Promotion) lưu riêng: chuyển qua lại giữa các nhóm không mất dữ liệu bên nào.

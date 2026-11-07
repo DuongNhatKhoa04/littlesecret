@@ -62,16 +62,15 @@
     return { storage, repository, store, session, output, shipping: A.shippingService.createShippingService({ store }) };
   }
 
-  test('shipping: state bản trước (chưa có shipping, chưa có loại SMS) => mở SMS Promotion, form Shipping mặc định, dữ liệu cũ giữ nguyên', () => {
+  test('shipping: state bản trước (chưa có shipping, chưa có loại SMS) => mở khối SMS Promotion, form Shipping mặc định, dữ liệu cũ giữ nguyên', () => {
     const { session } = setup({ nav: { group: 'sms' }, ticket: { summary: 'cũ' }, sms: { shop: 'ARIA' } });
-    assertEqual([session.isPromotion(), session.isShipping(), session.shipping(), session.sms().shop, session.ticket().summary],
+    assertEqual([session.smsActive(), session.isShipping(), session.shipping(), session.sms().shop, session.ticket().summary],
       [true, false, { merchant: '', tracking: '', delivery: '' }, 'ARIA', 'cũ']);
-    assertEqual(setup({ nav: { group: 'sms', smsKind: 'lạ' } }).session.nav().smsKind, 'promotion');
   });
 
   test('shipping: loại SMS chỉ có tác dụng trong nhóm SMS', () => {
     const { session } = setup({ nav: { group: 'ticket', smsKind: 'shipping' } });
-    assertEqual([session.isPromotion(), session.isShipping(), session.activeTypeKey()], [false, false, 'incident']);
+    assertEqual([session.isShipping(), session.activeTypeKey()], [false, 'incident']);
   });
 
   test('shipping: sửa form, lưu và đọc lại; không phải loại ticket nên type rỗng', () => {

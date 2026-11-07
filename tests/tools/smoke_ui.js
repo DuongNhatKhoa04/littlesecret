@@ -296,13 +296,31 @@
     check('Ticket mới xóa nội dung', $('#outBody').textContent === '' && $('#f_phone').value === '');
     check('Ticket mới: con trỏ ở ô Loại', focused() === 'f_category', focused());
 
-    // SMS Promotion
-    clickText('#picker', 'SMS');
+    // SMS Promotion: khối tùy chọn trong Hỗ trợ merchant
+    const copyAndGet = async (selector) => {
+      const before = copiedTexts.length;
+      $(selector).click();
+      await until(() => copiedTexts.length > before, 5000);
+      return copiedTexts[copiedTexts.length - 1];
+    };
+    check('SMS: chưa tick => ẩn ô SMS, không có khối SMS ở Kết quả', !$('#sms_enabled').checked && $('.sms-fields').hidden && $('#smsBlock').hidden);
+    check('SMS: khối có màu riêng', getComputedStyle($('.sms-box')).backgroundColor !== getComputedStyle($('.sec')).backgroundColor);
+    type($('#f_summary'), 'đổi giá');
+    type($('textarea[data-key="s1"]'), 'Merchant cần đổi giá');
     await settle();
-    check('SMS: mặc định Promotion, ẩn Title, khóa Lưu template', pressed().join('|') === 'SMS|Promotion' && $('#titleBlock').hidden && $('#tplSave').disabled, pressed());
+    const plainTicket = [$('#outTitle').textContent, $('#outBody').textContent];
+    const plainFill = await copyAndGet('#copyFill');
+    $('#sms_enabled').focus();
+    $('#sms_enabled').click();
+    await settle();
+    check('SMS: tick => mở ô SMS + khối SMS ở Kết quả, con trỏ giữ nguyên', !$('.sms-fields').hidden && !$('#smsBlock').hidden && focused() === 'sms_enabled', focused());
+    check('SMS: khối ở khu Kết quả, sau Nội dung', !!$('#outPane #smsBlock') && !!($('#outBody').compareDocumentPosition($('#smsBlock')) & Node.DOCUMENT_POSITION_FOLLOWING));
     type($('#sms_shop'), 'ARIA NAIL BAR');
     await settle();
-    check('SMS thiếu trường => cảnh báo + khóa copy', $('#copyBody').disabled && $('#warn').textContent.startsWith('Còn thiếu: Recipients, Type Customer, Message'), $('#warn').textContent);
+    check('SMS thiếu trường => cảnh báo riêng + khóa Copy SMS, ticket vẫn copy được', $('#copySms').disabled && $('#smsWarn').textContent.startsWith('Còn thiếu: Recipients, Type Customer, Message') &&
+      $('#warn').hidden && !$('#copyBody').disabled && !$('#copyFill').disabled, $('#smsWarn').textContent);
+    key(document, { key: '3', altKey: true });
+    check('Alt+3 khi khóa => báo lý do', String(alerts[alerts.length - 1]).startsWith('Còn thiếu: Recipients'), alerts);
     type($('#sms_recipients'), '3178');
     $('.sms-type[data-type="lastVisit"] input[type=checkbox]').click();
     $('.sms-type[data-type="visitTimes"] input[type=checkbox]').click();
@@ -313,13 +331,16 @@
     await wait(50);
     type($('input[data-option="0"]'), 'Birthday in October');
     await settle();
-    check('SMS: tin nhắn đúng + option tự thêm + mở copy', !$('#copyBody').disabled && $('#outBody').textContent.includes(
+    check('SMS: tin nhắn đúng + option tự thêm + mở copy', !$('#copySms').disabled && $('#outSms').textContent.includes(
       'Recipients: 3178 customers\nType Customer:\n- Last Visit <= 365\n- Times visit between 1 - 5000\n- Birthday in October\nMessage:\n"Sale 15%"\nPrice per SMS: $0.06\nEstimate Total: $190.68'),
-      $('#outBody').textContent);
+      $('#outSms').textContent);
     $$('input[name="smsLang"]').find(r => r.value === 'vi').click();
     await settle();
-    check('SMS: chọn Tiếng Việt => tin nhắn tiếng Việt', $('#outBody').textContent.startsWith('Chào ARIA NAIL BAR,') &&
-      $('#outBody').textContent.includes('Giá mỗi SMS: $0.06\nTổng chi phí dự kiến: $190.68'), $('#outBody').textContent);
+    check('SMS: chọn Tiếng Việt => tin nhắn tiếng Việt', $('#outSms').textContent.startsWith('Chào ARIA NAIL BAR,') &&
+      $('#outSms').textContent.includes('Giá mỗi SMS: $0.06\nTổng chi phí dự kiến: $190.68'), $('#outSms').textContent);
+    check('SMS: Title + Nội dung ticket không đổi', $('#outTitle').textContent === plainTicket[0] && $('#outBody').textContent === plainTicket[1], $('#outBody').textContent);
+    check('SMS: Copy SMS chỉ copy tin nhắn', (await copyAndGet('#copySms')) === $('#outSms').textContent);
+    check('SMS: Copy để điền giống hệt khi chưa bật SMS', (await copyAndGet('#copyFill')) === plainFill);
     const smsZone = $('.pzone[data-img-key="sms:customerTypes"]');
     smsZone.focus();
     const smsData = new DataTransfer();
@@ -331,14 +352,16 @@
       !$('#imgPanel').hidden && imageLabels().join('|') === 'Type Customer', $('#imgList').textContent);
     $('#resetBtn').click();
     await settle();
-    check('SMS: Ticket mới xóa form SMS + ảnh SMS', $('#outBody').textContent === '' && $('#sms_shop').value === '' &&
-      !$('input[data-option]') && $('#imgPanel').hidden);
+    check('SMS: Ticket mới xóa ticket + form SMS + ảnh SMS, bỏ tick', $('#outBody').textContent === '' && $('#sms_shop').value === '' &&
+      !$('input[data-option]') && $('#imgPanel').hidden && !$('#sms_enabled').checked && $('.sms-fields').hidden && $('#smsBlock').hidden);
 
     // SMS Shipping
+    $('#sms_enabled').click();
     type($('#sms_shop'), 'GIỮ LẠI');
-    clickText('#picker', 'Shipping');
+    clickText('#picker', 'SMS');
     await settle();
-    check('Shipping: SMS → Shipping, ẩn Title, khóa Lưu template', pressed().join('|') === 'SMS|Shipping' && $('#titleBlock').hidden && $('#tplSave').disabled, pressed());
+    check('Shipping: nhóm SMS chỉ còn Shipping, ẩn Title, khóa Lưu template', pressed().join('|') === 'SMS|Shipping' && $('#titleBlock').hidden && $('#tplSave').disabled &&
+      $('#smsBlock').hidden && !$$('#picker button').some(x => x.textContent === 'Promotion'), pressed());
     type($('#ship_merchant'), 'Ms Terri');
     await settle();
     check('Shipping thiếu Tracking + ngày => cảnh báo + khóa copy', $('#copyBody').disabled && $('#warn').textContent.startsWith('Còn thiếu: Tracking Number, Estimated Delivery.'), $('#warn').textContent);
@@ -352,12 +375,13 @@
     $('#resetBtn').click();
     await settle();
     check('Shipping: Ticket mới chỉ xóa form Shipping', $('#outBody').textContent === '' && $('#ship_merchant').value === '' && $('#ship_delivery').value === '', $('#outBody').textContent);
-    clickText('#picker', 'Promotion');
-    await settle();
-    check('Shipping: form SMS Promotion vẫn giữ', $('#sms_shop').value === 'GIỮ LẠI', $('#sms_shop').value);
     clickText('#picker', 'Viết ticket');
     await settle();
     check('về Viết ticket: hiện lại Title, mở Lưu template', !$('#titleBlock').hidden && !$('#tplSave').disabled);
+    check('Shipping: form SMS Promotion vẫn giữ', $('#sms_shop').value === 'GIỮ LẠI' && !$('.sms-fields').hidden && !$('#smsBlock').hidden, $('#sms_shop').value);
+    clickText('#picker', 'Chuyển CS/MKT');
+    await settle();
+    check('Chuyển CS/MKT: không có khối SMS', !$('.sms-box') && $('#smsBlock').hidden);
   } catch (error) {
     log.push('FAIL exception :: ' + error.stack);
   }

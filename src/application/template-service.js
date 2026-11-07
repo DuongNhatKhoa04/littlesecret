@@ -50,7 +50,7 @@
 
     return {
       count: () => templates.length,
-      /** Nhánh setup chưa có checklist / SMS Promotion: không có loại ticket để lưu. */
+      /** Nhánh setup chưa có checklist / nhóm SMS: không có loại ticket để lưu. */
       canSave: () => !!session.activeTypeKey(),
       search: (query) => T.searchTemplates(templates, query),
       draft,

@@ -1,4 +1,4 @@
-// src/ui/sms-form.js — Khu Nhập của SMS Promotion: Ngôn ngữ tin nhắn, Tên tiệm, Recipients, Type Customer (chọn nhiều, sửa số), Message, Price.
+// src/ui/sms-form.js — Khối SMS Promotion trong form ticket: ô tick mở khối, Ngôn ngữ tin nhắn, Tên tiệm, Recipients, Type Customer (chọn nhiều, sửa số), Message, Price.
 (function (TW) {
   'use strict';
 
@@ -10,8 +10,9 @@
     'Ảnh: click ô dán rồi Ctrl+V, hoặc kéo thả vào khối này.';
   const OPTION_PLACEHOLDER = 'Option khác, vd Birthday in October · Enter: thêm option · Backspace ở ô trống: xóa';
 
-  function createSmsForm({ root, context, session, smsService, imageZone }) {
+  function createSmsForm({ context, session, smsService, imageZone }) {
     const { labels, customerTypes, prices, languages } = context.sms;
+    let fields = null;   // phần mở ra khi tick, null khi loại đang mở không có khối SMS
 
     function field(name, control) {
       const wrap = el('div', 'field');
@@ -99,7 +100,7 @@
 
     function restoreFocus(focus) {
       if (!focus || focus.key !== OPTION_FOCUS_KEY) return;
-      const target = root.querySelector(`input[data-option="${focus.index}"]`);
+      const target = fields.querySelector(`input[data-option="${focus.index}"]`);
       if (target) target.focus();
     }
 
@@ -119,17 +120,35 @@
       }));
     }
 
+    function toggle() {
+      const label = el('label', 'sms-toggle');
+      const box = el('input');
+      Object.assign(box, { id: 'sms_enabled', type: 'checkbox', checked: session.sms().enabled });
+      box.addEventListener('change', () => smsService.setEnabled(box.checked));
+      label.append(box, el('b', '', labels.toggle));
+      return label;
+    }
+
+    /** Trả về khối để form ticket gắn vào. Luôn dựng đủ ô, chưa tick thì ẩn: tick không làm mất con trỏ. */
     function build(focus) {
-      root.textContent = '';
       const message = messageInput();
-      root.append(languageField(), textInput('shop'), textInput('recipients', 'numeric'), customerTypesField(), message, priceField());
+      fields = el('div', 'sms-fields');
+      fields.hidden = !session.sms().enabled;
+      fields.append(languageField(), textInput('shop'), textInput('recipients', 'numeric'), customerTypesField(), message, priceField());
+      const box = el('div', 'sec sms-box');
+      box.append(toggle(), fields);
       // Giữ sẵn ô Message: tới lúc frame chạy, khu Nhập có thể đã đổi sang form khác
       const textarea = message.querySelector('textarea');
       requestAnimationFrame(() => { autoGrow(textarea); restoreFocus(focus); });
+      return box;
     }
 
-    // Ô nhập tự giữ giá trị khi gõ, không có phần nào phụ thuộc trường khác => không cần cập nhật lại form.
-    const sync = () => {};
+    /** Ô nhập tự giữ giá trị khi gõ; chỉ cần ẩn / hiện theo ô tick. Ô Message lúc ẩn không đo được chiều cao nên đo lại khi hiện. */
+    function sync() {
+      if (!fields || fields.hidden === !session.sms().enabled) return;
+      fields.hidden = !fields.hidden;
+      if (!fields.hidden) autoGrow(fields.querySelector('textarea'));
+    }
 
     return { build, sync };
   }

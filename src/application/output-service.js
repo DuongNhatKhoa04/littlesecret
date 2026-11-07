@@ -13,7 +13,7 @@
 
   const EMPTY = Object.freeze({
     title: '', body: '', missingAction: false, missingImages: 0, canCopyTitle: false, canCopyBody: false, actionLabel: '', conclusion: '',
-    missingFields: [], showTitle: true
+    missingFields: [], showTitle: true, sms: null
   });
 
   /**
@@ -23,11 +23,13 @@
     /** Nhóm SMS: chỉ có tin nhắn gửi tiệm, không có title. */
     const messageResult = (body, missingFields) => ({ ...EMPTY, body, missingFields, canCopyBody: !!body && !missingFields.length, showTitle: false });
 
+    /** Khối SMS Promotion: kết quả riêng, không đụng title / nội dung / điều kiện copy của ticket. */
     function computeSms() {
       const sms = session.sms();
       const config = context.sms;
       const body = buildSmsMessage({ sms, config });
-      return messageResult(body, body ? missingSmsFields({ sms, config }) : []);
+      const missingFields = body ? missingSmsFields({ sms, config }) : [];
+      return { body, missingFields, canCopy: !!body && !missingFields.length };
     }
 
     function computeShipping() {
@@ -38,7 +40,6 @@
     }
 
     function compute() {
-      if (session.isPromotion()) return computeSms();
       if (session.isShipping()) return computeShipping();
       const type = session.activeType();
       if (!type) return EMPTY;
@@ -55,15 +56,16 @@
         canCopyBody: canCopyBody({ body, missingAction, missingImages }),
         actionLabel: actionSection ? actionSection.label : '',
         conclusion: ticket.conclusion,
-        missingFields: [], showTitle: true
+        missingFields: [], showTitle: true,
+        sms: session.smsActive() ? computeSms() : null
       };
     }
 
-    /** Chỗ gắn ảnh đang hiện: SMS Promotion chỉ có Type Customer, ticket theo loại đang mở. */
+    /** Chỗ gắn ảnh đang hiện: theo loại đang mở, khối SMS đang bật thì thêm Type Customer ở cuối. */
     function currentSlots() {
-      if (session.isPromotion()) return [{ key: SMS_IMAGE_KEY, label: context.sms.labels.customerTypes }];
       const type = session.activeType();
-      return type ? imageSlots(type) : [];
+      const slots = type ? imageSlots(type) : [];
+      return session.smsActive() ? [...slots, { key: SMS_IMAGE_KEY, label: context.sms.labels.customerTypes }] : slots;
     }
 
     /** Mọi ảnh đang hiện, theo thứ tự nội dung. */
@@ -75,7 +77,6 @@
     /** Mục nhận ảnh khi dán mà không đứng trong mục nào: mục focus gần nhất nếu còn hiện, không thì mục đầu. */
     function pasteTarget(lastKey) {
       if (currentSlots().some(slot => slot.key === lastKey)) return lastKey;
-      if (session.isPromotion()) return SMS_IMAGE_KEY;
       const type = session.activeType();
       return type ? defaultImageKey(type) : null;
     }

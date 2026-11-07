@@ -1,4 +1,4 @@
-// src/ui/ticket-form.js — Khu Nhập: trường chung, checklist (nếu có), các mục, Kết luận.
+// src/ui/ticket-form.js — Khu Nhập: trường chung, checklist (nếu có), các mục, Kết luận, khối SMS Promotion (nếu có).
 (function (TW) {
   'use strict';
 
@@ -7,7 +7,7 @@
 
   const IDEA_HINT = 'Enter: ý mới · Shift+Enter: xuống dòng · Tab: field kế tiếp · Ctrl+V: dán ảnh';
 
-  function createTicketForm({ root, context, session, ticketService, categoryCombo, ideaList, imageZone, checklistView }) {
+  function createTicketForm({ root, context, session, ticketService, categoryCombo, ideaList, imageZone, checklistView, smsForm }) {
     const { app, catalog } = context;
 
     function textField(field, inputMode) {
@@ -95,12 +95,13 @@
     function sync() {
       syncAction();
       checklistView.sync();
+      smsForm.sync();
     }
 
     /** Không chỉ định ô (mở trang, đổi loại, Ticket mới, dùng template) => vào ô Loại để gõ ngay. */
     function restoreFocus(focus) {
       $$('textarea', root).forEach(autoGrow);
-      // Form có thể đã bị thay (đổi sang SMS, nhánh chưa có checklist) trước khi khung hình này chạy
+      // Form có thể đã bị thay (đổi sang SMS Shipping, nhánh chưa có checklist) trước khi khung hình này chạy; focus của khối SMS do sms-form lo
       const target = focus ? root.querySelector(`textarea[data-key="${focus.key}"][data-i="${focus.index}"]`) : root.querySelector('#f_category');
       if (!target) return;
       target.focus();
@@ -116,6 +117,7 @@
       if (type.showLang) root.append(langField());
       if (type.checklist) root.append(checklistView.build(type));   // checklist đứng trước, Note nằm sau
       type.sections.forEach(section => root.append(sectionBox(section)));
+      if (type.smsPromotion) root.append(smsForm.build(focus));
       sync();
       requestAnimationFrame(() => restoreFocus(focus));
     }

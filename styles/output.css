@@ -15,6 +15,7 @@
   font: 14px/1.55 ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace; min-height: 44px;
 }
 .out:empty::before { content: attr(data-empty); color: var(--muted); }
+.sms-out { background: var(--sms-bg); border-color: var(--sms-line); }
 .warn { background: var(--warn-bg); color: var(--warn-ink); padding: 8px 12px; border-radius: var(--radius); margin: 0 0 12px; font-size: 14px; }
 .warn[hidden] { display: none; }
 .fillbar { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; }
