@@ -98,11 +98,11 @@
       smsForm.sync();
     }
 
-    /** Không chỉ định ô (mở trang, đổi loại, Ticket mới, dùng template) => vào ô Loại để gõ ngay. */
+    /** Không chỉ định ô (mở trang, đổi loại, Ticket mới, dùng template) => vào ô Loại (loại không có ô Loại thì ô Tóm tắt) để gõ ngay. */
     function restoreFocus(focus) {
       $$('textarea', root).forEach(autoGrow);
       // Form có thể đã bị thay (đổi sang SMS Shipping, nhánh chưa có checklist) trước khi khung hình này chạy; focus của khối SMS do sms-form lo
-      const target = focus ? root.querySelector(`textarea[data-key="${focus.key}"][data-i="${focus.index}"]`) : root.querySelector('#f_category');
+      const target = focus ? root.querySelector(`textarea[data-key="${focus.key}"][data-i="${focus.index}"]`) : root.querySelector('#f_category, #f_summary');
       if (!target) return;
       target.focus();
       target.setSelectionRange(target.value.length, target.value.length);
@@ -113,7 +113,8 @@
       root.textContent = '';
       const type = session.activeType();
       if (!type) { root.append(emptyState()); return; }
-      root.append(categoryCombo.build(), textField('summary'), textField('phone', 'tel'));
+      if (!type.noCategory) root.append(categoryCombo.build());
+      root.append(textField('summary'), textField('phone', 'tel'));
       if (type.showLang) root.append(langField());
       if (type.checklist) root.append(checklistView.build(type));   // checklist đứng trước, Note nằm sau
       type.sections.forEach(section => root.append(sectionBox(section)));

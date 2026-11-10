@@ -38,9 +38,10 @@
     const feeds = {};   // nguồn => { stream, video }; người dùng bấm "Dừng chia sẻ" thì lần sau hỏi lại
 
     return {
-      async capture(source) {
+      async capture(source, delayMs = 0) {
         try {
           if (!isLive(feeds[source])) feeds[source] = await openFeed();
+          await wait(delayMs);   // đếm sau khi hộp thoại chọn màn hình đã đóng
           const blob = await grabFrame(feeds[source].video);
           return blob ? new File([blob], 'screen.png', { type: PNG }) : null;
         } catch (error) { return null; }

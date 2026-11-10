@@ -37,6 +37,7 @@ Mọi file config theo đúng khuôn này: IIFE nhận `registry`, lấy hàm c�
 | `tag` | Tên ngắn |
 | `sections` | Các mục, theo thứ tự hiện trên form và trong nội dung |
 | `showLang: true` | Hiện chọn Ngôn ngữ merchant, ghi ` - ENG`/` - VIE` sau Phone |
+| `noCategory: true` | Không có ô Loại; title chỉ có Tóm tắt |
 | `smsPromotion: true` | Có khối tùy chọn SMS Promotion ở cuối form (REQUIREMENTS §16). Phải có ít nhất 1 loại ticket bật cờ này |
 | `footer` | Câu cố định cuối nội dung |
 | `formerKeys` | Key các loại cũ đã gộp vào loại này. State / template lưu key cũ vẫn mở bằng loại này. Key cũ không được dùng lại cho loại mới |

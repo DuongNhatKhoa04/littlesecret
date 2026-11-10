@@ -10,8 +10,9 @@
   const SHOT_TITLE = 'Lần đầu chọn màn hình trong hộp thoại của Chrome; các lần sau bấm là chụp ngay, ảnh tự vào mục này.';
   const SHOT_FAILED = 'Chưa chụp được màn hình';
   const SCREENS = {
-    other: { label: 'Chụp màn hình kia', switchTitle: 'Đang chụp màn hình kia. Bấm để đổi sang màn hình đang mở Ticket Writer' },
-    current: { label: 'Chụp màn hình này', switchTitle: 'Đang chụp màn hình đang mở Ticket Writer. Bấm để đổi sang màn hình kia' }
+    other: { label: 'Chụp màn hình kia', delayMs: 0, switchTitle: 'Đang chụp màn hình kia. Bấm để đổi sang màn hình đang mở Ticket Writer' },
+    // chờ 3s để kịp chuyển sang tab cần chụp
+    current: { label: 'Chụp màn hình này sau 3s', delayMs: 3000, switchTitle: 'Đang chụp màn hình đang mở Ticket Writer (sau 3s). Bấm để đổi sang màn hình kia' }
   };
   const DEFAULT_SCREEN = 'other';
 
@@ -91,7 +92,7 @@
     }
 
     async function takeShot(key, trigger) {
-      const file = await screenCapture.capture(screen);
+      const file = await screenCapture.capture(screen, SCREENS[screen].delayMs);
       if (file) addFiles(key, [file]);
       else flash(trigger, SHOT_FAILED);
     }

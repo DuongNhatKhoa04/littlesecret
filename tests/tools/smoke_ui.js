@@ -169,9 +169,13 @@
     clickText('#picker', 'Chuyển CS/MKT');
     await settle();
     check('đổi sang Chuyển CS/MKT giữ nội dung s1', $('#outBody').textContent.includes('Yêu cầu:\n- Terminal lỗi'), $('#outBody').textContent);
-    check('đổi loại: con trỏ về ô Loại', focused() === 'f_category', focused());
+    check('Chuyển CS/MKT: không có ô Loại, title chỉ có Tóm tắt', !$('#f_category') && $('#outTitle').textContent === 'MẤT KẾT NỐI',
+      $('#outTitle').textContent);
+    check('đổi sang loại không có ô Loại: con trỏ về ô Tóm tắt', focused() === 'f_summary', focused());
     clickText('#picker', 'Hỗ trợ merchant');
     await settle();
+    check('về Hỗ trợ merchant: ô Loại + Loại đã chọn vẫn giữ, con trỏ ở ô Loại',
+      focused() === 'f_category' && $('#outTitle').textContent === 'CLOVER - INTERNET - MẤT KẾT NỐI', [focused(), $('#outTitle').textContent]);
 
     // Setup: nút đang tạm ẩn (config/app.js) nhưng vẫn nằm trong DOM nên kịch bản bấm được
     check('nhóm Setup / Training không hiện', $$('#picker button').find(x => x.textContent === 'Setup / Training').offsetParent === null);
@@ -246,7 +250,7 @@
     await until(() => midThumbs() === 3);
     check('chụp: lần đầu chọn màn hình, lần sau chụp ngay, ảnh vào mục', midThumbs() === 3 && picked.length === 1, { thumbs: midThumbs(), picked: picked.length });
     $('.ci[data-id="pax-mid"] .shot-switch').click();
-    check('⇄ đổi mọi nút sang màn hình này', $$('.shot button:first-child').every(b => b.textContent === 'Chụp màn hình này'));
+    check('⇄ đổi mọi nút sang màn hình này', $$('.shot button:first-child').every(b => b.textContent === 'Chụp màn hình này sau 3s'));
     shotOf('pax-mid').click();
     await until(() => midThumbs() === 4);
     check('màn hình này: chọn riêng 1 lần', midThumbs() === 4 && picked.length === 2, { thumbs: midThumbs(), picked: picked.length });

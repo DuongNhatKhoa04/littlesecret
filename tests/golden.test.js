@@ -3,7 +3,7 @@
   'use strict';
 
   const { test, assertEqual, goldenCases, goldenExpected } = TW.tests;
-  const { buildTitle } = TW.domain.title;
+  const { ticketTitle } = TW.domain.title;
   const { buildBody } = TW.domain.body;
   const { isActionMissing, countMissingImages } = TW.domain.validation;
   const { sanitizeTicket, findConclusion } = TW.domain.ticket;
@@ -28,7 +28,8 @@
     },
     // PAX: thêm bước cuối "Close batch sau khi test sale"; Check Display / Screen chuyển sang không cần ảnh
     'setupPax: mọi mục N/A': { appendBody: '\n- [ ] Close batch sau khi test sale' },
-    'setupPax: chưa đụng gì, chỉ phone': { missingImgs: 6, appendBody: '\n- [ ] Close batch sau khi test sale' }
+    'setupPax: chưa đụng gì, chỉ phone': { missingImgs: 6, appendBody: '\n- [ ] Close batch sau khi test sale' },
+    'transfer có phone + VIE': { title: 'HỎI MARKETING' }   // Chuyển CS/MKT không có ô Loại: title chỉ có Tóm tắt
   };
 
   function expectedFor(input, i) {
@@ -43,7 +44,7 @@
       const type = context.typeOf(input.type);
       const ticket = sanitizeTicket(input.ticket, context);
       const imageCounts = input.images || {};
-      assertEqual(buildTitle(ticket), expected.title, 'title');
+      assertEqual(ticketTitle(type, ticket), expected.title, 'title');
       assertEqual(buildBody({ type, ticket, imageCounts, model: '', app: context.app }), expected.body, 'body');
       assertEqual(isActionMissing({ type, ticket, conclusion: findConclusion(context.app, ticket.conclusion) }), expected.missingAction, 'missingAction');
       assertEqual(countMissingImages({ type, ticket, imageCounts }), expected.missingImgs, 'missingImages');

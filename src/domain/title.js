@@ -17,5 +17,8 @@
     return (cleanCategory ? cleanCategory + SEPARATOR + cleanSummary : cleanSummary).toUpperCase();
   }
 
-  TW.domain.title = { parseCategories, joinCategories, buildTitle };
+  /** Title theo loại ticket: loại noCategory (không có ô Loại) bỏ Loại đang lưu, chỉ còn Tóm tắt. */
+  const ticketTitle = (type, ticket) => buildTitle(type && type.noCategory ? { ...ticket, category: '' } : ticket);
+
+  TW.domain.title = { parseCategories, joinCategories, buildTitle, ticketTitle };
 })(window.TW);

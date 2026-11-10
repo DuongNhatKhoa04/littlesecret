@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { buildTitle } = TW.domain.title;
+  const { ticketTitle } = TW.domain.title;
   const { hasAnyContent } = TW.domain.ticket;
   const { navigationForType } = TW.domain.navigation;
   const T = TW.domain.template;
@@ -24,7 +24,7 @@
     /** Template từ ticket hiện tại, tên = title. null khi chưa có title hoặc chưa chọn loại. */
     function draft() {
       const ticket = session.ticket();
-      const name = buildTitle(ticket).trim();
+      const name = ticketTitle(session.activeType(), ticket).trim();
       const typeKey = session.activeTypeKey();
       if (!name || !typeKey) return null;
       return T.createTemplate({ name, typeKey, ticket, blockKeys, now: Date.now() });

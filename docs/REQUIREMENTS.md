@@ -38,16 +38,17 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 | Trường | Mô tả |
 |---|---|
-| **Loại** | Ô chọn nhiều thẻ (chip). Danh sách có sẵn: `ABC`, `CLOVER`, `PAX`, `INTERNET`. Gõ để lọc (không phân biệt dấu), ↑/↓ chọn, Enter thêm (đang gõ dở mà bấm Tab cũng thêm mục đang sáng rồi mới sang ô kế), Backspace khi ô trống = bỏ thẻ cuối, Esc đóng. Thứ tự chọn = thứ tự trong title. Gõ tên chưa có → `+ Thêm "…"` → lưu vào danh sách riêng trên máy (viết HOA, gộp khoảng trắng, bỏ ` - `). Loại tự thêm có nút × để xóa khỏi danh sách; loại có sẵn thì không. |
+| **Loại** | Không có ở loại có `noCategory` (Chuyển CS/MKT). Ô chọn nhiều thẻ (chip). Danh sách có sẵn: `ABC`, `CLOVER`, `PAX`, `INTERNET`. Gõ để lọc (không phân biệt dấu), ↑/↓ chọn, Enter thêm (đang gõ dở mà bấm Tab cũng thêm mục đang sáng rồi mới sang ô kế), Backspace khi ô trống = bỏ thẻ cuối, Esc đóng. Thứ tự chọn = thứ tự trong title. Gõ tên chưa có → `+ Thêm "…"` → lưu vào danh sách riêng trên máy (viết HOA, gộp khoảng trắng, bỏ ` - `). Loại tự thêm có nút × để xóa khỏi danh sách; loại có sẵn thì không. |
 | **Tóm tắt** | Đưa vào title. `Enter`: sang ô kế tiếp (như Tab). |
 | **Phone** | Ô text (bàn phím số trên mobile). `Enter`: sang ô kế tiếp (như Tab). |
 | **Ngôn ngữ merchant** | Chỉ ở loại có `showLang` (Chuyển CS/MKT). Chọn `ENG` / `VIE`, mặc định `ENG`. |
 
-- Con trỏ tự vào ô **Loại** khi mở trang, đổi loại ticket, bấm `Ticket mới` hoặc dùng template (ở nhóm Viết ticket và Setup).
+- Con trỏ tự vào ô **Loại** (loại không có ô Loại thì ô **Tóm tắt**) khi mở trang, đổi loại ticket, bấm `Ticket mới` hoặc dùng template (ở nhóm Viết ticket và Setup).
 
 ## 5. Title
 
 - Có Loại: `<LOẠI 1> - <LOẠI 2> - <Tóm tắt>`; không có Loại: `<Tóm tắt>`.
+- Loại không có ô Loại (Chuyển CS/MKT): title luôn chỉ là `<Tóm tắt>`. Loại đã chọn ở loại khác vẫn giữ, đổi lại thì hiện như cũ.
 - Toàn bộ viết HOA. Bỏ dấu `-`/khoảng trắng thừa ở cuối phần Loại.
 - Có Loại mà chưa có Tóm tắt: dấu nối vẫn hiện sẵn, vd `ABC - `.
 - Ví dụ: Loại `ABC`, `CLOVER` + Tóm tắt `mất kết nối` → `ABC - CLOVER - MẤT KẾT NỐI`.
@@ -59,7 +60,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 | Key | Nhãn nút | Các mục (theo thứ tự) |
 |---|---|---|
 | `incident` | Hỗ trợ merchant | Vấn đề (`s1`) · Đã support (`s2`) · **Kết luận** · Việc cần làm tiếp (`s5`, chỉ hiện khi Pending) · Note (`s6`). Cuối form có khối tùy chọn **SMS Promotion** (§16) |
-| `transfer` | Chuyển CS/MKT | Yêu cầu (`s1`). Có Ngôn ngữ merchant. Cuối nội dung luôn có câu: `Nhờ team help merchant ạ. Many thanks team!` |
+| `transfer` | Chuyển CS/MKT | Yêu cầu (`s1`). Không có ô Loại. Có Ngôn ngữ merchant. Cuối nội dung luôn có câu: `Nhờ team help merchant ạ. Many thanks team!` |
 
 Mục cùng key giữa các loại (`s1`, `s2`, …) dùng chung dữ liệu → **đổi loại ticket vẫn giữ nội dung đã nhập**.
 
@@ -187,7 +188,7 @@ Việc cần làm tiếp:
   - Nút `Chụp màn hình kia` (mọi chỗ có ô dán ảnh): chụp 1 khung hình màn hình rồi tự thêm ảnh vào đúng mục đó (như dán ảnh, kể cả tự tick done / bỏ N/A).
     - Lần đầu hiện hộp thoại chọn màn hình của Chrome (mở sẵn tab Toàn màn hình, không cho chọn chính tab Ticket Writer); người dùng tự chọn màn hình. Trình duyệt không cho trang tự chọn sẵn màn hình nào.
     - Sau đó giữ luồng chia sẻ: các lần bấm sau chụp ngay, không hỏi lại. Chrome hiện thanh "Đang chia sẻ màn hình"; bấm "Dừng chia sẻ" hoặc tải lại trang thì lần sau hỏi lại.
-    - Nút `⇄` cạnh nút chụp: đổi giữa `Chụp màn hình kia` (mặc định) và `Chụp màn hình này` (màn hình đang mở Ticket Writer). Đổi chung cho mọi mục, chỉ trong phiên (tải lại trang về mặc định). Mỗi bên nhớ màn hình đã chọn riêng.
+    - Nút `⇄` cạnh nút chụp: đổi giữa `Chụp màn hình kia` (mặc định) và `Chụp màn hình này sau 3s` (màn hình đang mở Ticket Writer; chờ 3s sau khi đã chọn màn hình rồi mới chụp, để kịp chuyển sang tab cần chụp). Đổi chung cho mọi mục, chỉ trong phiên (tải lại trang về mặc định). Mỗi bên nhớ màn hình đã chọn riêng.
     - Hủy hộp thoại / trình duyệt không hỗ trợ → nút báo `Chưa chụp được màn hình`, không thêm ảnh.
 - Ctrl+V khi không đứng trong mục nào → dán vào mục được focus gần nhất (nếu còn hiển thị), không thì mục đầu tiên. Không bắt Ctrl+V khi đang ở ô nhập text không thuộc mục, khi có dialog mở, hoặc khi clipboard có cả text.
 - Đọc nguyên file gốc, không nén.

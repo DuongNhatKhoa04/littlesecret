@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { buildTitle } = TW.domain.title;
+  const { ticketTitle } = TW.domain.title;
   const { buildBody } = TW.domain.body;
   const { isActionMissing, countMissingImages, canCopyBody } = TW.domain.validation;
   const { imageSlots, imageLabel, defaultImageKey } = TW.domain.imageSlots;
@@ -53,7 +53,7 @@
       if (!type) return EMPTY;
       const ticket = session.ticket();
       const imageCounts = images.counts();
-      const title = buildTitle(ticket);
+      const title = ticketTitle(type, ticket);
       const body = buildBody({ type, ticket, imageCounts, model: session.model(), app: context.app });
       const missingAction = isActionMissing({ type, ticket, conclusion: session.conclusion() });
       const missingImages = countMissingImages({ type, ticket, imageCounts });
