@@ -27,6 +27,8 @@
   const outputService = A.outputService.createOutputService({ context, session, images, files });
   const categories = A.categoryService.createCategoryService({ context, storage });
   const templateService = A.templateService.createTemplateService({ context, store, session, storage, files, categories });
+  const staffService = A.staffService.createStaffService({ context, storage });
+  const offlineService = A.offlineService.createOfflineService({ context, store, session, files, images, outputService });
 
   // UI
   const viewer = U.imageViewer.createImageViewer({ outputService });
@@ -39,7 +41,7 @@
     ideaList: U.ideaList.createIdeaList({ context, session, ticketService })
   });
   const shippingForm = U.shippingForm.createShippingForm({ root: $('#form'), context, session, shippingService });
-  const reviewForm = U.reviewForm.createReviewForm({ root: $('#form'), context, session, reviewService });
+  const reviewForm = U.reviewForm.createReviewForm({ root: $('#form'), context, session, reviewService, staffService });
   const activeForm = () => {   // 3 form dùng chung khu Nhập
     if (session.isReview()) return reviewForm;
     return session.isShipping() ? shippingForm : form;
@@ -49,13 +51,14 @@
   const output = U.outputView.createOutputView({ context, outputService, clipboard, ticketFill, imagePanel });
   const header = U.header.createHeader({ context, session, viewService, ticketService, smsService, shippingService, reviewService, images, onShowOutput: output.render });
   const templateDialog = U.templateDialog.createTemplateDialog({ templateService, files });
+  const offlineDialog = U.offlineDialog.createOfflineDialog({ offlineService });
   U.fillDialog.createFillDialog({ ticketFill });
   U.pasteHandler.installPasteHandler({ outputService, imageZone });
 
   store.subscribe((change) => {
     repository.save(store.get());
     if (change.view) { header.render(); return; }
-    if (change.rebuild) { picker.render(); activeForm().build(change.focus); templateDialog.render(); output.render(); return; }
+    if (change.rebuild) { picker.render(); activeForm().build(change.focus); templateDialog.render(); offlineDialog.render(); output.render(); return; }
     activeForm().sync();
     output.schedule();
   });
@@ -68,6 +71,7 @@
   picker.render();
   activeForm().build();
   templateDialog.render();
+  offlineDialog.render();
   header.render();
   output.render();
 })(window.TW);

@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-07.8',      // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-10.3',      // hiện cạnh tên app để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
 
@@ -13,6 +13,7 @@
     storageKey: 'ticketWriter.v1',
     templateKey: 'ticketWriter.templates.v1',
     categoryKey: 'ticketWriter.categories.v1',
+    staffKey: 'ticketWriter.staff.v1',         // tên nhân viên (form SMS Xin review), lưu riêng để Ticket mới không xóa
 
     // Bookmark "Điền ticket" trên trang ticket: ô cần điền, chữ điền vào ô Comment ở khung Checklist, nút bấm sau khi điền.
     // Đổi ở đây thì phải kéo lại bookmark.

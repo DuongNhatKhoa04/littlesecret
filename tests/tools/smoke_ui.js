@@ -268,6 +268,44 @@
     await settle();
     check('N/A cả nhóm => mở copy', !$('#copyBody').disabled && $('#outBody').textContent.includes('- [N/A] Check MID'), $('#warn').textContent);
 
+    // Lưu offline: chỉ 1 file ZIP (JSON + ảnh + PDF cùng tên bên trong), rồi Ticket mới và mở lại chính file ZIP đó
+    const offBody = $('#outBody').textContent;
+    const offNames = [];
+    const offBlobs = {};
+    const realAnchorClick = HTMLAnchorElement.prototype.click;
+    const realObjectUrl = URL.createObjectURL;
+    let lastBlob = null;
+    URL.createObjectURL = (blob) => { lastBlob = blob; return realObjectUrl.call(URL, blob); };
+    HTMLAnchorElement.prototype.click = function () { offNames.push(this.download); offBlobs[this.download] = lastBlob; };
+    $('#offSave').click();
+    check('Lưu offline: hỏi zipcode + ticket type, có ảnh thì hiện ô PDF', $('#offSaveDlg').open && !$('#offPdfRow').hidden);
+    type($('#offZip'), '02134');
+    type($('#offType'), 'Setup');
+    $('#offPdf').checked = true;
+    $('#offSaveOk').click();
+    await until(() => !$('#offSaveDlg').open, 10000);
+    await wait(1000);   // đợi thêm: nếu có file thứ 2 thì Chrome thật sẽ chặn
+    HTMLAnchorElement.prototype.click = realAnchorClick;
+    URL.createObjectURL = realObjectUrl;
+    const offBase = (offNames[0] || '').replace(/\.zip$/, '');
+    const offZip = offBlobs[offNames[0]];
+    const zipText = offZip ? new TextDecoder().decode(new Uint8Array(await offZip.arrayBuffer())) : '';
+    check('Lưu offline: chỉ tải đúng 1 file ZIP tên OFF-…, bên trong có JSON + PDF cùng tên',
+      offNames.length === 1 && /^OFF-\d{8}-\d{6} - CLOVER - INTERNET - MAT KET NOI$/.test(offBase) &&
+      zipText.startsWith('PK') && zipText.includes(offBase + '.json') && zipText.includes(offBase + '.pdf') && zipText.includes('"zipcode": "02134"'), offNames);
+    $('#resetBtn').click();
+    await settle();
+    check('Ticket mới trước khi mở file offline', !$('#outBody').textContent.includes('Check MID'), $('#outBody').textContent.slice(0, 40));
+    const offFile = new DataTransfer();
+    offFile.items.add(new File([offZip], offNames[0], { type: 'application/zip' }));
+    $('#offImport').files = offFile.files;
+    $('#offImport').dispatchEvent(new Event('change', { bubbles: true }));
+    await until(() => $('#outBody').textContent === offBody, 5000);
+    check('Mở file offline (.zip): về đúng nhánh PAX, nội dung giống lúc lưu, báo zipcode + ticket type + file ảnh',
+      $('#outBody').textContent === offBody && pressed().includes('PAX') &&
+      String(alerts[alerts.length - 1]).includes('Business zipcode: 02134\nTicket type: Setup\nẢnh + PDF: trong file ' + offBase + '.zip'),
+      [pressed(), alerts[alerts.length - 1]]);
+
     // Nhánh chưa có checklist
     clickText('#picker', 'Clover');
     clickText('#picker', 'Replace');
@@ -401,15 +439,20 @@
     type($('#review_state'), 'tx');
     await settle();
     check('Xin review: TX => link Arlington, hiện chi nhánh, mở copy', !$('#copyBody').disabled && $('#warn').hidden && $('#review_branch').textContent === 'Chi nhánh: Arlington' &&
-      $('#outBody').textContent.startsWith('Greeting,\n\nThank you for contacting MAC USA.') && $('#outBody').textContent.includes('on Google: https://g.page/r/CSNU0_lEme3rEBM/review\n\nHave a nice day'), $('#outBody').textContent);
+      $('#outBody').textContent.startsWith('Greeting,\n\nThank you for contacting MAC USA.') && $('#outBody').textContent.includes('on Google: https://g.page/r/CSNU0_lEme3rEBM/review\n\nHave a nice day!'), $('#outBody').textContent);
     $$('input[name="reviewLang"]').find(r => r.value === 'vi').click();
     type($('#review_state'), 'LA');
     await settle();
     check('Xin review: Tiếng Việt + LA => link Houston', $('#review_branch').textContent === 'Chi nhánh: Houston' &&
-      $('#outBody').textContent.startsWith('Xin chào,\n\nCảm ơn anh/chị đã liên hệ MAC USA.') && $('#outBody').textContent.includes('tại đây: https://g.page/r/CXbRhObNeE8NEBM/review\n\nChúc một ngày tốt lành'), $('#outBody').textContent);
+      $('#outBody').textContent.startsWith('Xin chào,\n\nCảm ơn anh/chị đã liên hệ MAC USA.') && $('#outBody').textContent.includes('tại đây: https://g.page/r/CXbRhObNeE8NEBM/review\n\nChúc anh/chị một ngày tốt lành!'), $('#outBody').textContent);
+    type($('#review_staff'), 'Ryan');
+    await settle();
+    check('Xin review: tên nhân viên lưu riêng trên máy, không vào tin nhắn',
+      localStorage.getItem('ticketWriter.staff.v1') === '"Ryan"' && !$('#outBody').textContent.includes('Ryan'), localStorage.getItem('ticketWriter.staff.v1'));
     $('#resetBtn').click();
     await settle();
-    check('Xin review: Ticket mới xóa form', $('#outBody').textContent === '' && $('#review_state').value === '' && $('#review_branch').textContent === '', $('#outBody').textContent);
+    check('Xin review: Ticket mới xóa form, giữ tên nhân viên', $('#outBody').textContent === '' && $('#review_state').value === '' && $('#review_branch').textContent === '' &&
+      $('#review_staff').value === 'Ryan', [$('#outBody').textContent, $('#review_staff').value]);
     clickText('#picker', 'Viết ticket');
     await settle();
     check('về Viết ticket: hiện lại Title, mở Lưu template', !$('#titleBlock').hidden && !$('#tplSave').disabled);

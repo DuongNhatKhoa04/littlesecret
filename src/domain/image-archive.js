@@ -49,5 +49,5 @@
     };
   }
 
-  TW.domain.imageArchive = { buildImageArchive, buildImageReport };
+  TW.domain.imageArchive = { toFileName, buildImageArchive, buildImageReport };
 })(window.TW);

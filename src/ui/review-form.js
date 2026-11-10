@@ -1,4 +1,4 @@
-// src/ui/review-form.js — Khu Nhập của SMS Xin review: Bang (gõ chữ viết tắt, gợi ý từ danh sách), Ngôn ngữ tin nhắn.
+// src/ui/review-form.js — Khu Nhập của SMS Xin review: Bang (gõ chữ viết tắt, gợi ý từ danh sách), Ngôn ngữ tin nhắn, Tên nhân viên.
 (function (TW) {
   'use strict';
 
@@ -7,8 +7,9 @@
 
   const STATE_LIST_ID = 'review_states';
   const STATE_PLACEHOLDER = 'Chữ viết tắt của bang, vd TX';
+  const STAFF_PLACEHOLDER = 'Nhập 1 lần, tự nhớ trên máy này';
 
-  function createReviewForm({ root, context, session, reviewService }) {
+  function createReviewForm({ root, context, session, reviewService, staffService }) {
     const { labels, languages } = context.review;
     let branchHint = null;
     let suggestions = null;
@@ -41,6 +42,18 @@
       return wrap;
     }
 
+    // Không nằm trong state của form: Ticket mới không xóa, F5 vẫn còn.
+    function staffField() {
+      const wrap = el('div', 'field');
+      const input = el('input', 'text');
+      Object.assign(input, { id: 'review_staff', type: 'text', value: staffService.name(), placeholder: STAFF_PLACEHOLDER, autocomplete: 'off' });
+      input.addEventListener('input', () => staffService.setName(input.value));
+      const label = el('label', '', labels.staff);
+      label.htmlFor = input.id;
+      wrap.append(label, input);
+      return wrap;
+    }
+
     /**
      * Hiện chi nhánh của bang đang nhập để biết link nào được dùng.
      * Tự lọc gợi ý theo chữ viết tắt: để Chrome lọc thì nó tìm cả trong tên bang (gõ b ra Nebraska).
@@ -54,7 +67,7 @@
 
     function build() {
       root.textContent = '';
-      root.append(stateField(), languageField());
+      root.append(stateField(), languageField(), staffField());
       sync();
     }
 

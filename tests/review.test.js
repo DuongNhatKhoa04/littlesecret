@@ -1,4 +1,4 @@
-// tests/review.test.js — SMS Xin review: bảng bang → chi nhánh → link, tin nhắn 2 ngôn ngữ, đọc/lưu state, Kết quả không có title.
+// tests/review.test.js — SMS Xin review: bảng bang → chi nhánh → link, tin nhắn 2 ngôn ngữ, đọc/lưu state, Kết quả không có title, tên nhân viên.
 (function (TW) {
   'use strict';
 
@@ -17,7 +17,7 @@
     '',
     `Thank you for contacting MAC USA. If you have a moment, we’d appreciate hearing about your experience on Google: ${ARLINGTON}`,
     '',
-    'Have a nice day'
+    'Have a nice day!'
   ].join('\n');
 
   const EXPECTED_VI = [
@@ -25,7 +25,7 @@
     '',
     `Cảm ơn anh/chị đã liên hệ MAC USA. Nếu có thời gian, anh/chị có thể chia sẻ trải nghiệm của mình trên Google tại đây: ${ATLANTA}`,
     '',
-    'Chúc một ngày tốt lành'
+    'Chúc anh/chị một ngày tốt lành!'
   ].join('\n');
 
   const build = (raw) => D.reviewMessage.buildReviewMessage({ review: D.review.sanitizeReview(raw, config), config });
@@ -114,5 +114,21 @@
     assertEqual([output.imageList(), output.pasteTarget('s1')], [[], null]);
     review.reset();
     assertEqual([store.get().review, store.get().shipping.merchant], [{ usState: '', lang: 'en' }, 'Ms Terri']);
+  });
+
+  test('review: tên nhân viên lưu key riêng, mở lại vẫn còn, reset form không xóa, không vào tin nhắn', () => {
+    const { storage, output, review } = setup({ nav: { group: 'sms', smsKind: 'review' } });
+    const staff = A.staffService.createStaffService({ context, storage });
+    assertEqual(staff.name(), '');
+    staff.setName('Ryan');
+    review.setField('usState', 'TX');
+    assertEqual([storage.data[context.app.staffKey], output.compute().body], ['Ryan', EXPECTED_EN]);
+    review.reset();
+    assertEqual(A.staffService.createStaffService({ context, storage }).name(), 'Ryan');
+  });
+
+  test('review: tên nhân viên lưu hỏng => rỗng', () => {
+    const storage = { read: () => 42, write: () => true };
+    assertEqual(A.staffService.createStaffService({ context, storage }).name(), '');
   });
 })(window.TW);

@@ -24,7 +24,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 ## 3. Bố cục giao diện
 
-**Header**: tên app + version · các nút chọn **loại ticket** (bản mới: chọn theo cấp, xem §14.2) · chế độ xem (`Chia đôi` / `Nhập` / `Kết quả`) · `Template` · `+ Lưu template` · `⇄ Đổi bên` · `Ticket mới`.
+**Header**: tên app + version · các nút chọn **loại ticket** (bản mới: chọn theo cấp, xem §14.2) · chế độ xem (`Chia đôi` / `Nhập` / `Kết quả`) · `Template` · `+ Lưu template` · `Lưu offline` · `Mở file offline` (§19) · `⇄ Đổi bên` · `Ticket mới`.
 
 **Chế độ xem**
 - `Chia đôi`: trái Nhập, phải Kết quả. `⇄ Đổi bên` đảo trái/phải (chỉ bật ở Chia đôi).
@@ -224,6 +224,7 @@ Việc cần làm tiếp:
 | Key | Nội dung |
 |---|---|
 | `ticketWriter.v1` | Loại đang chọn, chế độ xem, đổi bên, ticket đang nhập (Loại, Tóm tắt, Phone, ngôn ngữ, variant, kết luận, các mục, tick/N/A checklist), form SMS Promotion (trường `sms`, gồm ô tick `enabled`, ngôn ngữ tin nhắn `lang` và option tự thêm `customOptions`; ảnh không lưu), form SMS Shipping (trường `shipping`), form SMS Xin review (trường `review`: bang `usState`, ngôn ngữ `lang`) |
+| `ticketWriter.staff.v1` | Tên nhân viên (form SMS Xin review). Lưu riêng để `Ticket mới` không xóa |
 | `ticketWriter.templates.v1` | Danh sách template |
 | `ticketWriter.categories.v1` | Loại tự thêm |
 
@@ -441,6 +442,7 @@ Nhóm `SMS` → `Xin review`. Soạn tin mời merchant đánh giá trên Google
 |---|---|
 | **Bang** | Ô text có gợi ý. Gõ chữ viết tắt của bang (vd `TX`), không phân biệt hoa thường; tên đầy đủ (`Texas`) không nhận. Gợi ý chỉ lọc theo chữ viết tắt bắt đầu bằng phần đã gõ (gõ `t` → `TN`, `TX`; gõ `b` → không có), xếp A→Z, có kèm tên bang để tra. Tìm thấy thì hiện `Chi nhánh: <tên>` ngay dưới ô. |
 | **Ngôn ngữ tin nhắn** | Chọn 1: `English` (mặc định) / `Tiếng Việt`. |
+| **Tên nhân viên** | Ô text. Nhập 1 lần, lưu riêng trên máy (key `ticketWriter.staff.v1`): F5 hay `Ticket mới` đều không mất, chỉ đổi khi nhân viên tự sửa. Chưa đưa vào tin nhắn; dùng cho nút Copy dòng Excel (§18.4, chưa làm). |
 
 ### 18.2 Tin nhắn (output)
 
@@ -449,7 +451,7 @@ Greeting,
 
 Thank you for contacting MAC USA. If you have a moment, we’d appreciate hearing about your experience on Google: <link>
 
-Have a nice day
+Have a nice day!
 ```
 
 ```
@@ -457,7 +459,7 @@ Xin chào,
 
 Cảm ơn anh/chị đã liên hệ MAC USA. Nếu có thời gian, anh/chị có thể chia sẻ trải nghiệm của mình trên Google tại đây: <link>
 
-Chúc một ngày tốt lành
+Chúc anh/chị một ngày tốt lành!
 ```
 
 - `<link>` = link của chi nhánh phụ trách bang đó. Bảng 51 bang (50 bang + DC) → 3 chi nhánh Arlington / Atlanta / Houston, cùng câu mời, nằm trong `config/sms/review.js`, sửa không cần đụng `src/`.
@@ -469,4 +471,32 @@ Chúc một ngày tốt lành
 - `Alt+2` = Copy nội dung (§9); `Alt+1` không làm gì vì không có Title.
 - **Copy nội dung** khóa khi tin nhắn rỗng. Gõ bang không có trong danh sách thì có dòng cảnh báo vàng: `Còn thiếu: Bang hợp lệ. Điền đủ rồi mới copy được.`
 - `+ Lưu template` bị khóa.
-- `Ticket mới`: hỏi xác nhận → xóa form SMS Xin review, không đụng ticket và các form SMS khác.
+- `Ticket mới`: hỏi xác nhận → xóa form SMS Xin review (giữ Tên nhân viên), không đụng ticket và các form SMS khác.
+
+### 18.4 Kế hoạch (chưa làm): nút Copy dòng Excel
+
+- Mục tiêu: 1 nút ghép thông tin lần xin review thành 1 dòng, các cột cách nhau bằng Tab, copy để dán vào Excel Online (Microsoft) là tự chia vào từng ô.
+- Có cột Tên nhân viên (§18.1). Chưa nhập Tên nhân viên → cảnh báo `Còn thiếu: Tên nhân viên` và khóa nút này.
+- **Đang chờ manager chốt** danh sách cột và thứ tự cột trong sheet. Cột nào form chưa có (vd Tên tiệm, Phone) thì thêm ô nhập khi chốt.
+
+## 19. Ticket offline (ticket system không vào được)
+
+Lưu ticket ra file trên máy, khi ticket system vào lại được thì mở file, nạp lại vào form rồi dùng `Copy để điền` + bookmark `Điền ticket` (§9) như bình thường. Không lưu gì trong browser: file nằm ở thư mục Downloads, không mất khi xóa dữ liệu Chrome, mang sang máy khác được.
+
+### 19.1 Lưu offline
+
+- Nút `Lưu offline` ở header. Khóa khi không có loại ticket (nhóm SMS, nhánh setup chưa có checklist). Ticket trống (chưa có title lẫn nội dung) → báo, không mở hộp.
+- Hộp hỏi: **Business zipcode** và **Ticket type** (ô text, nhân viên tự điền), đều bắt buộc. Có ảnh thì có thêm ô tick `Tải kèm PDF ảnh` (mặc định không tick).
+- Bấm `Lưu` → tải **đúng 1 file** (Chrome tự chặn file thứ 2 trở đi trong cùng 1 lần bấm). Mọi file dùng chung **tên gốc** `OFF-YYYYMMDD-HHmmss - <TITLE>` (chỉ ASCII như §10, mã OFF-… theo giờ máy lúc lưu):
+  - Không có ảnh → `<tên gốc>.json`.
+  - Có ảnh → `<tên gốc>.zip`, bên trong: `<tên gốc>.json`, các ảnh (đặt tên như `Tải tất cả (ZIP)`), và `<tên gốc>.pdf` nếu có tick (giống `Tải PDF`).
+- File `.json` gồm: mã, giờ lưu, loại ticket, zipcode, ticket type, title, nội dung, tên file ZIP / PDF, toàn bộ ticket đang nhập (Loại, Tóm tắt, Phone, các mục, Kết luận, tick/N/A checklist).
+- Tạo PDF lỗi → ZIP không có PDF, báo. Tạo ZIP lỗi → chỉ tải `.json` (giữ được phần chữ), báo để tự bấm `Tải tất cả (ZIP)` / `Tải PDF`.
+- Lưu xong form giữ nguyên; muốn làm ticket khác thì bấm `Ticket mới`.
+
+### 19.2 Mở file offline
+
+- Nút `Mở file offline` → nếu đang có nội dung hoặc ảnh thì hỏi xác nhận → chọn file `.zip` (đọc file `.json` bên trong, không cần giải nén) hoặc file `.json`.
+- File đúng → chuyển về đúng loại ticket / nhánh setup trong file, thay toàn bộ ticket đang nhập, bỏ ảnh đang dán; báo mã, Business zipcode, Ticket type, file ZIP chứa ảnh (+ PDF).
+- File không phải ticket offline / loại ticket trong file không còn → báo, không đổi gì.
+- Ảnh không tự nạp lại: giải nén ZIP rồi dán / kéo thả vào từng mục (tên ảnh trong ZIP ghi mục nào).

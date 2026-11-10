@@ -35,7 +35,8 @@
 /**
  * @typedef {Object} FileAdapter
  * @property {(file: File) => Promise<string | null>} readAsDataUrl   null = không đọc được
- * @property {(file: File) => Promise<any>} readJson                  undefined = không phải JSON hợp lệ
+ * @property {(file: File) => Promise<any>} readJson                  undefined = không phải JSON hợp lệ; file .zip thì đọc file .json bên trong
+ * @property {(report: ImageReport) => Promise<Blob | null>} createPdf   tạo PDF không tải (để gói vào ZIP); null = không tạo được
  * @property {(fileName: string, text: string) => void} download
  * @property {(fileName: string, entries: ZipEntry[]) => Promise<boolean>} downloadZip   false = không tạo được file ZIP
  * @property {(fileName: string, report: ImageReport) => Promise<boolean>} downloadPdf   false = không tạo được file PDF

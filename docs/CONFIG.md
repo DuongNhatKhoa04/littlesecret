@@ -207,7 +207,7 @@ setShipping({   // const { setShipping } = registry;
 
 ```js
 setReview({   // const { setReview } = registry;
-  labels: { state: 'Bang', language: 'Ngôn ngữ tin nhắn', branch: 'Chi nhánh', invalidState: 'Bang hợp lệ' },
+  labels: { state: 'Bang', language: 'Ngôn ngữ tin nhắn', branch: 'Chi nhánh', invalidState: 'Bang hợp lệ', staff: 'Tên nhân viên' },
   links: { Arlington: 'https://g.page/r/…/review', Atlanta: '…', Houston: '…' },
   states: [{ code: 'TX', name: 'Texas', branch: 'Arlington' } /* … */],
   languages: [{ id: 'en', label: 'English', lines: ['Greeting,', '', '… on Google: {link}', '', 'Have a nice day'] } /* … */]
@@ -231,7 +231,7 @@ setReview({   // const { setReview } = registry;
 | `version` | `vYYYY-MM-DD.N`, tăng mỗi lần sửa |
 | `autoCapitalize` | Tự viết hoa chữ đầu mỗi dòng |
 | `debounceMs` | Độ trễ cập nhật Kết quả |
-| `storageKey`, `templateKey`, `categoryKey` | Key localStorage. **Không đổi** |
+| `storageKey`, `templateKey`, `categoryKey`, `staffKey` | Key localStorage. **Không đổi** |
 | `ticketFill` | Bookmark `Điền ticket`: selector ô `subject` / `description` / `comment` (ô Comment ở khung Checklist), `commentText` (`done`), nút bấm sau khi điền = phần tử `uploadLabel` có chữ `uploadText`. Đổi thì người dùng phải kéo lại bookmark |
 | `categories` | Loại có sẵn (`ABC`, `CLOVER`, `PAX`, `INTERNET`) |
 | `marks` | Ký hiệu checklist trong nội dung: `[x]`, `[ ]`, `[N/A]` |

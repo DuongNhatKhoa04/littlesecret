@@ -2,10 +2,18 @@
 (function (TW) {
   'use strict';
 
-  const { createZipBlob } = TW.infra.zip;
+  const { createZipBlob, readZipEntries } = TW.infra.zip;
   const { createPdfBlob } = TW.infra.pdf;
 
   const URL_REVOKE_DELAY_MS = 1000;
+  const ZIP_SIGNATURE = 'PK';
+
+  /** File .zip (vd ticket offline có ảnh): lấy file .json đầu tiên bên trong; file thường: đọc thẳng. */
+  async function jsonText(file) {
+    if (await file.slice(0, ZIP_SIGNATURE.length).text() !== ZIP_SIGNATURE) return file.text();
+    const entry = (await readZipEntries(file)).find(item => item.name.toLowerCase().endsWith('.json'));
+    return entry ? entry.blob.text() : '';
+  }
 
   function saveBlob(fileName, blob) {
     const link = document.createElement('a');
@@ -28,9 +36,9 @@
           reader.readAsDataURL(file);
         });
       },
-      /** undefined = file không phải JSON hợp lệ */
+      /** undefined = file không phải JSON hợp lệ (file .zip: không có file .json hợp lệ bên trong) */
       async readJson(file) {
-        try { return JSON.parse(await file.text()); } catch (error) { return undefined; }
+        try { return JSON.parse(await jsonText(file)); } catch (error) { return undefined; }
       },
       download(fileName, text) {
         saveBlob(fileName, new Blob([text], { type: 'application/json' }));
@@ -38,6 +46,10 @@
       /** false = không tạo được file ZIP */
       async downloadZip(fileName, entries) {
         try { saveBlob(fileName, await createZipBlob(entries)); return true; } catch (error) { return false; }
+      },
+      /** Tạo PDF không tải (để gói vào ZIP). null = không tạo được */
+      async createPdf(report) {
+        try { return await createPdfBlob(report); } catch (error) { return null; }
       },
       /** false = không tạo được file PDF (vd ảnh không giải mã được) */
       async downloadPdf(fileName, report) {

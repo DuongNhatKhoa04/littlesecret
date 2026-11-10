@@ -1,4 +1,4 @@
-// src/infrastructure/zip.js — Gói nhiều file thành 1 file ZIP. Không nén: ảnh vốn đã nén, nén thêm chỉ tốn thời gian.
+// src/infrastructure/zip.js — Gói nhiều file thành 1 file ZIP và đọc lại. Không nén: ảnh vốn đã nén, nén thêm chỉ tốn thời gian.
 (function (TW) {
   'use strict';
 
@@ -100,5 +100,27 @@
     return new Blob([...body, ...central, end], { type: 'application/zip' });
   }
 
-  TW.infra.zip = { createZipBlob };
+  /**
+   * Đọc lại file ZIP không nén (loại createZipBlob tạo ra). Gặp file nén / hỏng thì dừng, trả các file đã đọc được.
+   * @param {Blob} blob
+   * @returns {Promise<ZipEntry[]>}
+   */
+  async function readZipEntries(blob) {
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    const view = new DataView(bytes.buffer);
+    const decoder = new TextDecoder();
+    const entries = [];
+    let at = 0;
+    while (at + LOCAL_SIZE <= bytes.length && view.getUint32(at, true) === LOCAL_HEADER) {
+      const size = view.getUint32(at + 18, true);
+      const nameEnd = at + LOCAL_SIZE + view.getUint16(at + 26, true);
+      const start = nameEnd + view.getUint16(at + 28, true);
+      if (view.getUint16(at + 8, true) !== STORED || start + size > bytes.length) break;
+      entries.push({ name: decoder.decode(bytes.subarray(at + LOCAL_SIZE, nameEnd)), blob: new Blob([bytes.subarray(start, start + size)]) });
+      at = start + size;
+    }
+    return entries;
+  }
+
+  TW.infra.zip = { createZipBlob, readZipEntries };
 })(window.TW);

@@ -16,8 +16,9 @@
     if (a !== e) throw new Error(`${message ? message + '\n' : ''}Mong đợi: ${e}\nNhận được: ${a}`);
   }
 
-  function runCase({ name, fn }) {
-    try { fn(); return { name, ok: true }; } catch (error) { return { name, ok: false, error: error.message }; }
+  // fn có thể là async (vd lưu offline phải chờ tải file ZIP)
+  async function runCase({ name, fn }) {
+    try { await fn(); return { name, ok: true }; } catch (error) { return { name, ok: false, error: error.message }; }
   }
 
   function render(results) {
@@ -35,7 +36,11 @@
     });
   }
 
-  function run() { render(cases.map(runCase)); }
+  async function run() {
+    const results = [];
+    for (const testCase of cases) results.push(await runCase(testCase));
+    render(results);
+  }
 
   TW.tests = { ...TW.tests, test, assert, assertEqual, run };
 })(window.TW);

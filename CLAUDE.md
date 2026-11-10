@@ -50,15 +50,15 @@ ticket-writer/
 ├─ src/
 │  ├─ core/                    namespace.js (TW) · registry.js (config đăng ký vào) · ports.js (typedef port)
 │  ├─ domain/                  QUY TẮC NGHIỆP VỤ: hàm thuần, không DOM, không storage
-│  │                           text · title · ticket · checklist · body · validation · navigation · image-slots · image-archive · template ·
+│  │                           text · title · ticket · checklist · body · validation · navigation · image-slots · image-archive · template · offline-ticket ·
 │  │                           sms · sms-message · shipping · shipping-message · review · review-message
 │  ├─ application/             USE CASE: store + service, điều phối domain và port
 │  │                           context · store · session · session-repository · ticket/navigation/view/image/
-│  │                           output/category/template/sms/shipping/review-service
+│  │                           output/category/template/offline/sms/shipping/review/staff-service
 │  ├─ infrastructure/          ADAPTER: storage (localStorage) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
 │  ├─ ui/                      GIAO DIỆN: dom (helper) · picker · ticket-form · category-combo · idea-list ·
 │  │                           checklist-view · image-zone · output-view · image-panel · image-viewer ·
-│  │                           template-dialog · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form
+│  │                           template-dialog · offline-dialog · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form
 │  └─ main.js                  COMPOSITION ROOT: tạo adapter, inject vào service, gắn UI
 ├─ tests/                      xem tests/README.md
 │  ├─ index.html               double-click để chạy test
@@ -126,7 +126,7 @@ File config:
 - **S — Single Responsibility**: 1 file = 1 trách nhiệm. Ví dụ ghép title, ghép nội dung, kiểm tra điều kiện copy là 3 file domain riêng; ô chọn Loại, checklist, khối ảnh là 3 view riêng.
 - **O — Open/Closed**: thêm loại ticket hoặc checklist = **thêm 1 file config**, không sửa `src/`. Hiện có 2 kiểu mục (nhập ý / Kết luận). Khi cần kiểu thứ 3: tách thành bảng renderer + composer theo `kind`, không nối thêm `if/else`.
 - **L — Liskov**: mọi loại ticket và checklist theo cùng 1 schema (docs/CONFIG.md); code xử lý loại nào cũng không cần biết đang là loại gì. Adapter thay thế được nhau (vd storage thật ↔ storage giả trong test).
-- **I — Interface Segregation**: port nhỏ, chỉ đúng hàm cần: `KeyValueStore { read(key), write(key, value) }`, `TextClipboard { writeText }`, `ImageClipboard { writeImage, readImages }`, `ScreenCapture { capture }`, `TicketFill { payload, bookmarkletUrl }`, `FileAdapter { readAsDataUrl, readJson, download, downloadZip, downloadPdf }`. Typedef đặt ở `src/core/ports.js`.
+- **I — Interface Segregation**: port nhỏ, chỉ đúng hàm cần: `KeyValueStore { read(key), write(key, value) }`, `TextClipboard { writeText }`, `ImageClipboard { writeImage, readImages }`, `ScreenCapture { capture }`, `TicketFill { payload, bookmarkletUrl }`, `FileAdapter { readAsDataUrl, readJson, download, downloadZip, createPdf, downloadPdf }`. Typedef đặt ở `src/core/ports.js`.
 - **D — Dependency Inversion**: service nhận port qua tham số factory, không tự tạo. Chỉ `main.js` biết adapter cụ thể nào được dùng.
 
 ## Clean code
@@ -148,7 +148,7 @@ File config:
 - **Không đổi key loại** đang có: `incident` `request` `transfer` `setup` `setupPax` `newDb` `setupValor` `setupTraining`. State và template lưu theo key. Gộp loại → khai báo key cũ trong `formerKeys` của loại nhận (vd `request` → `incident`); key cũ không được dùng lại.
 - **`id` mục checklist duy nhất trong toàn dự án**: tick/N/A lưu chung theo id. Không đổi id đang có; bỏ bước thì xóa mục.
 - **Key mục ticket dùng chung giữa các loại**: cùng key = cùng ý nghĩa (chi tiết ở docs/CONFIG.md).
-- Không đổi `storageKey`, `templateKey`, `categoryKey`. Thêm dữ liệu lưu mới → thêm trường, vẫn đọc được bản cũ.
+- Không đổi `storageKey`, `templateKey`, `categoryKey`, `staffKey`. Thêm dữ liệu lưu mới → thêm trường, vẫn đọc được bản cũ.
 - Mỗi lần sửa bất kỳ file nào: tăng `version` trong `config/app.js`, dạng `vYYYY-MM-DD.N`.
 
 ## Nội dung checklist

@@ -24,7 +24,8 @@ Double-click `tests/index.html`. Dòng đầu hiện `PASS x/x` (xanh) hoặc `F
 | `application.test.js` | Đọc state bản cũ, lưu state, thao tác sửa ticket (storage giả). |
 | `sms.test.js` | SMS Promotion: tin nhắn đúng mẫu, trường còn thiếu, đọc/lưu state, khối SMS trong Hỗ trợ merchant không đụng kết quả ticket. |
 | `shipping.test.js` | SMS Shipping: tin nhắn đúng mẫu, trường còn thiếu, đọc/lưu state, Kết quả không có title. |
-| `review.test.js` | SMS Xin review: bảng bang → chi nhánh → link, tin nhắn 2 ngôn ngữ, đọc/lưu state, Kết quả không có title. |
+| `review.test.js` | SMS Xin review: bảng bang → chi nhánh → link, tin nhắn 2 ngôn ngữ, đọc/lưu state, Kết quả không có title, tên nhân viên. |
+| `offline.test.js` | Ticket offline: mã OFF-…, mỗi lần lưu chỉ tải 1 file (ZIP chứa JSON + ảnh + PDF cùng tên), đọc file, mở lại vào form. Test async (runner chờ từng test). |
 
 ## Thêm test
 

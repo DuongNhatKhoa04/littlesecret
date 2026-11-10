@@ -5,7 +5,7 @@
   const { setReview } = registry;
 
   setReview({
-    labels: { state: 'Bang', language: 'Ngôn ngữ tin nhắn', branch: 'Chi nhánh', invalidState: 'Bang hợp lệ' },
+    labels: { state: 'Bang', language: 'Ngôn ngữ tin nhắn', branch: 'Chi nhánh', invalidState: 'Bang hợp lệ', staff: 'Tên nhân viên' },
 
     // Link Google review của từng chi nhánh. Key = `branch` trong `states`.
     links: {
@@ -79,7 +79,7 @@
           '',
           'Thank you for contacting MAC USA. If you have a moment, we’d appreciate hearing about your experience on Google: {link}',
           '',
-          'Have a nice day'
+          'Have a nice day!'
         ]
       },
       {
@@ -89,7 +89,7 @@
           '',
           'Cảm ơn anh/chị đã liên hệ MAC USA. Nếu có thời gian, anh/chị có thể chia sẻ trải nghiệm của mình trên Google tại đây: {link}',
           '',
-          'Chúc một ngày tốt lành'
+          'Chúc anh/chị một ngày tốt lành!'
         ]
       }
     ]
