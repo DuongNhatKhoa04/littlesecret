@@ -4,10 +4,16 @@ Tool web 1 trang giúp support viết ticket (Title + Nội dung để copy) và
 
 | Tài liệu | Nội dung |
 |---|---|
-| [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) | Hành vi của tool. Đọc trước khi đổi hành vi; đổi hành vi thì cập nhật trong cùng lần sửa. |
+| [README.md](README.md) | Giới thiệu, cách chạy, cách gửi đồng nghiệp. Người mới đọc trước. |
+| [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) | Hành vi của tool. Đọc trước khi đổi hành vi; đổi hành vi thì cập nhật trong cùng lần sửa. **Không đánh số lại các mục §**: code, test và tài liệu khác tham chiếu theo số. |
 | [docs/CONFIG.md](docs/CONFIG.md) | Cách thêm/sửa loại ticket và checklist setup (schema từng trường). |
-| `../ticket-writer.html` | Bản gốc 1 file. Chỉ để tham chiếu, **không sửa**. Bản mới phải cho output giống hệt với cùng dữ liệu nhập. |
-| `../CLAUDE.md` | Nguyên tắc làm việc chung (tự load vì folder nằm trong `actions/`). |
+| [docs/SECURITY.md](docs/SECURITY.md) | Dữ liệu nằm ở đâu, rủi ro của phone-upload, quy tắc bảo mật khi viết code. Đọc trước khi đụng lưu trữ, clipboard, mạng. |
+| [docs/REVIEW.md](docs/REVIEW.md) | Vùng bắt buộc có người duyệt, checklist trước khi gửi bản mới cho đồng nghiệp. |
+| [CHANGELOG.md](CHANGELOG.md) | Lịch sử thay đổi. Mỗi lần tăng `version` thì thêm 1 dòng. |
+| [tests/README.md](tests/README.md) | Cách chạy test, từng file test kiểm tra gì. |
+| [phone-upload/README.md](phone-upload/README.md) | Hướng dẫn người dùng nhận ảnh iPad / iPhone. |
+
+**Bản gốc 1 file** `ticket-writer.html` (version `v2026-10-16.1`) **không nằm trong repo này**. Output chuẩn của nó đã được chụp lại trong `tests/golden-expected.js`: đó là chuẩn để so khi refactor. Muốn sinh lại file này phải đặt bản gốc tại `../ticket-writer.html` (cạnh folder dự án) rồi chạy `tests/tools/generate_golden.py`; không có bản gốc thì **không sửa** `golden-expected.js`.
 
 ## Ngôn ngữ
 
@@ -25,7 +31,7 @@ Tool web 1 trang giúp support viết ticket (Title + Nội dung để copy) và
 ## Chạy & chia sẻ
 
 - **`index.html` là file chính**: double-click là chạy (giao thức `file://`), không cần server, không cần cài gì.
-- Gửi đồng nghiệp: nén **cả folder** `ticket-writer/` (giữ nguyên cấu trúc), bên kia giải nén rồi double-click `index.html`.
+- Gửi đồng nghiệp: nén **cả folder dự án** (giữ nguyên cấu trúc; sơ đồ dưới gọi là `ticket-writer/`, repo hiện tên `littlesecret/`), bên kia giải nén rồi double-click `index.html`. Trước khi gửi: [docs/REVIEW.md](docs/REVIEW.md).
 - Vì chạy trên `file://`:
   - Dùng `<script src="...">` thường. **Không** dùng ES module (`type="module"`, `import`/`export`): trình duyệt chặn trên `file://`.
   - **Không** `fetch()`/XHR file trong folder. Cấu hình viết thành file `.js`. (Ngoại lệ duy nhất: `phone-inbox` gọi `http://127.0.0.1` tới phone-upload, không phải đọc file.)
@@ -158,6 +164,20 @@ File config:
 - Giữ nguyên chữ người dùng viết (kể cả viết tắt, từ chuyên môn). Thấy lỗi chính tả hay link nghi sai thì **báo**, không tự sửa.
 - Mỗi setup có 2 quy trình **Ship mới** (`new`) và **Replace** (`replace`), luôn là file riêng, không gộp bằng if/else.
 
+## Không tự ý sửa
+
+Những file / vùng dưới đây chỉ sửa khi người dùng yêu cầu rõ; thấy cần sửa thì **báo và hỏi trước**:
+
+| File / vùng | Vì sao |
+|---|---|
+| `tests/golden-expected.js` | Sinh tự động từ bản gốc, là chuẩn so output. Bản gốc không có trong repo nên không sinh lại được. |
+| Câu chữ trong `config/setup/**`, `config/sms/*`, `config/tickets/*` | Nội dung nghiệp vụ người dùng viết (xem Nội dung checklist). |
+| `ticketFill` trong `config/app.js` | Selector của trang ticket system bên ngoài; đổi thì mọi người phải kéo lại bookmark. |
+| Các key lưu trữ, `id` mục checklist, key loại | Xem Không được phá. |
+| `phone-upload/phone-upload.ps1` | Mở port mạng trên máy công ty; đổi phải đọc [docs/SECURITY.md](docs/SECURITY.md) và có người duyệt ([docs/REVIEW.md](docs/REVIEW.md)). |
+| Số mục § trong `docs/REQUIREMENTS.md` | Code, test, tài liệu tham chiếu theo số. Thêm mục mới thì đánh số tiếp theo. |
+| File người dùng đang sửa dở (có thay đổi chưa commit mà không phải do mình) | Không ghi đè cả file; sửa đúng chỗ bằng Edit, hoặc hỏi trước. |
+
 ## Kiểm tra sau khi sửa
 
 1. Double-click `tests/index.html` (hoặc `python tests/tools/run_tests.py`): tất cả test xanh. Sửa `domain`/`application` → thêm hoặc cập nhật test.
@@ -165,4 +185,6 @@ File config:
 3. Đi qua mọi loại ticket và mọi nhánh Thiết bị → Hãng → Model → Quy trình: hiện đúng mục/checklist.
 4. Loại vừa sửa: nhập thử → Kết quả đúng REQUIREMENTS §8, nút Copy nội dung khóa/mở đúng §9.
 5. localStorage có sẵn từ bản trước (ticket đang nhập, template) vẫn load đúng.
-6. Khi refactor: Title + Nội dung phải giống từng ký tự với `../ticket-writer.html` cho cùng input, ngoại lệ: dòng `Model:` của ticket setup (REQUIREMENTS §14.3), loại Hỗ trợ merchant (REQUIREMENTS §14.5) và các chỗ đổi config checklist có chủ đích, ghi trong `CHANGED_SINCE_ORIGINAL` của `tests/golden.test.js` (REQUIREMENTS §14.4). Các ca này nằm trong test golden.
+6. Khi refactor: Title + Nội dung phải giống từng ký tự với output bản gốc đã chụp trong `tests/golden-expected.js` cho cùng input, ngoại lệ: dòng `Model:` của ticket setup (REQUIREMENTS §14.3), loại Hỗ trợ merchant (REQUIREMENTS §14.5) và các chỗ đổi config checklist có chủ đích, ghi trong `CHANGED_SINCE_ORIGINAL` của `tests/golden.test.js` (REQUIREMENTS §14.4). Các ca này nằm trong test golden.
+7. Tăng `version` trong `config/app.js` và thêm 1 dòng vào [CHANGELOG.md](CHANGELOG.md).
+8. Trước khi gửi bản mới cho đồng nghiệp: làm theo checklist trong [docs/REVIEW.md](docs/REVIEW.md).

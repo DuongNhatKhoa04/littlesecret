@@ -1,6 +1,29 @@
 # Ticket Writer — Requirements
 
-Viết lại từ bản 1 file `../ticket-writer.html` (version `v2026-10-16.1`). Tài liệu này mô tả **hành vi hiện có**; bản tách file phải giữ đúng như vậy. Mục 14 là yêu cầu mới cho đợt tách file và các thay đổi so với bản gốc.
+Tài liệu này mô tả **hành vi hiện có** của tool, tới từng câu chữ. Đổi hành vi → sửa tài liệu trong cùng lần sửa code.
+
+- Tool được viết lại từ bản 1 file `ticket-writer.html` (version `v2026-10-16.1`). Bản gốc **không nằm trong repo**; output chuẩn của nó được chụp lại trong `tests/golden-expected.js` (xem CLAUDE.md).
+- **Không đánh số lại các mục**: code, test và tài liệu khác tham chiếu theo số (vd §14.3). Mục mới đánh số tiếp theo.
+- Lịch sử thay đổi theo version: [CHANGELOG.md](../CHANGELOG.md). Rủi ro bảo mật: [SECURITY.md](SECURITY.md).
+
+## Mục lục
+
+| § | Nội dung | Trạng thái |
+|---|---|---|
+| 1–3 | Mục đích, ràng buộc kỹ thuật, bố cục giao diện | Hiện hành |
+| 4–5 | Trường chung (Loại, Tóm tắt, Phone…), Title | Hiện hành |
+| 6 | Nhóm Viết ticket (Hỗ trợ merchant, Chuyển CS/MKT), Kết luận | Hiện hành |
+| 7 | Nhóm Setup / Training (checklist) | Hiện hành, **nhóm đang tạm ẩn** (§14.2) |
+| 8–9 | Định dạng Nội dung, khu Kết quả & điều kiện Copy, Điền ticket | Hiện hành |
+| 10 | Ảnh: dán, chụp, đổi thứ tự, ZIP, PDF, xóa hết | Hiện hành |
+| 11–12 | Template, lưu trữ (localStorage + IndexedDB) | Hiện hành |
+| 13 | Tính năng bản gốc đã bỏ (`variants`) | Ghi chú lịch sử |
+| 14 | Thay đổi trong đợt tách file so với bản gốc (chọn loại theo cấp, dòng Model, gộp Hỗ trợ merchant…) | **Vẫn hiện hành**; tên mục là lịch sử |
+| 15 | Ghi nhận từ bản gốc | **Chờ người phụ trách xác nhận** |
+| 16–18 | SMS Promotion, Shipping, Xin review | Hiện hành; §18.4 **kế hoạch, chưa làm** |
+| 19 | Ticket offline | Hiện hành |
+| 20 | Cảnh báo lưu trữ | Hiện hành |
+| 21 | Nhận ảnh iPad / iPhone (phone-upload) | Hiện hành; rủi ro ở SECURITY.md §3 |
 
 ---
 
@@ -221,7 +244,7 @@ Việc cần làm tiếp:
 - `Xuất JSON`: tải `ticket-templates.json` gồm `{ templates, categories }` (categories = Loại tự thêm).
 - `Nhập JSON`: gộp theo tên (trùng thì ghi đè), bỏ mục không hợp lệ, thêm Loại mới; báo số mới / ghi đè / bỏ qua.
 
-## 12. Lưu trữ (localStorage)
+## 12. Lưu trữ (localStorage, IndexedDB)
 
 | Key | Nội dung |
 |---|---|

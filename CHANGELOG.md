@@ -1,0 +1,42 @@
+# Changelog
+
+Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu ngày tương ứng: version · đổi gì (người dùng thấy gì) · mục REQUIREMENTS liên quan. Bản cũ hơn 2026-11-12 chưa ghi version, tóm tắt theo commit.
+
+## 2026-11-12
+
+- `v2026-11-12.15` · Tài liệu: README, SECURITY, REVIEW, CHANGELOG; sửa tham chiếu bản gốc trong CLAUDE.md; mục lục REQUIREMENTS. Không đổi hành vi.
+- `v2026-11-12.14` · Kéo thả thumbnail để đổi thứ tự ảnh trong 1 mục; nút `Xóa hết ảnh` ở khối Ảnh (giữ nội dung ticket). §10
+- `v2026-11-12.13` · Ô Loại chỉ chọn 1 loại, chọn xong con trỏ sang Tóm tắt; chọn loại khác thì thay. §4, §5
+- `v2026-11-12.12` · Nhận ảnh iOS: iPad quét **mã QR** trên Ticket Writer; mã iPad hết hạn sau 12 tiếng, nút `Đổi mã ngay`; mã máy tính chỉ nhận từ chính máy đó; sửa kẹt ~15s do kết nối dự phòng của trình duyệt. §21
+- `v2026-11-12.11` · Bỏ icon 📱, đổi tên nút thành `Nhận ảnh iOS`. §21
+- `v2026-11-12.10` · Mã phone-upload chuyển ra `%LOCALAPPDATA%\TicketWriter\` (nén folder không mang mã theo), tự chuyển mã cũ. §21.1
+- `v2026-11-12.9` · (tăng version, không ghi lại nội dung)
+- `v2026-11-12.8` · Nhận ảnh từ iPhone / iPad qua LAN (`phone-upload/phone-upload.bat` + nút ở header); ảnh vào mục như Ctrl+V. §21
+- `v2026-11-12.7` · Nút Copy / Tải ZIP / PDF nền cyan nhạt, nút đã copy màu mint (light mode). 
+- `v2026-11-12.6` · Nút đang chọn (Chia đôi, Viết ticket…) nhạt hơn ở light mode.
+- `v2026-11-12.5` · Nút giao diện `◐ Tự động` / `☀ Sáng` / `☾ Tối`, lưu riêng trên máy. §2, §3, §12
+- `v2026-11-12.4` · Bảng màu hồng + cyan (light + dark), chữ đạt tương phản WCAG AA.
+- `v2026-11-12.3` · Bảng màu kem + xanh mòng két (thay sau đó ở `.4`).
+- `v2026-11-12.2` · Thanh cảnh báo lưu trữ (`config/notifications.js`): không lưu được nội dung / ảnh, bộ nhớ sắp đầy. §20
+- `v2026-11-12.1` · Ảnh lưu IndexedDB: F5 / đóng Chrome không mất ảnh. §2, §10, §12
+
+## 2026-11-10
+
+- Bản `v2026-11-10.3` (bản cuối ngày). SMS: thêm tên nhân viên (Xin review); thêm Ticket offline (`Lưu offline` / `Mở file offline`). §18, §19
+- Bỏ Type ở Chuyển CS/MKT; chụp "màn hình này" chờ ~3s trước khi chụp. §6, §10
+
+## 2026-11-07
+
+- Sửa câu chữ SMS Promotion; thêm SMS Xin review. §16, §18
+- Gộp SMS Promotion vào Viết ticket (khối SMS trong Hỗ trợ merchant), thêm Type `All`. §16
+- Tạm ẩn nhóm Setup / Training. §14.2
+
+## 2026-11-02
+
+- SMS Shipping: sửa ngày. Đổi tên file PDF xuất ra. §10, §17
+
+## 2026-11-01
+
+- Thêm Ticket Writer (bản tách file từ bản gốc 1 file `v2026-10-16.1`).
+- Bookmark *Điền ticket*: điền Subject, Description, bấm Upload File(s). §9
+- Tên file PDF có ngày giờ tải. §10
