@@ -66,7 +66,7 @@
     isReady: () => !!paste.target(),
     onFile: (file) => imageZone.addFiles(paste.target(), [file])
   });
-  U.phoneButton.createPhoneButton({ phoneService });
+  U.phoneButton.createPhoneButton({ phoneService, phoneDialog: U.phoneDialog.createPhoneDialog({ phoneService }) });
 
   store.subscribe((change) => {
     notices.toggle('sessionSaveFailed', !repository.save(store.get()));

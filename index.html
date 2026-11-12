@@ -126,6 +126,24 @@
   </form>
 </dialog>
 
+<dialog id="phoneDlg" aria-label="Nhận ảnh iOS">
+  <div class="dhead">
+    <b>Nhận ảnh iOS</b><span class="spacer"></span>
+    <button type="button" class="ghost" id="phoneClose">Đóng</button>
+  </div>
+  <div class="phone-body">
+    <p>iPad / iPhone (cùng Wi-Fi với máy này): mở <b>Camera</b>, hướng vào mã → bấm link hiện ra → <b>Chọn ảnh để gửi</b>. Ảnh tự vào mục đang mở, như Ctrl+V.</p>
+    <canvas id="phoneQr" class="phone-qr" hidden></canvas>
+    <p class="phone-link" id="phoneLinkText"></p>
+    <p class="status" id="phoneExpiry"></p>
+  </div>
+  <div class="dfoot">
+    <button type="button" class="ghost" id="phoneRenew" title="iPad dùng chung: đổi ca thì đổi mã, trang gửi ảnh cũ trên iPad sẽ không gửi được nữa">Đổi mã ngay</button>
+    <span class="spacer"></span>
+    <button type="button" class="ghost" id="phoneStop">Tắt nhận ảnh</button>
+  </div>
+</dialog>
+
 <dialog id="fillDlg" aria-label="Điền ticket">
   <div class="dhead">
     <b>Điền ticket: Subject, Description, Comment (Checklist) rồi bấm Upload File(s)</b><span class="spacer"></span>
@@ -190,6 +208,7 @@
 <script src="src/domain/review.js"></script>
 <script src="src/domain/review-message.js"></script>
 <script src="src/domain/phone-link.js"></script>
+<script src="src/domain/qr-code.js"></script>
 
 <!-- application -->
 <script src="src/application/context.js"></script>
@@ -246,6 +265,7 @@
 <script src="src/ui/fill-dialog.js"></script>
 <script src="src/ui/header.js"></script>
 <script src="src/ui/paste-handler.js"></script>
+<script src="src/ui/phone-dialog.js"></script>
 <script src="src/ui/phone-button.js"></script>
 
 <!-- composition root: luôn cuối cùng -->

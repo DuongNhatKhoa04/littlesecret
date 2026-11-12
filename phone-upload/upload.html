@@ -43,21 +43,35 @@
   li .state { flex: none; color: var(--muted); }
   li.ok .state { color: var(--ok); }
   li.fail .state { color: var(--err); }
+  .expired { padding: 14px; margin: 0 0 16px; border-radius: 12px; background: var(--panel); border: 1px solid var(--err); color: var(--err); font-weight: 600; }
+  .expired[hidden] { display: none; }
+  .pick.off { opacity: .4; pointer-events: none; }
 </style>
 </head>
 <body>
 <h1>Gửi ảnh cho Ticket Writer</h1>
-<p class="hint">Chọn ảnh → ảnh tự gửi sang máy tính, vào mục đang mở trên Ticket Writer. Bấm Chia sẻ → Thêm vào MH chính để lần sau mở nhanh.</p>
-<label class="pick">📷 Chọn ảnh để gửi<input type="file" id="files" accept="image/*" multiple></label>
+<p class="hint">Chọn ảnh → ảnh tự gửi sang máy tính, vào mục đang mở trên Ticket Writer.</p>
+<p class="expired" id="expired" hidden>Mã đã hết hạn hoặc đã đổi. Trên máy tính bấm nút Nhận ảnh iOS rồi quét lại mã QR.</p>
+<label class="pick" id="pick">📷 Chọn ảnh để gửi<input type="file" id="files" accept="image/*" multiple></label>
 <p class="summary" id="summary"></p>
 <ul id="list"></ul>
 <script>
   'use strict';
-  // Trang ở /<mã>; gửi lên /<mã>/upload. Mỗi ảnh 1 request, gửi lần lượt để biết ảnh nào lỗi.
-  const uploadUrl = location.pathname.replace(/\/$/, '') + '/upload';
+  // Trang ở /u/<mã iPad>; gửi lên /u/<mã>/upload. Mỗi ảnh 1 request, gửi lần lượt để biết ảnh nào lỗi.
+  // Mã hết hạn sau 12 tiếng / khi máy tính bấm Đổi mã ngay (iPad dùng chung): máy trả 410.
+  const base = location.pathname.replace(/\/$/, '');
+  const uploadUrl = base + '/upload';
+  const EXPIRED = 410;
   const list = document.getElementById('list');
   const summary = document.getElementById('summary');
   let sent = 0;
+
+  function showExpired() {
+    document.getElementById('expired').hidden = false;
+    document.getElementById('pick').classList.add('off');
+  }
+
+  fetch(base + '/check', { cache: 'no-store' }).then(r => { if (r.status === EXPIRED) showExpired(); }).catch(() => {});
 
   function row(name) {
     const item = document.createElement('li');
@@ -80,6 +94,7 @@
         headers: { 'Content-Type': file.type || 'application/octet-stream', 'X-File-Name': encodeURIComponent(file.name) }
       });
       if (response.ok) { sent++; done(true, '✓ Đã gửi'); return; }
+      if (response.status === EXPIRED) showExpired();
       const reply = await response.json().catch(() => ({}));
       done(false, reply.error || 'Lỗi ' + response.status);
     } catch (error) {

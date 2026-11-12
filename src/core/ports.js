@@ -71,10 +71,19 @@
  */
 
 /**
- * Lấy ảnh iPhone / iPad gửi lên phone-upload (chạy cùng máy), mỗi lần 1 ảnh, lấy xong là xóa khỏi hàng chờ.
+ * Lấy ảnh iPad / iPhone gửi lên phone-upload, lấy link iPad (chạy cùng máy), mỗi lần 1 ảnh, lấy xong là xóa khỏi hàng chờ.
  * @typedef {Object} PhoneInbox
  * @property {(url: string) => Promise<{ ok: boolean, file: File | null }>} next   ok: false = không gọi được phone-upload; file: null = hàng chờ trống
+ * @property {(url: string) => Promise<IpadLink>} info     link iPad hiện tại (để vẽ QR)
+ * @property {(url: string) => Promise<IpadLink>} rotate   đổi mã iPad ngay, trả link mới
  */
+
+/**
+ * Link để iPad mở trang gửi ảnh. Mã iPad tự hết hạn (12 tiếng) hoặc đổi khi bấm Đổi mã ngay.
+ * @typedef {Object} IpadLink
+ * @property {boolean} ok         false = không gọi được phone-upload
+ * @property {string[]} urls      http://<IP LAN>:<port>/u/<mã iPad>, mỗi card mạng 1 link
+ * @property {string} expiresAt   ISO 8601 (UTC)
 
 /**
  * @typedef {Object} SavedImage

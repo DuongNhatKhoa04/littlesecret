@@ -1,8 +1,8 @@
-// src/domain/phone-link.js — Đọc link phone-upload (port + mã bí mật) và dựng địa chỉ Ticket Writer hỏi ảnh.
+// src/domain/phone-link.js — Đọc link phone-upload (port + mã máy tính) và dựng địa chỉ Ticket Writer gọi phone-upload.
 (function (TW) {
   'use strict';
 
-  // Link hiện trong cửa sổ phone-upload: http://<IP bất kỳ>:<port>/<mã>; mã do phone-upload.ps1 sinh (chữ thường + số)
+  // Link mục 1 trong cửa sổ phone-upload: http://127.0.0.1:<port>/<mã máy tính>; mã do phone-upload.ps1 sinh (chữ thường + số)
   const LINK = /^https?:\/\/[^/\s:]+:(\d{1,5})\/([a-z0-9]{12})\/?$/i;
   const MAX_PORT = 65535;
   const LOCAL_HOST = '127.0.0.1';   // phone-upload chạy cùng máy: luôn hỏi qua localhost, IP LAN có thể đổi
@@ -18,8 +18,11 @@
     return port >= 1 && port <= MAX_PORT ? { port, token: match[2].toLowerCase() } : null;
   }
 
-  /** @param {{ port: number, token: string }} link */
-  const inboxUrl = ({ port, token }) => `http://${LOCAL_HOST}:${port}/${token}/next`;
+  /**
+   * @param {{ port: number, token: string }} link
+   * @param {'next' | 'info' | 'rotate'} action   next: lấy 1 ảnh · info: link iPad + giờ hết hạn · rotate: đổi mã iPad ngay
+   */
+  const deskUrl = ({ port, token }, action) => `http://${LOCAL_HOST}:${port}/${token}/${action}`;
 
-  TW.domain.phoneLink = { parsePhoneLink, inboxUrl };
+  TW.domain.phoneLink = { parsePhoneLink, deskUrl };
 })(window.TW);

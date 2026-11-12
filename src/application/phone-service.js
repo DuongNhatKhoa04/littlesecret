@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { parsePhoneLink, inboxUrl } = TW.domain.phoneLink;
+  const { parsePhoneLink, deskUrl } = TW.domain.phoneLink;
 
   /** off: chưa bật · on: đang nhận · lost: không gọi được phone-upload (chưa chạy / sai link) */
   const STATUS = Object.freeze({ off: 'off', on: 'on', lost: 'lost' });
@@ -42,12 +42,19 @@
       }
     }
 
+    async function callDesk(action, call) {
+      const parsed = parsePhoneLink(link);
+      const result = parsed ? await call(deskUrl(parsed, action)) : { ok: false, urls: [], expiresAt: '' };
+      if (!result.ok && status === STATUS.on) { run++; setStatus(STATUS.lost); }
+      return result;
+    }
+
     function start() {
       const parsed = parsePhoneLink(link);
       if (!parsed) return false;
       run++;
       setStatus(STATUS.on);
-      poll(run, inboxUrl(parsed));
+      poll(run, deskUrl(parsed, 'next'));
       return true;
     }
 
@@ -68,6 +75,10 @@
         persist();
         setStatus(STATUS.off);
       },
+      /** Link iPad (để vẽ QR) + giờ hết hạn. Gọi lỗi => Mất kết nối */
+      ipadLink: () => callDesk('info', inbox.info),
+      /** Đổi mã iPad ngay (đổi ca trên iPad dùng chung): tab cũ trên iPad không gửi được nữa */
+      renewIpadLink: () => callDesk('rotate', inbox.rotate),
       /** Mở trang: lần trước đang bật thì bật lại */
       resume() { if (enabled) start(); },
       /** listener(event): 'status' = đổi trạng thái, 'received' = vừa nhận 1 ảnh */

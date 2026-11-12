@@ -520,29 +520,46 @@ Danh sách cảnh báo, câu chữ và ngưỡng nằm trong **`config/notificat
 - Trình duyệt không cho biết dung lượng → không hiện `storageNearlyFull`.
 - Lưu template lỗi vẫn báo bằng hộp alert như cũ (§11), vì người dùng vừa bấm nút và cần biết ngay.
 
-## 21. Nhận ảnh từ iPhone / iPad (phone-upload)
+## 21. Nhận ảnh từ iPad / iPhone (phone-upload)
 
-Chụp màn hình trên iPhone / iPad (vd lúc FaceTime) rồi gửi thẳng vào ticket qua mạng LAN. Hướng dẫn cho người dùng: `phone-upload/README.md`.
+Chụp màn hình trên iPad / iPhone (vd lúc FaceTime) rồi gửi thẳng vào ticket qua mạng LAN. iPad **dùng chung** nhiều người: iPad mở trang gửi ảnh bằng cách quét mã QR trên Ticket Writer, mã tự hết hạn. Hướng dẫn cho người dùng: `phone-upload/README.md`.
 
 Trang `file://` không tự mở port được, nên có thêm chương trình nhỏ `phone-upload/phone-upload.bat` (PowerShell có sẵn của Windows) chạy trên cùng máy:
 
 ```
-iPhone (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Writer hỏi http://127.0.0.1:8765/<mã>/next
+iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Writer gọi http://127.0.0.1:8765/<mã máy tính>/...
+   └ quét QR do Ticket Writer vẽ: http://<IP LAN>:8765/u/<mã iPad>
 ```
 
 ### 21.1 phone-upload
 
-- Nghe port `8765` trên mọi card mạng. Hiện link cho iPhone (IP của card có default gateway, không thấy thì mọi IPv4) và copy sẵn link `http://127.0.0.1:8765/<mã>` vào clipboard cho Ticket Writer.
-- **Mã bí mật** 12 ký tự (`a-z`, `2-9`, bỏ chữ dễ nhầm), sinh ngẫu nhiên bằng RNG mật mã, lưu ở `%LOCALAPPDATA%\TicketWriter\phone-upload-token.txt` để dùng lại các lần sau. Lưu **ngoài folder dự án** để nén folder gửi đồng nghiệp không mang mã theo (dùng chung mã thì người biết IP gửi / lấy được ảnh của máy khác). Bản đầu lưu ở `phone-upload/token.txt`: gặp file này thì chuyển mã sang chỗ mới rồi xóa, link cũ vẫn dùng được. Mọi đường dẫn đều cần mã; sai mã → 404.
-- `GET /<mã>` → trang gửi ảnh cho iPhone (`upload.html`). `POST /<mã>/upload` → nhận 1 ảnh (chỉ `image/*`, tối đa 50 MB), đưa vào hàng chờ. `GET /<mã>/next` → trả ảnh cũ nhất kèm header `X-File-Name` rồi xóa khỏi hàng chờ; trống → 204.
-- Hàng chờ chỉ trong bộ nhớ: tắt cửa sổ là mất ảnh chưa lấy (ảnh gốc còn trên iPhone).
-- Xử lý 1 request 1 lúc, nhưng **không chờ kết nối để không**: Safari / Chrome hay mở sẵn kết nối dự phòng. Chỉ xử lý kết nối đã có dữ liệu gửi tới; để không quá 15s thì đóng. (Bản đầu chờ kết nối đó → mỗi lần tải lại trang iPhone kẹt ~15s.)
-- Trang iPhone: chọn nhiều ảnh, gửi lần lượt, mỗi ảnh hiện `✓ Đã gửi` hoặc lý do lỗi.
+- Nghe port `8765` trên mọi card mạng. IP cho iPad: card có default gateway, không thấy thì mọi IPv4.
+- **2 mã bí mật**, 12 ký tự (`a-z`, `2-9`, bỏ chữ dễ nhầm), sinh bằng RNG mật mã, lưu ở `%LOCALAPPDATA%\TicketWriter\` — **ngoài folder dự án** để nén folder gửi đồng nghiệp không mang mã theo:
+  - **Mã máy tính** (`phone-upload-token.txt`): cố định, Ticket Writer dán 1 lần. Đường dẫn dùng mã này **chỉ nhận request từ chính máy đó** (loopback): iPad / máy khác biết mã cũng không lấy được ảnh. Bản đầu lưu ở `phone-upload/token.txt`: gặp file này thì chuyển mã sang chỗ mới rồi xóa.
+  - **Mã iPad** (`phone-upload-session.txt`, dạng `<mã> <giờ hết hạn Unix>`): **hết hạn sau 12 tiếng** thì tự sinh mã mới; tắt / mở lại cửa sổ trong hạn thì giữ mã. Đổi được ngay bằng `rotate`.
+- Khi chạy: copy sẵn link máy tính `http://127.0.0.1:8765/<mã máy tính>` vào clipboard, ghi rõ link này chỉ dùng trên máy tính; iPad thì quét QR trên Ticket Writer.
+- Đường dẫn:
+
+| Request | Ai gọi | Kết quả |
+|---|---|---|
+| `GET /<mã máy tính>/next` | Ticket Writer (chỉ loopback) | Ảnh cũ nhất kèm header `X-File-Name`, xóa khỏi hàng chờ; trống → 204 |
+| `GET /<mã máy tính>/info` | Ticket Writer (chỉ loopback) | `{ urls: ["http://<IP>:8765/u/<mã iPad>"], expiresAt: "<ISO UTC>" }` |
+| `POST /<mã máy tính>/rotate` | Ticket Writer (chỉ loopback) | Đổi mã iPad ngay, trả như `info` |
+| `GET /u/<mã bất kỳ>` | iPad | Trang gửi ảnh (`upload.html`); trang tự hỏi `/check` |
+| `GET /u/<mã iPad>/check` | iPad | 200; mã sai / hết hạn → 410 |
+| `POST /u/<mã iPad>/upload` | iPad | Nhận 1 ảnh (chỉ `image/*`, tối đa 50 MB) vào hàng chờ; mã sai / hết hạn → 410 |
+| Khác / sai mã / không phải loopback | | 404, không cho biết gì thêm |
+
+- Hàng chờ chỉ trong bộ nhớ: tắt cửa sổ là mất ảnh chưa lấy (ảnh gốc còn trên iPad).
+- Xử lý 1 request 1 lúc, nhưng **không chờ kết nối để không**: Safari / Chrome hay mở sẵn kết nối dự phòng. Chỉ xử lý kết nối đã có dữ liệu gửi tới; để không quá 15s thì đóng. (Bản đầu chờ kết nối đó → mỗi lần tải lại trang iPad kẹt ~15s.)
+- Trang iPad: mở trang → hỏi `/check`, mã hết hạn thì báo `Mã đã hết hạn hoặc đã đổi… quét lại mã QR` và khóa nút chọn ảnh. Chọn nhiều ảnh, gửi lần lượt, mỗi ảnh hiện `✓ Đã gửi` hoặc lý do lỗi; gửi gặp 410 cũng báo hết hạn.
 
 ### 21.2 Ticket Writer
 
 - Nút `Nhận ảnh iOS` ở header, 3 trạng thái: `Nhận ảnh iOS` (tắt) · `Đang nhận ảnh` · `Mất kết nối`.
-- Bấm khi tắt / mất kết nối → hộp hỏi link (điền sẵn link đã lưu) → link đúng dạng `http://<host>:<port>/<mã 12 ký tự>` thì bật; sai → báo. Bấm khi đang nhận → tắt.
+- Bấm khi tắt / mất kết nối → hộp hỏi link máy tính (điền sẵn link đã lưu) → link đúng dạng `http://<host>:<port>/<mã 12 ký tự>` thì bật và mở hộp mã QR; sai (kể cả dán nhầm link iPad `/u/…`) → báo.
+- Bấm khi đang nhận → **hộp Nhận ảnh iOS**: hướng dẫn quét, **mã QR** của link iPad (luôn đen trên trắng, cả giao diện tối), link dạng chữ, giờ hết hạn `HH:mm dd/MM`. Nút `Đổi mã ngay` (hỏi xác nhận) · `Tắt nhận ảnh` · `Đóng`. Không gọi được phone-upload → báo trong hộp, nút chuyển `Mất kết nối`. Máy không có IP LAN → báo.
+- Mã QR tự vẽ (`src/domain/qr-code.js`, không thư viện): chế độ byte, mức sửa lỗi M, phiên bản 1–6 (tối đa 106 byte; link iPad ~45 ký tự → phiên bản 3–4), chọn mask theo điểm phạt chuẩn.
 - Đang nhận: hỏi `/next` mỗi `phoneUpload.pollMs` (1.5s); có ảnh thì hỏi tiếp ngay tới khi hết. Mỗi ảnh vào **đúng mục Ctrl+V sẽ dán** (mục focus gần nhất, không thì mục đầu), giống hệt dán ảnh: tự tick checklist, lưu IndexedDB. Nút nháy `Đã nhận ảnh ✓`.
 - Màn hình không có mục nhận ảnh (vd SMS Shipping / Xin review) → không lấy ảnh, để chờ ở phone-upload.
 - Gọi phone-upload lỗi (chưa chạy / đã tắt / sai mã) → `Mất kết nối`, **ngừng hỏi** (không ghi lỗi đỏ liên tục vào Console). Bấm nút để thử lại.
