@@ -6,14 +6,14 @@ Chụp màn hình trên iPhone / iPad (vd lúc FaceTime) rồi gửi thẳng và
 
 1. Double-click **`phone-upload.bat`**. Cửa sổ đen hiện ra, giữ nó mở trong lúc làm.
    - Windows hỏi **Tường lửa (Windows Defender Firewall)** → chọn **Private networks** → **Allow access**. Máy công ty có thể cần IT bấm giúp.
-2. Ticket Writer: bấm nút **`📱 Nhận ảnh iPhone`** ở header → **Ctrl+V** (link đã được copy sẵn) → OK. Nút đổi thành `📱 Đang nhận ảnh`.
+2. Ticket Writer: bấm nút **`Nhận ảnh iOS`** ở header → **Ctrl+V** (link đã được copy sẵn) → OK. Nút đổi thành `Đang nhận ảnh`.
 3. iPhone / iPad (**cùng Wi-Fi** với máy tính): mở **Safari**, gõ link màu vàng trong cửa sổ đen (dạng `http://192.168.x.x:8765/...`).
    - Bấm **Chia sẻ → Thêm vào MH chính** để lần sau bấm icon là mở.
 
 ## Hằng ngày
 
 1. Double-click `phone-upload.bat`.
-2. Ticket Writer tự bật lại nhận ảnh khi mở trang (nếu lần trước đang bật). Nút ghi `📱 Mất kết nối` → bấm nút → Enter.
+2. Ticket Writer tự bật lại nhận ảnh khi mở trang (nếu lần trước đang bật). Nút ghi `Mất kết nối` → bấm nút → Enter.
 3. iPhone: mở icon "Gửi ảnh" → **Chọn ảnh để gửi** → chọn 1 hoặc nhiều ảnh. Ảnh tự vào **mục đang mở** trên Ticket Writer, giống Ctrl+V (tự tick checklist).
 
 ## Lưu ý

@@ -31,7 +31,7 @@ header h1 { font-size: 16px; margin: 0 4px 0 0; font-weight: 650; }
 .notice-text { flex: 1; }
 .notice-close { background: transparent; border: 0; color: inherit; font-size: 18px; line-height: 1; cursor: pointer; padding: 0 2px; }
 
-/* Nút nhận ảnh iPhone: đang nhận = viền cyan, mất kết nối = chữ đỏ */
+/* Nút nhận ảnh iOS: đang nhận = viền cyan, mất kết nối = chữ đỏ */
 #phoneBtn[data-status="on"] { border-color: var(--btn-line); background: var(--btn-bg); color: var(--btn-ink); }
 #phoneBtn[data-status="lost"] { border-color: var(--err-ink); color: var(--err-ink); }
 

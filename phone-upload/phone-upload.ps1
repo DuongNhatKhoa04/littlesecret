@@ -160,7 +160,7 @@ try { $Listener.Start() } catch {
 
 $addresses = @(Get-LanAddresses)
 Write-Host ''
-Write-Host '=== Nhận ảnh iPhone / iPad cho Ticket Writer ===' -ForegroundColor Cyan
+Write-Host '=== Nhận ảnh iOS cho Ticket Writer ===' -ForegroundColor Cyan
 Write-Host ''
 Write-Host 'Trên iPhone / iPad (cùng Wi-Fi với máy này), mở bằng Safari:'
 foreach ($address in $addresses) { Write-Host "    http://${address}:$Port/$Token" -ForegroundColor Yellow }
@@ -169,7 +169,7 @@ Write-Host ''
 $localLink = "http://127.0.0.1:$Port/$Token"
 $copied = ''
 if (-not $LocalOnly) { try { Set-Clipboard -Value $localLink; $copied = ' (đã copy sẵn, chỉ cần Ctrl+V)' } catch { } }
-Write-Host "Ticket Writer: bấm nút 📱 rồi dán link $localLink$copied"
+Write-Host "Ticket Writer: bấm nút Nhận ảnh iOS rồi dán link $localLink$copied"
 Write-Host ''
 Write-Host 'Giữ cửa sổ này mở trong lúc làm. Tắt cửa sổ = ngừng nhận ảnh.' -ForegroundColor DarkGray
 Write-Host ''

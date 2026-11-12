@@ -24,7 +24,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 ## 3. Bố cục giao diện
 
-**Header**: tên app + version · các nút chọn **loại ticket** (bản mới: chọn theo cấp, xem §14.2) · chế độ xem (`Chia đôi` / `Nhập` / `Kết quả`) · `Template` · `+ Lưu template` · `Lưu offline` · `Mở file offline` (§19) · `⇄ Đổi bên` · `📱 Nhận ảnh iPhone` (§21) · nút giao diện (`◐ Tự động` / `☀ Sáng` / `☾ Tối`) · `Ticket mới`.
+**Header**: tên app + version · các nút chọn **loại ticket** (bản mới: chọn theo cấp, xem §14.2) · chế độ xem (`Chia đôi` / `Nhập` / `Kết quả`) · `Template` · `+ Lưu template` · `Lưu offline` · `Mở file offline` (§19) · `⇄ Đổi bên` · `Nhận ảnh iOS` (§21) · nút giao diện (`◐ Tự động` / `☀ Sáng` / `☾ Tối`) · `Ticket mới`.
 
 **Chế độ xem**
 - `Chia đôi`: trái Nhập, phải Kết quả. `⇄ Đổi bên` đảo trái/phải (chỉ bật ở Chia đôi).
@@ -226,7 +226,7 @@ Việc cần làm tiếp:
 | `ticketWriter.v1` | Loại đang chọn, chế độ xem, đổi bên, ticket đang nhập (Loại, Tóm tắt, Phone, ngôn ngữ, variant, kết luận, các mục, tick/N/A checklist), form SMS Promotion (trường `sms`, gồm ô tick `enabled`, ngôn ngữ tin nhắn `lang` và option tự thêm `customOptions`; ảnh lưu ở IndexedDB), form SMS Shipping (trường `shipping`), form SMS Xin review (trường `review`: bang `usState`, ngôn ngữ `lang`) |
 | `ticketWriter.images.v1` | **IndexedDB** (không phải localStorage), object store `images`: mỗi bản ghi = danh sách ảnh `{ blob, copied }` của 1 mục, key = key mục. Ảnh gốc, không nén. Nạp lại khi mở trang, giữ cả trạng thái `✓ Đã copy` |
 | `ticketWriter.theme.v1` | Giao diện đã chọn: `auto` / `light` / `dark`. Lưu riêng để `Ticket mới` không đổi; giá trị lạ → `auto` |
-| `ticketWriter.phone.v1` | Nhận ảnh iPhone (§21): `{ link, enabled }` — link phone-upload đã dán và lần trước có đang bật không |
+| `ticketWriter.phone.v1` | Nhận ảnh iOS (§21): `{ link, enabled }` — link phone-upload đã dán và lần trước có đang bật không |
 | `ticketWriter.staff.v1` | Tên nhân viên (form SMS Xin review). Lưu riêng để `Ticket mới` không xóa |
 | `ticketWriter.templates.v1` | Danh sách template |
 | `ticketWriter.categories.v1` | Loại tự thêm |
@@ -541,9 +541,9 @@ iPhone (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Wri
 
 ### 21.2 Ticket Writer
 
-- Nút `📱` ở header, 3 trạng thái: `📱 Nhận ảnh iPhone` (tắt) · `📱 Đang nhận ảnh` · `📱 Mất kết nối`.
+- Nút `Nhận ảnh iOS` ở header, 3 trạng thái: `Nhận ảnh iOS` (tắt) · `Đang nhận ảnh` · `Mất kết nối`.
 - Bấm khi tắt / mất kết nối → hộp hỏi link (điền sẵn link đã lưu) → link đúng dạng `http://<host>:<port>/<mã 12 ký tự>` thì bật; sai → báo. Bấm khi đang nhận → tắt.
-- Đang nhận: hỏi `/next` mỗi `phoneUpload.pollMs` (1.5s); có ảnh thì hỏi tiếp ngay tới khi hết. Mỗi ảnh vào **đúng mục Ctrl+V sẽ dán** (mục focus gần nhất, không thì mục đầu), giống hệt dán ảnh: tự tick checklist, lưu IndexedDB. Nút nháy `📱 Đã nhận ảnh ✓`.
+- Đang nhận: hỏi `/next` mỗi `phoneUpload.pollMs` (1.5s); có ảnh thì hỏi tiếp ngay tới khi hết. Mỗi ảnh vào **đúng mục Ctrl+V sẽ dán** (mục focus gần nhất, không thì mục đầu), giống hệt dán ảnh: tự tick checklist, lưu IndexedDB. Nút nháy `Đã nhận ảnh ✓`.
 - Màn hình không có mục nhận ảnh (vd SMS Shipping / Xin review) → không lấy ảnh, để chờ ở phone-upload.
-- Gọi phone-upload lỗi (chưa chạy / đã tắt / sai mã) → `📱 Mất kết nối`, **ngừng hỏi** (không ghi lỗi đỏ liên tục vào Console). Bấm nút để thử lại.
+- Gọi phone-upload lỗi (chưa chạy / đã tắt / sai mã) → `Mất kết nối`, **ngừng hỏi** (không ghi lỗi đỏ liên tục vào Console). Bấm nút để thử lại.
 - Mở trang: lần trước đang bật thì tự bật lại (thử 1 lần).

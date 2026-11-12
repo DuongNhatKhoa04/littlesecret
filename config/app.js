@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-12.10',      // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-12.11',      // hiện cạnh tên app để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
 
@@ -15,7 +15,7 @@
     categoryKey: 'ticketWriter.categories.v1',
     staffKey: 'ticketWriter.staff.v1',         // tên nhân viên (form SMS Xin review), lưu riêng để Ticket mới không xóa
     themeKey: 'ticketWriter.theme.v1',         // giao diện sáng / tối / tự động, lưu riêng để Ticket mới không đổi
-    phoneKey: 'ticketWriter.phone.v1',         // link phone-upload + đang bật nhận ảnh iPhone hay không
+    phoneKey: 'ticketWriter.phone.v1',         // link phone-upload + đang bật nhận ảnh iOS hay không
     imageDbName: 'ticketWriter.images.v1',     // tên database IndexedDB chứa ảnh đang dán (KHÔNG ĐỔI)
 
     // Bookmark "Điền ticket" trên trang ticket: ô cần điền, chữ điền vào ô Comment ở khung Checklist, nút bấm sau khi điền.
@@ -42,7 +42,7 @@
       { value: 'Pending - Needs to follow up', hint: 'Chưa xong → để ticket mở, chờ follow-up', requiresAction: false, showInBody: true }
     ],
 
-    // Nhận ảnh iPhone / iPad qua phone-upload (phone-upload/phone-upload.bat): bao lâu hỏi 1 lần khi hàng chờ trống
+    // Nhận ảnh iOS / iPad qua phone-upload (phone-upload/phone-upload.bat): bao lâu hỏi 1 lần khi hàng chờ trống
     phoneUpload: { pollMs: 1500 },
 
     // Nút giao diện ở header: bấm để sang mục kế tiếp. Mục đầu là mặc định. id lưu trên máy => không đổi id.

@@ -56,7 +56,7 @@
     check('ô dán ảnh không nhận Tab', $$('.pzone').length > 0 && $$('.pzone').every(z => z.tabIndex === -1));
     const estimate = await navigator.storage.estimate();
     check('đọc được dung lượng trình duyệt trên file://', estimate.quota > 0, JSON.stringify(estimate));
-    check('nút nhận ảnh iPhone: mặc định tắt', $('#phoneBtn').dataset.status === 'off' && $('#phoneBtn').textContent === '📱 Nhận ảnh iPhone', $('#phoneBtn').textContent);
+    check('nút nhận ảnh iOS: mặc định tắt', $('#phoneBtn').dataset.status === 'off' && $('#phoneBtn').textContent === 'Nhận ảnh iOS', $('#phoneBtn').textContent);
     check('bình thường: không có thanh cảnh báo', $('#notices').hidden, $('#notices').textContent);
     const bg = () => getComputedStyle(document.body).backgroundColor;
     const themeOf = () => [document.documentElement.dataset.theme || 'auto', $('#themeBtn').textContent];

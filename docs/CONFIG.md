@@ -232,7 +232,7 @@ setReview({   // const { setReview } = registry;
 | `autoCapitalize` | Tự viết hoa chữ đầu mỗi dòng |
 | `debounceMs` | Độ trễ cập nhật Kết quả |
 | `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `phoneKey` | Key localStorage. **Không đổi** |
-| `phoneUpload.pollMs` | Nhận ảnh iPhone: bao lâu hỏi phone-upload 1 lần khi hàng chờ trống (REQUIREMENTS §21) |
+| `phoneUpload.pollMs` | Nhận ảnh iOS: bao lâu hỏi phone-upload 1 lần khi hàng chờ trống (REQUIREMENTS §21) |
 | `imageDbName` | Tên database IndexedDB chứa ảnh. **Không đổi** |
 | `themes` | Nút giao diện ở header: `{ id, label }`, bấm sang mục kế tiếp, mục đầu là mặc định. `auto` = theo hệ điều hành. `id` lưu trên máy: không đổi id đang có. Màu từng giao diện ở `styles/tokens.css` |
 | `ticketFill` | Bookmark `Điền ticket`: selector ô `subject` / `description` / `comment` (ô Comment ở khung Checklist), `commentText` (`done`), nút bấm sau khi điền = phần tử `uploadLabel` có chữ `uploadText`. Đổi thì người dùng phải kéo lại bookmark |
