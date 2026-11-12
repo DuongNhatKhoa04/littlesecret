@@ -102,4 +102,45 @@
     A.outputService.createOutputService({ context, session, images, files }).downloadImages();
     assertEqual(saved, { fileName: 'MAT KET NOI.zip', names: ['01 Van de.png', '02 Da support.png'] });
   });
+
+  function fakeImageStore(initial) {
+    const data = { ...initial };
+    return {
+      data,
+      loadAll: async () => ({ ...data }),
+      save: async (key, list) => { if (list.length) data[key] = list; else delete data[key]; return true; },
+      clear: async () => { Object.keys(data).forEach(key => delete data[key]); return true; }
+    };
+  }
+  const imageFiles = { readAsDataUrl: async () => 'data:image/png;base64,' };
+  const png = () => new Blob([], { type: 'image/png' });
+  const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+
+  test('ảnh: mở lại trang => nạp ảnh đã lưu (giữ ✓ Đã copy), bỏ bản ghi hỏng', async () => {
+    const imageStore = fakeImageStore({ s1: [{ blob: png(), copied: true }, { blob: 'hỏng' }], s2: 'hỏng' });
+    const images = A.imageService.createImageService({ files: imageFiles, imageStore, onChecklistImage: () => {} });
+    await settle();
+    assertEqual([images.counts(), images.list('s1')[0].copied], [{ s1: 1 }, true]);
+  });
+
+  test('ảnh: thêm / copy / xóa => lưu theo mục; Ticket mới => xóa hết', async () => {
+    const imageStore = fakeImageStore({});
+    const images = A.imageService.createImageService({ files: imageFiles, imageStore, onChecklistImage: () => {} });
+    await images.add('s1', [png(), png()]);
+    images.markCopied(images.list('s1')[1]);
+    images.remove('s1', 0);
+    await settle();
+    assertEqual(imageStore.data.s1.map(image => image.copied), [true]);
+    images.clear();
+    await settle();
+    assertEqual([images.counts(), imageStore.data], [{}, {}]);
+  });
+
+  test('ảnh: Ticket mới trong lúc đang nạp => không hiện lại ảnh cũ', async () => {
+    const imageStore = fakeImageStore({ s1: [{ blob: png(), copied: false }] });
+    const images = A.imageService.createImageService({ files: imageFiles, imageStore, onChecklistImage: () => {} });
+    images.clear();
+    await settle();
+    assertEqual([images.counts(), imageStore.data], [{}, {}]);
+  });
 })(window.TW);

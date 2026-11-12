@@ -1,4 +1,5 @@
 // src/ui/paste-handler.js — Ctrl+V ảnh ở bất kỳ đâu: dán vào mục đang đứng, không thì mục focus gần nhất, không thì mục đầu.
+// Trả target() để ảnh từ nguồn khác (iPhone qua phone-upload) vào cùng mục như Ctrl+V.
 (function (TW) {
   'use strict';
 
@@ -34,6 +35,9 @@
       event.preventDefault();
       imageZone.addFiles(key, files);
     });
+
+    /** Mục nhận ảnh khi không đứng trong mục nào. null = màn hình hiện tại không có mục nhận ảnh */
+    return { target: () => outputService.pasteTarget(lastKey) };
   }
 
   TW.ui.pasteHandler = { installPasteHandler };

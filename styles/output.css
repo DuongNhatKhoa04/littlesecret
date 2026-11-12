@@ -3,11 +3,12 @@
 .outhead h2 { font-size: 14px; margin: 0; font-weight: 650; }
 .status { color: var(--muted); font-size: 12px; }
 .copy {
-  margin-left: auto; background: var(--accent); color: var(--accent-ink);
-  border: 0; border-radius: var(--radius); padding: 6px 14px; cursor: pointer; font-weight: 600;
+  margin-left: auto; background: var(--btn-bg); color: var(--btn-ink);
+  border: 1px solid var(--btn-line); border-radius: var(--radius); padding: 6px 14px; cursor: pointer; font-weight: 600;
 }
+.copy:hover:not(:disabled) { background: var(--btn-hover); }
 .copy:disabled { opacity: .4; cursor: not-allowed; }
-.copy.done { background: var(--ok); color: #fff; }
+.copy.done { background: var(--done-bg); color: var(--done-ink); border-color: var(--done-line); }
 .copy + .copy { margin-left: 0; }   /* nhiều nút cạnh nhau (ZIP, PDF): chỉ nút đầu đẩy sang phải */
 .out {
   margin: 0 0 20px; padding: 12px; background: var(--out-bg); border: 1px solid var(--line);

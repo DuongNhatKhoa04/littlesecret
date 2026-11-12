@@ -27,8 +27,12 @@
     <button type="button" class="ghost" id="offOpen" title="Chọn file .zip / .json đã tải bằng Lưu offline để nạp lại vào form, rồi Copy để điền">Mở file offline</button>
     <input type="file" id="offImport" accept=".zip,.json,application/zip,application/json" hidden>
     <button type="button" class="ghost wide-only" id="swapBtn" title="Đổi vị trí Nhập / Kết quả (chỉ ở chế độ Chia đôi)">⇄ Đổi bên</button>
+    <button type="button" class="ghost" id="phoneBtn"></button>
+    <button type="button" class="ghost" id="themeBtn" title="Đổi giao diện: Tự động (theo Windows) → Sáng → Tối"></button>
     <button type="button" class="ghost" id="resetBtn">Ticket mới</button>
   </header>
+
+  <div class="notices" id="notices" hidden></div>
 
   <nav class="picker" id="picker" aria-label="Chọn loại ticket"></nav>
 
@@ -151,6 +155,7 @@
 
 <!-- config: cấu hình chung -->
 <script src="config/app.js"></script>
+<script src="config/notifications.js"></script>
 <!-- config: Viết ticket (thứ tự = thứ tự nút) -->
 <script src="config/tickets/incident.js"></script>
 <script src="config/tickets/transfer.js"></script>
@@ -184,6 +189,7 @@
 <script src="src/domain/shipping-message.js"></script>
 <script src="src/domain/review.js"></script>
 <script src="src/domain/review-message.js"></script>
+<script src="src/domain/phone-link.js"></script>
 
 <!-- application -->
 <script src="src/application/context.js"></script>
@@ -202,9 +208,14 @@
 <script src="src/application/shipping-service.js"></script>
 <script src="src/application/review-service.js"></script>
 <script src="src/application/staff-service.js"></script>
+<script src="src/application/notice-service.js"></script>
+<script src="src/application/theme-service.js"></script>
+<script src="src/application/phone-service.js"></script>
 
 <!-- infrastructure -->
 <script src="src/infrastructure/storage.js"></script>
+<script src="src/infrastructure/image-store.js"></script>
+<script src="src/infrastructure/storage-quota.js"></script>
 <script src="src/infrastructure/clipboard.js"></script>
 <script src="src/infrastructure/screen-capture.js"></script>
 <script src="src/infrastructure/ticket-fill.js"></script>
@@ -212,9 +223,12 @@
 <script src="src/infrastructure/pdf-image.js"></script>
 <script src="src/infrastructure/pdf.js"></script>
 <script src="src/infrastructure/files.js"></script>
+<script src="src/infrastructure/phone-inbox.js"></script>
 
 <!-- ui -->
 <script src="src/ui/dom.js"></script>
+<script src="src/ui/notice-bar.js"></script>
+<script src="src/ui/theme-toggle.js"></script>
 <script src="src/ui/category-combo.js"></script>
 <script src="src/ui/idea-list.js"></script>
 <script src="src/ui/image-zone.js"></script>
@@ -232,6 +246,7 @@
 <script src="src/ui/fill-dialog.js"></script>
 <script src="src/ui/header.js"></script>
 <script src="src/ui/paste-handler.js"></script>
+<script src="src/ui/phone-button.js"></script>
 
 <!-- composition root: luôn cuối cùng -->
 <script src="src/main.js"></script>

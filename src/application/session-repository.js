@@ -56,9 +56,10 @@
       return state;
     }
 
+    /** false = không lưu được (localStorage đầy / bị chặn) */
     function save(state) {
       const { mode, swap, nav, ticket, sms, shipping, review } = state;
-      storage.write(app.storageKey, { type: resolveTypeKey(nav, context), mode, swap, nav, ticket, sms, shipping, review });
+      return storage.write(app.storageKey, { type: resolveTypeKey(nav, context), mode, swap, nav, ticket, sms, shipping, review });
     }
 
     return { load, save };

@@ -1,19 +1,46 @@
 /* styles/tokens.css — Màu, bo góc, font (light + dark) và style nền. */
+/* Palette: #ffe7f3 hồng phấn · #ffcdde hồng nhạt · #fea2ba hồng đậm · #7efaff cyan sáng · #1adee6 cyan.
+   Cyan quá sáng để làm chữ trên nền sáng => chữ/link dùng --accent-text (cyan đậm), cyan gốc chỉ làm nền nút.
+   Màu chữ đã kiểm tra tương phản >= 4.5:1 trên nền tương ứng (WCAG AA), khung focus >= 3:1. */
 :root {
-  --bg: #f4f6f8; --panel: #ffffff; --ink: #1b2430; --muted: #66717f;
-  --line: #d9dee5; --accent: #0f6e8c; --accent-ink: #ffffff; --accent-soft: #e2f1f6;
-  --warn-bg: #fff4d6; --warn-ink: #7a5300; --ok: #1f7a4d; --out-bg: #f9fafb;
-  --sms-bg: #f3edfb; --sms-line: #b79be0;
+  color-scheme: light dark;   /* thanh cuộn, ô nhập của trình duyệt theo theme */
+  --bg: #fff3f9; --panel: #ffffff; --ink: #2b2433; --muted: #6b5566;
+  --line: #ffcdde; --accent: #1adee6; --accent-ink: #063f42; --accent-text: #00727a; --accent-soft: #d6fdff; --focus: #00838a;
+  --selected-bg: #c4f8fa; --selected-ink: #063f42;   /* nút đang chọn: nhạt hơn --accent cho đỡ gắt */
+  --btn-bg: #c4f8fa; --btn-ink: #063f42; --btn-line: #1adee6; --btn-hover: #7efaff;   /* nút Copy / Tải */
+  --done-bg: #d4f5e5; --done-ink: #0b5e45; --done-line: #6fd3a6;                     /* nút đã copy (Copy lại) */
+  --warn-bg: #fff0cc; --warn-ink: #7a4a00; --ok: #0d7f5f; --out-bg: #fffafc;
+  --err-bg: #fdd8d8; --err-ink: #a3141c;
+  --sms-bg: #ffe7f3; --sms-line: #fea2ba;
   --radius: 8px;
+  scrollbar-color: var(--sms-line) transparent;
 }
+/* Tối: theo hệ điều hành (data-theme chưa gắn = Tự động) hoặc người dùng chọn Tối. 2 khối phải giữ giống nhau. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #14181d; --panel: #1c222a; --ink: #e6eaef; --muted: #98a3b0;
-    --line: #313a46; --accent: #4fb3d1; --accent-ink: #0c1317; --accent-soft: #1d3540;
-    --warn-bg: #3a2f10; --warn-ink: #f2c96b; --ok: #5fd196; --out-bg: #181d23;
-    --sms-bg: #2a2140; --sms-line: #6d55a0;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #1e1820; --panel: #2a2230; --ink: #ffe7f3; --muted: #d4b3c3;
+    --line: #4a3a48; --accent: #1adee6; --accent-ink: #062a2c; --accent-text: #7efaff; --accent-soft: #17434a; --focus: #7efaff;
+    --selected-bg: #1adee6; --selected-ink: #062a2c;
+    --btn-bg: #1adee6; --btn-ink: #062a2c; --btn-line: #1adee6; --btn-hover: #7efaff;
+    --done-bg: #6fe0b4; --done-ink: #0b2a1f; --done-line: #6fe0b4;
+    --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #241d29;
+    --err-bg: #4a1a22; --err-ink: #ffb3bd;
+    --sms-bg: #3a2232; --sms-line: #fea2ba;
   }
 }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1e1820; --panel: #2a2230; --ink: #ffe7f3; --muted: #d4b3c3;
+  --line: #4a3a48; --accent: #1adee6; --accent-ink: #062a2c; --accent-text: #7efaff; --accent-soft: #17434a; --focus: #7efaff;
+  --selected-bg: #1adee6; --selected-ink: #062a2c;
+  --btn-bg: #1adee6; --btn-ink: #062a2c; --btn-line: #1adee6; --btn-hover: #7efaff;
+  --done-bg: #6fe0b4; --done-ink: #0b2a1f; --done-line: #6fe0b4;
+  --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #241d29;
+  --err-bg: #4a1a22; --err-ink: #ffb3bd;
+  --sms-bg: #3a2232; --sms-line: #fea2ba;
+}
+:root[data-theme="light"] { color-scheme: light; }
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body {
@@ -22,5 +49,5 @@ body {
 }
 button, input, textarea, select { font: inherit; color: inherit; }
 button:focus-visible, input:focus-visible, textarea:focus-visible, label:focus-within {
-  outline: 2px solid var(--accent); outline-offset: 1px;
+  outline: 2px solid var(--focus); outline-offset: 1px;
 }

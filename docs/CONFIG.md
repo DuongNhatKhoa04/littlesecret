@@ -231,7 +231,10 @@ setReview({   // const { setReview } = registry;
 | `version` | `vYYYY-MM-DD.N`, tăng mỗi lần sửa |
 | `autoCapitalize` | Tự viết hoa chữ đầu mỗi dòng |
 | `debounceMs` | Độ trễ cập nhật Kết quả |
-| `storageKey`, `templateKey`, `categoryKey`, `staffKey` | Key localStorage. **Không đổi** |
+| `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `phoneKey` | Key localStorage. **Không đổi** |
+| `phoneUpload.pollMs` | Nhận ảnh iPhone: bao lâu hỏi phone-upload 1 lần khi hàng chờ trống (REQUIREMENTS §21) |
+| `imageDbName` | Tên database IndexedDB chứa ảnh. **Không đổi** |
+| `themes` | Nút giao diện ở header: `{ id, label }`, bấm sang mục kế tiếp, mục đầu là mặc định. `auto` = theo hệ điều hành. `id` lưu trên máy: không đổi id đang có. Màu từng giao diện ở `styles/tokens.css` |
 | `ticketFill` | Bookmark `Điền ticket`: selector ô `subject` / `description` / `comment` (ô Comment ở khung Checklist), `commentText` (`done`), nút bấm sau khi điền = phần tử `uploadLabel` có chữ `uploadText`. Đổi thì người dùng phải kéo lại bookmark |
 | `categories` | Loại có sẵn (`ABC`, `CLOVER`, `PAX`, `INTERNET`) |
 | `marks` | Ký hiệu checklist trong nội dung: `[x]`, `[ ]`, `[N/A]` |
@@ -241,3 +244,17 @@ setReview({   // const { setReview } = registry;
 | `groups` | Nhóm ở cấp 1: `ticket`, `setup`, `sms`. `hidden: true` = tạm ẩn nút của nhóm (dữ liệu, checklist giữ nguyên); xóa `hidden` là hiện lại |
 | `smsKinds` | Cấp con của nhóm SMS: `shipping`, `review`; mục đầu là mặc định. Không dùng lại id `promotion`: state cũ mang id đó được chuyển sang khối SMS của `Hỗ trợ merchant`. `id` lưu trong state: không đổi id đang có. Thêm loại SMS mới cần thêm cả config + domain + form (như Shipping), không chỉ 1 dòng ở đây |
 | `labels` | Nhãn các trường chung |
+
+## 6. Cảnh báo lưu trữ — `config/notifications.js`
+
+Mọi cảnh báo hiện ở thanh dưới header (REQUIREMENTS §20).
+
+| Trường | Ý nghĩa |
+|---|---|
+| `nearlyFullRatio` | Ngưỡng cảnh báo sắp đầy, 0–1 (0.8 = 80% dung lượng trình duyệt cho phép) |
+| `items.<id>.level` | `error` (đỏ: tải lại trang sẽ mất dữ liệu) · `warn` (vàng) |
+| `items.<id>.message` | Câu hiện cho người dùng. `{percent}` = % dung lượng đã dùng |
+| `items.<id>.when` | Ghi chú cho người sửa config: khi nào hiện. Không hiện trên giao diện |
+
+- `id` do code bật/tắt: **không đổi, không xóa** id đang có. id gõ sai trong code → báo lỗi ngay khi chạy (test bắt được).
+- Thêm cảnh báo mới = thêm 1 mục ở đây + 1 dòng `notices.toggle('<id>', đangLỗi)` ở chỗ phát hiện sự cố.

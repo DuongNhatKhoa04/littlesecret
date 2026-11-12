@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gửi ảnh">
+<title>Gửi ảnh cho Ticket Writer</title>
+<style>
+  /* Trang cho iPhone / iPad, do phone-upload.ps1 phục vụ. Cùng màu với Ticket Writer (styles/tokens.css). */
+  :root {
+    color-scheme: light dark;
+    --bg: #fff3f9; --panel: #ffffff; --ink: #2b2433; --muted: #6b5566; --line: #ffcdde;
+    --btn-bg: #c4f8fa; --btn-ink: #063f42; --btn-line: #1adee6;
+    --ok: #0d7f5f; --err: #a3141c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1820; --panel: #2a2230; --ink: #ffe7f3; --muted: #d4b3c3; --line: #4a3a48;
+      --btn-bg: #1adee6; --btn-ink: #062a2c; --btn-line: #1adee6;
+      --ok: #6fe0b4; --err: #ffb3bd;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 20px 16px calc(20px + env(safe-area-inset-bottom)); background: var(--bg); color: var(--ink);
+    font: 17px/1.45 -apple-system, system-ui, "Segoe UI", sans-serif;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .hint { color: var(--muted); font-size: 15px; margin: 0 0 18px; }
+  .pick {
+    display: block; width: 100%; padding: 18px; border: 1px solid var(--btn-line); border-radius: 14px;
+    background: var(--btn-bg); color: var(--btn-ink); font-size: 19px; font-weight: 650; text-align: center; cursor: pointer;
+  }
+  .pick input { display: none; }
+  .summary { margin: 16px 0 8px; font-weight: 600; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li {
+    display: flex; justify-content: space-between; gap: 10px; padding: 10px 12px; margin: 0 0 8px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px; font-size: 15px;
+  }
+  li .name { overflow-wrap: anywhere; }
+  li .state { flex: none; color: var(--muted); }
+  li.ok .state { color: var(--ok); }
+  li.fail .state { color: var(--err); }
+</style>
+</head>
+<body>
+<h1>Gửi ảnh cho Ticket Writer</h1>
+<p class="hint">Chọn ảnh → ảnh tự gửi sang máy tính, vào mục đang mở trên Ticket Writer. Bấm Chia sẻ → Thêm vào MH chính để lần sau mở nhanh.</p>
+<label class="pick">📷 Chọn ảnh để gửi<input type="file" id="files" accept="image/*" multiple></label>
+<p class="summary" id="summary"></p>
+<ul id="list"></ul>
+<script>
+  'use strict';
+  // Trang ở /<mã>; gửi lên /<mã>/upload. Mỗi ảnh 1 request, gửi lần lượt để biết ảnh nào lỗi.
+  const uploadUrl = location.pathname.replace(/\/$/, '') + '/upload';
+  const list = document.getElementById('list');
+  const summary = document.getElementById('summary');
+  let sent = 0;
+
+  function row(name) {
+    const item = document.createElement('li');
+    const label = document.createElement('span');
+    const state = document.createElement('span');
+    label.className = 'name';
+    label.textContent = name;
+    state.className = 'state';
+    state.textContent = 'Đang gửi…';
+    item.append(label, state);
+    list.prepend(item);
+    return (ok, text) => { item.className = ok ? 'ok' : 'fail'; state.textContent = text; };
+  }
+
+  async function send(file) {
+    const done = row(file.name);
+    try {
+      const response = await fetch(uploadUrl, {
+        method: 'POST', body: file,
+        headers: { 'Content-Type': file.type || 'application/octet-stream', 'X-File-Name': encodeURIComponent(file.name) }
+      });
+      if (response.ok) { sent++; done(true, '✓ Đã gửi'); return; }
+      const reply = await response.json().catch(() => ({}));
+      done(false, reply.error || 'Lỗi ' + response.status);
+    } catch (error) {
+      done(false, 'Mất kết nối máy tính');
+    }
+  }
+
+  document.getElementById('files').addEventListener('change', async (event) => {
+    const files = [...event.target.files];
+    event.target.value = '';   // chọn lại đúng ảnh đó lần sau vẫn gửi được
+    for (const file of files) await send(file);
+    summary.textContent = `Đã gửi ${sent} ảnh trong lần mở trang này`;
+  });
+</script>
+</body>
+</html>

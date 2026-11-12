@@ -17,14 +17,14 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 - HTML + CSS + JS thuần, không thư viện ngoài, không cần server, mở bằng trình duyệt (Chrome/Edge).
 - Dữ liệu lưu trong `localStorage` của trình duyệt trên máy người dùng. Không gửi đi đâu.
-- Ảnh chỉ giữ trong bộ nhớ, **mất khi tải lại trang** (cố ý, không lưu ảnh).
-- Hỗ trợ dark mode theo hệ điều hành.
+- Ảnh lưu trong **IndexedDB** của trình duyệt (§12): tải lại trang / mở lại Chrome vẫn còn. `Ticket mới` và `Mở file offline` xóa ảnh. IndexedDB bị chặn/đầy → ảnh chỉ giữ trong bộ nhớ như trước, không báo lỗi.
+- Giao diện sáng / tối: nút ở header xoay vòng `◐ Tự động` (theo hệ điều hành, mặc định) → `☀ Sáng` → `☾ Tối`. Lựa chọn lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`.
 - Hỗ trợ gõ tiếng Việt bằng IME (Unikey…): không xử lý phím Enter/Backspace, không viết hoa khi đang gõ dấu.
 - Hiện `version` cạnh tên app để biết đang mở đúng bản mới.
 
 ## 3. Bố cục giao diện
 
-**Header**: tên app + version · các nút chọn **loại ticket** (bản mới: chọn theo cấp, xem §14.2) · chế độ xem (`Chia đôi` / `Nhập` / `Kết quả`) · `Template` · `+ Lưu template` · `Lưu offline` · `Mở file offline` (§19) · `⇄ Đổi bên` · `Ticket mới`.
+**Header**: tên app + version · các nút chọn **loại ticket** (bản mới: chọn theo cấp, xem §14.2) · chế độ xem (`Chia đôi` / `Nhập` / `Kết quả`) · `Template` · `+ Lưu template` · `Lưu offline` · `Mở file offline` (§19) · `⇄ Đổi bên` · `📱 Nhận ảnh iPhone` (§21) · nút giao diện (`◐ Tự động` / `☀ Sáng` / `☾ Tối`) · `Ticket mới`.
 
 **Chế độ xem**
 - `Chia đôi`: trái Nhập, phải Kết quả. `⇄ Đổi bên` đảo trái/phải (chỉ bật ở Chia đôi).
@@ -223,7 +223,10 @@ Việc cần làm tiếp:
 
 | Key | Nội dung |
 |---|---|
-| `ticketWriter.v1` | Loại đang chọn, chế độ xem, đổi bên, ticket đang nhập (Loại, Tóm tắt, Phone, ngôn ngữ, variant, kết luận, các mục, tick/N/A checklist), form SMS Promotion (trường `sms`, gồm ô tick `enabled`, ngôn ngữ tin nhắn `lang` và option tự thêm `customOptions`; ảnh không lưu), form SMS Shipping (trường `shipping`), form SMS Xin review (trường `review`: bang `usState`, ngôn ngữ `lang`) |
+| `ticketWriter.v1` | Loại đang chọn, chế độ xem, đổi bên, ticket đang nhập (Loại, Tóm tắt, Phone, ngôn ngữ, variant, kết luận, các mục, tick/N/A checklist), form SMS Promotion (trường `sms`, gồm ô tick `enabled`, ngôn ngữ tin nhắn `lang` và option tự thêm `customOptions`; ảnh lưu ở IndexedDB), form SMS Shipping (trường `shipping`), form SMS Xin review (trường `review`: bang `usState`, ngôn ngữ `lang`) |
+| `ticketWriter.images.v1` | **IndexedDB** (không phải localStorage), object store `images`: mỗi bản ghi = danh sách ảnh `{ blob, copied }` của 1 mục, key = key mục. Ảnh gốc, không nén. Nạp lại khi mở trang, giữ cả trạng thái `✓ Đã copy` |
+| `ticketWriter.theme.v1` | Giao diện đã chọn: `auto` / `light` / `dark`. Lưu riêng để `Ticket mới` không đổi; giá trị lạ → `auto` |
+| `ticketWriter.phone.v1` | Nhận ảnh iPhone (§21): `{ link, enabled }` — link phone-upload đã dán và lần trước có đang bật không |
 | `ticketWriter.staff.v1` | Tên nhân viên (form SMS Xin review). Lưu riêng để `Ticket mới` không xóa |
 | `ticketWriter.templates.v1` | Danh sách template |
 | `ticketWriter.categories.v1` | Loại tự thêm |
@@ -500,3 +503,47 @@ Lưu ticket ra file trên máy, khi ticket system vào lại được thì mở 
 - File đúng → chuyển về đúng loại ticket / nhánh setup trong file, thay toàn bộ ticket đang nhập, bỏ ảnh đang dán; báo mã, Business zipcode, Ticket type, file ZIP chứa ảnh (+ PDF).
 - File không phải ticket offline / loại ticket trong file không còn → báo, không đổi gì.
 - Ảnh không tự nạp lại: giải nén ZIP rồi dán / kéo thả vào từng mục (tên ảnh trong ZIP ghi mục nào).
+
+## 20. Cảnh báo lưu trữ
+
+Danh sách cảnh báo, câu chữ và ngưỡng nằm trong **`config/notifications.js`** (docs/CONFIG.md §6).
+
+- Hiện thành thanh dưới header, mỗi cảnh báo 1 dòng: `error` nền đỏ, `warn` nền vàng. Không chặn thao tác (không dùng hộp alert).
+- Tự hiện khi gặp sự cố, tự ẩn khi hết sự cố. Bấm `×` → ẩn cho tới khi sự cố hết rồi gặp lại.
+
+| id | Level | Khi nào hiện | Khi nào ẩn |
+|---|---|---|---|
+| `sessionSaveFailed` | error | Ghi ticket đang nhập / form SMS vào localStorage lỗi (đầy hoặc bị chặn) | Lần lưu sau thành công |
+| `imageSaveFailed` | error | Ghi ảnh của 1 mục vào IndexedDB lỗi | Mọi mục lỗi đã lưu lại được (thêm / xóa / copy ảnh ở mục đó), hoặc `Ticket mới` / `Mở file offline` |
+| `storageNearlyFull` | warn | Dung lượng trình duyệt cho phép đã dùng ≥ `nearlyFullRatio` (mặc định 80%), kèm `{percent}%`. Kiểm tra khi mở trang và mỗi lần ảnh thay đổi | Xuống dưới ngưỡng |
+
+- Trình duyệt không cho biết dung lượng → không hiện `storageNearlyFull`.
+- Lưu template lỗi vẫn báo bằng hộp alert như cũ (§11), vì người dùng vừa bấm nút và cần biết ngay.
+
+## 21. Nhận ảnh từ iPhone / iPad (phone-upload)
+
+Chụp màn hình trên iPhone / iPad (vd lúc FaceTime) rồi gửi thẳng vào ticket qua mạng LAN. Hướng dẫn cho người dùng: `phone-upload/README.md`.
+
+Trang `file://` không tự mở port được, nên có thêm chương trình nhỏ `phone-upload/phone-upload.bat` (PowerShell có sẵn của Windows) chạy trên cùng máy:
+
+```
+iPhone (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Writer hỏi http://127.0.0.1:8765/<mã>/next
+```
+
+### 21.1 phone-upload
+
+- Nghe port `8765` trên mọi card mạng. Hiện link cho iPhone (IP của card có default gateway, không thấy thì mọi IPv4) và copy sẵn link `http://127.0.0.1:8765/<mã>` vào clipboard cho Ticket Writer.
+- **Mã bí mật** 12 ký tự (`a-z`, `2-9`, bỏ chữ dễ nhầm), sinh ngẫu nhiên bằng RNG mật mã, lưu ở `%LOCALAPPDATA%\TicketWriter\phone-upload-token.txt` để dùng lại các lần sau. Lưu **ngoài folder dự án** để nén folder gửi đồng nghiệp không mang mã theo (dùng chung mã thì người biết IP gửi / lấy được ảnh của máy khác). Bản đầu lưu ở `phone-upload/token.txt`: gặp file này thì chuyển mã sang chỗ mới rồi xóa, link cũ vẫn dùng được. Mọi đường dẫn đều cần mã; sai mã → 404.
+- `GET /<mã>` → trang gửi ảnh cho iPhone (`upload.html`). `POST /<mã>/upload` → nhận 1 ảnh (chỉ `image/*`, tối đa 50 MB), đưa vào hàng chờ. `GET /<mã>/next` → trả ảnh cũ nhất kèm header `X-File-Name` rồi xóa khỏi hàng chờ; trống → 204.
+- Hàng chờ chỉ trong bộ nhớ: tắt cửa sổ là mất ảnh chưa lấy (ảnh gốc còn trên iPhone).
+- Xử lý 1 request 1 lúc, nhưng **không chờ kết nối để không**: Safari / Chrome hay mở sẵn kết nối dự phòng. Chỉ xử lý kết nối đã có dữ liệu gửi tới; để không quá 15s thì đóng. (Bản đầu chờ kết nối đó → mỗi lần tải lại trang iPhone kẹt ~15s.)
+- Trang iPhone: chọn nhiều ảnh, gửi lần lượt, mỗi ảnh hiện `✓ Đã gửi` hoặc lý do lỗi.
+
+### 21.2 Ticket Writer
+
+- Nút `📱` ở header, 3 trạng thái: `📱 Nhận ảnh iPhone` (tắt) · `📱 Đang nhận ảnh` · `📱 Mất kết nối`.
+- Bấm khi tắt / mất kết nối → hộp hỏi link (điền sẵn link đã lưu) → link đúng dạng `http://<host>:<port>/<mã 12 ký tự>` thì bật; sai → báo. Bấm khi đang nhận → tắt.
+- Đang nhận: hỏi `/next` mỗi `phoneUpload.pollMs` (1.5s); có ảnh thì hỏi tiếp ngay tới khi hết. Mỗi ảnh vào **đúng mục Ctrl+V sẽ dán** (mục focus gần nhất, không thì mục đầu), giống hệt dán ảnh: tự tick checklist, lưu IndexedDB. Nút nháy `📱 Đã nhận ảnh ✓`.
+- Màn hình không có mục nhận ảnh (vd SMS Shipping / Xin review) → không lấy ảnh, để chờ ở phone-upload.
+- Gọi phone-upload lỗi (chưa chạy / đã tắt / sai mã) → `📱 Mất kết nối`, **ngừng hỏi** (không ghi lỗi đỏ liên tục vào Console). Bấm nút để thử lại.
+- Mở trang: lần trước đang bật thì tự bật lại (thử 1 lần).

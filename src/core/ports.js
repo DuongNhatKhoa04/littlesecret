@@ -57,7 +57,33 @@
  */
 
 /**
- * Ảnh đang giữ trong bộ nhớ (không bao giờ lưu xuống storage).
+ * Lưu ảnh đang dán theo từng mục để tải lại trang không mất.
+ * @typedef {Object} ImageStore
+ * @property {() => Promise<Object<string, SavedImage[]>>} loadAll   {} khi không có / lỗi
+ * @property {(key: string, images: SavedImage[]) => Promise<boolean>} save   danh sách rỗng = xóa mục; false khi không lưu được
+ * @property {() => Promise<boolean>} clear
+ */
+
+/**
+ * Dung lượng trình duyệt cho trang này (localStorage + IndexedDB).
+ * @typedef {Object} StorageQuota
+ * @property {() => Promise<{ usage: number, quota: number } | null>} estimate   null = trình duyệt không cho biết
+ */
+
+/**
+ * Lấy ảnh iPhone / iPad gửi lên phone-upload (chạy cùng máy), mỗi lần 1 ảnh, lấy xong là xóa khỏi hàng chờ.
+ * @typedef {Object} PhoneInbox
+ * @property {(url: string) => Promise<{ ok: boolean, file: File | null }>} next   ok: false = không gọi được phone-upload; file: null = hàng chờ trống
+ */
+
+/**
+ * @typedef {Object} SavedImage
+ * @property {Blob} blob
+ * @property {boolean} copied
+ */
+
+/**
+ * Ảnh đang giữ trong bộ nhớ (bản lưu ở ImageStore chỉ có blob + copied).
  * @typedef {Object} StoredImage
  * @property {string} src       data URL của file gốc
  * @property {Blob} blob

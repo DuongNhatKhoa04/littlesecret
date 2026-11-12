@@ -12,7 +12,7 @@ header h1 { font-size: 16px; margin: 0 4px 0 0; font-weight: 650; }
   border-right: 1px solid var(--line);
 }
 .seg button:last-child { border-right: 0; }
-.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.seg button[aria-pressed="true"] { background: var(--selected-bg); color: var(--selected-ink); font-weight: 600; }
 .ver { color: var(--muted); font-size: 12px; margin-left: -8px; }
 .spacer { flex: 1; }
 .ghost {
@@ -21,6 +21,19 @@ header h1 { font-size: 16px; margin: 0 4px 0 0; font-weight: 650; }
 }
 .ghost:hover { border-color: var(--accent); }
 .ghost:disabled { opacity: .4; cursor: not-allowed; }
+
+/* Thanh cảnh báo (config/notifications.js) */
+.notices { display: flex; flex-direction: column; gap: 6px; padding: 8px 16px; background: var(--panel); border-bottom: 1px solid var(--line); }
+.notices[hidden] { display: none; }
+.notice { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px; border-radius: var(--radius); font-size: 14px; }
+.notice-warn { background: var(--warn-bg); color: var(--warn-ink); }
+.notice-error { background: var(--err-bg); color: var(--err-ink); }
+.notice-text { flex: 1; }
+.notice-close { background: transparent; border: 0; color: inherit; font-size: 18px; line-height: 1; cursor: pointer; padding: 0 2px; }
+
+/* Nút nhận ảnh iPhone: đang nhận = viền cyan, mất kết nối = chữ đỏ */
+#phoneBtn[data-status="on"] { border-color: var(--btn-line); background: var(--btn-bg); color: var(--btn-ink); }
+#phoneBtn[data-status="lost"] { border-color: var(--err-ink); color: var(--err-ink); }
 
 /* Thanh chọn theo cấp */
 .picker {
