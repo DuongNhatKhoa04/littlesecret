@@ -1,4 +1,4 @@
-// src/ui/image-panel.js — Khối Ảnh trong Kết quả: copy từng ảnh (copy xong đánh dấu ✓), tải tất cả thành ZIP hoặc PDF.
+// src/ui/image-panel.js — Khối Ảnh trong Kết quả: copy từng ảnh (copy xong đánh dấu ✓), tải tất cả thành ZIP hoặc PDF, xóa hết ảnh.
 (function (TW) {
   'use strict';
 
@@ -16,6 +16,10 @@
 
     wireDownload($('#imgZip'), outputService.downloadImages, 'Không tạo được file ZIP');
     wireDownload($('#imgPdf'), outputService.downloadImageReport, 'Không tạo được file PDF');
+    $('#imgClear').addEventListener('click', () => {
+      const total = images.total();
+      if (total && confirm(`Xóa hết ${total} ảnh của ticket này? Nội dung ticket giữ nguyên. Ảnh chưa tải ZIP / PDF sẽ mất.`)) images.clear();
+    });
 
     function card({ image, label }) {
       const node = el('div', 'icard');

@@ -63,6 +63,9 @@
 .thumb { position: relative; }
 .thumb img { display: block; height: 84px; max-width: 160px; object-fit: cover; border: 1px solid var(--line); border-radius: 6px; cursor: zoom-in; }
 .thumb button { position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: rgba(0, 0, 0, .65); color: #fff; cursor: pointer; line-height: 1; }
+/* Kéo thumbnail đổi thứ tự: ảnh đang kéo mờ đi, ảnh sẽ bị đẩy chỗ có viền */
+.thumb.dragging { opacity: .4; }
+.thumb.drop-target img { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 /* SMS Promotion */
 .sms-box { background: var(--sms-bg); border-color: var(--sms-line); }

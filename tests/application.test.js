@@ -136,6 +136,21 @@
     assertEqual([images.counts(), imageStore.data], [{}, {}]);
   });
 
+  test('ảnh: kéo đổi thứ tự trong mục => lưu thứ tự mới; vị trí sai => không đổi; đếm tổng', async () => {
+    const imageStore = fakeImageStore({});
+    const images = A.imageService.createImageService({ files: imageFiles, imageStore, onChecklistImage: () => {} });
+    const named = (name) => new File([], name, { type: 'image/png' });
+    await images.add('s1', [named('a'), named('b'), named('c')]);
+    await images.add('s2', [named('d')]);
+    const order = () => images.list('s1').map(image => image.blob.name);
+    images.move('s1', 2, 0);
+    assertEqual(order(), ['c', 'a', 'b']);
+    images.move('s1', 0, 2);
+    images.move('s1', 1, 9);
+    await settle();
+    assertEqual([order(), imageStore.data.s1.map(image => image.blob.name), images.total()], [['a', 'b', 'c'], ['a', 'b', 'c'], 4]);
+  });
+
   test('ảnh: Ticket mới trong lúc đang nạp => không hiện lại ảnh cũ', async () => {
     const imageStore = fakeImageStore({ s1: [{ blob: png(), copied: false }] });
     const images = A.imageService.createImageService({ files: imageFiles, imageStore, onChecklistImage: () => {} });

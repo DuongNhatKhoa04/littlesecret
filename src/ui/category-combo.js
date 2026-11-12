@@ -1,13 +1,14 @@
-// src/ui/category-combo.js — Ô Loại: chọn nhiều thẻ, gõ để lọc, thứ tự chọn = thứ tự trong title.
+// src/ui/category-combo.js — Ô Loại: chọn 1 loại (chọn loại khác thì thay), gõ để lọc, chọn xong con trỏ sang Tóm tắt.
 (function (TW) {
   'use strict';
 
-  const { el, button, isComposing } = TW.ui.dom;
+  const { $, el, button, isComposing } = TW.ui.dom;
   const { parseCategories } = TW.domain.title;
   const { normalizeForSearch, cleanCategory } = TW.domain.text;
 
-  const HINT = 'Chọn lần lượt, ví dụ ABC rồi CLOVER rồi INTERNET. Gõ để lọc, Enter (hoặc Tab) để chọn, Backspace để bỏ loại cuối. Loại chưa có thì gõ tên rồi Enter để thêm.';
-  const ALL_PICKED = 'Đã chọn hết các loại có sẵn. Gõ để thêm loại mới.';
+  const HINT = 'Chọn 1 loại: gõ để lọc, Enter (hoặc Tab) để chọn, xong tự sang Tóm tắt. Chọn loại khác thì thay loại cũ, Backspace để bỏ. Loại chưa có thì gõ tên rồi Enter để thêm.';
+  const NO_OTHER = 'Không còn loại nào khác. Gõ để thêm loại mới.';
+  const NEXT_FIELD = '#f_summary';
 
   function createCategoryCombo({ context, session, ticketService, categories }) {
     function build() {
@@ -79,7 +80,7 @@
         shown = computeOptions();
         if (active >= shown.length) active = Math.max(0, shown.length - 1);
         list.textContent = '';
-        if (!shown.length) list.append(el('div', 'combo-empty', ALL_PICKED));
+        if (!shown.length) list.append(el('div', 'combo-empty', NO_OTHER));
         shown.forEach((option, i) => list.append(optionRow(option, i)));
         const current = list.querySelector('.active');
         if (current) current.scrollIntoView({ block: 'nearest' });
@@ -88,13 +89,16 @@
       function open() { list.hidden = false; input.setAttribute('aria-expanded', 'true'); renderList(); }
       function close() { list.hidden = true; input.setAttribute('aria-expanded', 'false'); }
 
+      /** Chỉ 1 loại: chọn là thay loại cũ. Xong thì sang Tóm tắt (blur tự đóng danh sách). true = đã chọn */
       function pick(option) {
-        if (!option) return;
+        if (!option) return false;
         if (option.isNew) categories.add(option.value);
-        setTags([...tags(), option.value]);
+        setTags([option.value]);
         input.value = '';
         active = 0;
-        renderList();
+        const next = $(NEXT_FIELD);
+        if (next) next.focus(); else close();
+        return true;
       }
 
       function moveActive(step) {
@@ -109,11 +113,12 @@
         if (event.key === 'ArrowDown') { event.preventDefault(); moveActive(1); }
         else if (event.key === 'ArrowUp') { event.preventDefault(); moveActive(-1); }
         else if (event.key === 'Enter') { event.preventDefault(); if (!list.hidden) pick(shown[active]); }
-        else if (event.key === 'Tab' && input.value.trim() && !list.hidden) pick(shown[active]);   // gõ dở mà Tab đi thì không mất chữ
+        // Gõ dở mà Tab đi thì không mất chữ; đã tự sang Tóm tắt nên chặn Tab, không thì nhảy quá 1 ô
+        else if (event.key === 'Tab' && !event.shiftKey && input.value.trim() && !list.hidden) { if (pick(shown[active])) event.preventDefault(); }
         else if (event.key === 'Escape' && !list.hidden) { event.preventDefault(); event.stopPropagation(); close(); }
         else if (event.key === 'Backspace' && !input.value && tags().length) {
           event.preventDefault();
-          setTags(tags().slice(0, -1));
+          setTags([]);
           renderList();
         }
       }

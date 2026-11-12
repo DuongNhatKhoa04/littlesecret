@@ -172,11 +172,16 @@
     cat.focus();
     type(cat, 'cl');
     cat.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    await settle();
+    check('Loại: Enter chọn 1 loại, con trỏ tự sang Tóm tắt', $('#outTitle').textContent === 'CLOVER - MẤT KẾT NỐI' && focused() === 'f_summary',
+      [$('#outTitle').textContent, focused()]);
+    cat.focus();
     type(cat, 'internet');
     key(cat, { key: 'Tab' });
     await settle();
-    check('Loại chip theo thứ tự chọn (Enter, Tab khi gõ dở)', $('#outTitle').textContent === 'CLOVER - INTERNET - MẤT KẾT NỐI' && cat.value === '',
-      $('#outTitle').textContent);
+    check('Loại: chọn loại khác (Tab khi gõ dở) => thay loại cũ, sang Tóm tắt',
+      $('#outTitle').textContent === 'INTERNET - MẤT KẾT NỐI' && $$('.chip').length === 1 && cat.value === '' && focused() === 'f_summary',
+      [$('#outTitle').textContent, $$('.chip').length, focused()]);
 
     // Đổi loại giữ nội dung mục chung
     $('textarea[data-key="s1"]').focus();
@@ -189,7 +194,7 @@
     clickText('#picker', 'Hỗ trợ merchant');
     await settle();
     check('về Hỗ trợ merchant: ô Loại + Loại đã chọn vẫn giữ, con trỏ ở ô Loại',
-      focused() === 'f_category' && $('#outTitle').textContent === 'CLOVER - INTERNET - MẤT KẾT NỐI', [focused(), $('#outTitle').textContent]);
+      focused() === 'f_category' && $('#outTitle').textContent === 'INTERNET - MẤT KẾT NỐI', [focused(), $('#outTitle').textContent]);
 
     // Setup: nút đang tạm ẩn (config/app.js) nhưng vẫn nằm trong DOM nên kịch bản bấm được
     check('nhóm Setup / Training không hiện', $$('#picker button').find(x => x.textContent === 'Setup / Training').offsetParent === null);
@@ -241,6 +246,27 @@
     check('Tải PDF: 1 file .pdf, 1 trang cho 1 ảnh, nút báo đã tải',
       pdf.names.length === 1 && pdf.names[0].endsWith('.pdf') && pdfText.startsWith('%PDF-1.4') && pdfText.endsWith('%%EOF\n') &&
       pdfText.includes('/Count 1 ') && pdf.label === 'Đã tải ✓', { names: pdf.names, size: pdf.bytes.length, label: pdf.label });
+
+    // Kéo thumbnail đổi thứ tự: dán thêm 1 ảnh khác, kéo nó lên đầu, rồi xóa để các bước sau vẫn chỉ có 1 ảnh
+    const reorderThumbs = () => $$('.pzone[data-img-key="chk:pax-mid"] .thumb');
+    const other = document.createElement('canvas');
+    other.width = other.height = 2;
+    other.getContext('2d').fillRect(0, 0, 1, 1);
+    const otherData = new DataTransfer();
+    otherData.items.add(new File([await new Promise(r => other.toBlob(r, 'image/png'))], 'b.png', { type: 'image/png' }));
+    zone.dispatchEvent(new ClipboardEvent('paste', { clipboardData: otherData, bubbles: true, cancelable: true }));
+    await until(() => reorderThumbs().length === 2);
+    const reorderSrcs = () => reorderThumbs().map(t => t.querySelector('img').src);
+    const [firstSrc, secondSrc] = reorderSrcs();
+    const drag = new DataTransfer();
+    reorderThumbs()[1].dispatchEvent(new DragEvent('dragstart', { bubbles: true, dataTransfer: drag }));
+    reorderThumbs()[0].dispatchEvent(new DragEvent('dragover', { bubbles: true, cancelable: true, dataTransfer: drag }));
+    reorderThumbs()[0].dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: drag }));
+    await settle();
+    check('kéo thumbnail đổi thứ tự ảnh trong mục', reorderSrcs()[0] === secondSrc && reorderSrcs()[1] === firstSrc && reorderThumbs().length === 2, reorderSrcs().length);
+    reorderThumbs()[0].querySelector('button').click();
+    await settle();
+    check('xóa ảnh vừa thêm: còn đúng ảnh ban đầu', reorderThumbs().length === 1 && reorderSrcs()[0] === firstSrc);
 
     // Chụp màn hình: headless không có màn hình thật => giả hộp thoại chọn màn hình bằng luồng từ canvas
     const fakeScreen = document.createElement('canvas');
@@ -305,7 +331,7 @@
     const offZip = offBlobs[offNames[0]];
     const zipText = offZip ? new TextDecoder().decode(new Uint8Array(await offZip.arrayBuffer())) : '';
     check('Lưu offline: chỉ tải đúng 1 file ZIP tên OFF-…, bên trong có JSON + PDF cùng tên',
-      offNames.length === 1 && /^OFF-\d{8}-\d{6} - CLOVER - INTERNET - MAT KET NOI$/.test(offBase) &&
+      offNames.length === 1 && /^OFF-\d{8}-\d{6} - INTERNET - MAT KET NOI$/.test(offBase) &&
       zipText.startsWith('PK') && zipText.includes(offBase + '.json') && zipText.includes(offBase + '.pdf') && zipText.includes('"zipcode": "02134"'), offNames);
     $('#resetBtn').click();
     await settle();
@@ -334,7 +360,7 @@
     const savedTemplates = JSON.parse(localStorage.getItem('ticketWriter.templates.v1') || '[]');
     check('lưu template', savedTemplates.length === 1 && savedTemplates[0].type === 'incident', alerts);
     $('#tplOpen').click();
-    check('mở hộp template', $('#tplDlg').open && $('#tplList').textContent.includes('CLOVER - INTERNET - MẤT KẾT NỐI'), $('#tplList').textContent);
+    check('mở hộp template', $('#tplDlg').open && $('#tplList').textContent.includes('INTERNET - MẤT KẾT NỐI'), $('#tplList').textContent);
     $('#tplDlg').close();
 
     // Chế độ xem
@@ -345,6 +371,18 @@
     // Lưu state
     const saved = JSON.parse(localStorage.getItem('ticketWriter.v1'));
     check('state lưu type + nav', saved.type === 'incident' && saved.nav.group === 'ticket' && saved.ticket.phone === '0901', saved.type);
+
+    // Xóa hết ảnh: chỉ xóa ảnh, nội dung ticket giữ nguyên
+    const clearData = new DataTransfer();
+    clearData.items.add(new File([png], 'c.png', { type: 'image/png' }));
+    $('.pzone[data-img-key="s1"]').dispatchEvent(new ClipboardEvent('paste', { clipboardData: clearData, bubbles: true, cancelable: true }));
+    await until(() => !$('#imgPanel').hidden);
+    const bodyBeforeClear = $('#outBody').textContent;
+    $('#imgClear').click();
+    await settle();
+    check('Xóa hết ảnh: hết ảnh, nội dung ticket giữ nguyên',
+      $('#imgPanel').hidden && $$('.pzone .thumb').length === 0 && bodyBeforeClear !== '' && $('#outBody').textContent === bodyBeforeClear,
+      [$('#imgPanel').hidden, $$('.pzone .thumb').length]);
 
     // Ticket mới
     $('#resetBtn').click();

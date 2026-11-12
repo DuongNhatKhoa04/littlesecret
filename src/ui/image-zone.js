@@ -1,11 +1,11 @@
-// src/ui/image-zone.js — Gắn ảnh vào 1 mục: nút "+ Thêm ảnh", nút chụp màn hình, ô dán ảnh (Ctrl+V) có thumbnail, kéo thả.
+// src/ui/image-zone.js — Gắn ảnh vào 1 mục: nút "+ Thêm ảnh", nút chụp màn hình, ô dán ảnh (Ctrl+V) có thumbnail, kéo thả file, kéo thumbnail đổi thứ tự.
 (function (TW) {
   'use strict';
 
   const { $$, el, button, fileInput, flash, acceptImageDrop } = TW.ui.dom;
 
   const ZONE_HINT = 'Click vào đây rồi Ctrl+V để dán ảnh';
-  const zoneHintWith = (count) => `✓ Đã có ${count} ảnh. Click vào đây rồi Ctrl+V để dán thêm`;
+  const zoneHintWith = (count) => `✓ Đã có ${count} ảnh. Click vào đây rồi Ctrl+V để dán thêm` + (count > 1 ? ', kéo ảnh để đổi thứ tự' : '');
   const ADD_TITLE = 'Dán ảnh đang copy trong clipboard. Clipboard không có ảnh thì mở chọn file.';
   const SHOT_TITLE = 'Lần đầu chọn màn hình trong hộp thoại của Chrome; các lần sau bấm là chụp ngay, ảnh tự vào mục này.';
   const SHOT_FAILED = 'Chưa chụp được màn hình';
@@ -24,6 +24,35 @@
       if (failed) alert('Không đọc được một ảnh, đã bỏ qua.');
     }
 
+    let dragging = null;   // thumbnail đang kéo { key, index }: chỉ đổi thứ tự trong cùng 1 mục
+
+    /** Kéo thả thumbnail để đổi thứ tự ảnh trong mục */
+    function wireReorder(thumb, key, index) {
+      thumb.draggable = true;
+      const isSameItem = () => !!dragging && dragging.key === key;
+      thumb.addEventListener('dragstart', (event) => {
+        dragging = { key, index };
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', '');
+        thumb.classList.add('dragging');
+      });
+      thumb.addEventListener('dragend', () => { dragging = null; thumb.classList.remove('dragging'); });
+      thumb.addEventListener('dragover', (event) => {
+        if (!isSameItem()) return;
+        event.preventDefault();
+        thumb.classList.add('drop-target');
+      });
+      thumb.addEventListener('dragleave', () => thumb.classList.remove('drop-target'));
+      thumb.addEventListener('drop', (event) => {
+        if (!isSameItem()) return;
+        event.preventDefault();
+        event.stopPropagation();
+        const from = dragging.index;
+        dragging = null;
+        images.move(key, from, index);
+      });
+    }
+
     function fillThumbs(container, key) {
       container.textContent = '';
       images.list(key).forEach((image, i) => {
@@ -31,11 +60,13 @@
         const img = el('img');
         img.src = image.src;
         img.alt = 'Ảnh ' + (i + 1);
-        img.title = 'Bấm để xem ảnh lớn';
+        img.title = 'Bấm để xem ảnh lớn, kéo để đổi thứ tự';
+        img.draggable = false;   // kéo <img> thì Chrome gửi kèm file ảnh => ô dán ảnh tưởng là ảnh mới, thêm trùng
         img.addEventListener('click', () => openViewer(image));
         thumb.append(img, button('', '×', {
           title: 'Xóa ảnh', ariaLabel: 'Xóa ảnh ' + (i + 1), skipTab: true, onClick: () => images.remove(key, i)
         }));
+        wireReorder(thumb, key, i);
         container.append(thumb);
       });
     }

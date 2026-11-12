@@ -38,7 +38,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 | Trường | Mô tả |
 |---|---|
-| **Loại** | Không có ở loại có `noCategory` (Chuyển CS/MKT). Ô chọn nhiều thẻ (chip). Danh sách có sẵn: `ABC`, `CLOVER`, `PAX`, `INTERNET`. Gõ để lọc (không phân biệt dấu), ↑/↓ chọn, Enter thêm (đang gõ dở mà bấm Tab cũng thêm mục đang sáng rồi mới sang ô kế), Backspace khi ô trống = bỏ thẻ cuối, Esc đóng. Thứ tự chọn = thứ tự trong title. Gõ tên chưa có → `+ Thêm "…"` → lưu vào danh sách riêng trên máy (viết HOA, gộp khoảng trắng, bỏ ` - `). Loại tự thêm có nút × để xóa khỏi danh sách; loại có sẵn thì không. |
+| **Loại** | Không có ở loại có `noCategory` (Chuyển CS/MKT). Ô chọn **1 loại** (hiện thành thẻ chip). Danh sách có sẵn: `ABC`, `CLOVER`, `PAX`, `INTERNET`, `VALOR`. Gõ để lọc (không phân biệt dấu), ↑/↓ chọn, Enter / bấm chuột chọn (đang gõ dở mà bấm Tab cũng chọn mục đang sáng). **Chọn xong con trỏ tự sang ô Tóm tắt.** Chọn loại khác → thay loại cũ. Backspace khi ô trống / × trên thẻ = bỏ loại, Esc đóng. Ticket / template cũ đã có nhiều loại vẫn hiện đủ và vào title như cũ; chọn loại mới thì thay hết bằng 1 loại. Gõ tên chưa có → `+ Thêm "…"` → lưu vào danh sách riêng trên máy (viết HOA, gộp khoảng trắng, bỏ ` - `). Loại tự thêm có nút × để xóa khỏi danh sách; loại có sẵn thì không. |
 | **Tóm tắt** | Đưa vào title. `Enter`: sang ô kế tiếp (như Tab). |
 | **Phone** | Ô text (bàn phím số trên mobile). `Enter`: sang ô kế tiếp (như Tab). |
 | **Ngôn ngữ merchant** | Chỉ ở loại có `showLang` (Chuyển CS/MKT). Chọn `ENG` / `VIE`, mặc định `ENG`. |
@@ -47,11 +47,11 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 ## 5. Title
 
-- Có Loại: `<LOẠI 1> - <LOẠI 2> - <Tóm tắt>`; không có Loại: `<Tóm tắt>`.
+- Có Loại: `<LOẠI> - <Tóm tắt>` (ticket / template cũ có nhiều loại: `<LOẠI 1> - <LOẠI 2> - <Tóm tắt>`); không có Loại: `<Tóm tắt>`.
 - Loại không có ô Loại (Chuyển CS/MKT): title luôn chỉ là `<Tóm tắt>`. Loại đã chọn ở loại khác vẫn giữ, đổi lại thì hiện như cũ.
 - Toàn bộ viết HOA. Bỏ dấu `-`/khoảng trắng thừa ở cuối phần Loại.
 - Có Loại mà chưa có Tóm tắt: dấu nối vẫn hiện sẵn, vd `ABC - `.
-- Ví dụ: Loại `ABC`, `CLOVER` + Tóm tắt `mất kết nối` → `ABC - CLOVER - MẤT KẾT NỐI`.
+- Ví dụ: Loại `ABC` + Tóm tắt `mất kết nối` → `ABC - MẤT KẾT NỐI`.
 
 ## 6. Nhóm "Viết ticket"
 
@@ -192,8 +192,10 @@ Việc cần làm tiếp:
     - Hủy hộp thoại / trình duyệt không hỗ trợ → nút báo `Chưa chụp được màn hình`, không thêm ảnh.
 - Ctrl+V khi không đứng trong mục nào → dán vào mục được focus gần nhất (nếu còn hiển thị), không thì mục đầu tiên. Không bắt Ctrl+V khi đang ở ô nhập text không thuộc mục, khi có dialog mở, hoặc khi clipboard có cả text.
 - Đọc nguyên file gốc, không nén.
-- Ảnh hiện thumbnail trong ô dán, có × để xóa; ô dán đổi màu `✓ Đã có n ảnh`.
+- Ảnh hiện thumbnail trong ô dán, có × để xóa; ô dán đổi màu `✓ Đã có n ảnh` (từ 2 ảnh thêm `, kéo ảnh để đổi thứ tự`).
+- **Đổi thứ tự**: kéo thả thumbnail trong cùng 1 mục (thả lên ảnh nào thì chiếm chỗ ảnh đó). Không kéo được sang mục khác. Thứ tự mới được lưu (IndexedDB) và là thứ tự trong khối Ảnh, nhãn `ảnh n`, file ZIP, file PDF. Kéo thumbnail không bị tính là thả file ảnh mới.
 - Khu Kết quả có khối **Ảnh**: liệt kê mọi ảnh theo thứ tự nội dung (checklist trước, rồi các mục), nhãn `<nhóm> – <mục>` (mục ticket: `<mục>`), thêm ` – ảnh n` khi mục có từ 2 ảnh. Nhãn ảnh được rút gọn: bỏ ghi chú trong ngoặc ở tên nhóm / `parent` (vd `(nếu có)`, `(làm theo thứ tự)`); tên mục trùng tên nhóm thì chỉ ghi 1 lần (vd `Setup terminal`). Ngoặc trong tên mục vẫn giữ (vd `Terminal (Dual Pricing)`). Nội dung ticket không đổi. Mỗi ảnh nút `Copy ảnh` (copy PNG vào clipboard) → đánh dấu `✓ Đã copy`, đếm `x/y đã copy`.
+- Nút `Xóa hết ảnh` ở đầu khối Ảnh (cạnh ZIP / PDF): hỏi xác nhận (`Xóa hết n ảnh của ticket này? …`) → xóa mọi ảnh của mọi mục, cả bản lưu IndexedDB. Nội dung ticket, tick / N/A checklist giữ nguyên.
 - Nút `Tải tất cả (ZIP)` ở đầu khối Ảnh: tải mọi ảnh đang hiện thành 1 file `.zip` (không nén, giữ nguyên file gốc).
   - Tên file ZIP = title ticket; title trống → `anh-ticket.zip`.
   - Tên ảnh bên trong = `<số thứ tự> <nhãn>.<đuôi>`, vd `01 Can setup - Check MID.png`, `03 Setup terminal - anh 1.png`. Số thứ tự theo thứ tự trong khối Ảnh, tối thiểu 2 chữ số.
@@ -298,7 +300,7 @@ Chỉ thêm thao tác và cách tải ảnh; Title, Nội dung, điều kiện c
 | Bổ sung | Chi tiết |
 |---|---|
 | Con trỏ tự vào ô **Loại** khi mở trang, đổi loại, `Ticket mới`, dùng template | §4 |
-| Ô Loại: đang gõ dở mà bấm `Tab` thì thêm mục đang sáng | §4 |
+| Ô Loại: đang gõ dở mà bấm `Tab` thì chọn mục đang sáng; chỉ 1 loại, chọn xong sang Tóm tắt | §4 |
 | `Enter` ở Tóm tắt / Phone: sang ô kế tiếp | §4 |
 | Ô dán ảnh không nhận `Tab` (Tab đi thẳng từ mục này sang mục kế) | §6.2 |
 | `Alt+1` / `Alt+2`: Copy title / Copy nội dung; nút đang khóa thì báo lý do | §9 |

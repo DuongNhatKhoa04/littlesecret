@@ -70,6 +70,16 @@
         return counts;
       },
       remove(key, index) { (images[key] || []).splice(index, 1); persist(key); notify(key); },
+      /** Đổi thứ tự ảnh trong 1 mục: ảnh ở vị trí from chuyển tới vị trí to (thứ tự này = thứ tự trong khối Ảnh, ZIP, PDF) */
+      move(key, from, to) {
+        const list = images[key] || [];
+        if (from === to || from < 0 || to < 0 || from >= list.length || to >= list.length) return;
+        list.splice(to, 0, list.splice(from, 1)[0]);
+        persist(key);
+        notify(key);
+      },
+      /** Có ảnh nào không (để hỏi trước khi Xóa hết ảnh) */
+      total: () => Object.values(images).reduce((sum, list) => sum + list.length, 0),
       markCopied(image) {
         image.copied = true;
         const key = Object.keys(images).find(name => images[name].includes(image));
