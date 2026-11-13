@@ -4,6 +4,8 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-13
 
+- `v2026-11-13.8` · Tài liệu: README ghi rõ Nhận ảnh iOS đang tạm ẩn + cách bật lại; JSDoc `ScreenCapture.capture` thêm `delayMs`. Không đổi hành vi.
+- `v2026-11-13.7` · Tài liệu: `docs/ONBOARDING.md` (thứ tự đọc code cho bạn mới). Không đổi hành vi.
 - `v2026-11-13.6` · Tool: `tests/tools/generate_diagrams.py`, `generate_tree.py` sinh lại sơ đồ trong `docs/diagrams/`. Không đổi hành vi.
 - `v2026-11-13.5` · Tài liệu: sơ đồ cây thư mục `docs/diagrams/tree.html` (tổng quan, `src/`, `config/`). Không đổi hành vi.
 - `v2026-11-13.4` · `.gitignore` bỏ qua `.agents/`, `.claude/skills/` (skill cài lại bằng `npx skills` từ `skills-lock.json`). Không đổi hành vi.

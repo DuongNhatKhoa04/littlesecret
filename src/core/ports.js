@@ -22,7 +22,7 @@
 /**
  * Chụp 1 khung hình màn hình thành file PNG. Mỗi nguồn nhớ màn hình đã chọn trong phiên.
  * @typedef {Object} ScreenCapture
- * @property {(source: string) => Promise<File | null>} capture   null = người dùng hủy / trình duyệt không hỗ trợ
+ * @property {(source: string, delayMs?: number) => Promise<File | null>} capture   delayMs: chờ trước khi chụp (để kịp chuyển cửa sổ); null = người dùng hủy / trình duyệt không hỗ trợ
  */
 
 /**

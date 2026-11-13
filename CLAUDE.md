@@ -5,6 +5,7 @@ Tool web 1 trang giúp support viết ticket (Title + Nội dung để copy) và
 | Tài liệu | Nội dung |
 |---|---|
 | [README.md](README.md) | Giới thiệu, cách chạy, cách gửi đồng nghiệp. Người mới đọc trước. |
+| [docs/ONBOARDING.md](docs/ONBOARDING.md) | Thứ tự đọc code cho bạn mới, câu hỏi tự kiểm tra, bài tập đầu tiên, tính năng đang ẩn. |
 | [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) | Hành vi của tool. Đọc trước khi đổi hành vi; đổi hành vi thì cập nhật trong cùng lần sửa. **Không đánh số lại các mục §**: code, test và tài liệu khác tham chiếu theo số. |
 | [docs/CONFIG.md](docs/CONFIG.md) | Cách thêm/sửa loại ticket và checklist setup (schema từng trường). |
 | [docs/SECURITY.md](docs/SECURITY.md) | Dữ liệu nằm ở đâu, rủi ro của phone-upload, quy tắc bảo mật khi viết code. Đọc trước khi đụng lưu trữ, clipboard, mạng. |
