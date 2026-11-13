@@ -1,1 +1,5 @@
 __pycache__/
+
+# Skill cài bằng npx skills: không đưa vào repo, cài lại từ skills-lock.json
+.agents/
+.claude/skills/

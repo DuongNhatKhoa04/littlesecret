@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-13
 
+- `v2026-11-13.4` · `.gitignore` bỏ qua `.agents/`, `.claude/skills/` (skill cài lại bằng `npx skills` từ `skills-lock.json`). Không đổi hành vi.
 - `v2026-11-13.3` · Tài liệu: 4 sơ đồ trong `docs/diagrams/` (architecture lúc chạy, dependency giữa layer, UML class port KeyValueStore, sequence gõ Tóm tắt → Kết quả). Không đổi hành vi.
 - `v2026-11-13.2` · Gợi ý Tóm tắt lưu IN HOA (giống title), gõ thường hay hoa đều ra 1 mục. §12
 - `v2026-11-13.1` · Ô Tóm tắt gợi ý các Tóm tắt đã dùng (lưu trên máy, key `ticketWriter.summaries.v1`); tạm ẩn nút Nhận ảnh iOS. §12 §21
