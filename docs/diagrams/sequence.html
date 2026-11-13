@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gõ Tóm tắt đến khi Kết quả cập nhật</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #bf4520;
+      --font-sans: 'Geist', system-ui, sans-serif;
+      --font-serif: 'Instrument Serif', 'Noto Serif', serif;
+      --font-mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1200px; width: 100%; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight: 400;
+      letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
+    .note { font-size: 0.85rem; color: var(--color-muted); line-height: 1.5; margin-top: 1rem; max-width: 72ch; }
+    .note code { font-family: var(--font-mono); font-size: 0.8rem; }
+    svg { width: 100%; min-width: 1080px; display: block; }
+    @media print { .diagram-container { overflow-x: visible; } svg { min-width: 0; } }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Sequence · Ticket Writer</p>
+    <h1>Gõ Tóm tắt đến khi Kết quả cập nhật</h1>
+    <div class="diagram-container">
+      <svg viewBox="0 0 1080 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="sequence-title sequence-desc">
+        <title id="sequence-title">Gõ Tóm tắt đến khi Kết quả cập nhật</title>
+        <desc id="sequence-desc">Sơ đồ tuần tự: Support gõ Tóm tắt, TicketForm gọi TicketService.setField, Store đổi state và lưu localStorage, báo OutputView; sau 400ms OutputView dựng Title in hoa và mở nút Copy; khi rời ô, Tóm tắt được lưu IN HOA vào danh sách gợi ý.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+          <marker id="seq-open" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polyline points="0 0, 8 3, 0 6" fill="none" stroke="#4f5d75" stroke-width="1.2"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+        <line x1="100" y1="112" x2="100" y2="712" stroke="rgba(45,49,66,0.22)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="300" y1="112" x2="300" y2="712" stroke="rgba(45,49,66,0.22)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="500" y1="112" x2="500" y2="712" stroke="rgba(45,49,66,0.22)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="700" y1="112" x2="700" y2="712" stroke="rgba(45,49,66,0.22)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="900" y1="112" x2="900" y2="712" stroke="rgba(45,49,66,0.22)" stroke-width="1" stroke-dasharray="3,3"/>
+        <rect x="64" y="560" width="400" height="144" rx="4" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <rect x="64" y="560" width="40" height="16" rx="2" fill="#f5f5f5" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="84" y="572" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.12em">OPT</text>
+        <text x="76" y="592" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.04em">[change: Enter / rời ô]</text>
+        <rect x="296" y="160" width="8" height="56" fill="rgba(45,49,66,0.06)" stroke="#4f5d75" stroke-width="0.8"/>
+        <rect x="496" y="208" width="8" height="56" fill="rgba(45,49,66,0.06)" stroke="#4f5d75" stroke-width="0.8"/>
+        <rect x="696" y="256" width="8" height="120" fill="rgba(45,49,66,0.06)" stroke="#4f5d75" stroke-width="0.8"/>
+        <rect x="896" y="368" width="8" height="160" fill="rgba(45,49,66,0.06)" stroke="#4f5d75" stroke-width="0.8"/>
+        <rect x="296" y="628" width="8" height="64" fill="rgba(45,49,66,0.06)" stroke="#4f5d75" stroke-width="0.8"/>
+        <path d="M100,160 H296" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M304,208 H496" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M504,256 H696" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M704,296 H740 V328 H704" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M704,368 H896" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#seq-open)"/>
+        <path d="M904,400 H940 V432 H904" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M904,456 H940 V488 H904" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M896,520 H100" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+        <path d="M100,628 H296" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M304,652 H340 V684 H304" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="170" y="140" width="60" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="200" y="149" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">GÕ TÓM TẮT</text>
+        <rect x="352" y="188" width="96" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="400" y="197" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">SETFIELD(SUMMARY)</text>
+        <rect x="560" y="236" width="80" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="600" y="245" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">UPDATE(MUTATE)</text>
+        <rect x="748" y="306" width="88" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="792" y="315" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">LƯU LOCALSTORAGE</text>
+        <rect x="770" y="348" width="60" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="800" y="357" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">SCHEDULE()</text>
+        <rect x="948" y="410" width="56" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="976" y="419" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">CHỜ 400MS</text>
+        <rect x="948" y="466" width="68" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="982" y="475" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TITLE + BODY</text>
+        <rect x="538" y="500" width="124" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="600" y="509" fill="#bf4520" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TITLE IN HOA · NÚT COPY</text>
+        <rect x="178" y="608" width="76" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="216" y="617" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ENTER / RỜI Ô</text>
+        <rect x="348" y="662" width="88" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="392" y="671" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">LƯU GỢI Ý IN HOA</text>
+        <rect x="24" y="64" width="152" height="48" rx="6" fill="rgba(45,49,66,0.03)" stroke="#4f5d75" stroke-width="1"/>
+        <text x="100" y="86" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">Support</text>
+        <text x="100" y="102" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">người dùng</text>
+        <rect x="224" y="64" width="152" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="300" y="86" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">TicketForm</text>
+        <text x="300" y="102" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">ui/ticket-form</text>
+        <rect x="424" y="64" width="152" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="500" y="86" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">TicketService</text>
+        <text x="500" y="102" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">application</text>
+        <rect x="624" y="64" width="152" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="700" y="86" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">Store</text>
+        <text x="700" y="102" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">application/store</text>
+        <rect x="824" y="64" width="152" height="48" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="900" y="86" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">OutputView</text>
+        <text x="900" y="102" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">ui/output-view</text>
+        <line x1="40" y1="740" x2="1040" y2="740" stroke="rgba(45,49,66,0.1)" stroke-width="0.8"/>
+        <text x="40" y="756" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.18em">CHÚ THÍCH</text>
+        <path d="M40,772 H68" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <text x="76" y="776" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">gọi (sync)</text>
+        <path d="M180,772 H208" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#seq-open)"/>
+        <text x="216" y="776" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">báo không chờ (async)</text>
+        <path d="M380,772 H408" fill="none" stroke="#bf4520" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <text x="416" y="776" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">kết quả người dùng thấy</text>
+        <rect x="610" y="764" width="8" height="16" fill="rgba(45,49,66,0.06)" stroke="#4f5d75" stroke-width="0.8"/>
+        <text x="636" y="776" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">đang xử lý</text>
+      </svg>
+    </div>
+    <p class="note">Store không tự lưu: hàm <code>subscribe</code> trong <code>main.js</code> gọi <code>repository.save()</code> rồi <code>output.schedule()</code>. Title, Nội dung và điều kiện Copy do <code>outputService.compute()</code> ghép từ <code>domain/title</code>, <code>domain/body</code>, <code>domain/validation</code>. Gợi ý Tóm tắt dùng sự kiện <code>change</code>, nên gõ từng phím không ghi vào lịch sử.</p>
+  </div>
+</body>
+</html>

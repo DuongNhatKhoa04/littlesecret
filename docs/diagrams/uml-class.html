@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Port KeyValueStore và nơi dùng</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper: #f5f5f5; --color-ink: #2d3142; --color-muted: #4f5d75; --color-accent: #bf4520;
+      --font-sans: 'Geist', system-ui, sans-serif;
+      --font-serif: 'Instrument Serif', 'Noto Serif', serif;
+      --font-mono: 'Geist Mono', ui-monospace, monospace;
+    }
+    body { font-family: var(--font-sans); background: var(--color-paper); color: var(--color-ink);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 3rem 2rem; }
+    .frame { max-width: 1200px; width: 100%; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow { font-family: var(--font-mono); font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.5rem; }
+    h1 { font-family: var(--font-serif); font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem); font-weight: 400;
+      letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
+    .note { font-size: 0.85rem; color: var(--color-muted); line-height: 1.5; margin-top: 1rem; max-width: 72ch; }
+    .note code { font-family: var(--font-mono); font-size: 0.8rem; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print { .diagram-container { overflow-x: visible; } svg { min-width: 0; } }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">UML class · Ticket Writer</p>
+    <h1>Port KeyValueStore và nơi dùng</h1>
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="uml-class-title uml-class-desc">
+        <title id="uml-class-title">Port KeyValueStore và nơi dùng</title>
+        <desc id="uml-class-desc">Sơ đồ lớp UML: interface KeyValueStore được LocalStorageAdapter và FakeStorage của test cài đặt; SummaryHistoryService, CategoryService và SessionRepository chỉ phụ thuộc vào interface này.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+          <marker id="uml-triangle" markerWidth="16" markerHeight="12" refX="15" refY="6" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 0, 16 6, 0 12" fill="#f5f5f5" stroke="#2d3142" stroke-width="1"/></marker>
+          <marker id="uml-diamond-filled" markerWidth="18" markerHeight="10" refX="0" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 5, 9 0, 18 5, 9 10" fill="#2d3142"/></marker>
+          <marker id="uml-diamond-hollow" markerWidth="18" markerHeight="10" refX="0" refY="5" orient="auto" markerUnits="userSpaceOnUse"><polygon points="0 5, 9 0, 18 5, 9 10" fill="#f5f5f5" stroke="#2d3142" stroke-width="1"/></marker>
+          <marker id="uml-open" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L9,4 L0,8" fill="none" stroke="#4f5d75" stroke-width="1"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+        <path d="M560,240 V140" fill="none" stroke="#bf4520" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#uml-triangle)"/>
+        <path d="M810,240 V140" fill="none" stroke="#bf4520" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#uml-triangle)"/>
+        <path d="M320,64 H440" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#uml-open)"/>
+        <path d="M320,240 H372 Q380,240 380,232 V96 Q380,88 388,88 H440" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#uml-open)"/>
+        <path d="M320,464 H396 Q404,464 404,456 V120 Q404,112 412,112 H440" fill="none" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#uml-open)"/>
+        <rect x="338" y="44" width="28" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="352" y="53" fill="#5a6580" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">DÙNG</text>
+        <rect x="440" y="40" width="400" height="100" rx="6" fill="rgba(191,69,32,0.04)" stroke="#bf4520" stroke-width="1"/>
+        <rect x="440" y="40" width="400" height="40" rx="6" fill="rgba(191,69,32,0.10)"/>
+        <rect x="440" y="72" width="400" height="8" fill="rgba(191,69,32,0.10)"/>
+        <line x1="440" y1="80" x2="840" y2="80" stroke="rgba(191,69,32,0.40)" stroke-width="1"/>
+        <text x="640" y="56" fill="#bf4520" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">«interface»</text>
+        <text x="640" y="72" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">KeyValueStore</text>
+        <text x="456" y="100" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ read(key: string): any</text>
+        <text x="456" y="120" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ write(key: string, value: any): boolean</text>
+        <rect x="440" y="240" width="240" height="100" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="560" y="264" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">LocalStorageAdapter</text>
+        <line x1="440" y1="280" x2="680" y2="280" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="456" y="300" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ read(key): any  // lỗi → null</text>
+        <text x="456" y="320" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ write(key, value): boolean</text>
+        <rect x="720" y="240" width="180" height="140" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="810" y="264" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">FakeStorage (test)</text>
+        <line x1="720" y1="280" x2="900" y2="280" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="736" y="300" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ data: Object</text>
+        <line x1="720" y1="320" x2="900" y2="320" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="736" y="340" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ read(key): any</text>
+        <text x="736" y="360" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ write(key, value): true</text>
+        <rect x="40" y="40" width="280" height="140" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="180" y="64" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">SummaryHistoryService</text>
+        <line x1="40" y1="80" x2="320" y2="80" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="56" y="100" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">- entries: string[]  // ≤ 300</text>
+        <line x1="40" y1="120" x2="320" y2="120" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="56" y="140" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ list(): string[]</text>
+        <text x="56" y="160" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ remember(value): void</text>
+        <rect x="40" y="220" width="280" height="180" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="180" y="244" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">CategoryService</text>
+        <line x1="40" y1="260" x2="320" y2="260" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="56" y="280" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">- custom: string[]</text>
+        <line x1="40" y1="300" x2="320" y2="300" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="56" y="320" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ options(): string[]</text>
+        <text x="56" y="340" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ add(value): void</text>
+        <text x="56" y="360" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ remove(value): void</text>
+        <text x="56" y="380" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ importMany(values): number</text>
+        <rect x="40" y="440" width="280" height="100" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="180" y="464" fill="#2d3142" font-size="12" font-family="'Geist', sans-serif" text-anchor="middle" font-weight="600">SessionRepository</text>
+        <line x1="40" y1="480" x2="320" y2="480" stroke="rgba(45,49,66,0.22)" stroke-width="1"/>
+        <text x="56" y="500" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ load(): State</text>
+        <text x="56" y="520" fill="#2d3142" font-size="9" font-family="'Geist Mono', monospace" text-anchor="start">+ save(state): boolean</text>
+        <line x1="40" y1="572" x2="920" y2="572" stroke="rgba(45,49,66,0.1)" stroke-width="0.8"/>
+        <text x="40" y="588" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="start" letter-spacing="0.18em">CHÚ THÍCH · QUAN HỆ</text>
+        <line x1="40" y1="608" x2="68" y2="608" stroke="#2d3142" stroke-width="1" marker-end="url(#uml-triangle)"/>
+        <text x="76" y="612" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">Kế thừa</text>
+        <line x1="188" y1="608" x2="216" y2="608" stroke="#2d3142" stroke-width="1" stroke-dasharray="5,4" marker-end="url(#uml-triangle)"/>
+        <text x="224" y="612" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">Cài đặt (implements)</text>
+        <line x1="336" y1="608" x2="364" y2="608" stroke="#2d3142" stroke-width="1" marker-start="url(#uml-diamond-filled)"/>
+        <text x="372" y="612" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">Composition · sở hữu</text>
+        <line x1="484" y1="608" x2="512" y2="608" stroke="#2d3142" stroke-width="1" marker-start="url(#uml-diamond-hollow)"/>
+        <text x="520" y="612" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">Aggregation · có</text>
+        <line x1="632" y1="608" x2="660" y2="608" stroke="#4f5d75" stroke-width="1" marker-end="url(#uml-open)"/>
+        <text x="668" y="612" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">Association</text>
+        <line x1="780" y1="608" x2="808" y2="608" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#uml-open)"/>
+        <text x="816" y="612" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">Phụ thuộc · dùng</text>
+      </svg>
+    </div>
+    <p class="note">Code thật là factory + closure (<code>createLocalStorage()</code>, <code>createSummaryHistoryService(deps)</code>), không phải <code>class</code>; sơ đồ vẽ theo UML để thấy hợp đồng. Service nhận <code>storage</code> qua tham số nên test thay bằng FakeStorage mà không đổi code (D + L trong SOLID). ThemeService, StaffService, TemplateService, PhoneService cũng dùng port này, không vẽ cho gọn.</p>
+  </div>
+</body>
+</html>
