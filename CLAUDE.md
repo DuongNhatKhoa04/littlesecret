@@ -9,6 +9,7 @@ Tool web 1 trang giúp support viết ticket (Title + Nội dung để copy) và
 | [docs/CONFIG.md](docs/CONFIG.md) | Cách thêm/sửa loại ticket và checklist setup (schema từng trường). |
 | [docs/SECURITY.md](docs/SECURITY.md) | Dữ liệu nằm ở đâu, rủi ro của phone-upload, quy tắc bảo mật khi viết code. Đọc trước khi đụng lưu trữ, clipboard, mạng. |
 | [docs/REVIEW.md](docs/REVIEW.md) | Vùng bắt buộc có người duyệt, checklist trước khi gửi bản mới cho đồng nghiệp. |
+| [docs/diagrams/](docs/diagrams/) | Sơ đồ HTML: architecture lúc chạy, dependency giữa layer, UML class (port KeyValueStore), sequence gõ Tóm tắt → Kết quả. Đổi kiến trúc thì vẽ lại. |
 | [CHANGELOG.md](CHANGELOG.md) | Lịch sử thay đổi. Mỗi lần tăng `version` thì thêm 1 dòng. |
 | [tests/README.md](tests/README.md) | Cách chạy test, từng file test kiểm tra gì. |
 | [phone-upload/README.md](phone-upload/README.md) | Hướng dẫn người dùng nhận ảnh iPad / iPhone. |

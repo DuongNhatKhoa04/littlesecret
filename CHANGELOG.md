@@ -2,6 +2,12 @@
 
 Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu ngày tương ứng: version · đổi gì (người dùng thấy gì) · mục REQUIREMENTS liên quan. Bản cũ hơn 2026-11-12 chưa ghi version, tóm tắt theo commit.
 
+## 2026-11-13
+
+- `v2026-11-13.3` · Tài liệu: 4 sơ đồ trong `docs/diagrams/` (architecture lúc chạy, dependency giữa layer, UML class port KeyValueStore, sequence gõ Tóm tắt → Kết quả). Không đổi hành vi.
+- `v2026-11-13.2` · Gợi ý Tóm tắt lưu IN HOA (giống title), gõ thường hay hoa đều ra 1 mục. §12
+- `v2026-11-13.1` · Ô Tóm tắt gợi ý các Tóm tắt đã dùng (lưu trên máy, key `ticketWriter.summaries.v1`); tạm ẩn nút Nhận ảnh iOS. §12 §21
+
 ## 2026-11-12
 
 - `v2026-11-12.15` · Tài liệu: README, SECURITY, REVIEW, CHANGELOG; sửa tham chiếu bản gốc trong CLAUDE.md; mục lục REQUIREMENTS. Không đổi hành vi.

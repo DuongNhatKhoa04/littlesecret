@@ -255,6 +255,7 @@ Việc cần làm tiếp:
 | `ticketWriter.staff.v1` | Tên nhân viên (form SMS Xin review). Lưu riêng để `Ticket mới` không xóa |
 | `ticketWriter.templates.v1` | Danh sách template |
 | `ticketWriter.categories.v1` | Loại tự thêm |
+| `ticketWriter.summaries.v1` | Tóm tắt đã dùng, lưu IN HOA như title (tối đa 300, mới nhất đầu, không trùng). Lưu khi rời ô Tóm tắt; gõ ô Tóm tắt thì gợi ý các mục chứa chữ đang gõ. `Ticket mới` không xóa |
 
 - Lưu sau mỗi thay đổi. Dữ liệu hỏng/không hợp lệ → bỏ qua phần đó, dùng mặc định.
 - Đọc được format cũ (`data[type]` lưu riêng từng loại).
@@ -546,6 +547,8 @@ Danh sách cảnh báo, câu chữ và ngưỡng nằm trong **`config/notificat
 - Lưu template lỗi vẫn báo bằng hộp alert như cũ (§11), vì người dùng vừa bấm nút và cần biết ngay.
 
 ## 21. Nhận ảnh từ iPad / iPhone (phone-upload)
+
+> **Tạm ẩn** (`phoneUpload.hidden` trong `config/app.js`, đang dùng Send Anywhere): không hiện nút, không tự bật lại. Xóa `hidden` là dùng lại như dưới.
 
 Chụp màn hình trên iPad / iPhone (vd lúc FaceTime) rồi gửi thẳng vào ticket qua mạng LAN. iPad **dùng chung** nhiều người: iPad mở trang gửi ảnh bằng cách quét mã QR trên Ticket Writer, mã tự hết hạn. Hướng dẫn cho người dùng: `phone-upload/README.md`.
 

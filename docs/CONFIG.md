@@ -231,7 +231,7 @@ setReview({   // const { setReview } = registry;
 | `version` | `vYYYY-MM-DD.N`, tăng mỗi lần sửa |
 | `autoCapitalize` | Tự viết hoa chữ đầu mỗi dòng |
 | `debounceMs` | Độ trễ cập nhật Kết quả |
-| `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `phoneKey` | Key localStorage. **Không đổi** |
+| `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `phoneKey`, `summaryKey` | Key localStorage. **Không đổi** |
 | `phoneUpload.pollMs` | Nhận ảnh iOS: bao lâu hỏi phone-upload 1 lần khi hàng chờ trống (REQUIREMENTS §21) |
 | `imageDbName` | Tên database IndexedDB chứa ảnh. **Không đổi** |
 | `themes` | Nút giao diện ở header: `{ id, label }`, bấm sang mục kế tiếp, mục đầu là mặc định. `auto` = theo hệ điều hành. `id` lưu trên máy: không đổi id đang có. Màu từng giao diện ở `styles/tokens.css` |

@@ -33,6 +33,7 @@
   const templateService = A.templateService.createTemplateService({ context, store, session, storage, files, categories });
   const staffService = A.staffService.createStaffService({ context, storage });
   const themeService = A.themeService.createThemeService({ context, storage });
+  const summaryHistory = A.summaryHistoryService.createSummaryHistoryService({ context, storage });
   const offlineService = A.offlineService.createOfflineService({ context, store, session, files, images, outputService });
 
   // UI
@@ -43,7 +44,7 @@
   const checklistView = U.checklistView.createChecklistView({ session, ticketService, images, imageZone });
   const smsForm = U.smsForm.createSmsForm({ context, session, smsService, imageZone });
   const form = U.ticketForm.createTicketForm({
-    root: $('#form'), context, session, ticketService, imageZone, checklistView, smsForm,
+    root: $('#form'), context, session, ticketService, imageZone, checklistView, smsForm, summaryHistory,
     categoryCombo: U.categoryCombo.createCategoryCombo({ context, session, ticketService, categories }),
     ideaList: U.ideaList.createIdeaList({ context, session, ticketService })
   });
@@ -66,7 +67,11 @@
     isReady: () => !!paste.target(),
     onFile: (file) => imageZone.addFiles(paste.target(), [file])
   });
-  U.phoneButton.createPhoneButton({ phoneService, phoneDialog: U.phoneDialog.createPhoneDialog({ phoneService }) });
+  const phoneEnabled = !registry.app().phoneUpload.hidden;
+  if (phoneEnabled) {
+    $('#phoneBtn').hidden = false;
+    U.phoneButton.createPhoneButton({ phoneService, phoneDialog: U.phoneDialog.createPhoneDialog({ phoneService }) });
+  }
 
   store.subscribe((change) => {
     notices.toggle('sessionSaveFailed', !repository.save(store.get()));
@@ -89,5 +94,5 @@
   header.render();
   output.render();
   notices.checkStorage();
-  phoneService.resume();
+  if (phoneEnabled) phoneService.resume();
 })(window.TW);

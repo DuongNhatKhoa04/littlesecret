@@ -7,7 +7,7 @@
 
   const IDEA_HINT = 'Enter: ý mới · Shift+Enter: xuống dòng · Tab: field kế tiếp · Ctrl+V: dán ảnh';
 
-  function createTicketForm({ root, context, session, ticketService, categoryCombo, ideaList, imageZone, checklistView, smsForm }) {
+  function createTicketForm({ root, context, session, ticketService, categoryCombo, ideaList, imageZone, checklistView, smsForm, summaryHistory }) {
     const { app, catalog } = context;
 
     function textField(field, inputMode) {
@@ -24,6 +24,19 @@
         focusNext(input, root);
       });
       wrap.append(label, input);
+      return wrap;
+    }
+
+    /** Ô Tóm tắt + gợi ý các Tóm tắt đã dùng (datalist có sẵn của trình duyệt, lọc theo chữ đang gõ). */
+    function summaryField() {
+      const wrap = textField('summary');
+      const input = wrap.querySelector('input');
+      const list = el('datalist');
+      list.id = 'f_summaryHistory';
+      summaryHistory.list().forEach(text => { const option = el('option'); option.value = text; list.append(option); });
+      input.setAttribute('list', list.id);
+      input.addEventListener('change', () => summaryHistory.remember(input.value));   // change = rời ô / chọn gợi ý, không lưu từng phím
+      wrap.append(list);
       return wrap;
     }
 
@@ -114,7 +127,7 @@
       const type = session.activeType();
       if (!type) { root.append(emptyState()); return; }
       if (!type.noCategory) root.append(categoryCombo.build());
-      root.append(textField('summary'), textField('phone', 'tel'));
+      root.append(summaryField(), textField('phone', 'tel'));
       if (type.showLang) root.append(langField());
       if (type.checklist) root.append(checklistView.build(type));   // checklist đứng trước, Note nằm sau
       type.sections.forEach(section => root.append(sectionBox(section)));

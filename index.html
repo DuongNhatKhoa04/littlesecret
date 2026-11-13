@@ -27,7 +27,7 @@
     <button type="button" class="ghost" id="offOpen" title="Chọn file .zip / .json đã tải bằng Lưu offline để nạp lại vào form, rồi Copy để điền">Mở file offline</button>
     <input type="file" id="offImport" accept=".zip,.json,application/zip,application/json" hidden>
     <button type="button" class="ghost wide-only" id="swapBtn" title="Đổi vị trí Nhập / Kết quả (chỉ ở chế độ Chia đôi)">⇄ Đổi bên</button>
-    <button type="button" class="ghost" id="phoneBtn"></button>
+    <button type="button" class="ghost" id="phoneBtn" hidden></button>
     <button type="button" class="ghost" id="themeBtn" title="Đổi giao diện: Tự động (theo Windows) → Sáng → Tối"></button>
     <button type="button" class="ghost" id="resetBtn">Ticket mới</button>
   </header>
@@ -231,6 +231,7 @@
 <script src="src/application/notice-service.js"></script>
 <script src="src/application/theme-service.js"></script>
 <script src="src/application/phone-service.js"></script>
+<script src="src/application/summary-history-service.js"></script>
 
 <!-- infrastructure -->
 <script src="src/infrastructure/storage.js"></script>
