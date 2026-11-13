@@ -10,6 +10,8 @@ Double-click `tests/index.html`. Dòng đầu hiện `PASS x/x` (xanh) hoặc `F
 |---|---|
 | `python tests/tools/run_tests.py` | Chạy `tests/index.html` bằng Chrome headless, in kết quả. |
 | `python tests/tools/smoke_ui.py` | Bấm thử giao diện thật (`index.html`): gõ, phím tắt, chọn theo cấp, ô Loại, dán / chụp / kéo đổi thứ tự / xóa hết ảnh, tải ZIP/PDF, template, ticket offline, SMS, giao diện sáng/tối, nút Nhận ảnh iOS, chế độ xem. Báo cả lỗi JS. Chạy theo giờ thật (~30s), tối đa 120s: trang gửi kết quả về server tạm trên `127.0.0.1` do script tự mở. Treo tới 120s thường là lỗi cú pháp trong `smoke_ui.js` (vd khai báo `const` trùng tên). |
+| `python tests/tools/generate_diagrams.py` | Sinh lại 4 sơ đồ trong `docs/diagrams/` (architecture, dependency, uml-class, sequence). Nội dung viết tay trong script. |
+| `python tests/tools/generate_tree.py` | Sinh lại `docs/diagrams/tree.html`, đếm số file từ ổ đĩa. |
 | `python tests/tools/generate_golden.py` | Sinh lại `golden-expected.js` từ bản gốc. **Cần file `../ticket-writer.html`** (cạnh folder dự án), hiện **không có** trong repo → không chạy được; giữ nguyên `golden-expected.js`. |
 
 ## Các file
