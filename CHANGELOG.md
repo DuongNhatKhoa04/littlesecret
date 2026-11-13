@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-13
 
+- `v2026-11-13.9` · Ô Tóm tắt: danh sách gợi ý mới (giống ô Loại), mỗi gợi ý có `×` để xóa gợi ý không muốn giữ (vd `T` gõ nhầm); gõ không dấu vẫn ra gợi ý có dấu. §12
 - `v2026-11-13.8` · Tài liệu: README ghi rõ Nhận ảnh iOS đang tạm ẩn + cách bật lại; JSDoc `ScreenCapture.capture` thêm `delayMs`. Không đổi hành vi.
 - `v2026-11-13.7` · Tài liệu: `docs/ONBOARDING.md` (thứ tự đọc code cho bạn mới). Không đổi hành vi.
 - `v2026-11-13.6` · Tool: `tests/tools/generate_diagrams.py`, `generate_tree.py` sinh lại sơ đồ trong `docs/diagrams/`. Không đổi hành vi.

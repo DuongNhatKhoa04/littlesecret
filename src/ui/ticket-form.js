@@ -7,7 +7,7 @@
 
   const IDEA_HINT = 'Enter: ý mới · Shift+Enter: xuống dòng · Tab: field kế tiếp · Ctrl+V: dán ảnh';
 
-  function createTicketForm({ root, context, session, ticketService, categoryCombo, ideaList, imageZone, checklistView, smsForm, summaryHistory }) {
+  function createTicketForm({ root, context, session, ticketService, categoryCombo, ideaList, imageZone, checklistView, smsForm, summaryCombo }) {
     const { app, catalog } = context;
 
     function textField(field, inputMode) {
@@ -19,7 +19,7 @@
       if (inputMode) input.inputMode = inputMode;
       input.addEventListener('input', () => ticketService.setField(field, input.value));
       input.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter' || isComposing(event)) return;
+        if (event.key !== 'Enter' || isComposing(event) || event.defaultPrevented) return;   // defaultPrevented: Enter đã chọn gợi ý
         event.preventDefault();
         focusNext(input, root);
       });
@@ -27,18 +27,7 @@
       return wrap;
     }
 
-    /** Ô Tóm tắt + gợi ý các Tóm tắt đã dùng (datalist có sẵn của trình duyệt, lọc theo chữ đang gõ). */
-    function summaryField() {
-      const wrap = textField('summary');
-      const input = wrap.querySelector('input');
-      const list = el('datalist');
-      list.id = 'f_summaryHistory';
-      summaryHistory.list().forEach(text => { const option = el('option'); option.value = text; list.append(option); });
-      input.setAttribute('list', list.id);
-      input.addEventListener('change', () => summaryHistory.remember(input.value));   // change = rời ô / chọn gợi ý, không lưu từng phím
-      wrap.append(list);
-      return wrap;
-    }
+    const summaryField = () => summaryCombo.attach(textField('summary'));
 
     function langField() {
       const wrap = el('div', 'field');

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python tests/tools/smoke_ui.py)",
+      "Bash(python -)",
+      "Bash(sed -i 's/v2026-11-13\\\\.8/v2026-11-13.9/' config/app.js)",
+      "Bash(sed -i 's/`ticket-form.js` \\(+ `category-combo.js`, /`ticket-form.js` \\(+ `category-combo.js`, `summary-combo.js`, /' docs/ONBOARDING.md && grep -n \"summary-combo\" docs/ONBOARDING.md; grep -n \"summary\" tests/README.md)"
+    ],
+    "additionalDirectories": [
+      "d:\\mac\\littlesecret\\docs"
+    ]
+  }
+}

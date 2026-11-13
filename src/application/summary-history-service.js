@@ -18,6 +18,11 @@
         if (!text) return;
         entries = [text, ...entries.filter(x => x !== text)].slice(0, MAX_ENTRIES);
         storage.write(key, entries);
+      },
+      /** Bỏ 1 gợi ý người dùng không muốn giữ (gõ nhầm, gõ dở). */
+      forget(value) {
+        entries = entries.filter(x => x !== value);
+        storage.write(key, entries);
       }
     };
   }

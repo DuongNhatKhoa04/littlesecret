@@ -27,7 +27,7 @@ Double-click `tests/index.html`. Dòng đầu hiện `PASS x/x` (xanh) hoặc `F
 | `notice.test.js` | Cảnh báo lưu trữ: bật / tắt / ẩn bằng ×, ngưỡng sắp đầy, ảnh không lưu được. |
 | `theme.test.js` | Nút giao diện: mặc định Tự động, xoay vòng, lưu lựa chọn. |
 | `phone.test.js` | Nhận ảnh iOS: đọc link máy tính, hỏi hàng chờ, giao ảnh, mất kết nối, link iPad / đổi mã. Mã QR: kích thước, ô tìm vị trí, chọn phiên bản theo độ dài. |
-| `summary-history.test.js` | Gợi ý Tóm tắt: dữ liệu hỏng, mới nhất đầu, không trùng. |
+| `summary-history.test.js` | Gợi ý Tóm tắt: dữ liệu hỏng, mới nhất đầu, không trùng, xóa 1 gợi ý. |
 | `sms.test.js` | SMS Promotion: tin nhắn đúng mẫu, trường còn thiếu, đọc/lưu state, khối SMS trong Hỗ trợ merchant không đụng kết quả ticket. |
 | `shipping.test.js` | SMS Shipping: tin nhắn đúng mẫu, trường còn thiếu, đọc/lưu state, Kết quả không có title. |
 | `review.test.js` | SMS Xin review: bảng bang → chi nhánh → link, tin nhắn 2 ngôn ngữ, đọc/lưu state, Kết quả không có title, tên nhân viên. |

@@ -255,7 +255,7 @@ Việc cần làm tiếp:
 | `ticketWriter.staff.v1` | Tên nhân viên (form SMS Xin review). Lưu riêng để `Ticket mới` không xóa |
 | `ticketWriter.templates.v1` | Danh sách template |
 | `ticketWriter.categories.v1` | Loại tự thêm |
-| `ticketWriter.summaries.v1` | Tóm tắt đã dùng, lưu IN HOA như title (tối đa 300, mới nhất đầu, không trùng). Lưu khi rời ô Tóm tắt; gõ ô Tóm tắt thì gợi ý các mục chứa chữ đang gõ. `Ticket mới` không xóa |
+| `ticketWriter.summaries.v1` | Tóm tắt đã dùng, lưu IN HOA như title (tối đa 300, mới nhất đầu, không trùng). Lưu khi rời ô Tóm tắt; gõ ô Tóm tắt thì hiện danh sách gợi ý chứa chữ đang gõ (không phân biệt dấu): ↓/↑ chọn, Enter điền vào ô, Esc đóng, `×` xóa gợi ý đó. Chưa chọn gợi ý thì Enter vẫn sang ô kế tiếp. `Ticket mới` không xóa |
 
 - Lưu sau mỗi thay đổi. Dữ liệu hỏng/không hợp lệ → bỏ qua phần đó, dùng mặc định.
 - Đọc được format cũ (`data[type]` lưu riêng từng loại).

@@ -57,7 +57,7 @@
     const estimate = await navigator.storage.estimate();
     check('đọc được dung lượng trình duyệt trên file://', estimate.quota > 0, JSON.stringify(estimate));
     check('nút nhận ảnh iOS: tạm ẩn (phoneUpload.hidden)', $('#phoneBtn').hidden);
-    check('ô Tóm tắt: có danh sách gợi ý', $('#f_summary').list && $('#f_summary').list.id === 'f_summaryHistory');
+    check('ô Tóm tắt: có danh sách gợi ý', $('#f_summary').getAttribute('aria-controls') === 'f_summaryHistory' && $('#f_summaryHistory').hidden);
     check('bình thường: không có thanh cảnh báo', $('#notices').hidden, $('#notices').textContent);
     const bg = () => getComputedStyle(document.body).backgroundColor;
     const themeOf = () => [document.documentElement.dataset.theme || 'auto', $('#themeBtn').textContent];
@@ -73,6 +73,20 @@
     $('#f_summary').focus();
     key($('#f_summary'), { key: 'Enter' });
     check('Enter ở Tóm tắt => sang Phone', focused() === 'f_phone', focused());
+    $('#f_summary').dispatchEvent(new Event('change'));   // rời ô => lưu gợi ý
+    $('#f_summary').focus();
+    type($('#f_summary'), 'mat');
+    const suggestions = () => $$('#f_summaryHistory .combo-opt span').map(s => s.textContent);
+    check('gợi ý Tóm tắt: gõ không dấu vẫn ra, lưu IN HOA', !$('#f_summaryHistory').hidden && suggestions().join('|') === 'MẤT KẾT NỐI', suggestions());
+    key($('#f_summary'), { key: 'ArrowDown' });
+    key($('#f_summary'), { key: 'Enter' });
+    check('gợi ý Tóm tắt: ↓ + Enter chọn gợi ý, ở lại ô', $('#f_summary').value === 'MẤT KẾT NỐI' && $('#f_summaryHistory').hidden && focused() === 'f_summary',
+      [$('#f_summary').value, focused()]);
+    type($('#f_summary'), 'm');
+    $('#f_summaryHistory .combo-del').dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
+    check('gợi ý Tóm tắt: × xóa gợi ý, ô giữ chữ đang gõ', $('#f_summaryHistory').hidden && $('#f_summary').value === 'm' &&
+      !JSON.parse(localStorage.getItem('ticketWriter.summaries.v1')).length, localStorage.getItem('ticketWriter.summaries.v1'));
+    type($('#f_summary'), 'mất kết nối');
     type($('#f_phone'), '0901');
     key($('#f_phone'), { key: 'Enter' });
     check('Enter ở Phone => sang ý đầu Vấn đề (bỏ qua nút phụ)', focused() === 's1', focused());

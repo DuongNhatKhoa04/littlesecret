@@ -65,7 +65,7 @@ ticket-writer/
 │  │                           context · store · session · session-repository · ticket/navigation/view/image/
 │  │                           output/category/template/offline/sms/shipping/review/staff/notice/theme/phone-service
 │  ├─ infrastructure/          ADAPTER: storage (localStorage) · image-store (ảnh trên IndexedDB) · storage-quota (dung lượng) · phone-inbox (lấy ảnh từ phone-upload) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
-│  ├─ ui/                      GIAO DIỆN: dom (helper) · notice-bar (thanh cảnh báo) · theme-toggle (nút sáng/tối) · phone-button (nút Nhận ảnh iOS) · phone-dialog (mã QR cho iPad) · picker · ticket-form · category-combo · idea-list ·
+│  ├─ ui/                      GIAO DIỆN: dom (helper) · notice-bar (thanh cảnh báo) · theme-toggle (nút sáng/tối) · phone-button (nút Nhận ảnh iOS) · phone-dialog (mã QR cho iPad) · picker · ticket-form · category-combo · summary-combo · idea-list ·
 │  │                           checklist-view · image-zone · output-view · image-panel · image-viewer ·
 │  │                           template-dialog · offline-dialog · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form
 │  └─ main.js                  COMPOSITION ROOT: tạo adapter, inject vào service, gắn UI

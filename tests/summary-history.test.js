@@ -1,4 +1,4 @@
-// tests/summary-history.test.js — Gợi ý Tóm tắt: lưu Tóm tắt đã dùng, mới nhất đầu, không trùng.
+// tests/summary-history.test.js — Gợi ý Tóm tắt: lưu Tóm tắt đã dùng, mới nhất đầu, không trùng, xóa được.
 (function (TW) {
   'use strict';
 
@@ -23,5 +23,13 @@
     ['Ticket', 'transaction ', '  ', 'ticket'].forEach(history.remember);
     assertEqual(history.list(), ['TICKET', 'TRANSACTION']);
     assertEqual(storage.data[key], ['TICKET', 'TRANSACTION']);
+  });
+
+  test('gợi ý Tóm tắt: xóa 1 gợi ý, lưu lại ngay', () => {
+    const storage = fakeStorage({ [key]: ['T', 'TICKET'] });
+    const history = A.summaryHistoryService.createSummaryHistoryService({ context, storage });
+    history.forget('T');
+    assertEqual(history.list(), ['TICKET']);
+    assertEqual(storage.data[key], ['TICKET']);
   });
 })(window.TW);
