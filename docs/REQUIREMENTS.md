@@ -20,7 +20,7 @@ Tài liệu này mô tả **hành vi hiện có** của tool, tới từng câu 
 | 13 | Tính năng bản gốc đã bỏ (`variants`) | Ghi chú lịch sử |
 | 14 | Thay đổi trong đợt tách file so với bản gốc (chọn loại theo cấp, dòng Model, gộp Hỗ trợ merchant…) | **Vẫn hiện hành**; tên mục là lịch sử |
 | 15 | Ghi nhận từ bản gốc | **Chờ người phụ trách xác nhận** |
-| 16–18 | SMS Promotion, Shipping, Xin review | Hiện hành; §18.4 **kế hoạch, chưa làm** |
+| 16–18 | SMS Promotion, Shipping, Xin review | Hiện hành; §16.4, §18.4 **kế hoạch, chưa làm** |
 | 19 | Ticket offline | Hiện hành |
 | 20 | Cảnh báo lưu trữ | Hiện hành |
 | 21 | Nhận ảnh iPad / iPhone (phone-upload) | Hiện hành; rủi ro ở SECURITY.md §3 |
@@ -432,6 +432,18 @@ Please carefully review the content of the Promotion message, and only when you 
 - Ctrl+V ảnh khi đứng trong khối Type Customer → vào ảnh Type Customer; không đứng ở ô nào → mục focus gần nhất, không thì mục đầu của ticket.
 - `Ticket mới`: hỏi xác nhận → xóa cả ticket, form SMS (kể cả option tự thêm và ảnh Type Customer) và bỏ tick.
 - Dùng template không đụng form SMS.
+
+### 16.4 Kế hoạch (chưa làm): đếm SMS segment
+
+- Mục tiêu: biết tin promo tốn mấy segment, giống trang Twilio Message Segment Calculator (https://twiliodeved.github.io/message-segment-calculator/).
+- Không gọi trang đó: không có API, tool chạy `file://` không gọi mạng, và không gửi nội dung merchant ra ngoài (SECURITY.md). Tự đếm trong `src/domain/` (hàm thuần, ~30 dòng, có test so với ví dụ lấy từ trang Twilio).
+- Cách đếm:
+  - **GSM-7**: 160 ký tự / 1 segment; dài hơn thì 153 ký tự / segment. Ký tự mở rộng `^ { } [ ] ~ \ | €` tính 2.
+  - **UCS-2**: có bất kỳ ký tự ngoài GSM-7 (tiếng Việt có dấu, emoji, nháy cong `’`) → 70 ký tự / 1 segment; dài hơn thì 67 / segment.
+- **Đang chờ chốt**:
+  1. Hiện ở đâu. Đề xuất: 1 dòng dưới ô Message, vd `245 ký tự · 2 segment · GSM-7`; rơi vào UCS-2 thì chỉ ra ký tự gây ra.
+  2. `\n` trong bản `Copy tin SMS`: hệ thống gửi SMS đổi thành xuống dòng thật (đếm 1 ký tự) hay gửi nguyên văn (`\` là ký tự mở rộng → mỗi chỗ tốn 3).
+  3. Estimate Total có nhân số segment không (giá × Recipients × segment).
 
 
 ## 17. SMS Shipping
