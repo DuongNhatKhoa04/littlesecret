@@ -59,6 +59,7 @@
 .pzone:hover { border-color: var(--accent); }
 .pzone:focus { color: var(--ink); background: var(--accent-soft); border: 1px solid var(--accent); }
 .pzone.has { color: var(--ok); border-color: var(--ok); }
+.pzone.drop-target { outline: 2px dashed var(--accent); outline-offset: 2px; }   /* đang kéo ảnh của mục khác vào đây */
 .thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 0; }
 .thumbs:empty { display: none; }
 .thumb { position: relative; }

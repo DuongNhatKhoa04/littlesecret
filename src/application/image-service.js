@@ -78,6 +78,23 @@
         persist(key);
         notify(key);
       },
+      /**
+       * Kéo ảnh sang mục khác (vd Vấn đề → Đã support): ảnh thứ `index` của fromKey chèn vào vị trí `toIndex` của toKey
+       * (không truyền / quá cuối => thêm vào cuối). Giữ nguyên ảnh (cả dấu ✓ Đã copy), lưu lại cả 2 mục.
+       */
+      transfer(fromKey, index, toKey, toIndex) {
+        const source = images[fromKey] || [];
+        if (fromKey === toKey || index < 0 || index >= source.length) return;
+        const target = images[toKey] = images[toKey] || [];
+        const at = toIndex === undefined ? target.length : Math.min(Math.max(toIndex, 0), target.length);
+        target.splice(at, 0, source.splice(index, 1)[0]);
+        const itemId = itemIdFromImageKey(toKey);
+        if (itemId) onChecklistImage(itemId);   // như khi thêm ảnh vào mục checklist
+        persist(fromKey);
+        persist(toKey);
+        notify(fromKey);
+        notify(toKey);
+      },
       /** Có ảnh nào không (để hỏi trước khi Xóa hết ảnh) */
       total: () => Object.values(images).reduce((sum, list) => sum + list.length, 0),
       markCopied(image) {

@@ -283,6 +283,26 @@
     reorderThumbs()[0].dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: drag }));
     await settle();
     check('kéo thumbnail đổi thứ tự ảnh trong mục', reorderSrcs()[0] === secondSrc && reorderSrcs()[1] === firstSrc && reorderThumbs().length === 2, reorderSrcs().length);
+    // Kéo sang mục khác (Note): thả vào ô trống => thêm cuối mục đó; rồi kéo lên ảnh của mục cũ => về đúng vị trí đầu
+    const noteZone = $('.pzone[data-img-key="s6"]');
+    const dragTo = (thumb, target) => {
+      const data = new DataTransfer();
+      thumb.dispatchEvent(new DragEvent('dragstart', { bubbles: true, dataTransfer: data }));
+      target.dispatchEvent(new DragEvent('dragover', { bubbles: true, cancelable: true, dataTransfer: data }));
+      target.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: data }));
+      thumb.dispatchEvent(new DragEvent('dragend', { bubbles: true, dataTransfer: data }));
+    };
+    const noteThumbs = () => [...noteZone.querySelectorAll('.thumb')];   // $$ của script này luôn tìm trên cả trang
+    const noteSrcs = () => noteThumbs().map(t => t.querySelector('img').src);
+    const noteBefore = noteSrcs().length;   // các bước trước có thể đã dán ảnh vào Note
+    dragTo(reorderThumbs()[0], noteZone);
+    await settle();
+    check('kéo ảnh sang mục khác (thả vào ô ảnh) => thêm cuối mục đó, mục cũ bớt 1',
+      reorderThumbs().length === 1 && noteSrcs().length === noteBefore + 1 && noteSrcs()[noteBefore] === secondSrc && !noteZone.classList.contains('drop-target'),
+      { from: reorderThumbs().length, to: noteSrcs().length, noteBefore });
+    dragTo(noteThumbs()[noteBefore], reorderThumbs()[0]);
+    await settle();
+    check('kéo ảnh về mục cũ (thả lên 1 ảnh) => chèn đúng vị trí đó', noteSrcs().length === noteBefore && reorderSrcs()[0] === secondSrc && reorderSrcs()[1] === firstSrc);
     reorderThumbs()[0].querySelector('button').click();
     await settle();
     check('xóa ảnh vừa thêm: còn đúng ảnh ban đầu', reorderThumbs().length === 1 && reorderSrcs()[0] === firstSrc);

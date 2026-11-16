@@ -151,6 +151,26 @@
     assertEqual([order(), imageStore.data.s1.map(image => image.blob.name), images.total()], [['a', 'b', 'c'], ['a', 'b', 'c'], 4]);
   });
 
+  test('ảnh: kéo sang mục khác => chèn đúng vị trí / thêm cuối, giữ ✓ Đã copy, lưu cả 2 mục; cùng mục / vị trí sai => không đổi', async () => {
+    const imageStore = fakeImageStore({});
+    const checked = [];
+    const images = A.imageService.createImageService({ files: imageFiles, imageStore, onChecklistImage: (id) => checked.push(id) });
+    const named = (name) => new File([], name, { type: 'image/png' });
+    await images.add('s1', [named('a'), named('b')]);
+    await images.add('s2', [named('c')]);
+    images.markCopied(images.list('s1')[0]);
+    const names = (key) => images.list(key).map(image => image.blob.name);
+    images.transfer('s1', 0, 's2', 0);
+    assertEqual([names('s1'), names('s2'), images.list('s2')[0].copied], [['b'], ['a', 'c'], true]);
+    images.transfer('s1', 0, 's5');
+    assertEqual([names('s1'), names('s5')], [[], ['b']]);
+    images.transfer('s2', 9, 's1');
+    images.transfer('s2', 0, 's2', 1);
+    images.transfer('s5', 0, 'chk:pax-qc');
+    await settle();
+    assertEqual([names('s2'), imageStore.data.s1, imageStore.data.s2.length, checked, images.total()], [['a', 'c'], undefined, 2, ['pax-qc'], 3]);
+  });
+
   test('ảnh: Ticket mới trong lúc đang nạp => không hiện lại ảnh cũ', async () => {
     const imageStore = fakeImageStore({ s1: [{ blob: png(), copied: false }] });
     const images = A.imageService.createImageService({ files: imageFiles, imageStore, onChecklistImage: () => {} });

@@ -1,11 +1,12 @@
-// src/ui/image-zone.js — Gắn ảnh vào 1 mục: nút "+ Thêm ảnh", nút chụp màn hình, ô dán ảnh (Ctrl+V) có thumbnail, kéo thả file, kéo thumbnail đổi thứ tự.
+// src/ui/image-zone.js — Gắn ảnh vào 1 mục: nút "+ Thêm ảnh", nút chụp màn hình, ô dán ảnh (Ctrl+V) có thumbnail, kéo thả file, kéo thumbnail đổi thứ tự hoặc sang mục khác.
 (function (TW) {
   'use strict';
 
   const { $$, el, button, fileInput, flash, acceptImageDrop } = TW.ui.dom;
 
   const ZONE_HINT = 'Click vào đây rồi Ctrl+V để dán ảnh';
-  const zoneHintWith = (count) => `✓ Đã có ${count} ảnh. Click vào đây rồi Ctrl+V để dán thêm` + (count > 1 ? ', kéo ảnh để đổi thứ tự' : '');
+  const zoneHintWith = (count) => `✓ Đã có ${count} ảnh. Click vào đây rồi Ctrl+V để dán thêm` +
+    (count > 1 ? ', kéo ảnh để đổi thứ tự hoặc sang mục khác' : ', kéo ảnh sang mục khác');
   const ADD_TITLE = 'Dán ảnh đang copy trong clipboard. Clipboard không có ảnh thì mở chọn file.';
   const SHOT_TITLE = 'Lần đầu chọn màn hình trong hộp thoại của Chrome; các lần sau bấm là chụp ngay, ảnh tự vào mục này.';
   const SHOT_FAILED = 'Chưa chụp được màn hình';
@@ -24,32 +25,61 @@
       if (failed) alert('Không đọc được một ảnh, đã bỏ qua.');
     }
 
-    let dragging = null;   // thumbnail đang kéo { key, index }: chỉ đổi thứ tự trong cùng 1 mục
+    let dragging = null;   // thumbnail đang kéo { key, index }
 
-    /** Kéo thả thumbnail để đổi thứ tự ảnh trong mục */
-    function wireReorder(thumb, key, index) {
+    /** Thả ảnh đang kéo vào mục `key`: cùng mục = đổi thứ tự; mục khác = chuyển sang (index không có => thêm vào cuối). */
+    function dropDragged(key, index) {
+      const { key: fromKey, index: fromIndex } = dragging;
+      dragging = null;
+      if (fromKey === key) images.move(key, fromIndex, index);
+      else images.transfer(fromKey, fromIndex, key, index);
+    }
+
+    /** Kéo thả thumbnail: đổi thứ tự trong mục, hoặc thả lên ảnh của mục khác để chuyển sang đúng vị trí đó. */
+    function wireDrag(thumb, key, index) {
       thumb.draggable = true;
-      const isSameItem = () => !!dragging && dragging.key === key;
       thumb.addEventListener('dragstart', (event) => {
         dragging = { key, index };
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.setData('text/plain', '');
         thumb.classList.add('dragging');
       });
-      thumb.addEventListener('dragend', () => { dragging = null; thumb.classList.remove('dragging'); });
+      thumb.addEventListener('dragend', () => {
+        dragging = null;
+        thumb.classList.remove('dragging');
+        $$('.pzone.drop-target').forEach(node => node.classList.remove('drop-target'));   // thả ra ngoài thì bỏ viền đích còn sót
+      });
       thumb.addEventListener('dragover', (event) => {
-        if (!isSameItem()) return;
+        if (!dragging) return;
         event.preventDefault();
+        event.stopPropagation();   // đích là ảnh này, không phải cả ô
         thumb.classList.add('drop-target');
       });
       thumb.addEventListener('dragleave', () => thumb.classList.remove('drop-target'));
       thumb.addEventListener('drop', (event) => {
-        if (!isSameItem()) return;
+        if (!dragging) return;
         event.preventDefault();
         event.stopPropagation();
-        const from = dragging.index;
-        dragging = null;
-        images.move(key, from, index);
+        thumb.classList.remove('drop-target');
+        dropDragged(key, index);
+      });
+    }
+
+    /** Thả ảnh của mục khác vào khoảng trống của ô dán ảnh => thêm vào cuối mục này. */
+    function acceptThumbDrop(node, key) {
+      const fromOtherItem = () => !!dragging && dragging.key !== key;
+      node.addEventListener('dragover', (event) => {
+        if (!fromOtherItem()) return;
+        event.preventDefault();
+        node.classList.add('drop-target');
+      });
+      node.addEventListener('dragleave', (event) => { if (!node.contains(event.relatedTarget)) node.classList.remove('drop-target'); });
+      node.addEventListener('drop', (event) => {
+        if (!fromOtherItem()) return;
+        event.preventDefault();
+        event.stopPropagation();
+        node.classList.remove('drop-target');
+        dropDragged(key);
       });
     }
 
@@ -60,13 +90,13 @@
         const img = el('img');
         img.src = image.src;
         img.alt = 'Ảnh ' + (i + 1);
-        img.title = 'Bấm để xem ảnh lớn, kéo để đổi thứ tự';
+        img.title = 'Bấm để xem ảnh lớn, kéo để đổi thứ tự hoặc sang mục khác';
         img.draggable = false;   // kéo <img> thì Chrome gửi kèm file ảnh => ô dán ảnh tưởng là ảnh mới, thêm trùng
         img.addEventListener('click', () => openViewer(image));
         thumb.append(img, button('', '×', {
           title: 'Xóa ảnh', ariaLabel: 'Xóa ảnh ' + (i + 1), skipTab: true, onClick: () => images.remove(key, i)
         }));
-        wireReorder(thumb, key, i);
+        wireDrag(thumb, key, i);
         container.append(thumb);
       });
     }
@@ -85,6 +115,7 @@
       node.tabIndex = -1;   // không nhận Tab: đứng trong ô nhập của mục rồi Ctrl+V cũng vào đúng mục này
       node.dataset.imgKey = key;
       node.append(el('div', 'pz-hint', ZONE_HINT), el('div', 'thumbs'));
+      acceptThumbDrop(node, key);
       paint(node);
       return node;
     }
