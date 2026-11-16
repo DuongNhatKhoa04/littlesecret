@@ -1,44 +1,44 @@
 /* styles/tokens.css — Màu, bo góc, font (light + dark) và style nền. */
-/* Palette: #ffe7f3 hồng phấn · #ffcdde hồng nhạt · #fea2ba hồng đậm · #7efaff cyan sáng · #1adee6 cyan.
-   Cyan quá sáng để làm chữ trên nền sáng => chữ/link dùng --accent-text (cyan đậm), cyan gốc chỉ làm nền nút.
+/* Palette: #6367ff chàm · #8494ff xanh dừa cạn · #c9beff tím lavender · #ffdbfd hồng phấn.
+   #6367ff làm nền dưới chữ trắng chỉ đạt 4.27:1 => --accent sáng dùng #5a5ef5 (đậm hơn chút), chữ/link dùng --accent-text.
    Màu chữ đã kiểm tra tương phản >= 4.5:1 trên nền tương ứng (WCAG AA), khung focus >= 3:1. */
 :root {
   color-scheme: light dark;   /* thanh cuộn, ô nhập của trình duyệt theo theme */
-  --bg: #fff3f9; --panel: #ffffff; --ink: #2b2433; --muted: #6b5566;
-  --line: #ffcdde; --accent: #1adee6; --accent-ink: #063f42; --accent-text: #00727a; --accent-soft: #d6fdff; --focus: #00838a;
-  --selected-bg: #c4f8fa; --selected-ink: #063f42;   /* nút đang chọn: nhạt hơn --accent cho đỡ gắt */
-  --btn-bg: #c4f8fa; --btn-ink: #063f42; --btn-line: #1adee6; --btn-hover: #7efaff;   /* nút Copy / Tải */
-  --done-bg: #d4f5e5; --done-ink: #0b5e45; --done-line: #6fd3a6;                     /* nút đã copy (Copy lại) */
-  --warn-bg: #fff0cc; --warn-ink: #7a4a00; --ok: #0d7f5f; --out-bg: #fffafc;
+  --bg: #fbf5ff; --panel: #ffffff; --ink: #23214a; --muted: #5a5680;
+  --line: #e3dcff; --accent: #5a5ef5; --accent-ink: #ffffff; --accent-text: #4b4fe0; --accent-soft: #ece8ff; --focus: #6367ff;
+  --selected-bg: #e4deff; --selected-ink: #1e1a66;   /* nút đang chọn: nhạt hơn --accent cho đỡ gắt */
+  --btn-bg: #e4deff; --btn-ink: #1e1a66; --btn-line: #8494ff; --btn-hover: #c9beff;   /* nút Copy / Tải */
+  --done-bg: #ffdbfd; --done-ink: #6b1f66; --done-line: #f0a8ec;                     /* nút đã copy (Copy lại) */
+  --warn-bg: #fff0cc; --warn-ink: #7a4a00; --ok: #0d7f5f; --out-bg: #fdfaff;
   --err-bg: #fdd8d8; --err-ink: #a3141c;
-  --sms-bg: #ffe7f3; --sms-line: #fea2ba;
+  --sms-bg: #ffeefe; --sms-line: #ffdbfd;
   --radius: 8px;
-  scrollbar-color: var(--sms-line) transparent;
+  scrollbar-color: var(--btn-hover) transparent;
 }
 /* Tối: theo hệ điều hành (data-theme chưa gắn = Tự động) hoặc người dùng chọn Tối. 2 khối phải giữ giống nhau. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #1e1820; --panel: #2a2230; --ink: #ffe7f3; --muted: #d4b3c3;
-    --line: #4a3a48; --accent: #1adee6; --accent-ink: #062a2c; --accent-text: #7efaff; --accent-soft: #17434a; --focus: #7efaff;
-    --selected-bg: #1adee6; --selected-ink: #062a2c;
-    --btn-bg: #1adee6; --btn-ink: #062a2c; --btn-line: #1adee6; --btn-hover: #7efaff;
-    --done-bg: #6fe0b4; --done-ink: #0b2a1f; --done-line: #6fe0b4;
-    --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #241d29;
+    --bg: #16152b; --panel: #201f3d; --ink: #f3efff; --muted: #c9beff;
+    --line: #38366a; --accent: #8494ff; --accent-ink: #10113a; --accent-text: #a9b3ff; --accent-soft: #2e2f63; --focus: #a9b3ff;
+    --selected-bg: #8494ff; --selected-ink: #10113a;
+    --btn-bg: #8494ff; --btn-ink: #10113a; --btn-line: #8494ff; --btn-hover: #a9b3ff;
+    --done-bg: #ffdbfd; --done-ink: #3d0f3a; --done-line: #ffdbfd;
+    --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #1b1a34;
     --err-bg: #4a1a22; --err-ink: #ffb3bd;
-    --sms-bg: #3a2232; --sms-line: #fea2ba;
+    --sms-bg: #2f1f3d; --sms-line: #c9beff;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #1e1820; --panel: #2a2230; --ink: #ffe7f3; --muted: #d4b3c3;
-  --line: #4a3a48; --accent: #1adee6; --accent-ink: #062a2c; --accent-text: #7efaff; --accent-soft: #17434a; --focus: #7efaff;
-  --selected-bg: #1adee6; --selected-ink: #062a2c;
-  --btn-bg: #1adee6; --btn-ink: #062a2c; --btn-line: #1adee6; --btn-hover: #7efaff;
-  --done-bg: #6fe0b4; --done-ink: #0b2a1f; --done-line: #6fe0b4;
-  --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #241d29;
+  --bg: #16152b; --panel: #201f3d; --ink: #f3efff; --muted: #c9beff;
+  --line: #38366a; --accent: #8494ff; --accent-ink: #10113a; --accent-text: #a9b3ff; --accent-soft: #2e2f63; --focus: #a9b3ff;
+  --selected-bg: #8494ff; --selected-ink: #10113a;
+  --btn-bg: #8494ff; --btn-ink: #10113a; --btn-line: #8494ff; --btn-hover: #a9b3ff;
+  --done-bg: #ffdbfd; --done-ink: #3d0f3a; --done-line: #ffdbfd;
+  --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #1b1a34;
   --err-bg: #4a1a22; --err-ink: #ffb3bd;
-  --sms-bg: #3a2232; --sms-line: #fea2ba;
+  --sms-bg: #2f1f3d; --sms-line: #c9beff;
 }
 :root[data-theme="light"] { color-scheme: light; }
 * { box-sizing: border-box; }

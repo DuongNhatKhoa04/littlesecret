@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-16
 
+- `v2026-11-16.4` · Bảng màu mới chàm · xanh dừa cạn · lavender · hồng phấn (light + dark) thay hồng + cyan, chữ đạt tương phản WCAG AA. Chỉ đổi `styles/tokens.css`.
 - `v2026-11-16.3` · Tài liệu: ghi kế hoạch đếm SMS segment (chưa làm, chờ chốt 3 điểm). Không đổi hành vi. §16.4
 - `v2026-11-16.2` · SMS Promotion: chi tiết Recipients → Estimate Total tự in cuối mục Đã support của nội dung ticket; tin promo có `.` sau Phone tiệm; tin gửi tiệm giữ xuống dòng của Message; nút mới `Copy tin SMS (Alt+4)` copy riêng tin khách nhận trên 1 dòng (xuống dòng thành `\n`, không ngoặc kép). §16
 - `v2026-11-16.1` · Ô Phone (ticket) và Phone tiệm (SMS Promotion) chỉ nhận số, tự format `(111) 111-1111`; thêm ô Tên merchant cạnh Phone, in ra `Phone: (111) 111-1111 - Mr. Vương`. §4 §8
