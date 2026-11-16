@@ -4,7 +4,7 @@
 
   const { el, isComposing } = TW.ui.dom;
   const { comboList, showComboList, scrollToActive, comboOption } = TW.ui.combo;
-  const { normalizeForSearch } = TW.domain.text;
+  const { searchSuggestions } = TW.domain.text;
 
   const LIST_ID = 'f_summaryHistory';
 
@@ -16,10 +16,7 @@
       let shown = [];
       let active = -1;   // -1 = chưa chọn gợi ý nào: Enter giữ hành vi cũ (sang ô kế tiếp)
 
-      const matches = () => {
-        const query = normalizeForSearch(input.value.trim());
-        return summaryHistory.list().filter(text => normalizeForSearch(text).includes(query));
-      };
+      const matches = () => searchSuggestions(summaryHistory.list(), input.value);
 
       const optionRow = (text, i) => comboOption({
         text, active: i === active, onPick: () => pick(text),

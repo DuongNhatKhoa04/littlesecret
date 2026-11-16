@@ -61,7 +61,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 | Trường | Mô tả |
 |---|---|
-| **Loại** | Không có ở loại có `noCategory` (Chuyển CS/MKT). Ô chọn **1 loại** (hiện thành thẻ chip). Danh sách có sẵn: `ABC`, `CLOVER`, `PAX`, `INTERNET`, `VALOR`. Gõ để lọc (không phân biệt dấu), ↑/↓ chọn, Enter / bấm chuột chọn (đang gõ dở mà bấm Tab cũng chọn mục đang sáng). **Chọn xong con trỏ tự sang ô Tóm tắt.** Chọn loại khác → thay loại cũ. Backspace khi ô trống / × trên thẻ = bỏ loại, Esc đóng. Ticket / template cũ đã có nhiều loại vẫn hiện đủ và vào title như cũ; chọn loại mới thì thay hết bằng 1 loại. Gõ tên chưa có → `+ Thêm "…"` → lưu vào danh sách riêng trên máy (viết HOA, gộp khoảng trắng, bỏ ` - `). Loại tự thêm có nút × để xóa khỏi danh sách; loại có sẵn thì không. |
+| **Loại** | Không có ở loại có `noCategory` (Chuyển CS/MKT). Ô chọn **1 loại** (hiện thành thẻ chip). Danh sách có sẵn: `ABC`, `CLOVER`, `PAX`, `INTERNET`, `VALOR`. Gõ để lọc: chỉ giữ loại **bắt đầu bằng** chữ đang gõ (khớp lần lượt từ ký tự đầu, không phân biệt dấu / hoa thường), danh sách xếp theo bảng chữ cái. ↑/↓ chọn, Enter / bấm chuột chọn (đang gõ dở mà bấm Tab cũng chọn mục đang sáng). **Chọn xong con trỏ tự sang ô Tóm tắt.** Chọn loại khác → thay loại cũ. Backspace khi ô trống / × trên thẻ = bỏ loại, Esc đóng. Ticket / template cũ đã có nhiều loại vẫn hiện đủ và vào title như cũ; chọn loại mới thì thay hết bằng 1 loại. Gõ tên chưa có → `+ Thêm "…"` → lưu vào danh sách riêng trên máy (viết HOA, gộp khoảng trắng, bỏ ` - `). Loại tự thêm có nút × để xóa khỏi danh sách; loại có sẵn thì không. |
 | **Tóm tắt** | Đưa vào title. `Enter`: sang ô kế tiếp (như Tab). |
 | **Phone** | Ô text (bàn phím số trên mobile), **chỉ nhận số**, tối đa 10 số, gõ / dán tới đâu tự format tới đó thành `(111) 111-1111` (dán `+1 …` 11 số thì bỏ số `1` đầu). `Enter`: sang ô kế tiếp (như Tab). |
 | **Tên merchant** | Cạnh ô Phone, không bắt buộc (vd `Mr. Vương`). `Enter`: sang ô kế tiếp. |
@@ -256,7 +256,7 @@ Việc cần làm tiếp:
 | `ticketWriter.staff.v1` | Tên nhân viên (form SMS Xin review). Lưu riêng để `Ticket mới` không xóa |
 | `ticketWriter.templates.v1` | Danh sách template |
 | `ticketWriter.categories.v1` | Loại tự thêm |
-| `ticketWriter.summaries.v1` | Tóm tắt đã dùng, lưu IN HOA như title (tối đa 300, mới nhất đầu, không trùng). Lưu khi rời ô Tóm tắt; gõ ô Tóm tắt thì hiện danh sách gợi ý chứa chữ đang gõ (không phân biệt dấu): ↓/↑ chọn, Enter điền vào ô, Esc đóng, `×` xóa gợi ý đó. Chưa chọn gợi ý thì Enter vẫn sang ô kế tiếp. `Ticket mới` không xóa |
+| `ticketWriter.summaries.v1` | Tóm tắt đã dùng, lưu IN HOA như title (tối đa 300, mới nhất đầu, không trùng). Lưu khi rời ô Tóm tắt; gõ ô Tóm tắt thì hiện danh sách gợi ý **bắt đầu bằng** chữ đang gõ (không phân biệt dấu / hoa thường; vd gõ `ket` ra `KẾT NỐI WIFI` nhưng không ra `MẤT KẾT NỐI`), xếp theo bảng chữ cái (lưu vẫn theo mới nhất đầu để giới hạn 300 bỏ mục cũ nhất): ↓/↑ chọn, Enter điền vào ô, Esc đóng, `×` xóa gợi ý đó. Chưa chọn gợi ý thì Enter vẫn sang ô kế tiếp. `Ticket mới` không xóa |
 
 - Lưu sau mỗi thay đổi. Dữ liệu hỏng/không hợp lệ → bỏ qua phần đó, dùng mặc định.
 - Đọc được format cũ (`data[type]` lưu riêng từng loại).

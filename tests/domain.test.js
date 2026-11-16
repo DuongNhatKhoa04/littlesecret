@@ -58,6 +58,16 @@
       ['', '', '(1', '(111', '(111) 1', '(111) 111', '(111) 111-1', '(111) 111-1111', '(555) 123-4567', '(555) 123-4567']);
   });
 
+  test('gợi ý: chỉ mục bắt đầu bằng chữ đang gõ (không dấu, không hoa thường), sắp theo bảng chữ cái', () => {
+    const items = ['PAX', 'MẤT KẾT NỐI', 'ABC', 'KẾT NỐI WIFI', 'ĐỔI GIÁ', 'CLOVER', 'MÁY IN'];
+    const s = D.text.searchSuggestions;
+    assertEqual(s(items, ''), ['ABC', 'CLOVER', 'ĐỔI GIÁ', 'KẾT NỐI WIFI', 'MÁY IN', 'MẤT KẾT NỐI', 'PAX']);
+    assertEqual(s(items, 'ket'), ['KẾT NỐI WIFI']);   // "MẤT KẾT NỐI" chứa "ket" ở giữa: không khớp
+    assertEqual(s(items, ' ma'), ['MÁY IN', 'MẤT KẾT NỐI']);
+    assertEqual(s(items, 'do'), ['ĐỔI GIÁ']);
+    assertEqual(items[0], 'PAX');   // không sửa mảng gốc
+  });
+
   test('dòng Phone kèm Tên merchant nếu có', () => {
     const type = context.typeOf('incident');
     const body = (ticket) => D.body.buildBody({ type, ticket: D.ticket.sanitizeTicket(ticket, context), imageCounts: {}, model: '', app: context.app });

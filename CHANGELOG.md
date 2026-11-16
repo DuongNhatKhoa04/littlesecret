@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-16
 
+- `v2026-11-16.9` · Gợi ý ô Loại và ô Tóm tắt: chỉ hiện mục **bắt đầu bằng** chữ đang gõ (trước: chứa ở bất kỳ đâu), xếp theo bảng chữ cái. §4 §12
 - `v2026-11-16.8` · SMS Promotion: chi tiết in vào mục Đã support của ticket bỏ 2 dòng `Price per SMS` và `Estimate Total` (vẫn có trong tin gửi tiệm). §16
 - `v2026-11-16.7` · Tài liệu: vẽ lại sơ đồ architecture (Clipboard có tin SMS) và sequence (chi tiết SMS vào mục Đã support). Không đổi hành vi.
 - `v2026-11-16.6` · Refactor, không đổi hành vi: helper combo tách ra file mới `ui/combo.js`; `ui/dom.js` thêm `labeledField`, `textInput`, 4 form (ticket, SMS Promotion, Shipping, Xin review) dùng chung; hàm > 3 tham số đổi sang object (`level`, `tool`) hoặc bớt tham số (`syncItem`, `onKeydown`); tách phần gắn sự kiện của `template-dialog`, `category-combo`.

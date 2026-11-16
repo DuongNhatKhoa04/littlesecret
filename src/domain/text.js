@@ -34,6 +34,15 @@
   /** Bỏ dấu tiếng Việt + viết thường để so khớp khi tìm. */
   const normalizeForSearch = (text) => removeDiacritics(text).toLowerCase();
 
+  /**
+   * Gợi ý của ô Loại / Tóm tắt: giữ mục BẮT ĐẦU bằng chữ đang gõ (khớp lần lượt từ ký tự đầu, không phân biệt dấu / hoa thường),
+   * sắp theo bảng chữ cái tiếng Việt. Ô trống => mọi mục.
+   */
+  function searchSuggestions(items, query) {
+    const prefix = normalizeForSearch(query.trim());
+    return items.filter(item => normalizeForSearch(item).startsWith(prefix)).sort((a, b) => a.localeCompare(b, 'vi'));
+  }
+
   /** Tên Loại người dùng gõ: gộp khoảng trắng, bỏ " - " (là dấu nối giữa các Loại), viết HOA. */
   const cleanCategory = (text) => text.trim().replace(/\s+-\s+/g, ' ').replace(/\s+/g, ' ').toUpperCase();
 
@@ -59,5 +68,5 @@
     return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
   }
 
-  TW.domain.text = { isBlank, asString, pad2, formatPhoneInput, capitalizeLine, capitalizeLines, cleanItems, bulletize, removeDiacritics, normalizeForSearch, cleanCategory };
+  TW.domain.text = { isBlank, asString, pad2, formatPhoneInput, capitalizeLine, capitalizeLines, cleanItems, bulletize, removeDiacritics, normalizeForSearch, searchSuggestions, cleanCategory };
 })(window.TW);

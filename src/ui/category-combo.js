@@ -5,7 +5,7 @@
   const { $, el, button, isComposing } = TW.ui.dom;
   const { comboList, showComboList, scrollToActive, comboOption } = TW.ui.combo;
   const { parseCategories } = TW.domain.title;
-  const { normalizeForSearch, cleanCategory } = TW.domain.text;
+  const { searchSuggestions, cleanCategory } = TW.domain.text;
 
   const HINT = 'Chọn 1 loại: gõ để lọc, Enter (hoặc Tab) để chọn, xong tự sang Tóm tắt. Chọn loại khác thì thay loại cũ, Backspace để bỏ. Loại chưa có thì gõ tên rồi Enter để thêm.';
   const NO_OTHER = 'Không còn loại nào khác. Gõ để thêm loại mới.';
@@ -43,10 +43,9 @@
       }
 
       function computeOptions() {
-        const query = normalizeForSearch(input.value.trim());
         const picked = new Set(tags());
-        const options = categories.options()
-          .filter(o => !picked.has(o) && (!query || normalizeForSearch(o).includes(query)))
+        const options = searchSuggestions(categories.options(), input.value)
+          .filter(o => !picked.has(o))
           .map(value => ({ value }));
         const typed = cleanCategory(input.value);
         if (typed && !categories.options().includes(typed) && !picked.has(typed)) options.push({ value: typed, isNew: true });
