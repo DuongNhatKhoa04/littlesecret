@@ -166,7 +166,7 @@ def architecture():
     b += node(232, 220, 160, 56, 'Ticket Writer', 'index.html · file://', 'APP', 'focal')
     b += node(432, 140, 160, 56, 'localStorage', 'state · template · gợi ý', 'KV', 'store')
     b += node(432, 220, 160, 56, 'IndexedDB', 'ảnh đang dán', 'DB', 'store')
-    b += node(432, 300, 160, 56, 'Clipboard', 'Title · Nội dung · ảnh', 'OS', 'store')
+    b += node(432, 300, 160, 56, 'Clipboard', 'Title · Nội dung · SMS · ảnh', 'OS', 'store')
     b += node(716, 200, 160, 56, 'Ticket system', 'Subject · Description', 'EXT', 'external')
     b += node(716, 300, 160, 56, 'Điền ticket', 'bookmarklet', 'JS', 'internal')
     b += node(40, 460, 120, 56, 'iPad / iPhone', 'Safari · quét QR', 'IOS', 'optional')
@@ -341,7 +341,8 @@ def sequence():
     page('sequence', W, H, 'Sequence · Ticket Writer', 'Gõ Tóm tắt đến khi Kết quả cập nhật',
          'Sơ đồ tuần tự: Support gõ Tóm tắt, TicketForm gọi TicketService.setField, Store đổi state và lưu localStorage, báo OutputView; sau 400ms OutputView dựng Title in hoa và mở nút Copy; khi rời ô, Tóm tắt được lưu IN HOA vào danh sách gợi ý.',
          b, 'Store không tự lưu: hàm <code>subscribe</code> trong <code>main.js</code> gọi <code>repository.save()</code> rồi <code>output.schedule()</code>. '
-            'Title, Nội dung và điều kiện Copy do <code>outputService.compute()</code> ghép từ <code>domain/title</code>, <code>domain/body</code>, <code>domain/validation</code>. '
+            'Title, Nội dung và điều kiện Copy do <code>outputService.compute()</code> ghép từ <code>domain/title</code>, <code>domain/body</code>, <code>domain/validation</code>; '
+            'khối SMS Promotion đang bật thì chi tiết từ <code>domain/sms-message</code> in thêm cuối mục Đã support. '
             'Gợi ý Tóm tắt dùng sự kiện <code>change</code>, nên gõ từng phím không ghi vào lịch sử.',
          defs)
 

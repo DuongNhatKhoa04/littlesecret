@@ -113,7 +113,7 @@
         <text x="636" y="776" fill="#4f5d75" font-size="8.5" font-family="'Geist', sans-serif" text-anchor="start">đang xử lý</text>
       </svg>
     </div>
-    <p class="note">Store không tự lưu: hàm <code>subscribe</code> trong <code>main.js</code> gọi <code>repository.save()</code> rồi <code>output.schedule()</code>. Title, Nội dung và điều kiện Copy do <code>outputService.compute()</code> ghép từ <code>domain/title</code>, <code>domain/body</code>, <code>domain/validation</code>. Gợi ý Tóm tắt dùng sự kiện <code>change</code>, nên gõ từng phím không ghi vào lịch sử.</p>
+    <p class="note">Store không tự lưu: hàm <code>subscribe</code> trong <code>main.js</code> gọi <code>repository.save()</code> rồi <code>output.schedule()</code>. Title, Nội dung và điều kiện Copy do <code>outputService.compute()</code> ghép từ <code>domain/title</code>, <code>domain/body</code>, <code>domain/validation</code>; khối SMS Promotion đang bật thì chi tiết từ <code>domain/sms-message</code> in thêm cuối mục Đã support. Gợi ý Tóm tắt dùng sự kiện <code>change</code>, nên gõ từng phím không ghi vào lịch sử.</p>
   </div>
 </body>
 </html>
