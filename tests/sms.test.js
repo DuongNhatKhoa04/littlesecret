@@ -31,6 +31,9 @@
     'Please carefully review the content of the Promotion message, and only when you are sure that there are no further changes should you text "OK" to this phone number. Have a nice day.'
   ].join('\n');
 
+  // Chi tiết in vào Đã support của ticket: Recipients → hết Message, bỏ 2 dòng giá (Price per SMS, Estimate Total)
+  const TICKET_DETAILS = EXPECTED.split('\n\n')[2].split('\n').slice(0, -2).join('\n');
+
   const build = (raw) => D.smsMessage.buildSmsMessage({ sms: D.sms.sanitizeSms(raw, config), config });
   const missing = (raw) => D.smsMessage.missingSmsFields({ sms: D.sms.sanitizeSms(raw, config), config });
 
@@ -210,8 +213,8 @@
       [before, false, ['Phone tiệm', 'Recipients', 'Type Customer', 'Message']]);
     store.update(state => { state.sms = D.sms.sanitizeSms({ ...EXAMPLE, enabled: true }, config); });
     assertEqual([pick(output.compute()), output.compute().sms], [before, { body: EXPECTED, promo: EXPECTED.split('\n')[9].slice(1, -1), missingFields: [], canCopy: true }]);
-    const details = EXPECTED.split('\n\n')[2];   // Recipients → Estimate Total
-    assertEqual(output.compute().body, ticketBody + '\n' + details);
+    assertEqual(output.compute().body, ticketBody + '\n' + TICKET_DETAILS);
+    assertEqual(output.compute().body.includes('Price per SMS') || output.compute().body.includes('Estimate Total'), false);
     sms.setEnabled(false);
     assertEqual(output.compute().body, ticketBody);
     sms.reset();
@@ -221,6 +224,6 @@
   test('sms: chỉ có chi tiết SMS (Đã support trống) vẫn in mục Đã support', () => {
     const { store, output } = setup(null);
     store.update(state => { state.sms = D.sms.sanitizeSms({ ...EXAMPLE, enabled: true }, config); });
-    assertEqual(output.compute().body, 'Đã support:\n' + EXPECTED.split('\n\n')[2]);
+    assertEqual(output.compute().body, 'Đã support:\n' + TICKET_DETAILS);
   });
 })(window.TW);

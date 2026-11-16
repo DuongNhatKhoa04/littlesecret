@@ -46,8 +46,8 @@
     Object.values(sms.customerTypes).some(type => type.on) || cleanItems(sms.customOptions).length > 0;
 
   /**
-   * Phần chi tiết từ Recipients tới Estimate Total: nằm giữa tin nhắn gửi tiệm, và in vào mục Đã support của ticket. Chưa nhập gì => rỗng.
-   * Câu chữ theo ngôn ngữ đã chọn. Type Customer: mục có sẵn theo thứ tự config (không theo thứ tự tick), rồi tới option tự thêm.
+   * Chi tiết từ Recipients tới hết Message (không có giá): in vào mục Đã support của ticket, và là phần giữa tin nhắn gửi tiệm.
+   * Chưa nhập gì => rỗng. Câu chữ theo ngôn ngữ đã chọn. Type Customer: mục có sẵn theo thứ tự config (không theo thứ tự tick), rồi tới option tự thêm.
    * @param {{ sms: object, config: object }} input
    * @returns {string}
    */
@@ -55,25 +55,28 @@
     if (!hasInput(sms)) return '';
     const language = findLanguage(sms, config);
     const { lines } = language;
-    const total = estimateTotal(sms);
-    const fill = (line) => fillTemplate(line, { recipients: sms.recipients.trim(), price: sms.price, total });
     const typeText = (type) => (language.customerTypes || {})[type.id] || type.text;
     const customerTypes = [
       ...pickedTypes(sms, config).map(type => fillTemplate(typeText(type), trimValues(sms.customerTypes[type.id].values))),
       ...cleanItems(sms.customOptions)
     ].map(text => '- ' + text);
     return [
-      fill(lines.recipients), lines.customerTypes, ...customerTypes, lines.message, promoMessage(sms, config), fill(lines.price),
-      ...(total ? [fill(lines.total)] : [])
+      fillTemplate(lines.recipients, { recipients: sms.recipients.trim() }), lines.customerTypes, ...customerTypes, lines.message, promoMessage(sms, config)
     ].join('\n');
   }
 
-  /** Tin nhắn gửi tiệm: lời chào, chi tiết, lời dặn. Chưa nhập gì => rỗng. */
+  /** Price per SMS + Estimate Total: chỉ có trong tin gửi tiệm, không vào ticket. Không tính được tổng thì bỏ dòng tổng. */
+  function priceLines(sms, lines) {
+    const total = estimateTotal(sms);
+    return [fillTemplate(lines.price, { price: sms.price }), ...(total ? [fillTemplate(lines.total, { total })] : [])];
+  }
+
+  /** Tin nhắn gửi tiệm: lời chào, chi tiết, giá, lời dặn. Chưa nhập gì => rỗng. */
   function buildSmsMessage({ sms, config }) {
     const details = buildSmsDetails({ sms, config });
     if (!details) return '';
     const { lines } = findLanguage(sms, config);
-    return [lines.greeting, lines.intro, details, lines.outro].join(BLOCK_GAP);
+    return [lines.greeting, lines.intro, [details, ...priceLines(sms, lines)].join('\n'), lines.outro].join(BLOCK_GAP);
   }
 
   /** Nhãn các trường còn thiếu, theo thứ tự trên form. Type Customer thiếu khi chưa tick / chưa thêm option nào, hoặc mục đã tick còn ô số trống. */

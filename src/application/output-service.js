@@ -24,7 +24,7 @@
     /** Nhóm SMS: chỉ có tin nhắn gửi tiệm, không có title. */
     const messageResult = (body, missingFields) => ({ ...EMPTY, body, missingFields, canCopyBody: !!body && !missingFields.length, showTitle: false });
 
-    /** Khối SMS đang bật: chi tiết Recipients → Estimate Total in thêm cuối mục ticketSection (Đã support) của nội dung ticket. */
+    /** Khối SMS đang bật: chi tiết Recipients → hết Message (không có giá) in thêm cuối mục ticketSection (Đã support) của nội dung ticket. */
     function smsExtras() {
       if (!session.smsActive()) return {};
       const config = context.sms;

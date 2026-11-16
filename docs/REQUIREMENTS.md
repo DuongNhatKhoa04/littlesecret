@@ -370,7 +370,7 @@ Khối tùy chọn ở cuối form `Viết ticket` → `Hỗ trợ merchant` (c�
 - Có ô tick `SMS Promotion`. Chưa tick: các ô SMS ẩn, ticket như thường. Tick: mở các ô bên dưới và khối SMS ở Kết quả; bỏ tick thì ẩn lại, dữ liệu vẫn giữ.
 - Khối ở khu Nhập và khối tin nhắn ở khu Kết quả có màu riêng (`--sms-bg`, `--sms-line`) để tách khỏi phần ticket.
 - Không có ở loại khác: đổi sang `Chuyển CS/MKT` thì ẩn khối, về lại `Hỗ trợ merchant` thì hiện như cũ.
-- Không vào Title, không lưu vào template. Khi tick: phần chi tiết (từ dòng Recipients tới hết Estimate Total, theo ngôn ngữ tin nhắn) in thêm cuối mục **Đã support** của Nội dung (mục theo `ticketSection` trong config), nên cũng vào `Copy nội dung`, `Copy để điền` (§16.3).
+- Không vào Title, không lưu vào template. Khi tick: phần chi tiết (từ dòng Recipients tới hết dòng tin trong ngoặc kép, không có giá, theo ngôn ngữ tin nhắn) in thêm cuối mục **Đã support** của Nội dung (mục theo `ticketSection` trong config), nên cũng vào `Copy nội dung`, `Copy để điền` (§16.3).
 - Bản trước có tab `SMS` → `Promotion` riêng: phiên đã lưu đang ở tab đó mở lại ở `Hỗ trợ merchant` với ô tick đã bật; phiên khác giữ dữ liệu SMS, ô tick tắt.
 
 ### 16.1 Form
@@ -424,9 +424,8 @@ Please carefully review the content of the Promotion message, and only when you 
   - <lựa chọn đã tick>
   Message:
   "<Tên tiệm> <Phone tiệm>. <Message> Reply STOP To Optout."
-  Price per SMS: $<giá>
-  Estimate Total: $<tổng>
   ```
+  **Không** in `Price per SMS` và `Estimate Total` vào ticket: 2 dòng này chỉ có trong tin gửi tiệm.
 - **Copy SMS** khóa khi tin nhắn rỗng hoặc còn thiếu: Tên tiệm, Phone tiệm, Recipients, Type Customer (chưa tick mục nào và chưa có option tự thêm, hoặc mục đã tick còn ô số trống), Message. Dòng cảnh báo vàng trong khối SMS: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.` SMS thiếu trường không khóa các nút copy của ticket.
 - Khối **Ảnh**: ảnh Type Customer (nhãn `Type Customer`, từ 2 ảnh thì `Type Customer – ảnh n`) hiện sau ảnh ticket khi đang tick, nên cũng nằm trong `Tải tất cả (ZIP)` và `Tải PDF` (§10). Ảnh không ảnh hưởng điều kiện copy.
 - Ctrl+V ảnh khi đứng trong khối Type Customer → vào ảnh Type Customer; không đứng ở ô nào → mục focus gần nhất, không thì mục đầu của ticket.

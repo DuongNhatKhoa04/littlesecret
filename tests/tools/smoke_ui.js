@@ -453,9 +453,9 @@
     await settle();
     check('SMS: chọn Tiếng Việt => tin nhắn tiếng Việt', $('#outSms').textContent.startsWith('Xin chào,') &&
       $('#outSms').textContent.includes('Giá mỗi SMS: $0.06\nTổng chi phí dự kiến: $190.68'), $('#outSms').textContent);
-    const smsDetails = $('#outSms').textContent.split('\n\n')[2];   // Số khách nhận → Tổng chi phí dự kiến
-    check('SMS: Title không đổi, chi tiết SMS in vào Đã support', $('#outTitle').textContent === plainTicket[0] &&
-      $('#outBody').textContent === plainTicket[1] + '\n\nĐã support:\n' + smsDetails, $('#outBody').textContent);
+    const smsDetails = $('#outSms').textContent.split('\n\n')[2].split('\n').slice(0, -2).join('\n');   // Số khách nhận → hết Nội dung tin nhắn, bỏ 2 dòng giá
+    check('SMS: Title không đổi, chi tiết SMS (không có giá) in vào Đã support', $('#outTitle').textContent === plainTicket[0] &&
+      $('#outBody').textContent === plainTicket[1] + '\n\nĐã support:\n' + smsDetails && !$('#outBody').textContent.includes('Giá mỗi SMS'), $('#outBody').textContent);
     check('SMS: Copy SMS chỉ copy tin nhắn', (await copyAndGet('#copySms')) === $('#outSms').textContent);
     const promoCopy = await copyAndGet('#copyPromo');
     check('SMS: Copy tin SMS = 1 dòng, \\n dính liền, không ngoặc kép', promoCopy === 'ARIA NAIL BAR (555) 123-4567. Sale 15%\\nToday only Reply STOP To Optout.', promoCopy);
