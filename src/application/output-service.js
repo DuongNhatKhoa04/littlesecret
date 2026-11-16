@@ -7,7 +7,7 @@
   const { isActionMissing, countMissingImages, canCopyBody } = TW.domain.validation;
   const { imageSlots, imageLabel, defaultImageKey } = TW.domain.imageSlots;
   const { buildImageArchive, buildImageReport } = TW.domain.imageArchive;
-  const { buildSmsMessage, missingSmsFields } = TW.domain.smsMessage;
+  const { buildSmsDetails, buildSmsMessage, buildPromoText, missingSmsFields } = TW.domain.smsMessage;
   const { buildShippingMessage, missingShippingFields } = TW.domain.shippingMessage;
   const { buildReviewMessage, missingReviewFields } = TW.domain.reviewMessage;
   const SMS_IMAGE_KEY = TW.domain.sms.IMAGE_KEY;
@@ -24,13 +24,20 @@
     /** Nhóm SMS: chỉ có tin nhắn gửi tiệm, không có title. */
     const messageResult = (body, missingFields) => ({ ...EMPTY, body, missingFields, canCopyBody: !!body && !missingFields.length, showTitle: false });
 
-    /** Khối SMS Promotion: kết quả riêng, không đụng title / nội dung / điều kiện copy của ticket. */
+    /** Khối SMS đang bật: chi tiết Recipients → Estimate Total in thêm cuối mục ticketSection (Đã support) của nội dung ticket. */
+    function smsExtras() {
+      if (!session.smsActive()) return {};
+      const config = context.sms;
+      return { [config.ticketSection]: buildSmsDetails({ sms: session.sms(), config }) };
+    }
+
+    /** Khối SMS Promotion: tin nhắn riêng, không đụng title / điều kiện copy của ticket. */
     function computeSms() {
       const sms = session.sms();
       const config = context.sms;
       const body = buildSmsMessage({ sms, config });
       const missingFields = body ? missingSmsFields({ sms, config }) : [];
-      return { body, missingFields, canCopy: !!body && !missingFields.length };
+      return { body, promo: body ? buildPromoText({ sms, config }) : '', missingFields, canCopy: !!body && !missingFields.length };
     }
 
     function computeShipping() {
@@ -54,7 +61,7 @@
       const ticket = session.ticket();
       const imageCounts = images.counts();
       const title = ticketTitle(type, ticket);
-      const body = buildBody({ type, ticket, imageCounts, model: session.model(), app: context.app });
+      const body = buildBody({ type, ticket, imageCounts, model: session.model(), app: context.app, sectionExtras: smsExtras() });
       const missingAction = isActionMissing({ type, ticket, conclusion: session.conclusion() });
       const missingImages = countMissingImages({ type, ticket, imageCounts });
       const actionSection = type.sections.find(section => section.actionFor);

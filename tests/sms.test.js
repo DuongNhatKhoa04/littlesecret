@@ -1,4 +1,4 @@
-// tests/sms.test.js — SMS Promotion: ghép tin nhắn, trường còn thiếu, đọc/lưu state, khối SMS trong Hỗ trợ merchant không đụng kết quả ticket.
+// tests/sms.test.js — SMS Promotion: ghép tin nhắn, trường còn thiếu, đọc/lưu state, khối SMS trong Hỗ trợ merchant: chi tiết SMS vào mục Đã support.
 (function (TW) {
   'use strict';
 
@@ -24,7 +24,7 @@
     '- Last Visit <= 365',
     '- Times visit between 1 - 10000',
     'Message:',
-    '"ARIA NAIL BAR (555) 123-4567 This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout."',
+    '"ARIA NAIL BAR (555) 123-4567. This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout."',
     'Price per SMS: $0.02',
     'Estimate Total: $63.56',
     '',
@@ -51,7 +51,7 @@
       ...EXAMPLE, message: '"Sale 10%"',
       customerTypes: { lastVisit: { on: false, values: { days: '365' } }, visitTimes: { on: true, values: { min: ' 2 ', max: '50' } } }
     });
-    assertEqual(body.includes('Type Customer:\n- Times visit between 2 - 50\nMessage:\n"ARIA NAIL BAR (555) 123-4567 Sale 10% Reply STOP To Optout."\n'), true, body);
+    assertEqual(body.includes('Type Customer:\n- Times visit between 2 - 50\nMessage:\n"ARIA NAIL BAR (555) 123-4567. Sale 10% Reply STOP To Optout."\n'), true, body);
     assertEqual(body.includes('Last Visit'), false);
   });
 
@@ -62,8 +62,16 @@
     assertEqual(missing(all), []);
   });
 
+  test('sms: Message xuống dòng => tin gửi tiệm giữ xuống dòng; bản Copy tin SMS 1 dòng, \\n dính liền, không ngoặc kép', () => {
+    const raw = (message) => ({ ...EXAMPLE, shop: 'A', message });
+    const promo = (message) => D.smsMessage.buildPromoText({ sms: D.sms.sanitizeSms(raw(message), config), config });
+    assertEqual(build(raw('toi la hang thu nhat\ntoi la hang thu hai')).includes('\n"A (555) 123-4567. toi la hang thu nhat\ntoi la hang thu hai Reply STOP To Optout."\n'), true);
+    assertEqual(promo('toi la hang thu nhat\ntoi la hang thu hai'), 'A (555) 123-4567. toi la hang thu nhat\\ntoi la hang thu hai Reply STOP To Optout.');
+    assertEqual(promo(' "dong 1  \r\n  dong 2\n\ndong 3" '), 'A (555) 123-4567. dong 1\\ndong 2\\n\\ndong 3 Reply STOP To Optout.');
+  });
+
   test('sms: Phone tiệm in dạng (555) 123-4567 dù gõ kiểu nào; không đúng dạng thì in như đã gõ', () => {
-    const phoneIn = (shopPhone) => build({ ...EXAMPLE, shop: 'A', message: 'B', shopPhone }).match(/"A (.*) B Reply STOP/)[1];
+    const phoneIn = (shopPhone) => build({ ...EXAMPLE, shop: 'A', message: 'B', shopPhone }).match(/"A (.*). B Reply STOP/)[1];
     assertEqual(['5551234567', '555-123-4567', '555.123.4567', '(555) 123-4567', '+1 555 123 4567', '15551234567'].map(phoneIn), Array(6).fill('(555) 123-4567'));
     assertEqual([' 555-1234 ', '555-123-4567 ext 2'].map(phoneIn), ['555-1234', '555-123-4567 ext 2']);
   });
@@ -99,7 +107,7 @@
     const body = build({ ...EXAMPLE, lang: 'vi' });
     assertEqual(body.split('\n').slice(0, 3), ['Xin chào,', '', 'Anh/chị vui lòng xác nhận thông tin dưới đây trước khi bên em gửi SMS promotion:']);
     assertEqual(body.includes('Số khách nhận: 3178 khách\nNhóm khách:\n- Lần ghé gần nhất <= 365 ngày\n- Số lần ghé từ 1 - 10000\n' +
-      'Nội dung tin nhắn:\n"ARIA NAIL BAR (555) 123-4567 This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout."\n' +
+      'Nội dung tin nhắn:\n"ARIA NAIL BAR (555) 123-4567. This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout."\n' +
       'Giá mỗi SMS: $0.02\nTổng chi phí dự kiến: $63.56\n\n'), true, body);
     assertEqual([D.sms.sanitizeSms({ lang: 'fr' }, config).lang, D.sms.sanitizeSms(EXAMPLE, config).lang], ['en', 'en']);
   });
@@ -190,19 +198,29 @@
     assertEqual([session.smsActive(), output.compute().sms], [false, null]);
   });
 
-  test('sms: bật khối SMS không đổi title, nội dung, điều kiện copy của ticket; SMS khóa copy tới khi đủ trường', () => {
+  test('sms: bật khối SMS không đổi title, điều kiện copy của ticket; chi tiết SMS in cuối Đã support; SMS khóa copy tới khi đủ trường', () => {
     const { store, output, sms } = setup({ ticket: { summary: 'đổi giá', phone: '0901', blocks: { s1: ['Đổi giá'], s2: ['Đã đổi'] } } });
-    const pick = ({ title, body, canCopyTitle, canCopyBody, missingFields, showTitle }) => ({ title, body, canCopyTitle, canCopyBody, missingFields, showTitle });
+    const pick = ({ title, canCopyTitle, canCopyBody, missingFields, showTitle }) => ({ title, canCopyTitle, canCopyBody, missingFields, showTitle });
     const before = pick(output.compute());
+    const ticketBody = output.compute().body;
     sms.setEnabled(true);
-    assertEqual(output.compute().sms, { body: '', missingFields: [], canCopy: false });
+    assertEqual([output.compute().sms, output.compute().body], [{ body: '', promo: '', missingFields: [], canCopy: false }, ticketBody]);
     sms.setField('shop', 'ARIA NAIL BAR');
     assertEqual([pick(output.compute()), output.compute().sms.canCopy, output.compute().sms.missingFields],
       [before, false, ['Phone tiệm', 'Recipients', 'Type Customer', 'Message']]);
     store.update(state => { state.sms = D.sms.sanitizeSms({ ...EXAMPLE, enabled: true }, config); });
-    assertEqual([pick(output.compute()), output.compute().sms], [before, { body: EXPECTED, missingFields: [], canCopy: true }]);
-    assertEqual(output.compute().body.includes('ARIA'), false);
+    assertEqual([pick(output.compute()), output.compute().sms], [before, { body: EXPECTED, promo: EXPECTED.split('\n')[9].slice(1, -1), missingFields: [], canCopy: true }]);
+    const details = EXPECTED.split('\n\n')[2];   // Recipients → Estimate Total
+    assertEqual(output.compute().body, ticketBody + '\n' + details);
+    sms.setEnabled(false);
+    assertEqual(output.compute().body, ticketBody);
     sms.reset();
     assertEqual(store.get().sms, D.sms.createEmptySms(config));
+  });
+
+  test('sms: chỉ có chi tiết SMS (Đã support trống) vẫn in mục Đã support', () => {
+    const { store, output } = setup(null);
+    store.update(state => { state.sms = D.sms.sanitizeSms({ ...EXAMPLE, enabled: true }, config); });
+    assertEqual(output.compute().body, 'Đã support:\n' + EXPECTED.split('\n\n')[2]);
   });
 })(window.TW);

@@ -22,7 +22,10 @@
     },
 
     // Tin khách nhận, in trong ngoặc kép dưới dòng Message, giống nhau ở mọi ngôn ngữ. {shop} {shopPhone} {message} lấy từ form.
-    promoText: '{shop} {shopPhone} {message} Reply STOP To Optout.',
+    promoText: '{shop} {shopPhone}. {message} Reply STOP To Optout.',
+
+    // key mục của loại ticket có smsPromotion: khối SMS đang bật thì chi tiết Recipients → Estimate Total in thêm cuối mục này
+    ticketSection: 's2',
 
     // Ngôn ngữ tin nhắn, ngôn ngữ đầu là mặc định. id lưu trong state => không đổi id đang có.
     // lines: từng dòng của tin nhắn. {recipients} {price} lấy từ form, {total} = giá × Recipients.

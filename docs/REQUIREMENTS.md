@@ -192,7 +192,7 @@ Việc cần làm tiếp:
 - **Copy title**: khóa khi title rỗng.
 - **Copy nội dung**: khóa khi (a) nội dung rỗng, (b) thiếu mục đề xuất bắt buộc, hoặc (c) checklist còn mục thiếu ảnh. (b)/(c) hiện dòng cảnh báo vàng nói rõ lý do.
 - Copy xong nút đổi thành `Đã copy ✓` trong 1.5s; lỗi thì báo copy tay.
-- Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung, `Alt+3` = Copy SMS khi khối SMS Promotion đang bật (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS Shipping không có Title nên `Alt+1` không làm gì.
+- Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung, `Alt+3` = Copy SMS, `Alt+4` = Copy tin SMS khi khối SMS Promotion đang bật (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS Shipping không có Title nên `Alt+1` không làm gì.
 - **Điền vào trang ticket** (chỉ loại ticket có Title; SMS Shipping không có; tin nhắn SMS Promotion không đi kèm):
   - Nút `Copy để điền` (trên khối Title): copy Title + Nội dung vào clipboard (JSON có đánh dấu của Ticket Writer). Khóa khi Copy title hoặc Copy nội dung đang khóa. Không gửi ảnh.
   - Nút `Cài bookmark "Điền ticket"`: hộp hướng dẫn, có nút `Điền ticket` để kéo lên thanh bookmark (bấm ở Ticket Writer thì không làm gì).
@@ -370,7 +370,7 @@ Khối tùy chọn ở cuối form `Viết ticket` → `Hỗ trợ merchant` (c�
 - Có ô tick `SMS Promotion`. Chưa tick: các ô SMS ẩn, ticket như thường. Tick: mở các ô bên dưới và khối SMS ở Kết quả; bỏ tick thì ẩn lại, dữ liệu vẫn giữ.
 - Khối ở khu Nhập và khối tin nhắn ở khu Kết quả có màu riêng (`--sms-bg`, `--sms-line`) để tách khỏi phần ticket.
 - Không có ở loại khác: đổi sang `Chuyển CS/MKT` thì ẩn khối, về lại `Hỗ trợ merchant` thì hiện như cũ.
-- Không phải một phần của ticket: không vào Title, Nội dung, `Copy để điền`; không lưu vào template.
+- Không vào Title, không lưu vào template. Khi tick: phần chi tiết (từ dòng Recipients tới hết Estimate Total, theo ngôn ngữ tin nhắn) in thêm cuối mục **Đã support** của Nội dung (mục theo `ticketSection` trong config), nên cũng vào `Copy nội dung`, `Copy để điền` (§16.3).
 - Bản trước có tab `SMS` → `Promotion` riêng: phiên đã lưu đang ở tab đó mở lại ở `Hỗ trợ merchant` với ô tick đã bật; phiên khác giữ dữ liệu SMS, ô tick tắt.
 
 ### 16.1 Form
@@ -397,7 +397,7 @@ Type Customer:
 - <lựa chọn đã tick 1>
 - <lựa chọn đã tick 2>
 Message:
-"<Tên tiệm> <Phone tiệm> <Message> Reply STOP To Optout."
+"<Tên tiệm> <Phone tiệm>. <Message> Reply STOP To Optout."
 Price per SMS: $<giá>
 Estimate Total: $<giá × Recipients>
 
@@ -405,7 +405,7 @@ Please carefully review the content of the Promotion message, and only when you 
 ```
 
 - Type Customer: mục có sẵn đã tick theo thứ tự config (không theo thứ tự tick, số đã trim), rồi tới option tự thêm (bỏ option trống).
-- Dòng trong ngoặc kép là tin khách nhận, ghép theo mẫu `promoText` trong config, giống nhau ở cả 2 ngôn ngữ. Message đã có sẵn cặp ngoặc kép bao ngoài thì bỏ cặp đó, chỉ giữ cặp bao cả dòng.
+- Dòng trong ngoặc kép là tin khách nhận, ghép theo mẫu `promoText` trong config, giống nhau ở cả 2 ngôn ngữ. Message đã có sẵn cặp ngoặc kép bao ngoài thì bỏ cặp đó, chỉ giữ cặp bao cả dòng. Message có xuống dòng → tin gửi tiệm giữ xuống dòng thật (bỏ khoảng trắng quanh chỗ xuống dòng) để merchant đọc đúng như khách sẽ nhận.
 - Chưa nhập gì (Tên tiệm, Phone tiệm, Recipients, Message trống, chưa tick Type Customer) → tin nhắn rỗng.
 - **Estimate Total** = Price per SMS × Recipients, 2 số lẻ, có dấu phẩy hàng nghìn (vd `3178` × `0.02` → `$63.56`, `50000` × `0.08` → `$4,000.00`). Recipients gõ `3,178` vẫn tính được. Recipients trống hoặc không phải số nguyên → bỏ dòng này.
 - **Tiếng Việt**: cùng bố cục, câu chữ tiếng Việt (vd `Xin chào,`, `Số khách nhận: <Recipients> khách`, `Nhóm khách:`, `Lần ghé gần nhất <= 365 ngày`, `Giá mỗi SMS: $<giá>`, `Tổng chi phí dự kiến: $<tổng>`). Option tự thêm in nguyên văn ở cả 2 ngôn ngữ.
@@ -413,7 +413,20 @@ Please carefully review the content of the Promotion message, and only when you 
 
 ### 16.3 Khu Kết quả & Copy
 
-- Khi tick: khối `SMS Promotion` hiện dưới khối Nội dung, có nút `Copy SMS (Alt+3)` riêng. Title, Nội dung, `Copy title`, `Copy nội dung`, `Copy để điền` giữ nguyên như khi chưa tick.
+- Khi tick: khối `SMS Promotion` hiện dưới khối Nội dung, có nút `Copy SMS (Alt+3)` riêng. Title, điều kiện copy của ticket giữ nguyên như khi chưa tick.
+- **Copy tin SMS (Alt+4)**: chỉ copy tin khách nhận (dòng trong ngoặc kép, không kèm ngoặc kép), trên 1 dòng, mỗi chỗ xuống dòng của Message thành 2 ký tự `\n` dính liền, vd `AURO NAILS SPA (123) 456-7890. dòng 1\ndòng 2 Reply STOP To Optout.` Khóa / mở cùng lúc với Copy SMS.
+- Nội dung ticket: chi tiết SMS cập nhật theo form, in cuối mục Đã support (sau các ý, không gạch đầu dòng). Đã support trống thì mục chỉ có chi tiết SMS. Chưa nhập gì vào SMS thì không in gì. Bỏ tick thì bỏ khỏi Nội dung.
+  ```
+  Đã support:
+  - <ý đã support>
+  Recipients: <Recipients> customers
+  Type Customer:
+  - <lựa chọn đã tick>
+  Message:
+  "<Tên tiệm> <Phone tiệm>. <Message> Reply STOP To Optout."
+  Price per SMS: $<giá>
+  Estimate Total: $<tổng>
+  ```
 - **Copy SMS** khóa khi tin nhắn rỗng hoặc còn thiếu: Tên tiệm, Phone tiệm, Recipients, Type Customer (chưa tick mục nào và chưa có option tự thêm, hoặc mục đã tick còn ô số trống), Message. Dòng cảnh báo vàng trong khối SMS: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.` SMS thiếu trường không khóa các nút copy của ticket.
 - Khối **Ảnh**: ảnh Type Customer (nhãn `Type Customer`, từ 2 ảnh thì `Type Customer – ảnh n`) hiện sau ảnh ticket khi đang tick, nên cũng nằm trong `Tải tất cả (ZIP)` và `Tải PDF` (§10). Ảnh không ảnh hưởng điều kiện copy.
 - Ctrl+V ảnh khi đứng trong khối Type Customer → vào ảnh Type Customer; không đứng ở ô nào → mục focus gần nhất, không thì mục đầu của ticket.

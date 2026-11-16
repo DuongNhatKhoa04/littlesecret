@@ -171,7 +171,8 @@ setSms({   // const { setSms } = registry;
     { id: 'visitTimes', text: 'Times visit between {min} - {max}', values: { min: '1', max: '10000' } }
   ],
   labels: { toggle: 'SMS Promotion', language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', shopPhone: 'Phone tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message', price: 'Price per SMS ($)' },
-  promoText: '{shop} {shopPhone} {message} Reply STOP To Optout.',
+  promoText: '{shop} {shopPhone}. {message} Reply STOP To Optout.',
+  ticketSection: 's2',
   languages: [
     { id: 'en', label: 'English', lines: { greeting: 'Greeting,', /* intro, recipients, customerTypes, message, price, total, outro */ } },
     { id: 'vi', label: 'Tiếng Việt', lines: { /* ... */ }, customerTypes: { lastVisit: 'Lần ghé gần nhất <= {days} ngày', /* ... */ } }
@@ -184,6 +185,7 @@ setSms({   // const { setSms } = registry;
 | `prices` | Giá mỗi SMS được chọn (chuỗi, in nguyên văn sau `$`). Giá đầu là mặc định |
 | `customerTypes` | Lựa chọn Type Customer theo thứ tự hiện + in ra. `{tên}` trong `text` = ô số trên form; `values` = số mặc định (chuỗi). **Thêm lựa chọn = thêm 1 dòng.** `id` lưu trong state: không đổi id đang có |
 | `labels` | Nhãn trường trên form, cũng dùng trong cảnh báo "Còn thiếu". `toggle` = chữ cạnh ô tick mở khối SMS |
+| `ticketSection` | Key mục của loại ticket có `smsPromotion` nhận chi tiết SMS (Recipients → Estimate Total) khi khối SMS đang bật. Hiện là `s2` (Đã support) |
 | `promoText` | Mẫu tin khách nhận, in trong ngoặc kép dưới dòng Message, giống nhau ở mọi ngôn ngữ. `{shop}`, `{shopPhone}`, `{message}` thay bằng dữ liệu form |
 | `languages` | Ngôn ngữ tin nhắn, theo thứ tự hiện trên form; ngôn ngữ đầu là mặc định. `id` lưu trong state: không đổi id đang có |
 | `languages[].lines` | Câu chữ từng dòng tin nhắn. `{recipients}`, `{price}` thay bằng dữ liệu form, `{total}` = giá × Recipients (dòng `total` tự bỏ khi Recipients không phải số) |

@@ -4,11 +4,12 @@
 
   const { $, flash } = TW.ui.dom;
   const UPDATING = 'Đang cập nhật…';
-  // Alt+1 / Alt+2 / Alt+3; blocked = lý do khi nút đang khóa
+  // Alt+1 … Alt+4; blocked = lý do khi nút đang khóa
   const COPY_SHORTCUTS = {
     1: { selector: '#copyTitle', blocked: () => 'Chưa có title: nhập Loại hoặc Tóm tắt trước.' },
     2: { selector: '#copyBody', blocked: (result) => warningText(result) || 'Chưa có nội dung để copy.' },
-    3: { selector: '#copySms', blocked: (result) => smsWarningText(result.sms) || 'Chưa có tin nhắn SMS để copy.' }
+    3: { selector: '#copySms', blocked: (result) => smsWarningText(result.sms) || 'Chưa có tin nhắn SMS để copy.' },
+    4: { selector: '#copyPromo', blocked: (result) => smsWarningText(result.sms) || 'Chưa có tin nhắn SMS để copy.' }
   };
 
   const missingText = (fields) => `Còn thiếu: ${fields.join(', ')}. Điền đủ rồi mới copy được.`;
@@ -33,7 +34,7 @@
       const warning = smsWarningText(sms);
       $('#smsWarn').textContent = warning;
       $('#smsWarn').hidden = !warning;
-      $('#copySms').disabled = !sms || !sms.canCopy;
+      $('#copySms').disabled = $('#copyPromo').disabled = !sms || !sms.canCopy;
     }
 
     function render() {
@@ -84,6 +85,7 @@
     wireCopy('#copyTitle', () => last.title);
     wireCopy('#copyBody', () => last.body);
     wireCopy('#copySms', () => last.sms.body);
+    wireCopy('#copyPromo', () => last.sms.promo);
     wireCopy('#copyFill', () => ticketFill.payload(last.title, last.body));
     document.addEventListener('keydown', onShortcut);
 

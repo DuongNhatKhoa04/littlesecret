@@ -6,6 +6,8 @@
   const { cleanItems } = TW.domain.text;
   const BLOCK_GAP = '\n\n';
   const WRAPPING_QUOTES = /^"([\s\S]*)"$/;
+  const LINE_BREAK = /[ \t]*\r?\n[ \t]*/g;
+  const ESCAPED_NEWLINE = '\\n';   // bản copy tin SMS: xuống dòng => 2 ký tự \n, dính liền 2 dòng
   const DIGIT_GROUPING = /[,\s]/g;   // "3,178" vẫn tính được Estimate Total
   const WHOLE_NUMBER = /^\d+$/;
   const PHONE_PUNCTUATION = /[\s().+-]/g;
@@ -33,20 +35,27 @@
   }
 
   /** Tin khách nhận theo mẫu promoText, bọc ngoặc kép. Message dán cả dấu ngoặc kép từ tin mẫu thì bỏ đi, tránh ngoặc lồng nhau. */
-  function promoMessage(sms, config) {
-    const message = sms.message.trim().replace(WRAPPING_QUOTES, '$1');
-    return `"${fillTemplate(config.promoText, { shop: sms.shop.trim(), shopPhone: formatPhone(sms.shopPhone), message })}"`;
+  function promoText(sms, config, lineBreak) {
+    const message = sms.message.trim().replace(WRAPPING_QUOTES, '$1').replace(LINE_BREAK, lineBreak);
+    return fillTemplate(config.promoText, { shop: sms.shop.trim(), shopPhone: formatPhone(sms.shopPhone), message });
   }
+
+  /** Trong tin gửi tiệm: xuống dòng thật, để merchant đọc đúng như sẽ nhận. */
+  const promoMessage = (sms, config) => `"${promoText(sms, config, '\n')}"`;
+
+  /** Nút Copy tin SMS: 1 dòng, không ngoặc kép, xuống dòng thành \n để dán vào hệ thống gửi SMS. */
+  const buildPromoText = ({ sms, config }) => promoText(sms, config, ESCAPED_NEWLINE);
 
   const hasInput = (sms) => !isBlank(sms.shop) || !isBlank(sms.shopPhone) || !isBlank(sms.recipients) || !isBlank(sms.message) ||
     Object.values(sms.customerTypes).some(type => type.on) || cleanItems(sms.customOptions).length > 0;
 
   /**
-   * Chưa nhập gì => rỗng. Câu chữ theo ngôn ngữ đã chọn. Type Customer: mục có sẵn theo thứ tự config (không theo thứ tự tick), rồi tới option tự thêm.
+   * Phần chi tiết từ Recipients tới Estimate Total: nằm giữa tin nhắn gửi tiệm, và in vào mục Đã support của ticket. Chưa nhập gì => rỗng.
+   * Câu chữ theo ngôn ngữ đã chọn. Type Customer: mục có sẵn theo thứ tự config (không theo thứ tự tick), rồi tới option tự thêm.
    * @param {{ sms: object, config: object }} input
    * @returns {string}
    */
-  function buildSmsMessage({ sms, config }) {
+  function buildSmsDetails({ sms, config }) {
     if (!hasInput(sms)) return '';
     const language = findLanguage(sms, config);
     const { lines } = language;
@@ -57,10 +66,17 @@
       ...pickedTypes(sms, config).map(type => fillTemplate(typeText(type), trimValues(sms.customerTypes[type.id].values))),
       ...cleanItems(sms.customOptions)
     ].map(text => '- ' + text);
-    const details = [
+    return [
       fill(lines.recipients), lines.customerTypes, ...customerTypes, lines.message, promoMessage(sms, config), fill(lines.price),
       ...(total ? [fill(lines.total)] : [])
     ].join('\n');
+  }
+
+  /** Tin nhắn gửi tiệm: lời chào, chi tiết, lời dặn. Chưa nhập gì => rỗng. */
+  function buildSmsMessage({ sms, config }) {
+    const details = buildSmsDetails({ sms, config });
+    if (!details) return '';
+    const { lines } = findLanguage(sms, config);
     return [lines.greeting, lines.intro, details, lines.outro].join(BLOCK_GAP);
   }
 
@@ -75,5 +91,5 @@
     ].filter(([, missing]) => missing).map(([field]) => config.labels[field]);
   }
 
-  TW.domain.smsMessage = { buildSmsMessage, missingSmsFields };
+  TW.domain.smsMessage = { buildSmsDetails, buildSmsMessage, buildPromoText, missingSmsFields };
 })(window.TW);

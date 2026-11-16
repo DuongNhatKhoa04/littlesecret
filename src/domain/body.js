@@ -27,27 +27,29 @@
       .join('\n'));
   }
 
-  function sectionBlock(section, { ticket, app }) {
+  function sectionBlock(section, { ticket, app, sectionExtras = {} }) {
     if (isConclusionSection(section)) {
       const conclusion = findConclusion(app, ticket.conclusion);
       return conclusion && conclusion.showInBody ? `${section.label}: ${ticket.conclusion}` : '';
     }
     if (isSectionHidden(section, findConclusion(app, ticket.conclusion))) return '';
-    const items = cleanItems(ticket.blocks[section.key] || []);
-    return items.length ? `${section.label}:\n` + items.map(bulletize).join('\n') : '';
+    const lines = cleanItems(ticket.blocks[section.key] || []).map(bulletize);
+    if (sectionExtras[section.key]) lines.push(sectionExtras[section.key]);
+    return lines.length ? `${section.label}:\n` + lines.join('\n') : '';
   }
 
   const hasSectionContent = (type, ticket) => type.sections
     .some(section => !isConclusionSection(section) && cleanItems(ticket.blocks[section.key] || []).length > 0);
 
   /** Chưa có Phone / Tên merchant, chưa đụng checklist, các mục đều trống => nội dung rỗng (không in footer). */
-  function hasContent({ type, ticket, imageCounts }) {
+  function hasContent({ type, ticket, imageCounts, sectionExtras = {} }) {
     return !!ticket.phone.trim() || !!ticket.merchant.trim() || hasSectionContent(type, ticket) ||
-      (!!type.checklist && isTouched(type.checklist, ticket.chk, imageCounts));
+      Object.values(sectionExtras).some(Boolean) || (!!type.checklist && isTouched(type.checklist, ticket.chk, imageCounts));
   }
 
   /**
-   * @param {{ type: object, ticket: object, imageCounts: Object<string, number>, model: string, app: object }} input
+   * sectionExtras: chữ in thêm cuối mục theo key, không gạch đầu dòng (vd chi tiết SMS Promotion cuối mục Đã support).
+   * @param {{ type: object, ticket: object, imageCounts: Object<string, number>, model: string, app: object, sectionExtras?: Object<string, string> }} input
    * @returns {string}
    */
   function buildBody(input) {
