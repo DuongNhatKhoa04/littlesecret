@@ -2,13 +2,14 @@
 (function (TW) {
   'use strict';
 
-  const { $, el, button, isComposing } = TW.ui.dom;
+  const { $, el, button, isComposing, comboList, showComboList, scrollToActive, comboOption } = TW.ui.dom;
   const { parseCategories } = TW.domain.title;
   const { normalizeForSearch, cleanCategory } = TW.domain.text;
 
   const HINT = 'Chọn 1 loại: gõ để lọc, Enter (hoặc Tab) để chọn, xong tự sang Tóm tắt. Chọn loại khác thì thay loại cũ, Backspace để bỏ. Loại chưa có thì gõ tên rồi Enter để thêm.';
   const NO_OTHER = 'Không còn loại nào khác. Gõ để thêm loại mới.';
   const NEXT_FIELD = '#f_summary';
+  const LIST_ID = 'catList';
 
   function createCategoryCombo({ context, session, ticketService, categories }) {
     function build() {
@@ -18,12 +19,7 @@
       const box = el('div', 'combo-box');
       const input = el('input', 'combo-input');
       Object.assign(input, { id: 'f_category', type: 'text', autocomplete: 'off' });
-      [['role', 'combobox'], ['aria-expanded', 'false'], ['aria-controls', 'catList'], ['aria-autocomplete', 'list']]
-        .forEach(([name, value]) => input.setAttribute(name, value));
-      const list = el('div', 'combo-list');
-      list.id = 'catList';
-      list.setAttribute('role', 'listbox');
-      list.hidden = true;
+      const list = comboList(input, LIST_ID);
       let shown = [];
       let active = 0;
 
@@ -57,21 +53,13 @@
       }
 
       function optionRow(option, i) {
-        const row = el('div', 'combo-opt' + (i === active ? ' active' : ''));
-        row.setAttribute('role', 'option');
-        row.setAttribute('aria-selected', String(i === active));
-        row.append(el('span', '', option.isNew ? `+ Thêm “${option.value}”` : option.value));
-        if (!option.isNew && !categories.isBuiltIn(option.value)) {   // loại tự thêm thì xóa được khỏi danh sách
-          const remove = button('combo-del', '×', { title: 'Xóa khỏi danh sách', skipTab: true });
-          remove.addEventListener('mousedown', (event) => {
-            event.preventDefault();
-            event.stopPropagation();
-            categories.remove(option.value);
-            renderList();
-          });
-          row.append(remove);
-        }
-        row.addEventListener('mousedown', (event) => { event.preventDefault(); pick(option); });
+        const removable = !option.isNew && !categories.isBuiltIn(option.value);   // loại tự thêm thì xóa được khỏi danh sách
+        const row = comboOption({
+          text: option.isNew ? `+ Thêm “${option.value}”` : option.value,
+          active: i === active,
+          onPick: () => pick(option),
+          remove: removable ? { title: 'Xóa khỏi danh sách', onRemove: () => { categories.remove(option.value); renderList(); } } : null
+        });
         row.addEventListener('mousemove', () => { if (active !== i) { active = i; renderList(); } });
         return row;
       }
@@ -82,12 +70,11 @@
         list.textContent = '';
         if (!shown.length) list.append(el('div', 'combo-empty', NO_OTHER));
         shown.forEach((option, i) => list.append(optionRow(option, i)));
-        const current = list.querySelector('.active');
-        if (current) current.scrollIntoView({ block: 'nearest' });
+        scrollToActive(list);
       }
 
-      function open() { list.hidden = false; input.setAttribute('aria-expanded', 'true'); renderList(); }
-      function close() { list.hidden = true; input.setAttribute('aria-expanded', 'false'); }
+      function open() { showComboList(input, list, true); renderList(); }
+      function close() { showComboList(input, list, false); }
 
       /** Chỉ 1 loại: chọn là thay loại cũ. Xong thì sang Tóm tắt (blur tự đóng danh sách). true = đã chọn */
       function pick(option) {

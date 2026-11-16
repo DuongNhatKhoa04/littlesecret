@@ -4,8 +4,7 @@
 
   const { fillTemplate } = TW.domain.sms;
   const { FIELDS } = TW.domain.shipping;
-
-  const isBlank = (value) => !value.trim();
+  const { isBlank } = TW.domain.text;
 
   /**
    * Chưa nhập gì => rỗng.

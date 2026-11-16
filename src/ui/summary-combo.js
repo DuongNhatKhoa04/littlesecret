@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { el, button, isComposing } = TW.ui.dom;
+  const { el, isComposing, comboList, showComboList, scrollToActive, comboOption } = TW.ui.dom;
   const { normalizeForSearch } = TW.domain.text;
 
   const LIST_ID = 'f_summaryHistory';
@@ -11,12 +11,7 @@
     /** Gắn danh sách gợi ý dưới ô input trong `wrap` (ô do ticket-form tạo). */
     function attach(wrap) {
       const input = wrap.querySelector('input');
-      const list = el('div', 'combo-list');
-      list.id = LIST_ID;
-      list.setAttribute('role', 'listbox');
-      list.hidden = true;
-      [['role', 'combobox'], ['aria-expanded', 'false'], ['aria-controls', LIST_ID], ['aria-autocomplete', 'list']]
-        .forEach(([name, value]) => input.setAttribute(name, value));
+      const list = comboList(input, LIST_ID);
       let shown = [];
       let active = -1;   // -1 = chưa chọn gợi ý nào: Enter giữ hành vi cũ (sang ô kế tiếp)
 
@@ -25,34 +20,21 @@
         return summaryHistory.list().filter(text => normalizeForSearch(text).includes(query));
       };
 
-      function optionRow(text, i) {
-        const row = el('div', 'combo-opt' + (i === active ? ' active' : ''));
-        row.setAttribute('role', 'option');
-        row.setAttribute('aria-selected', String(i === active));
-        const remove = button('combo-del', '×', { title: 'Xóa khỏi gợi ý', ariaLabel: 'Xóa gợi ý ' + text, skipTab: true });
-        remove.addEventListener('mousedown', (event) => {
-          event.preventDefault();   // giữ con trỏ trong ô, không kích hoạt chọn dòng
-          event.stopPropagation();
-          summaryHistory.forget(text);
-          render();
-        });
-        row.append(el('span', '', text), remove);
-        row.addEventListener('mousedown', (event) => { event.preventDefault(); pick(text); });
-        return row;
-      }
+      const optionRow = (text, i) => comboOption({
+        text, active: i === active, onPick: () => pick(text),
+        remove: { title: 'Xóa khỏi gợi ý', ariaLabel: 'Xóa gợi ý ' + text, onRemove: () => { summaryHistory.forget(text); render(); } }
+      });
 
       function render() {
         shown = matches();
         if (active >= shown.length) active = shown.length - 1;
         list.textContent = '';
         shown.forEach((text, i) => list.append(optionRow(text, i)));
-        list.hidden = !shown.length;
-        input.setAttribute('aria-expanded', String(!list.hidden));
-        const current = list.querySelector('.active');
-        if (current) current.scrollIntoView({ block: 'nearest' });
+        showComboList(input, list, shown.length > 0);
+        scrollToActive(list);
       }
 
-      function close() { active = -1; list.hidden = true; input.setAttribute('aria-expanded', 'false'); }
+      function close() { active = -1; showComboList(input, list, false); }
 
       function pick(text) {
         input.value = text;

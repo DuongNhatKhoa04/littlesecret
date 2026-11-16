@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { removeDiacritics } = TW.domain.text;
+  const { removeDiacritics, pad2 } = TW.domain.text;
 
   const FALLBACK_NAME = 'anh-ticket';
   const PDF_FALLBACK_NAME = 'anh - ticket';
@@ -19,7 +19,6 @@
 
   const extensionOf = (mimeType) => EXTENSIONS[mimeType] || mimeType.split('/')[1] || DEFAULT_EXTENSION;
 
-  const pad2 = (value) => String(value).padStart(2, '0');
 
   /** `MMDD - HHmm` theo giờ máy, đặt đầu tên: Explorer sắp file theo ngày giờ tải, tải lại không đè file cũ. */
   const toStamp = (date) => `${pad2(date.getMonth() + 1)}${pad2(date.getDate())} - ${pad2(date.getHours())}${pad2(date.getMinutes())}`;

@@ -37,6 +37,15 @@
   /** Tên Loại người dùng gõ: gộp khoảng trắng, bỏ " - " (là dấu nối giữa các Loại), viết HOA. */
   const cleanCategory = (text) => text.trim().replace(/\s+-\s+/g, ' ').replace(/\s+/g, ' ').toUpperCase();
 
+  /** Chuỗi trống / chỉ có khoảng trắng. */
+  const isBlank = (value) => !value.trim();
+
+  /** Dữ liệu đọc từ storage / file có thể sai kiểu: không phải chuỗi thì thành ''. */
+  const asString = (value) => typeof value === 'string' ? value : '';
+
+  /** 7 => "07" (ngày, giờ trong tên file / mã). */
+  const pad2 = (value) => String(value).padStart(2, '0');
+
   const US_PHONE_DIGITS = 10;
 
   /** Ô Phone: chỉ giữ số, tối đa 10 số, gõ tới đâu format tới đó: "(111", "(111) 111", "(111) 111-1111". Dán "+1 555…" (11 số, đầu 1) thì bỏ số 1. */
@@ -50,5 +59,5 @@
     return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
   }
 
-  TW.domain.text = { formatPhoneInput, capitalizeLine, capitalizeLines, cleanItems, bulletize, removeDiacritics, normalizeForSearch, cleanCategory };
+  TW.domain.text = { isBlank, asString, pad2, formatPhoneInput, capitalizeLine, capitalizeLines, cleanItems, bulletize, removeDiacritics, normalizeForSearch, cleanCategory };
 })(window.TW);

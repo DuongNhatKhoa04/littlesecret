@@ -2,11 +2,12 @@
 (function (TW) {
   'use strict';
 
+  const { asString } = TW.domain.text;
+
   /** @param {{ context: object, storage: KeyValueStore }} deps */
   function createStaffService({ context, storage }) {
     const key = context.app.staffKey;
-    const saved = storage.read(key);
-    let name = typeof saved === 'string' ? saved : '';
+    let name = asString(storage.read(key));
 
     return {
       name: () => name,

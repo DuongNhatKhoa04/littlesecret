@@ -3,13 +3,12 @@
   'use strict';
 
   const { toFileName } = TW.domain.imageArchive;
+  const { asString, pad2 } = TW.domain.text;
 
   const FORMAT = 'ticket-writer-offline';   // nhận ra đúng file của tính năng này khi mở lại
   const FORMAT_VERSION = 1;
   const ID_PREFIX = 'OFF-';
 
-  const pad2 = (value) => String(value).padStart(2, '0');
-  const asString = (value) => typeof value === 'string' ? value : '';
 
   /** OFF-YYYYMMDD-HHmmss theo giờ máy lúc lưu. */
   const createOfflineId = (date) => ID_PREFIX + `${date.getFullYear()}${pad2(date.getMonth() + 1)}${pad2(date.getDate())}-` +

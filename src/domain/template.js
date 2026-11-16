@@ -2,10 +2,9 @@
 (function (TW) {
   'use strict';
 
-  const { cleanItems, normalizeForSearch } = TW.domain.text;
+  const { cleanItems, normalizeForSearch, asString } = TW.domain.text;
   const { copyBlocks, findConclusion } = TW.domain.ticket;
 
-  const asString = (value) => typeof value === 'string' ? value : '';
 
   function isValidTemplate(template, typeExists) {
     return !!template && typeof template.name === 'string' && !!template.name.trim() &&

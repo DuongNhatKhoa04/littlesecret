@@ -4,6 +4,7 @@
 
   const { $ } = TW.ui.dom;
   const { encodeQr } = TW.domain.qrCode;
+  const { pad2 } = TW.domain.text;
 
   const MODULE_PX = 8;
   const QUIET_ZONE = 4;   // viền trắng 4 ô theo chuẩn, thiếu thì camera khó nhận
@@ -15,8 +16,7 @@
   const NO_LAN = 'Máy tính chưa vào mạng LAN / Wi-Fi nên iPad không kết nối được.';
   const CONFIRM_RENEW = 'Đổi mã iPad? Trang gửi ảnh đang mở trên iPad sẽ không gửi được nữa, phải quét mã mới.';
 
-  const pad = (value) => String(value).padStart(2, '0');
-  const formatTime = (date) => `${pad(date.getHours())}:${pad(date.getMinutes())} ${pad(date.getDate())}/${pad(date.getMonth() + 1)}`;
+  const formatTime = (date) => `${pad2(date.getHours())}:${pad2(date.getMinutes())} ${pad2(date.getDate())}/${pad2(date.getMonth() + 1)}`;
 
   function drawQr(canvas, grid) {
     const side = (grid.length + QUIET_ZONE * 2) * MODULE_PX;

@@ -3,7 +3,7 @@
   'use strict';
 
   const { fillTemplate } = TW.domain.sms;
-  const { cleanItems } = TW.domain.text;
+  const { cleanItems, isBlank, formatPhoneInput } = TW.domain.text;
   const BLOCK_GAP = '\n\n';
   const WRAPPING_QUOTES = /^"([\s\S]*)"$/;
   const LINE_BREAK = /[ \t]*\r?\n[ \t]*/g;
@@ -11,10 +11,9 @@
   const DIGIT_GROUPING = /[,\s]/g;   // "3,178" vẫn tính được Estimate Total
   const WHOLE_NUMBER = /^\d+$/;
   const PHONE_PUNCTUATION = /[\s().+-]/g;
-  const US_PHONE = /^1?(\d{3})(\d{3})(\d{4})$/;
+  const US_PHONE = /^1?\d{10}$/;
   const MONEY_FORMAT = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
 
-  const isBlank = (value) => !value.trim();
   const trimValues = (values) => Object.fromEntries(Object.entries(values).map(([name, value]) => [name, value.trim()]));
   const pickedTypes = (sms, config) => config.customerTypes.filter(type => sms.customerTypes[type.id].on);
 
@@ -28,11 +27,8 @@
     return (cents / 100).toLocaleString('en-US', MONEY_FORMAT);
   }
 
-  /** Số Mỹ 10 số (có thể có 1 hoặc +1 đầu), gõ kiểu nào cũng ra (555) 123-4567; không đúng dạng đó thì in như đã gõ. */
-  function formatPhone(phone) {
-    const match = phone.replace(PHONE_PUNCTUATION, '').match(US_PHONE);
-    return match ? `(${match[1]}) ${match[2]}-${match[3]}` : phone.trim();
-  }
+  /** Số Mỹ 10 số (có thể có 1 hoặc +1 đầu), gõ kiểu nào cũng ra (555) 123-4567; không đúng dạng đó (dữ liệu lưu trước khi ô có mask) thì in như đã gõ. */
+  const formatPhone = (phone) => US_PHONE.test(phone.replace(PHONE_PUNCTUATION, '')) ? formatPhoneInput(phone) : phone.trim();
 
   /** Tin khách nhận theo mẫu promoText, bọc ngoặc kép. Message dán cả dấu ngoặc kép từ tin mẫu thì bỏ đi, tránh ngoặc lồng nhau. */
   function promoText(sms, config, lineBreak) {
