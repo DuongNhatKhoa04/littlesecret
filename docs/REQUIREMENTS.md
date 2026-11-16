@@ -192,7 +192,7 @@ Việc cần làm tiếp:
 - **Copy title**: khóa khi title rỗng.
 - **Copy nội dung**: khóa khi (a) nội dung rỗng, (b) thiếu mục đề xuất bắt buộc, hoặc (c) checklist còn mục thiếu ảnh. (b)/(c) hiện dòng cảnh báo vàng nói rõ lý do.
 - Copy xong nút đổi thành `Đã copy ✓` trong 1.5s; lỗi thì báo copy tay.
-- Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung, `Alt+3` = Copy SMS, `Alt+4` = Copy tin SMS khi khối SMS Promotion đang bật (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS Shipping không có Title nên `Alt+1` không làm gì.
+- Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung, `Alt+3` = Copy SMS, `Alt+4` = Copy Confirm SMS khi khối SMS Promotion đang bật (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS Shipping không có Title nên `Alt+1` không làm gì.
 - **Điền vào trang ticket** (chỉ loại ticket có Title; SMS Shipping không có; tin nhắn SMS Promotion không đi kèm):
   - Nút `Copy để điền` (trên khối Title): copy Title + Nội dung vào clipboard (JSON có đánh dấu của Ticket Writer). Khóa khi Copy title hoặc Copy nội dung đang khóa. Không gửi ảnh.
   - Nút `Cài bookmark "Điền ticket"`: hộp hướng dẫn, có nút `Điền ticket` để kéo lên thanh bookmark (bấm ở Ticket Writer thì không làm gì).
@@ -415,7 +415,7 @@ Please carefully review the content of the Promotion message, and only when you 
 ### 16.3 Khu Kết quả & Copy
 
 - Khi tick: khối `SMS Promotion` hiện dưới khối Nội dung, có nút `Copy SMS (Alt+3)` riêng. Title, điều kiện copy của ticket giữ nguyên như khi chưa tick.
-- **Copy tin SMS (Alt+4)**: chỉ copy tin khách nhận (dòng trong ngoặc kép, không kèm ngoặc kép), trên 1 dòng, mỗi chỗ xuống dòng của Message thành 2 ký tự `\n` dính liền, vd `AURO NAILS SPA (123) 456-7890. dòng 1\ndòng 2 Reply STOP To Optout.` Khóa / mở cùng lúc với Copy SMS.
+- **Copy Confirm SMS (Alt+4)**: chỉ copy tin khách nhận (dòng trong ngoặc kép, không kèm ngoặc kép), trên 1 dòng, mỗi chỗ xuống dòng của Message thành 2 ký tự `\n` dính liền, vd `AURO NAILS SPA (123) 456-7890. dòng 1\ndòng 2 Reply STOP To Optout.` Khóa / mở cùng lúc với Copy SMS.
 - Nội dung ticket: chi tiết SMS cập nhật theo form, in cuối mục Đã support (sau các ý, không gạch đầu dòng). Đã support trống thì mục chỉ có chi tiết SMS. Chưa nhập gì vào SMS thì không in gì. Bỏ tick thì bỏ khỏi Nội dung.
   ```
   Đã support:
@@ -442,7 +442,7 @@ Please carefully review the content of the Promotion message, and only when you 
   - **UCS-2**: có bất kỳ ký tự ngoài GSM-7 (tiếng Việt có dấu, emoji, nháy cong `’`) → 70 ký tự / 1 segment; dài hơn thì 67 / segment.
 - **Đang chờ chốt**:
   1. Hiện ở đâu. Đề xuất: 1 dòng dưới ô Message, vd `245 ký tự · 2 segment · GSM-7`; rơi vào UCS-2 thì chỉ ra ký tự gây ra.
-  2. `\n` trong bản `Copy tin SMS`: hệ thống gửi SMS đổi thành xuống dòng thật (đếm 1 ký tự) hay gửi nguyên văn (`\` là ký tự mở rộng → mỗi chỗ tốn 3).
+  2. `\n` trong bản `Copy Confirm SMS`: hệ thống gửi SMS đổi thành xuống dòng thật (đếm 1 ký tự) hay gửi nguyên văn (`\` là ký tự mở rộng → mỗi chỗ tốn 3).
   3. Estimate Total có nhân số segment không (giá × Recipients × segment).
 
 

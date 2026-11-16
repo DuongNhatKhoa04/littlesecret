@@ -65,7 +65,7 @@
     assertEqual(missing(all), []);
   });
 
-  test('sms: Message xuống dòng => tin gửi tiệm giữ xuống dòng; bản Copy tin SMS 1 dòng, \\n dính liền, không ngoặc kép', () => {
+  test('sms: Message xuống dòng => tin gửi tiệm giữ xuống dòng; bản Copy Confirm SMS 1 dòng, \\n dính liền, không ngoặc kép', () => {
     const raw = (message) => ({ ...EXAMPLE, shop: 'A', message });
     const promo = (message) => D.smsMessage.buildPromoText({ sms: D.sms.sanitizeSms(raw(message), config), config });
     assertEqual(build(raw('toi la hang thu nhat\ntoi la hang thu hai')).includes('\n"A (555) 123-4567. toi la hang thu nhat\ntoi la hang thu hai Reply STOP To Optout."\n'), true);

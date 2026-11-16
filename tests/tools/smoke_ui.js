@@ -478,7 +478,7 @@
       $('#outBody').textContent === plainTicket[1] + '\n\nĐã support:\n' + smsDetails && !$('#outBody').textContent.includes('Giá mỗi SMS'), $('#outBody').textContent);
     check('SMS: Copy SMS chỉ copy tin nhắn', (await copyAndGet('#copySms')) === $('#outSms').textContent);
     const promoCopy = await copyAndGet('#copyPromo');
-    check('SMS: Copy tin SMS = 1 dòng, \\n dính liền, không ngoặc kép', promoCopy === 'ARIA NAIL BAR (555) 123-4567. Sale 15%\\nToday only Reply STOP To Optout.', promoCopy);
+    check('SMS: Copy Confirm SMS = 1 dòng, \\n dính liền, không ngoặc kép', promoCopy === 'ARIA NAIL BAR (555) 123-4567. Sale 15%\\nToday only Reply STOP To Optout.', promoCopy);
     const smsFill = await copyAndGet('#copyFill');
     check('SMS: Copy để điền có chi tiết SMS', smsFill !== plainFill && smsFill.includes(smsDetails.split('\n')[0]), smsFill);
     const smsZone = $('.pzone[data-img-key="sms:customerTypes"]');

@@ -39,7 +39,7 @@
   /** Trong tin gửi tiệm: xuống dòng thật, để merchant đọc đúng như sẽ nhận. */
   const promoMessage = (sms, config) => `"${promoText(sms, config, '\n')}"`;
 
-  /** Nút Copy tin SMS: 1 dòng, không ngoặc kép, xuống dòng thành \n để dán vào hệ thống gửi SMS. */
+  /** Nút Copy Confirm SMS: 1 dòng, không ngoặc kép, xuống dòng thành \n để dán vào hệ thống gửi SMS. */
   const buildPromoText = ({ sms, config }) => promoText(sms, config, ESCAPED_NEWLINE);
 
   const hasInput = (sms) => !isBlank(sms.shop) || !isBlank(sms.shopPhone) || !isBlank(sms.recipients) || !isBlank(sms.message) ||
