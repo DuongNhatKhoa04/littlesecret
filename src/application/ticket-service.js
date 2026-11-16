@@ -5,7 +5,7 @@
   const { createEmptyTicket } = TW.domain.ticket;
   const { joinCategories } = TW.domain.title;
   const { checkOf } = TW.domain.checklist;
-  const EDITABLE_FIELDS = ['category', 'summary', 'phone', 'lang'];
+  const EDITABLE_FIELDS = ['category', 'summary', 'phone', 'merchant', 'lang'];
 
   function createTicketService({ context, store }) {
     const edit = (mutate, change) => store.update(state => mutate(state.ticket), change || {});

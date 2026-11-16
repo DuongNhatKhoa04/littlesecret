@@ -63,7 +63,8 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 |---|---|
 | **Loại** | Không có ở loại có `noCategory` (Chuyển CS/MKT). Ô chọn **1 loại** (hiện thành thẻ chip). Danh sách có sẵn: `ABC`, `CLOVER`, `PAX`, `INTERNET`, `VALOR`. Gõ để lọc (không phân biệt dấu), ↑/↓ chọn, Enter / bấm chuột chọn (đang gõ dở mà bấm Tab cũng chọn mục đang sáng). **Chọn xong con trỏ tự sang ô Tóm tắt.** Chọn loại khác → thay loại cũ. Backspace khi ô trống / × trên thẻ = bỏ loại, Esc đóng. Ticket / template cũ đã có nhiều loại vẫn hiện đủ và vào title như cũ; chọn loại mới thì thay hết bằng 1 loại. Gõ tên chưa có → `+ Thêm "…"` → lưu vào danh sách riêng trên máy (viết HOA, gộp khoảng trắng, bỏ ` - `). Loại tự thêm có nút × để xóa khỏi danh sách; loại có sẵn thì không. |
 | **Tóm tắt** | Đưa vào title. `Enter`: sang ô kế tiếp (như Tab). |
-| **Phone** | Ô text (bàn phím số trên mobile). `Enter`: sang ô kế tiếp (như Tab). |
+| **Phone** | Ô text (bàn phím số trên mobile), **chỉ nhận số**, tối đa 10 số, gõ / dán tới đâu tự format tới đó thành `(111) 111-1111` (dán `+1 …` 11 số thì bỏ số `1` đầu). `Enter`: sang ô kế tiếp (như Tab). |
+| **Tên merchant** | Cạnh ô Phone, không bắt buộc (vd `Mr. Vương`). `Enter`: sang ô kế tiếp. |
 | **Ngôn ngữ merchant** | Chỉ ở loại có `showLang` (Chuyển CS/MKT). Chọn `ENG` / `VIE`, mặc định `ENG`. |
 
 - Con trỏ tự vào ô **Loại** (loại không có ô Loại thì ô **Tóm tắt**) khi mở trang, đổi loại ticket, bấm `Ticket mới` hoặc dùng template (ở nhóm Viết ticket và Setup).
@@ -147,7 +148,7 @@ Nội dung chi tiết từng bước: xem file config tương ứng (nguồn s�
 
 Các khối cách nhau **1 dòng trống**, theo thứ tự:
 
-1. `Phone: <số>` — loại có ngôn ngữ thì thêm ` - ENG`/` - VIE`. Bỏ nếu không nhập. (Bản mới: ticket setup thêm dòng `Model:` ngay dưới, xem §14.3.)
+1. `Phone: <số>` — có Tên merchant thì thêm ` - <tên>` (vd `Phone: (111) 111-1111 - Mr. Vương`); loại có ngôn ngữ thì thêm ` - ENG`/` - VIE`. Bỏ nếu không nhập cả Phone lẫn Tên merchant. (Bản mới: ticket setup thêm dòng `Model:` ngay dưới, xem §14.3.)
 2. Checklist (nếu có): mỗi nhóm 1 khối. Tên checklist **không** in ra.
    ```
    <Tên nhóm>:
@@ -378,7 +379,7 @@ Khối tùy chọn ở cuối form `Viết ticket` → `Hỗ trợ merchant` (c�
 |---|---|
 | **Ngôn ngữ tin nhắn** | Chọn 1: `English` (mặc định) / `Tiếng Việt`. Đổi ngôn ngữ chỉ đổi câu chữ tin nhắn, dữ liệu form giữ nguyên. |
 | **Tên tiệm** | Ô text. In ra đúng như gõ (đã trim). |
-| **Phone tiệm** | Ô text (bàn phím số điện thoại trên mobile). Số Mỹ 10 số (có thể có `1` / `+1` đầu) gõ kiểu nào cũng in ra `(555) 123-4567`; không đúng dạng đó thì in như đã gõ (đã trim). Ô nhập giữ nguyên chữ đã gõ. |
+| **Phone tiệm** | Ô text (bàn phím số điện thoại trên mobile). Số Mỹ 10 số (có thể có `1` / `+1` đầu) gõ kiểu nào cũng in ra `(555) 123-4567`; không đúng dạng đó thì in như đã gõ (đã trim). Ô nhập chỉ nhận số và tự format như ô Phone (§4). |
 | **Recipients** | Ô text (bàn phím số trên mobile). |
 | **Type Customer** | Chọn nhiều. Mỗi lựa chọn là 1 ô tick kèm ô số sửa được, vd `Last Visit <= [365]`, `Last Visit >= [90]`, `Times visit between [1] - [10000]`; `All customers` chỉ có ô tick, không có ô số. Danh sách + số mặc định ở `config/sms/promotion.js`. Thêm điều kiện khác bằng `+ Thêm option` (ô text tự gõ, có ×; Enter thêm option mới, Backspace ở ô trống xóa option). Option tự thêm chỉ thuộc promotion đang soạn, không thành lựa chọn cố định. Có ảnh như mục ticket (§10): nút `+ Thêm ảnh (Ctrl+V)`, ô dán ảnh, kéo thả; Ctrl+V ảnh khi đang đứng trong khối Type Customer cũng vào đây. |
 | **Message** | Ô nhập nhiều dòng. Không tự viết hoa. |

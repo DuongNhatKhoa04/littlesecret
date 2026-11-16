@@ -2,6 +2,10 @@
 
 Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu ngày tương ứng: version · đổi gì (người dùng thấy gì) · mục REQUIREMENTS liên quan. Bản cũ hơn 2026-11-12 chưa ghi version, tóm tắt theo commit.
 
+## 2026-11-16
+
+- `v2026-11-16.1` · Ô Phone (ticket) và Phone tiệm (SMS Promotion) chỉ nhận số, tự format `(111) 111-1111`; thêm ô Tên merchant cạnh Phone, in ra `Phone: (111) 111-1111 - Mr. Vương`. §4 §8
+
 ## 2026-11-13
 
 - `v2026-11-13.9` · Ô Tóm tắt: danh sách gợi ý mới (giống ô Loại), mỗi gợi ý có `×` để xóa gợi ý không muốn giữ (vd `T` gõ nhầm); gõ không dấu vẫn ra gợi ý có dấu. §12

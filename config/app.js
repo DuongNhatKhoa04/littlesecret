@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-13.9',      // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-16.1',      // hiện cạnh tên app để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
 
@@ -68,7 +68,7 @@
 
     labels: {
       category: 'Loại', summary: 'Tóm tắt (đưa vào title)', lang: 'Ngôn ngữ merchant',
-      phone: 'Phone', phoneOut: 'Phone',     // phoneOut = nhãn dòng SĐT trong nội dung ticket
+      phone: 'Phone', merchant: 'Tên merchant', phoneOut: 'Phone',     // phoneOut = nhãn dòng SĐT trong nội dung ticket
       modelOut: 'Model',                     // nhãn dòng Model trong nội dung ticket setup
       device: 'Thiết bị', brand: 'Hãng', model: 'Model', flow: 'Quy trình', checklist: 'Checklist'
     }

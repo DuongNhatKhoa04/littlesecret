@@ -37,5 +37,18 @@
   /** Tên Loại người dùng gõ: gộp khoảng trắng, bỏ " - " (là dấu nối giữa các Loại), viết HOA. */
   const cleanCategory = (text) => text.trim().replace(/\s+-\s+/g, ' ').replace(/\s+/g, ' ').toUpperCase();
 
-  TW.domain.text = { capitalizeLine, capitalizeLines, cleanItems, bulletize, removeDiacritics, normalizeForSearch, cleanCategory };
+  const US_PHONE_DIGITS = 10;
+
+  /** Ô Phone: chỉ giữ số, tối đa 10 số, gõ tới đâu format tới đó: "(111", "(111) 111", "(111) 111-1111". Dán "+1 555…" (11 số, đầu 1) thì bỏ số 1. */
+  function formatPhoneInput(text) {
+    let digits = text.replace(/\D/g, '');
+    if (digits.length === US_PHONE_DIGITS + 1 && digits[0] === '1') digits = digits.slice(1);
+    digits = digits.slice(0, US_PHONE_DIGITS);
+    if (!digits) return '';
+    if (digits.length <= 3) return `(${digits}`;
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  }
+
+  TW.domain.text = { formatPhoneInput, capitalizeLine, capitalizeLines, cleanItems, bulletize, removeDiacritics, normalizeForSearch, cleanCategory };
 })(window.TW);

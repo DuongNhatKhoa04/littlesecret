@@ -130,5 +130,16 @@
     if (next) next.focus();
   }
 
-  TW.ui.dom = { $, $$, el, button, link, fileInput, autoGrow, flash, choiceGroup, segmented, acceptImageDrop, isComposing, focusNext };
+  /** Ô Phone: mỗi lần gõ / dán thì format lại (chỉ nhận số), giữ con trỏ sau đúng số vừa gõ để sửa giữa chừng không bị nhảy về cuối. */
+  function maskPhone(input) {
+    const digitsBeforeCaret = input.value.slice(0, input.selectionStart).replace(/\D/g, '').length;
+    const value = TW.domain.text.formatPhoneInput(input.value);
+    let caret = 0;
+    for (let seen = 0; caret < value.length && seen < digitsBeforeCaret; caret++) if (/\d/.test(value[caret])) seen++;
+    input.value = value;
+    input.setSelectionRange(caret, caret);
+    return value;
+  }
+
+  TW.ui.dom = { $, $$, el, button, link, fileInput, autoGrow, flash, choiceGroup, segmented, acceptImageDrop, isComposing, focusNext, maskPhone };
 })(window.TW);

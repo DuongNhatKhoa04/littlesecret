@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { el, button, choiceGroup, autoGrow, isComposing } = TW.ui.dom;
+  const { el, button, choiceGroup, autoGrow, isComposing, maskPhone } = TW.ui.dom;
   const { splitTemplate, IMAGE_KEY: SMS_IMAGE_KEY } = TW.domain.sms;
   const { OPTION_FOCUS_KEY } = TW.application.smsService;
 
@@ -22,11 +22,11 @@
       return wrap;
     }
 
-    function textInput(name, inputMode) {
+    function textInput(name, { inputMode, format } = {}) {
       const input = el('input', 'text');
       Object.assign(input, { id: 'sms_' + name, type: 'text', value: session.sms()[name], autocomplete: 'off' });
       if (inputMode) input.inputMode = inputMode;
-      input.addEventListener('input', () => smsService.setField(name, input.value));
+      input.addEventListener('input', () => smsService.setField(name, format ? format(input) : input.value));
       return field(name, input);
     }
 
@@ -134,7 +134,7 @@
       const message = messageInput();
       fields = el('div', 'sms-fields');
       fields.hidden = !session.sms().enabled;
-      fields.append(languageField(), textInput('shop'), textInput('shopPhone', 'tel'), textInput('recipients', 'numeric'), customerTypesField(), message, priceField());
+      fields.append(languageField(), textInput('shop'), textInput('shopPhone', { inputMode: 'tel', format: maskPhone }), textInput('recipients', { inputMode: 'numeric' }), customerTypesField(), message, priceField());
       const box = el('div', 'sec sms-box');
       box.append(toggle(), fields);
       // Giữ sẵn ô Message: tới lúc frame chạy, khu Nhập có thể đã đổi sang form khác

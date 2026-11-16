@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { $$, el, button, choiceGroup, autoGrow, isComposing, focusNext } = TW.ui.dom;
+  const { $$, el, button, choiceGroup, autoGrow, isComposing, focusNext, maskPhone } = TW.ui.dom;
   const { isConclusionSection, isSectionHidden } = TW.domain.ticket;
 
   const IDEA_HINT = 'Enter: ý mới · Shift+Enter: xuống dòng · Tab: field kế tiếp · Ctrl+V: dán ảnh';
@@ -10,14 +10,14 @@
   function createTicketForm({ root, context, session, ticketService, categoryCombo, ideaList, imageZone, checklistView, smsForm, summaryCombo }) {
     const { app, catalog } = context;
 
-    function textField(field, inputMode) {
+    function textField(field, { inputMode, format } = {}) {
       const wrap = el('div', 'field');
       const label = el('label', '', app.labels[field]);
       label.htmlFor = 'f_' + field;
       const input = el('input', 'text');
       Object.assign(input, { id: 'f_' + field, type: 'text', value: session.ticket()[field], autocomplete: 'off' });
       if (inputMode) input.inputMode = inputMode;
-      input.addEventListener('input', () => ticketService.setField(field, input.value));
+      input.addEventListener('input', () => ticketService.setField(field, format ? format(input) : input.value));
       input.addEventListener('keydown', (event) => {
         if (event.key !== 'Enter' || isComposing(event) || event.defaultPrevented) return;   // defaultPrevented: Enter đã chọn gợi ý
         event.preventDefault();
@@ -28,6 +28,13 @@
     }
 
     const summaryField = () => summaryCombo.attach(textField('summary'));
+
+    /** Phone + Tên merchant (không bắt buộc) cùng 1 hàng; in ra "Phone: (111) 111-1111 - Mr. Vương". */
+    function contactRow() {
+      const row = el('div', 'field-row');
+      row.append(textField('phone', { inputMode: 'tel', format: maskPhone }), textField('merchant'));
+      return row;
+    }
 
     function langField() {
       const wrap = el('div', 'field');
@@ -116,7 +123,7 @@
       const type = session.activeType();
       if (!type) { root.append(emptyState()); return; }
       if (!type.noCategory) root.append(categoryCombo.build());
-      root.append(summaryField(), textField('phone', 'tel'));
+      root.append(summaryField(), contactRow());
       if (type.showLang) root.append(langField());
       if (type.checklist) root.append(checklistView.build(type));   // checklist đứng trước, Note nằm sau
       type.sections.forEach(section => root.append(sectionBox(section)));

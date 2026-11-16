@@ -1,5 +1,6 @@
 /* styles/form.css — Khu Nhập: trường, mục, ô Loại, danh sách ý, thẻ chọn, form SMS. */
 .field { margin-bottom: 14px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }   /* Phone + Tên merchant */
 .field > label, .sec h3 { display: block; font-size: 14px; font-weight: 650; margin: 0 0 6px; }
 .req { margin-left: 8px; font-size: 12px; font-weight: 600; color: var(--warn-ink); background: var(--warn-bg); padding: 1px 8px; border-radius: 99px; }
 .text {

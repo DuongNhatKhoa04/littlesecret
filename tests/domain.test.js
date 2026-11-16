@@ -52,6 +52,20 @@
     assertEqual(D.body.buildBody({ type, ticket: empty, imageCounts: {}, model: 'A920', app: context.app }), '');
   });
 
+  test('ô Phone: chỉ giữ số, format (111) 111-1111 khi đang gõ / dán', () => {
+    const f = D.text.formatPhoneInput;
+    assertEqual(['', 'abc', '1', '111', '1111', '111111', '1111111', '11111111111', '+1 (555) 123-4567', '555.123.4567 ext 9'].map(f),
+      ['', '', '(1', '(111', '(111) 1', '(111) 111', '(111) 111-1', '(111) 111-1111', '(555) 123-4567', '(555) 123-4567']);
+  });
+
+  test('dòng Phone kèm Tên merchant nếu có', () => {
+    const type = context.typeOf('incident');
+    const body = (ticket) => D.body.buildBody({ type, ticket: D.ticket.sanitizeTicket(ticket, context), imageCounts: {}, model: '', app: context.app });
+    assertEqual(body({ phone: '(111) 111-1111', merchant: ' Mr. Vương ' }), 'Phone: (111) 111-1111 - Mr. Vương');
+    assertEqual(body({ phone: '(111) 111-1111' }), 'Phone: (111) 111-1111');
+    assertEqual(body({ merchant: 'Mr. Vương' }), 'Phone: Mr. Vương');
+  });
+
   test('sanitize: bỏ dữ liệu hỏng, giữ phần hợp lệ', () => {
     const ticket = D.ticket.sanitizeTicket({ phone: 5, summary: 'x', lang: 'FR', conclusion: '??', blocks: { s1: [1] }, chk: { a: { done: 'yes' } } }, context);
     assertEqual([ticket.phone, ticket.summary, ticket.lang, ticket.conclusion, ticket.blocks.s1, ticket.chk.a],

@@ -3,7 +3,7 @@
   'use strict';
 
   const { cleanItems } = TW.domain.text;
-  const TEXT_FIELDS = ['category', 'summary', 'phone'];
+  const TEXT_FIELDS = ['category', 'summary', 'phone', 'merchant'];
 
   const isConclusionSection = (section) => section.kind === 'conclusion';
   const isStringList = (value) => Array.isArray(value) && value.length > 0 && value.every(x => typeof x === 'string');
@@ -24,7 +24,7 @@
 
   function createEmptyTicket({ app, blockKeys }) {
     return {
-      category: '', summary: '', phone: '', lang: app.langs[0], conclusion: app.defaultConclusion,
+      category: '', summary: '', phone: '', merchant: '', lang: app.langs[0], conclusion: app.defaultConclusion,
       blocks: copyBlocks(null, blockKeys), chk: {}
     };
   }

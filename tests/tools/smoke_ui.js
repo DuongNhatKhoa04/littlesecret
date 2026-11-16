@@ -87,13 +87,17 @@
     check('gợi ý Tóm tắt: × xóa gợi ý, ô giữ chữ đang gõ', $('#f_summaryHistory').hidden && $('#f_summary').value === 'm' &&
       !JSON.parse(localStorage.getItem('ticketWriter.summaries.v1')).length, localStorage.getItem('ticketWriter.summaries.v1'));
     type($('#f_summary'), 'mất kết nối');
-    type($('#f_phone'), '0901');
+    type($('#f_phone'), '09a01');
+    check('Phone: chỉ nhận số, tự format', $('#f_phone').value === '(090) 1', $('#f_phone').value);
     key($('#f_phone'), { key: 'Enter' });
-    check('Enter ở Phone => sang ý đầu Vấn đề (bỏ qua nút phụ)', focused() === 's1', focused());
+    check('Enter ở Phone => sang Tên merchant', focused() === 'f_merchant', focused());
+    type($('#f_merchant'), 'Mr. Vương');
+    key($('#f_merchant'), { key: 'Enter' });
+    check('Enter ở Tên merchant => sang ý đầu Vấn đề (bỏ qua nút phụ)', focused() === 's1', focused());
     type($('textarea[data-key="s1"]'), 'terminal lỗi');
     await settle();
     check('title', $('#outTitle').textContent === 'MẤT KẾT NỐI', $('#outTitle').textContent);
-    check('nội dung + viết hoa đầu dòng, mặc định Resolved (không in Kết luận)', $('#outBody').textContent === 'Phone: 0901\n\nVấn đề:\n- Terminal lỗi', $('#outBody').textContent);
+    check('nội dung + viết hoa đầu dòng, mặc định Resolved (không in Kết luận)', $('#outBody').textContent === 'Phone: (090) 1 - Mr. Vương\n\nVấn đề:\n- Terminal lỗi', $('#outBody').textContent);
     check('Resolved bước đầu copy được', !$('#copyBody').disabled);
 
     $('textarea[data-key="s1"]').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
@@ -233,7 +237,7 @@
     await settle();
     $('.ci[data-id="pax-qc"] [data-role=done]').click();
     await settle();
-    check('PAX: dòng Model dưới Phone', $('#outBody').textContent.startsWith('Phone: 0901\nModel: A920 Pro\n\nCần setup:\n- [x] Check QC note'), $('#outBody').textContent.slice(0, 80));
+    check('PAX: dòng Model dưới Phone', $('#outBody').textContent.startsWith('Phone: (090) 1 - Mr. Vương\nModel: A920 Pro\n\nCần setup:\n- [x] Check QC note'), $('#outBody').textContent.slice(0, 80));
     check('thiếu ảnh => khóa copy', $('#copyBody').disabled && $('#warn').textContent.startsWith('Còn 6 mục'), $('#warn').textContent);
     key(document, { key: '2', altKey: true });
     check('Alt+2 khi khóa => báo lý do', String(alerts[alerts.length - 1]).startsWith('Còn 6 mục'), alerts);
@@ -385,7 +389,7 @@
 
     // Lưu state
     const saved = JSON.parse(localStorage.getItem('ticketWriter.v1'));
-    check('state lưu type + nav', saved.type === 'incident' && saved.nav.group === 'ticket' && saved.ticket.phone === '0901', saved.type);
+    check('state lưu type + nav', saved.type === 'incident' && saved.nav.group === 'ticket' && saved.ticket.phone === '(090) 1' && saved.ticket.merchant === 'Mr. Vương', saved.type);
 
     // Xóa hết ảnh: chỉ xóa ảnh, nội dung ticket giữ nguyên
     const clearData = new DataTransfer();
