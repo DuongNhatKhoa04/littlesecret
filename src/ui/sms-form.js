@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { el, button, choiceGroup, autoGrow, isComposing, maskPhone } = TW.ui.dom;
+  const { el, button, choiceGroup, autoGrow, isComposing, labeledField, textInput, maskPhone } = TW.ui.dom;
   const { splitTemplate, IMAGE_KEY: SMS_IMAGE_KEY } = TW.domain.sms;
   const { OPTION_FOCUS_KEY } = TW.application.smsService;
 
@@ -14,21 +14,11 @@
     const { labels, customerTypes, prices, languages } = context.sms;
     let fields = null;   // phần mở ra khi tick, null khi loại đang mở không có khối SMS
 
-    function field(name, control) {
-      const wrap = el('div', 'field');
-      const label = el('label', '', labels[name]);
-      if (control.id) label.htmlFor = control.id;
-      wrap.append(label, control);
-      return wrap;
-    }
+    const field = (name, control) => labeledField(labels[name], control);
 
-    function textInput(name, { inputMode, format } = {}) {
-      const input = el('input', 'text');
-      Object.assign(input, { id: 'sms_' + name, type: 'text', value: session.sms()[name], autocomplete: 'off' });
-      if (inputMode) input.inputMode = inputMode;
-      input.addEventListener('input', () => smsService.setField(name, format ? format(input) : input.value));
-      return field(name, input);
-    }
+    /** options: inputMode, format (xem dom.textInput). */
+    const textField = (name, options = {}) =>
+      field(name, textInput({ id: 'sms_' + name, value: session.sms()[name], onInput: (value) => smsService.setField(name, value), ...options }));
 
     function messageInput() {
       const textarea = el('textarea', 'text sms-message');
@@ -134,7 +124,7 @@
       const message = messageInput();
       fields = el('div', 'sms-fields');
       fields.hidden = !session.sms().enabled;
-      fields.append(languageField(), textInput('shop'), textInput('shopPhone', { inputMode: 'tel', format: maskPhone }), textInput('recipients', { inputMode: 'numeric' }), customerTypesField(), message, priceField());
+      fields.append(languageField(), textField('shop'), textField('shopPhone', { inputMode: 'tel', format: maskPhone }), textField('recipients', { inputMode: 'numeric' }), customerTypesField(), message, priceField());
       const box = el('div', 'sec sms-box');
       box.append(toggle(), fields);
       // Giữ sẵn ô Message: tới lúc frame chạy, khu Nhập có thể đã đổi sang form khác

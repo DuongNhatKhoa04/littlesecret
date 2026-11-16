@@ -25,12 +25,12 @@
       autoGrow(textarea);
     }
 
-    function onKeydown(event, textarea, key, index) {
+    function onKeydown(event, key, index) {
       if (isComposing(event)) return;
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
         ticketService.insertIdea(key, index + 1);
-      } else if (event.key === 'Backspace' && textarea.value === '' && ideasOf(key).length > 1) {
+      } else if (event.key === 'Backspace' && event.currentTarget.value === '' && ideasOf(key).length > 1) {
         event.preventDefault();
         ticketService.removeIdea(key, index);
       }
@@ -39,12 +39,12 @@
     function tools(key, index) {
       const wrap = el('div', 'tools');
       const last = ideasOf(key).length - 1;
-      const tool = (text, title, onClick, disabled) =>
+      const tool = ({ text, title, onClick, disabled = false }) =>
         button('', text, { title, ariaLabel: title, onClick, disabled, skipTab: true });
       wrap.append(
-        tool('↑', 'Chuyển lên', () => ticketService.moveIdea(key, index, index - 1), index === 0),
-        tool('↓', 'Chuyển xuống', () => ticketService.moveIdea(key, index, index + 1), index === last),
-        tool('×', 'Xóa ý này', () => ticketService.clearIdea(key, index), false)
+        tool({ text: '↑', title: 'Chuyển lên', onClick: () => ticketService.moveIdea(key, index, index - 1), disabled: index === 0 }),
+        tool({ text: '↓', title: 'Chuyển xuống', onClick: () => ticketService.moveIdea(key, index, index + 1), disabled: index === last }),
+        tool({ text: '×', title: 'Xóa ý này', onClick: () => ticketService.clearIdea(key, index) })
       );
       return wrap;
     }
@@ -64,7 +64,7 @@
       });
       // Gõ dấu tiếng Việt xong mới viết hoa
       textarea.addEventListener('compositionend', () => setTimeout(() => commit(textarea, key, index), 0));
-      textarea.addEventListener('keydown', (event) => onKeydown(event, textarea, key, index));
+      textarea.addEventListener('keydown', (event) => onKeydown(event, key, index));
       const wrap = el('div', 'block');
       wrap.append(el('span', 'dash', '-'), textarea, tools(key, index));
       return wrap;

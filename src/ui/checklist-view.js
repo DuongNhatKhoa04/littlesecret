@@ -100,8 +100,7 @@
       return root;   // gắn vào DOM xong thì gọi sync()
     }
 
-    function syncItem(row, item, checks, counts) {
-      const status = C.itemStatus(item, checks, counts);
+    function syncItem(row, status) {
       row.classList.toggle('na', status.na);
       row.classList.toggle('missing', status.missing);
       $('[data-role=done]', row).checked = status.done;
@@ -116,7 +115,7 @@
       const counts = images.counts();
       const items = new Map(C.allItems(checklist).map(item => [item.id, item]));
       checklist.groups.forEach((group, index) => { $(`[data-gna="${index}"]`, root).checked = C.isGroupAllNa(group, checks); });
-      $$('.ci', root).forEach(row => syncItem(row, items.get(row.dataset.id), checks, counts));
+      $$('.ci', root).forEach(row => syncItem(row, C.itemStatus(items.get(row.dataset.id), checks, counts)));
       const p = C.progress(checklist, checks, counts);
       $('[data-role=progress]', root).textContent = `${p.ok}/${p.required} mục có ảnh` + (p.na ? ` · ${p.na} N/A` : '');
     }

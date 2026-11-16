@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { $$, el, button, choiceGroup, autoGrow, isComposing, focusNext, maskPhone } = TW.ui.dom;
+  const { $$, el, button, choiceGroup, autoGrow, isComposing, focusNext, labeledField, textInput, maskPhone } = TW.ui.dom;
   const { isConclusionSection, isSectionHidden } = TW.domain.ticket;
 
   const IDEA_HINT = 'Enter: ý mới · Shift+Enter: xuống dòng · Tab: field kế tiếp · Ctrl+V: dán ảnh';
@@ -10,21 +10,15 @@
   function createTicketForm({ root, context, session, ticketService, categoryCombo, ideaList, imageZone, checklistView, smsForm, summaryCombo }) {
     const { app, catalog } = context;
 
-    function textField(field, { inputMode, format } = {}) {
-      const wrap = el('div', 'field');
-      const label = el('label', '', app.labels[field]);
-      label.htmlFor = 'f_' + field;
-      const input = el('input', 'text');
-      Object.assign(input, { id: 'f_' + field, type: 'text', value: session.ticket()[field], autocomplete: 'off' });
-      if (inputMode) input.inputMode = inputMode;
-      input.addEventListener('input', () => ticketService.setField(field, format ? format(input) : input.value));
+    /** options: inputMode, format (xem dom.textInput). Enter = sang ô kế tiếp. */
+    function textField(field, options = {}) {
+      const input = textInput({ id: 'f_' + field, value: session.ticket()[field], onInput: (value) => ticketService.setField(field, value), ...options });
       input.addEventListener('keydown', (event) => {
         if (event.key !== 'Enter' || isComposing(event) || event.defaultPrevented) return;   // defaultPrevented: Enter đã chọn gợi ý
         event.preventDefault();
         focusNext(input, root);
       });
-      wrap.append(label, input);
-      return wrap;
+      return labeledField(app.labels[field], input);
     }
 
     const summaryField = () => summaryCombo.attach(textField('summary'));
@@ -36,15 +30,11 @@
       return row;
     }
 
-    function langField() {
-      const wrap = el('div', 'field');
-      wrap.append(el('label', '', app.labels.lang), choiceGroup({
-        name: 'lang', value: session.ticket().lang,
-        options: app.langs.map(code => ({ value: code, label: code })),
-        onChange: (code) => ticketService.setField('lang', code)
-      }));
-      return wrap;
-    }
+    const langField = () => labeledField(app.labels.lang, choiceGroup({
+      name: 'lang', value: session.ticket().lang,
+      options: app.langs.map(code => ({ value: code, label: code })),
+      onChange: (code) => ticketService.setField('lang', code)
+    }));
 
     function conclusionBody(box) {
       box.append(choiceGroup({

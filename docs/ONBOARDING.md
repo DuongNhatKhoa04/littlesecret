@@ -98,7 +98,7 @@ Trước khi sửa gì ở đây: đọc [docs/SECURITY.md](SECURITY.md).
 
 ## Bước 6 — Giao diện: `src/ui/` và `src/main.js`
 
-1. `ui/dom.js` — helper tạo phần tử. **Không dùng `innerHTML`**.
+1. `ui/dom.js` — helper tạo phần tử (`el`, `button`, `labeledField`, `textInput`…). **Không dùng `innerHTML`**. `ui/combo.js` — phần dùng chung của ô có danh sách gợi ý (ô Loại, ô Tóm tắt).
 2. `main.js` — composition root: tạo adapter → service → view, và hàm `store.subscribe` quyết định lúc nào dựng lại form, lúc nào chỉ cập nhật.
 3. Theo đúng thứ tự trên màn hình: `header.js` → `picker.js` → `ticket-form.js` (+ `category-combo.js`, `summary-combo.js`, `idea-list.js`, `checklist-view.js`, `image-zone.js`, `sms-form.js`) → `output-view.js`, `image-panel.js` → các dialog.
 

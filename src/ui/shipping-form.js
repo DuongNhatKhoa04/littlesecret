@@ -2,22 +2,14 @@
 (function (TW) {
   'use strict';
 
-  const { el } = TW.ui.dom;
+  const { labeledField, textInput } = TW.ui.dom;
   const { FIELDS } = TW.domain.shipping;
 
   function createShippingForm({ root, context, session, shippingService }) {
     const { labels } = context.shipping;
 
-    function field(name) {
-      const wrap = el('div', 'field');
-      const input = el('input', 'text');
-      Object.assign(input, { id: 'ship_' + name, type: 'text', value: session.shipping()[name], autocomplete: 'off' });
-      input.addEventListener('input', () => shippingService.setField(name, input.value));
-      const label = el('label', '', labels[name]);
-      label.htmlFor = input.id;
-      wrap.append(label, input);
-      return wrap;
-    }
+    const field = (name) => labeledField(labels[name],
+      textInput({ id: 'ship_' + name, value: session.shipping()[name], onInput: (value) => shippingService.setField(name, value) }));
 
     function build() {
       root.textContent = '';

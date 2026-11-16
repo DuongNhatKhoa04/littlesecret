@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { el, choiceGroup } = TW.ui.dom;
+  const { el, choiceGroup, labeledField, textInput } = TW.ui.dom;
   const { findState, suggestStates } = TW.domain.review;
 
   const STATE_LIST_ID = 'review_states';
@@ -17,42 +17,27 @@
     const stateOption = (state) => Object.assign(el('option'), { value: state.code, label: state.name });
 
     function stateField() {
-      const wrap = el('div', 'field');
-      const input = el('input', 'text');
-      Object.assign(input, { id: 'review_state', type: 'text', value: session.review().usState, placeholder: STATE_PLACEHOLDER, autocomplete: 'off' });
+      const input = textInput({
+        id: 'review_state', value: session.review().usState, placeholder: STATE_PLACEHOLDER,
+        onInput: (value) => reviewService.setField('usState', value)
+      });
       input.setAttribute('list', STATE_LIST_ID);
-      input.addEventListener('input', () => reviewService.setField('usState', input.value));
-      const label = el('label', '', labels.state);
-      label.htmlFor = input.id;
       branchHint = el('div', 'hint');
       branchHint.id = 'review_branch';
       suggestions = el('datalist');
       suggestions.id = STATE_LIST_ID;
-      wrap.append(label, input, suggestions, branchHint);
-      return wrap;
+      return labeledField(labels.state, input, suggestions, branchHint);
     }
 
-    function languageField() {
-      const wrap = el('div', 'field');
-      wrap.append(el('label', '', labels.language), choiceGroup({
-        name: 'reviewLang', value: session.review().lang,
-        options: languages.map(language => ({ value: language.id, label: language.label })),
-        onChange: (lang) => reviewService.setField('lang', lang)
-      }));
-      return wrap;
-    }
+    const languageField = () => labeledField(labels.language, choiceGroup({
+      name: 'reviewLang', value: session.review().lang,
+      options: languages.map(language => ({ value: language.id, label: language.label })),
+      onChange: (lang) => reviewService.setField('lang', lang)
+    }));
 
     // Không nằm trong state của form: Ticket mới không xóa, F5 vẫn còn.
-    function staffField() {
-      const wrap = el('div', 'field');
-      const input = el('input', 'text');
-      Object.assign(input, { id: 'review_staff', type: 'text', value: staffService.name(), placeholder: STAFF_PLACEHOLDER, autocomplete: 'off' });
-      input.addEventListener('input', () => staffService.setName(input.value));
-      const label = el('label', '', labels.staff);
-      label.htmlFor = input.id;
-      wrap.append(label, input);
-      return wrap;
-    }
+    const staffField = () => labeledField(labels.staff,
+      textInput({ id: 'review_staff', value: staffService.name(), placeholder: STAFF_PLACEHOLDER, onInput: staffService.setName }));
 
     /**
      * Hiện chi nhánh của bang đang nhập để biết link nào được dùng.

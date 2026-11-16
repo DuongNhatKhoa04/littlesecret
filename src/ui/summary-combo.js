@@ -2,7 +2,8 @@
 (function (TW) {
   'use strict';
 
-  const { el, isComposing, comboList, showComboList, scrollToActive, comboOption } = TW.ui.dom;
+  const { el, isComposing } = TW.ui.dom;
+  const { comboList, showComboList, scrollToActive, comboOption } = TW.ui.combo;
   const { normalizeForSearch } = TW.domain.text;
 
   const LIST_ID = 'f_summaryHistory';

@@ -131,50 +131,23 @@
     if (next) next.focus();
   }
 
-  /** Danh sách gợi ý (ARIA listbox) cho ô combobox `input`; ban đầu ẩn. Ô Loại, ô Tóm tắt. */
-  function comboList(input, id) {
-    const list = el('div', 'combo-list');
-    list.id = id;
-    list.setAttribute('role', 'listbox');
-    list.hidden = true;
-    [['role', 'combobox'], ['aria-expanded', 'false'], ['aria-controls', id], ['aria-autocomplete', 'list']]
-      .forEach(([name, value]) => input.setAttribute(name, value));
-    return list;
+  /** Khối .field: nhãn + ô (+ phần phụ như gợi ý). Ô có id thì nhãn trỏ vào: bấm nhãn là focus ô. */
+  function labeledField(text, control, ...extra) {
+    const wrap = el('div', 'field');
+    const label = el('label', '', text);
+    if (control.id) label.htmlFor = control.id;
+    wrap.append(label, control, ...extra);
+    return wrap;
   }
 
-  /** Hiện / ẩn danh sách gợi ý, báo cho trình đọc màn hình qua aria-expanded. */
-  function showComboList(input, list, show) {
-    list.hidden = !show;
-    input.setAttribute('aria-expanded', String(show));
-  }
-
-  /** Sau khi vẽ lại danh sách: cuộn để thấy dòng đang sáng. */
-  function scrollToActive(list) {
-    const current = list.querySelector('.active');
-    if (current) current.scrollIntoView({ block: 'nearest' });
-  }
-
-  /**
-   * 1 dòng gợi ý. Bấm chuột = chọn (mousedown + preventDefault: con trỏ vẫn ở trong ô).
-   * remove (nếu có) = nút × xóa gợi ý, không kích hoạt chọn dòng.
-   * @param {{ text: string, active: boolean, onPick: Function, remove?: { title: string, ariaLabel?: string, onRemove: Function } }} option
-   */
-  function comboOption({ text, active, onPick, remove }) {
-    const row = el('div', 'combo-opt' + (active ? ' active' : ''));
-    row.setAttribute('role', 'option');
-    row.setAttribute('aria-selected', String(active));
-    row.append(el('span', '', text));
-    if (remove) {
-      const del = button('combo-del', '×', { title: remove.title, ariaLabel: remove.ariaLabel, skipTab: true });
-      del.addEventListener('mousedown', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        remove.onRemove();
-      });
-      row.append(del);
-    }
-    row.addEventListener('mousedown', (event) => { event.preventDefault(); onPick(); });
-    return row;
+  /** Ô text 1 dòng; gõ là gọi onInput. format (vd maskPhone) sửa lại chữ trong ô và trả giá trị để lưu. */
+  function textInput({ id, value, onInput, inputMode, placeholder, format }) {
+    const input = el('input', 'text');
+    Object.assign(input, { id, type: 'text', value, autocomplete: 'off' });
+    if (inputMode) input.inputMode = inputMode;
+    if (placeholder) input.placeholder = placeholder;
+    input.addEventListener('input', () => onInput(format ? format(input) : input.value));
+    return input;
   }
 
   /** Ô Phone: mỗi lần gõ / dán thì format lại (chỉ nhận số), giữ con trỏ sau đúng số vừa gõ để sửa giữa chừng không bị nhảy về cuối. */
@@ -189,5 +162,5 @@
   }
 
   TW.ui.dom = { $, $$, el, button, link, fileInput, autoGrow, flash, choiceGroup, segmented, acceptImageDrop, isComposing, focusNext,
-    comboList, showComboList, scrollToActive, comboOption, maskPhone };
+    labeledField, textInput, maskPhone };
 })(window.TW);

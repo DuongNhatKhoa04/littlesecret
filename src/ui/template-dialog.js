@@ -72,26 +72,37 @@
     /** Gọi khi đổi loại: không có loại ticket để lưu (nhóm SMS, nhánh setup chưa có checklist) thì khóa nút. */
     function render() { $('#tplSave').disabled = !templateService.canSave(); }
 
-    $('#tplOpen').addEventListener('click', open);
-    $('#tplSave').addEventListener('click', save);
-    $('#tplClose').addEventListener('click', () => dialog.close());
-    dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });   // bấm nền để đóng
-    search.addEventListener('input', renderList);
-    search.addEventListener('keydown', (event) => {
+    /** Enter trong ô tìm = dùng template đầu tiên khớp. */
+    function onSearchKeydown(event) {
       if (isComposing(event) || event.key !== 'Enter') return;
       const found = templateService.search(search.value);
       if (found.length) { event.preventDefault(); apply(found[0]); }
-    });
-    $('#tplExport').addEventListener('click', () => templateService.exportFile());
-    $('#tplImport').addEventListener('change', (event) => {
+    }
+
+    /** Xóa value ngay để chọn lại đúng file đó lần sau vẫn có sự kiện change. */
+    function onImportChange(event) {
       const file = event.target.files[0];
       event.target.value = '';
       if (file) importFile(file);
-    });
-    document.addEventListener('keydown', (event) => {
-      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === 't') { event.preventDefault(); open(); }
-    });
+    }
 
+    function onShortcut(event) {
+      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === 't') { event.preventDefault(); open(); }
+    }
+
+    function wireEvents() {
+      $('#tplOpen').addEventListener('click', open);
+      $('#tplSave').addEventListener('click', save);
+      $('#tplClose').addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });   // bấm nền để đóng
+      search.addEventListener('input', renderList);
+      search.addEventListener('keydown', onSearchKeydown);
+      $('#tplExport').addEventListener('click', () => templateService.exportFile());
+      $('#tplImport').addEventListener('change', onImportChange);
+      document.addEventListener('keydown', onShortcut);
+    }
+
+    wireEvents();
     return { open, render };
   }
 

@@ -2,7 +2,8 @@
 (function (TW) {
   'use strict';
 
-  const { $, el, button, isComposing, comboList, showComboList, scrollToActive, comboOption } = TW.ui.dom;
+  const { $, el, button, isComposing } = TW.ui.dom;
+  const { comboList, showComboList, scrollToActive, comboOption } = TW.ui.combo;
   const { parseCategories } = TW.domain.title;
   const { normalizeForSearch, cleanCategory } = TW.domain.text;
 
@@ -110,11 +111,15 @@
         }
       }
 
-      input.addEventListener('focus', open);
-      input.addEventListener('blur', close);
-      input.addEventListener('input', () => { active = 0; open(); });
-      input.addEventListener('keydown', onKeydown);
-      box.addEventListener('click', () => input.focus());
+      function wireEvents() {
+        input.addEventListener('focus', open);
+        input.addEventListener('blur', close);
+        input.addEventListener('input', () => { active = 0; open(); });
+        input.addEventListener('keydown', onKeydown);
+        box.addEventListener('click', () => input.focus());   // bấm vào khoảng trống quanh thẻ chip cũng vào ô gõ
+      }
+
+      wireEvents();
       box.append(input);
       const combo = el('div', 'combo');
       combo.append(box, list);
