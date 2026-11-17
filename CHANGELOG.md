@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-17
 
+- `v2026-11-17.3` · Bảng màu Castorice: tím melrose làm màu chính, xanh anakiwa làm màu phụ (nút đã copy, khung SMS), chữ xanh tarawera; cả Sáng và Tối.
 - `v2026-11-17.1` · SMS Promotion: SMS không gửi được xuống dòng → Message xuống dòng thành 1 space (bỏ `\n`) ở cả tin gửi tiệm, mục Đã support và Copy Confirm SMS. §16
 
 ## 2026-11-16

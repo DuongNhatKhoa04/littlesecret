@@ -1,17 +1,18 @@
 /* styles/tokens.css — Màu, bo góc, font (light + dark) và style nền. */
-/* Palette: #6367ff chàm · #8494ff xanh dừa cạn · #c9beff tím lavender · #ffdbfd hồng phấn.
-   #6367ff làm nền dưới chữ trắng chỉ đạt 4.27:1 => --accent sáng dùng #5a5ef5 (đậm hơn chút), chữ/link dùng --accent-text.
+/* Palette Castorice (Honkai: Star Rail, fandomcolors.com): #c9b3ff melrose (màu chính) · #7cd7ff anakiwa · #1e90ff dodger blue · #0b3b5a tarawera · #f7fbff alice blue.
+   #c9b3ff quá nhạt để làm nền dưới chữ trắng => --accent sáng dùng bản đậm #6a4fd0, chữ/link dùng --accent-text; Tối dùng thẳng #c9b3ff với chữ tím đậm.
+   Xanh anakiwa làm màu phụ: nút đã copy, khung SMS.
    Màu chữ đã kiểm tra tương phản >= 4.5:1 trên nền tương ứng (WCAG AA), khung focus >= 3:1. */
 :root {
   color-scheme: light dark;   /* thanh cuộn, ô nhập của trình duyệt theo theme */
-  --bg: #fbf5ff; --panel: #ffffff; --ink: #23214a; --muted: #5a5680;
-  --line: #e3dcff; --accent: #5a5ef5; --accent-ink: #ffffff; --accent-text: #4b4fe0; --accent-soft: #ece8ff; --focus: #6367ff;
-  --selected-bg: #e4deff; --selected-ink: #1e1a66;   /* nút đang chọn: nhạt hơn --accent cho đỡ gắt */
-  --btn-bg: #e4deff; --btn-ink: #1e1a66; --btn-line: #8494ff; --btn-hover: #c9beff;   /* nút Copy / Tải */
-  --done-bg: #ffdbfd; --done-ink: #6b1f66; --done-line: #f0a8ec;                     /* nút đã copy (Copy lại) */
-  --warn-bg: #fff0cc; --warn-ink: #7a4a00; --ok: #0d7f5f; --out-bg: #fdfaff;
+  --bg: #f8f6ff; --panel: #ffffff; --ink: #0b3b5a; --muted: #5a5680;
+  --line: #e4dcff; --accent: #6a4fd0; --accent-ink: #ffffff; --accent-text: #5b3fc4; --accent-soft: #efe9ff; --focus: #8a6cf0;
+  --selected-bg: #e4d9ff; --selected-ink: #2a1660;   /* nút đang chọn: nhạt hơn --accent cho đỡ gắt */
+  --btn-bg: #ece4ff; --btn-ink: #2a1660; --btn-line: #c9b3ff; --btn-hover: #c9b3ff;   /* nút Copy / Tải */
+  --done-bg: #dff4ff; --done-ink: #0b3b5a; --done-line: #7cd7ff;                     /* nút đã copy (Copy lại) */
+  --warn-bg: #fff0cc; --warn-ink: #7a4a00; --ok: #0d7f5f; --out-bg: #fcfbff;
   --err-bg: #fdd8d8; --err-ink: #a3141c;
-  --sms-bg: #ffeefe; --sms-line: #ffdbfd;
+  --sms-bg: #eef8ff; --sms-line: #7cd7ff;
   --radius: 8px;
   scrollbar-color: var(--btn-hover) transparent;
 }
@@ -19,26 +20,26 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #16152b; --panel: #201f3d; --ink: #f3efff; --muted: #c9beff;
-    --line: #38366a; --accent: #8494ff; --accent-ink: #10113a; --accent-text: #a9b3ff; --accent-soft: #2e2f63; --focus: #a9b3ff;
-    --selected-bg: #8494ff; --selected-ink: #10113a;
-    --btn-bg: #8494ff; --btn-ink: #10113a; --btn-line: #8494ff; --btn-hover: #a9b3ff;
-    --done-bg: #ffdbfd; --done-ink: #3d0f3a; --done-line: #ffdbfd;
-    --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #1b1a34;
+    --bg: #120f24; --panel: #1c1736; --ink: #f7fbff; --muted: #c9b3ff;
+    --line: #352c5e; --accent: #c9b3ff; --accent-ink: #1c0f40; --accent-text: #c9b3ff; --accent-soft: #2e2557; --focus: #c9b3ff;
+    --selected-bg: #c9b3ff; --selected-ink: #1c0f40;
+    --btn-bg: #c9b3ff; --btn-ink: #1c0f40; --btn-line: #c9b3ff; --btn-hover: #ddd0ff;
+    --done-bg: #7cd7ff; --done-ink: #062033; --done-line: #7cd7ff;
+    --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #171230;
     --err-bg: #4a1a22; --err-ink: #ffb3bd;
-    --sms-bg: #2f1f3d; --sms-line: #c9beff;
+    --sms-bg: #142a40; --sms-line: #7cd7ff;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #16152b; --panel: #201f3d; --ink: #f3efff; --muted: #c9beff;
-  --line: #38366a; --accent: #8494ff; --accent-ink: #10113a; --accent-text: #a9b3ff; --accent-soft: #2e2f63; --focus: #a9b3ff;
-  --selected-bg: #8494ff; --selected-ink: #10113a;
-  --btn-bg: #8494ff; --btn-ink: #10113a; --btn-line: #8494ff; --btn-hover: #a9b3ff;
-  --done-bg: #ffdbfd; --done-ink: #3d0f3a; --done-line: #ffdbfd;
-  --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #1b1a34;
+  --bg: #120f24; --panel: #1c1736; --ink: #f7fbff; --muted: #c9b3ff;
+  --line: #352c5e; --accent: #c9b3ff; --accent-ink: #1c0f40; --accent-text: #c9b3ff; --accent-soft: #2e2557; --focus: #c9b3ff;
+  --selected-bg: #c9b3ff; --selected-ink: #1c0f40;
+  --btn-bg: #c9b3ff; --btn-ink: #1c0f40; --btn-line: #c9b3ff; --btn-hover: #ddd0ff;
+  --done-bg: #7cd7ff; --done-ink: #062033; --done-line: #7cd7ff;
+  --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #171230;
   --err-bg: #4a1a22; --err-ink: #ffb3bd;
-  --sms-bg: #2f1f3d; --sms-line: #c9beff;
+  --sms-bg: #142a40; --sms-line: #7cd7ff;
 }
 :root[data-theme="light"] { color-scheme: light; }
 * { box-sizing: border-box; }
