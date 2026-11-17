@@ -193,7 +193,7 @@ Việc cần làm tiếp:
 - **Copy title**: khóa khi title rỗng.
 - **Copy nội dung**: khóa khi (a) nội dung rỗng, (b) thiếu mục đề xuất bắt buộc, hoặc (c) checklist còn mục thiếu ảnh. (b)/(c) hiện dòng cảnh báo vàng nói rõ lý do.
 - Copy xong nút đổi thành `Đã copy ✓` trong 1.5s; lỗi thì báo copy tay.
-- Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung, `Alt+3` = Copy SMS, `Alt+4` = Copy Confirm SMS khi khối SMS Promotion đang bật (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS Shipping không có Title nên `Alt+1` không làm gì.
+- Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung, `Alt+3` = Copy SMS (chỉ Message), `Alt+4` = Copy Confirm SMS (toàn bộ tin gửi tiệm) khi khối SMS Promotion đang bật (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS Shipping không có Title nên `Alt+1` không làm gì.
 - **Điền vào trang ticket** (chỉ loại ticket có Title; SMS Shipping không có; tin nhắn SMS Promotion không đi kèm):
   - Nút `Copy để điền` (trên khối Title): copy Title + Nội dung vào clipboard (JSON có đánh dấu của Ticket Writer). Khóa khi Copy title hoặc Copy nội dung đang khóa. Không gửi ảnh.
   - Nút `Cài bookmark "Điền ticket"`: hộp hướng dẫn, có nút `Điền ticket` để kéo lên thanh bookmark (bấm ở Ticket Writer thì không làm gì).
@@ -407,7 +407,7 @@ Please carefully review the content of the Promotion message, and only when you 
 ```
 
 - Type Customer: mục có sẵn đã tick theo thứ tự config (không theo thứ tự tick, số đã trim), rồi tới option tự thêm (bỏ option trống).
-- Dòng trong ngoặc kép là tin khách nhận, ghép theo mẫu `promoText` trong config, giống nhau ở cả 2 ngôn ngữ. Message đã có sẵn cặp ngoặc kép bao ngoài thì bỏ cặp đó, chỉ giữ cặp bao cả dòng. SMS không gửi được xuống dòng → Message có xuống dòng thì nối thành 1 dòng: mỗi chỗ xuống dòng (kể cả dòng trống, khoảng trắng quanh đó) thành 1 space, ở cả tin gửi tiệm và Copy Confirm SMS.
+- Dòng trong ngoặc kép là tin khách nhận, ghép theo mẫu `promoText` trong config, giống nhau ở cả 2 ngôn ngữ. Message đã có sẵn cặp ngoặc kép bao ngoài thì bỏ cặp đó, chỉ giữ cặp bao cả dòng. SMS không gửi được xuống dòng → Message có xuống dòng thì nối thành 1 dòng: mỗi chỗ xuống dòng (kể cả dòng trống, khoảng trắng quanh đó) thành 1 space, ở cả tin gửi tiệm và Copy SMS.
 - Chưa nhập gì (Tên tiệm, Phone tiệm, Recipients, Message trống, chưa tick Type Customer) → tin nhắn rỗng.
 - **Estimate Total** = Price per SMS × Recipients, 2 số lẻ, có dấu phẩy hàng nghìn (vd `3178` × `0.02` → `$63.56`, `50000` × `0.08` → `$4,000.00`). Recipients gõ `3,178` vẫn tính được. Recipients trống hoặc không phải số nguyên → bỏ dòng này.
 - **Tiếng Việt**: cùng bố cục, câu chữ tiếng Việt (vd `Xin chào,`, `Số khách nhận: <Recipients> khách`, `Nhóm khách:`, `Lần ghé gần nhất <= 365 ngày`, `Giá mỗi SMS: $<giá>`, `Tổng chi phí dự kiến: $<tổng>`). Option tự thêm in nguyên văn ở cả 2 ngôn ngữ.
@@ -415,8 +415,9 @@ Please carefully review the content of the Promotion message, and only when you 
 
 ### 16.3 Khu Kết quả & Copy
 
-- Khi tick: khối `SMS Promotion` hiện dưới khối Nội dung, có nút `Copy SMS (Alt+3)` riêng. Title, điều kiện copy của ticket giữ nguyên như khi chưa tick.
-- **Copy Confirm SMS (Alt+4)**: chỉ copy tin khách nhận (dòng trong ngoặc kép, không kèm ngoặc kép), trên 1 dòng, vd `AURO NAILS SPA (123) 456-7890. dòng 1 dòng 2 Reply STOP To Optout.` Khóa / mở cùng lúc với Copy SMS.
+- Khi tick: khối `SMS Promotion` hiện dưới khối Nội dung, có nút `Copy Confirm SMS (Alt+4)` và `Copy SMS (Alt+3)` riêng. Title, điều kiện copy của ticket giữ nguyên như khi chưa tick.
+- **Copy Confirm SMS (Alt+4)**: copy toàn bộ tin nhắn gửi tiệm xác nhận (như khung SMS Promotion).
+- **Copy SMS (Alt+3)**: chỉ copy nội dung Message, trên 1 dòng, không tên tiệm / phone / `Reply STOP To Optout`, không ngoặc kép, vd `dòng 1 dòng 2`. Khóa / mở cùng lúc với Copy Confirm SMS.
 - Nội dung ticket: chi tiết SMS cập nhật theo form, in cuối mục Đã support (sau các ý, không gạch đầu dòng). Đã support trống thì mục chỉ có chi tiết SMS. Chưa nhập gì vào SMS thì không in gì. Bỏ tick thì bỏ khỏi Nội dung.
   ```
   Đã support:

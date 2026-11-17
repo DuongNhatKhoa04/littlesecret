@@ -65,12 +65,13 @@
     assertEqual(missing(all), []);
   });
 
-  test('sms: Message xuống dòng => nối thành 1 dòng (cách 1 space) ở cả tin gửi tiệm và bản Copy Confirm SMS (không ngoặc kép)', () => {
+  test('sms: Message xuống dòng => nối thành 1 dòng (cách 1 space) ở cả tin gửi tiệm và bản Copy SMS (chỉ Message, không ngoặc kép)', () => {
     const raw = (message) => ({ ...EXAMPLE, shop: 'A', message });
     const promo = (message) => D.smsMessage.buildPromoText({ sms: D.sms.sanitizeSms(raw(message), config), config });
     assertEqual(build(raw('toi la hang thu nhat\ntoi la hang thu hai')).includes('\n"A (555) 123-4567. toi la hang thu nhat toi la hang thu hai Reply STOP To Optout."\n'), true);
     assertEqual(promo('toi la hang thu nhat\ntoi la hang thu hai'), 'A (555) 123-4567. toi la hang thu nhat toi la hang thu hai Reply STOP To Optout.');
     assertEqual(promo(' "dong 1  \r\n  dong 2\n\ndong 3" '), 'A (555) 123-4567. dong 1 dong 2 dong 3 Reply STOP To Optout.');
+    assertEqual(D.smsMessage.buildMessageText({ sms: raw(' "dong 1  \r\n  dong 2" ') }), 'dong 1 dong 2');
   });
 
   test('sms: Phone tiệm in dạng (555) 123-4567 dù gõ kiểu nào; không đúng dạng thì in như đã gõ', () => {
@@ -207,12 +208,12 @@
     const before = pick(output.compute());
     const ticketBody = output.compute().body;
     sms.setEnabled(true);
-    assertEqual([output.compute().sms, output.compute().body], [{ body: '', promo: '', missingFields: [], canCopy: false }, ticketBody]);
+    assertEqual([output.compute().sms, output.compute().body], [{ body: '', message: '', missingFields: [], canCopy: false }, ticketBody]);
     sms.setField('shop', 'ARIA NAIL BAR');
     assertEqual([pick(output.compute()), output.compute().sms.canCopy, output.compute().sms.missingFields],
       [before, false, ['Phone tiệm', 'Recipients', 'Type Customer', 'Message']]);
     store.update(state => { state.sms = D.sms.sanitizeSms({ ...EXAMPLE, enabled: true }, config); });
-    assertEqual([pick(output.compute()), output.compute().sms], [before, { body: EXPECTED, promo: EXPECTED.split('\n')[9].slice(1, -1), missingFields: [], canCopy: true }]);
+    assertEqual([pick(output.compute()), output.compute().sms], [before, { body: EXPECTED, message: EXAMPLE.message, missingFields: [], canCopy: true }]);
     assertEqual(output.compute().body, ticketBody + '\n' + TICKET_DETAILS);
     assertEqual(output.compute().body.includes('Price per SMS') || output.compute().body.includes('Estimate Total'), false);
     sms.setEnabled(false);

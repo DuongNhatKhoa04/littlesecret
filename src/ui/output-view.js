@@ -84,8 +84,8 @@
 
     wireCopy('#copyTitle', () => last.title);
     wireCopy('#copyBody', () => last.body);
-    wireCopy('#copySms', () => last.sms.body);
-    wireCopy('#copyPromo', () => last.sms.promo);
+    wireCopy('#copySms', () => last.sms.message);
+    wireCopy('#copyPromo', () => last.sms.body);
     wireCopy('#copyFill', () => ticketFill.payload(last.title, last.body));
     document.addEventListener('keydown', onShortcut);
 

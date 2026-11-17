@@ -7,7 +7,7 @@
   const { isActionMissing, countMissingImages, canCopyBody } = TW.domain.validation;
   const { imageSlots, imageLabel, defaultImageKey } = TW.domain.imageSlots;
   const { buildImageArchive, buildImageReport } = TW.domain.imageArchive;
-  const { buildSmsDetails, buildSmsMessage, buildPromoText, missingSmsFields } = TW.domain.smsMessage;
+  const { buildSmsDetails, buildSmsMessage, buildMessageText, missingSmsFields } = TW.domain.smsMessage;
   const { buildShippingMessage, missingShippingFields } = TW.domain.shippingMessage;
   const { buildReviewMessage, missingReviewFields } = TW.domain.reviewMessage;
   const { buildPassCaseMessage, missingPassCaseFields } = TW.domain.passCaseMessage;
@@ -38,7 +38,7 @@
       const config = context.sms;
       const body = buildSmsMessage({ sms, config });
       const missingFields = body ? missingSmsFields({ sms, config }) : [];
-      return { body, promo: body ? buildPromoText({ sms, config }) : '', missingFields, canCopy: !!body && !missingFields.length };
+      return { body, message: body ? buildMessageText({ sms }) : '', missingFields, canCopy: !!body && !missingFields.length };
     }
 
     function computeShipping() {

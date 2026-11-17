@@ -29,11 +29,12 @@
   /** Số Mỹ 10 số (có thể có 1 hoặc +1 đầu), gõ kiểu nào cũng ra (555) 123-4567; không đúng dạng đó (dữ liệu lưu trước khi ô có mask) thì in như đã gõ. */
   const formatPhone = (phone) => US_PHONE.test(phone.replace(PHONE_PUNCTUATION, '')) ? formatPhoneInput(phone) : phone.trim();
 
-  /** Tin khách nhận theo mẫu promoText, 1 dòng, không ngoặc kép (nút Copy Confirm SMS). Message dán cả dấu ngoặc kép từ tin mẫu thì bỏ đi, tránh ngoặc lồng nhau. */
-  function buildPromoText({ sms, config }) {
-    const message = sms.message.trim().replace(WRAPPING_QUOTES, '$1').replace(LINE_BREAKS, ' ');
-    return fillTemplate(config.promoText, { shop: sms.shop.trim(), shopPhone: formatPhone(sms.shopPhone), message });
-  }
+  /** Chỉ nội dung Message, 1 dòng (nút Copy SMS). Message dán cả dấu ngoặc kép từ tin mẫu thì bỏ đi, tránh ngoặc lồng nhau. */
+  const buildMessageText = ({ sms }) => sms.message.trim().replace(WRAPPING_QUOTES, '$1').replace(LINE_BREAKS, ' ');
+
+  /** Tin khách nhận theo mẫu promoText, 1 dòng, không ngoặc kép. */
+  const buildPromoText = ({ sms, config }) =>
+    fillTemplate(config.promoText, { shop: sms.shop.trim(), shopPhone: formatPhone(sms.shopPhone), message: buildMessageText({ sms }) });
 
   /** Trong tin gửi tiệm: bọc ngoặc kép, đúng như khách sẽ nhận. */
   const promoMessage = (sms, config) => `"${buildPromoText({ sms, config })}"`;
@@ -86,5 +87,5 @@
     ].filter(([, missing]) => missing).map(([field]) => config.labels[field]);
   }
 
-  TW.domain.smsMessage = { buildSmsDetails, buildSmsMessage, buildPromoText, missingSmsFields };
+  TW.domain.smsMessage = { buildSmsDetails, buildSmsMessage, buildPromoText, buildMessageText, missingSmsFields };
 })(window.TW);
