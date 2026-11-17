@@ -2,6 +2,10 @@
 
 Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu ngày tương ứng: version · đổi gì (người dùng thấy gì) · mục REQUIREMENTS liên quan. Bản cũ hơn 2026-11-12 chưa ghi version, tóm tắt theo commit.
 
+## 2026-11-17
+
+- `v2026-11-17.1` · SMS Promotion: SMS không gửi được xuống dòng → Message xuống dòng thành 1 space (bỏ `\n`) ở cả tin gửi tiệm, mục Đã support và Copy Confirm SMS. §16
+
 ## 2026-11-16
 
 - `v2026-11-16.11` · Đổi tên nút `Copy tin SMS (Alt+4)` thành `Copy Confirm SMS (Alt+4)`. §16

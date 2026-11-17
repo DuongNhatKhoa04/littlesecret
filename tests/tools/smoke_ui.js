@@ -466,7 +466,7 @@
     type($('input[data-option="0"]'), 'Birthday in October');
     await settle();
     check('SMS: tin nhắn đúng + option tự thêm + mở copy', !$('#copySms').disabled && $('#outSms').textContent.includes(
-      'Recipients: 3178 customers\nType Customer:\n- Last Visit <= 365\n- Times visit between 1 - 5000\n- Birthday in October\nMessage:\n"ARIA NAIL BAR (555) 123-4567. Sale 15%\nToday only Reply STOP To Optout."\nPrice per SMS: $0.06\nEstimate Total: $190.68') &&
+      'Recipients: 3178 customers\nType Customer:\n- Last Visit <= 365\n- Times visit between 1 - 5000\n- Birthday in October\nMessage:\n"ARIA NAIL BAR (555) 123-4567. Sale 15% Today only Reply STOP To Optout."\nPrice per SMS: $0.06\nEstimate Total: $190.68') &&
       $('#outSms').textContent.startsWith('Greeting,\n'),
       $('#outSms').textContent);
     $$('input[name="smsLang"]').find(r => r.value === 'vi').click();
@@ -478,7 +478,7 @@
       $('#outBody').textContent === plainTicket[1] + '\n\nĐã support:\n' + smsDetails && !$('#outBody').textContent.includes('Giá mỗi SMS'), $('#outBody').textContent);
     check('SMS: Copy SMS chỉ copy tin nhắn', (await copyAndGet('#copySms')) === $('#outSms').textContent);
     const promoCopy = await copyAndGet('#copyPromo');
-    check('SMS: Copy Confirm SMS = 1 dòng, \\n dính liền, không ngoặc kép', promoCopy === 'ARIA NAIL BAR (555) 123-4567. Sale 15%\\nToday only Reply STOP To Optout.', promoCopy);
+    check('SMS: Copy Confirm SMS = 1 dòng (xuống dòng thành space), không ngoặc kép', promoCopy === 'ARIA NAIL BAR (555) 123-4567. Sale 15% Today only Reply STOP To Optout.', promoCopy);
     const smsFill = await copyAndGet('#copyFill');
     check('SMS: Copy để điền có chi tiết SMS', smsFill !== plainFill && smsFill.includes(smsDetails.split('\n')[0]), smsFill);
     const smsZone = $('.pzone[data-img-key="sms:customerTypes"]');

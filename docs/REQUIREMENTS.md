@@ -406,7 +406,7 @@ Please carefully review the content of the Promotion message, and only when you 
 ```
 
 - Type Customer: mục có sẵn đã tick theo thứ tự config (không theo thứ tự tick, số đã trim), rồi tới option tự thêm (bỏ option trống).
-- Dòng trong ngoặc kép là tin khách nhận, ghép theo mẫu `promoText` trong config, giống nhau ở cả 2 ngôn ngữ. Message đã có sẵn cặp ngoặc kép bao ngoài thì bỏ cặp đó, chỉ giữ cặp bao cả dòng. Message có xuống dòng → tin gửi tiệm giữ xuống dòng thật (bỏ khoảng trắng quanh chỗ xuống dòng) để merchant đọc đúng như khách sẽ nhận.
+- Dòng trong ngoặc kép là tin khách nhận, ghép theo mẫu `promoText` trong config, giống nhau ở cả 2 ngôn ngữ. Message đã có sẵn cặp ngoặc kép bao ngoài thì bỏ cặp đó, chỉ giữ cặp bao cả dòng. SMS không gửi được xuống dòng → Message có xuống dòng thì nối thành 1 dòng: mỗi chỗ xuống dòng (kể cả dòng trống, khoảng trắng quanh đó) thành 1 space, ở cả tin gửi tiệm và Copy Confirm SMS.
 - Chưa nhập gì (Tên tiệm, Phone tiệm, Recipients, Message trống, chưa tick Type Customer) → tin nhắn rỗng.
 - **Estimate Total** = Price per SMS × Recipients, 2 số lẻ, có dấu phẩy hàng nghìn (vd `3178` × `0.02` → `$63.56`, `50000` × `0.08` → `$4,000.00`). Recipients gõ `3,178` vẫn tính được. Recipients trống hoặc không phải số nguyên → bỏ dòng này.
 - **Tiếng Việt**: cùng bố cục, câu chữ tiếng Việt (vd `Xin chào,`, `Số khách nhận: <Recipients> khách`, `Nhóm khách:`, `Lần ghé gần nhất <= 365 ngày`, `Giá mỗi SMS: $<giá>`, `Tổng chi phí dự kiến: $<tổng>`). Option tự thêm in nguyên văn ở cả 2 ngôn ngữ.
@@ -415,7 +415,7 @@ Please carefully review the content of the Promotion message, and only when you 
 ### 16.3 Khu Kết quả & Copy
 
 - Khi tick: khối `SMS Promotion` hiện dưới khối Nội dung, có nút `Copy SMS (Alt+3)` riêng. Title, điều kiện copy của ticket giữ nguyên như khi chưa tick.
-- **Copy Confirm SMS (Alt+4)**: chỉ copy tin khách nhận (dòng trong ngoặc kép, không kèm ngoặc kép), trên 1 dòng, mỗi chỗ xuống dòng của Message thành 2 ký tự `\n` dính liền, vd `AURO NAILS SPA (123) 456-7890. dòng 1\ndòng 2 Reply STOP To Optout.` Khóa / mở cùng lúc với Copy SMS.
+- **Copy Confirm SMS (Alt+4)**: chỉ copy tin khách nhận (dòng trong ngoặc kép, không kèm ngoặc kép), trên 1 dòng, vd `AURO NAILS SPA (123) 456-7890. dòng 1 dòng 2 Reply STOP To Optout.` Khóa / mở cùng lúc với Copy SMS.
 - Nội dung ticket: chi tiết SMS cập nhật theo form, in cuối mục Đã support (sau các ý, không gạch đầu dòng). Đã support trống thì mục chỉ có chi tiết SMS. Chưa nhập gì vào SMS thì không in gì. Bỏ tick thì bỏ khỏi Nội dung.
   ```
   Đã support:
@@ -442,7 +442,7 @@ Please carefully review the content of the Promotion message, and only when you 
   - **UCS-2**: có bất kỳ ký tự ngoài GSM-7 (tiếng Việt có dấu, emoji, nháy cong `’`) → 70 ký tự / 1 segment; dài hơn thì 67 / segment.
 - **Đang chờ chốt**:
   1. Hiện ở đâu. Đề xuất: 1 dòng dưới ô Message, vd `245 ký tự · 2 segment · GSM-7`; rơi vào UCS-2 thì chỉ ra ký tự gây ra.
-  2. `\n` trong bản `Copy Confirm SMS`: hệ thống gửi SMS đổi thành xuống dòng thật (đếm 1 ký tự) hay gửi nguyên văn (`\` là ký tự mở rộng → mỗi chỗ tốn 3).
+  2. ~~`\n` trong bản `Copy Confirm SMS`~~: đã chốt, SMS không có xuống dòng, Message nối thành 1 dòng (§16).
   3. Estimate Total có nhân số segment không (giá × Recipients × segment).
 
 

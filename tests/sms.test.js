@@ -65,12 +65,12 @@
     assertEqual(missing(all), []);
   });
 
-  test('sms: Message xuống dòng => tin gửi tiệm giữ xuống dòng; bản Copy Confirm SMS 1 dòng, \\n dính liền, không ngoặc kép', () => {
+  test('sms: Message xuống dòng => nối thành 1 dòng (cách 1 space) ở cả tin gửi tiệm và bản Copy Confirm SMS (không ngoặc kép)', () => {
     const raw = (message) => ({ ...EXAMPLE, shop: 'A', message });
     const promo = (message) => D.smsMessage.buildPromoText({ sms: D.sms.sanitizeSms(raw(message), config), config });
-    assertEqual(build(raw('toi la hang thu nhat\ntoi la hang thu hai')).includes('\n"A (555) 123-4567. toi la hang thu nhat\ntoi la hang thu hai Reply STOP To Optout."\n'), true);
-    assertEqual(promo('toi la hang thu nhat\ntoi la hang thu hai'), 'A (555) 123-4567. toi la hang thu nhat\\ntoi la hang thu hai Reply STOP To Optout.');
-    assertEqual(promo(' "dong 1  \r\n  dong 2\n\ndong 3" '), 'A (555) 123-4567. dong 1\\ndong 2\\n\\ndong 3 Reply STOP To Optout.');
+    assertEqual(build(raw('toi la hang thu nhat\ntoi la hang thu hai')).includes('\n"A (555) 123-4567. toi la hang thu nhat toi la hang thu hai Reply STOP To Optout."\n'), true);
+    assertEqual(promo('toi la hang thu nhat\ntoi la hang thu hai'), 'A (555) 123-4567. toi la hang thu nhat toi la hang thu hai Reply STOP To Optout.');
+    assertEqual(promo(' "dong 1  \r\n  dong 2\n\ndong 3" '), 'A (555) 123-4567. dong 1 dong 2 dong 3 Reply STOP To Optout.');
   });
 
   test('sms: Phone tiệm in dạng (555) 123-4567 dù gõ kiểu nào; không đúng dạng thì in như đã gõ', () => {

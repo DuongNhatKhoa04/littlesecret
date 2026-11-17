@@ -6,8 +6,7 @@
   const { cleanItems, isBlank, formatPhoneInput } = TW.domain.text;
   const BLOCK_GAP = '\n\n';
   const WRAPPING_QUOTES = /^"([\s\S]*)"$/;
-  const LINE_BREAK = /[ \t]*\r?\n[ \t]*/g;
-  const ESCAPED_NEWLINE = '\\n';   // bản copy tin SMS: xuống dòng => 2 ký tự \n, dính liền 2 dòng
+  const LINE_BREAKS = /\s*\n\s*/g;   // SMS không gửi được xuống dòng => nối thành 1 dòng
   const DIGIT_GROUPING = /[,\s]/g;   // "3,178" vẫn tính được Estimate Total
   const WHOLE_NUMBER = /^\d+$/;
   const PHONE_PUNCTUATION = /[\s().+-]/g;
@@ -30,17 +29,14 @@
   /** Số Mỹ 10 số (có thể có 1 hoặc +1 đầu), gõ kiểu nào cũng ra (555) 123-4567; không đúng dạng đó (dữ liệu lưu trước khi ô có mask) thì in như đã gõ. */
   const formatPhone = (phone) => US_PHONE.test(phone.replace(PHONE_PUNCTUATION, '')) ? formatPhoneInput(phone) : phone.trim();
 
-  /** Tin khách nhận theo mẫu promoText, bọc ngoặc kép. Message dán cả dấu ngoặc kép từ tin mẫu thì bỏ đi, tránh ngoặc lồng nhau. */
-  function promoText(sms, config, lineBreak) {
-    const message = sms.message.trim().replace(WRAPPING_QUOTES, '$1').replace(LINE_BREAK, lineBreak);
+  /** Tin khách nhận theo mẫu promoText, 1 dòng, không ngoặc kép (nút Copy Confirm SMS). Message dán cả dấu ngoặc kép từ tin mẫu thì bỏ đi, tránh ngoặc lồng nhau. */
+  function buildPromoText({ sms, config }) {
+    const message = sms.message.trim().replace(WRAPPING_QUOTES, '$1').replace(LINE_BREAKS, ' ');
     return fillTemplate(config.promoText, { shop: sms.shop.trim(), shopPhone: formatPhone(sms.shopPhone), message });
   }
 
-  /** Trong tin gửi tiệm: xuống dòng thật, để merchant đọc đúng như sẽ nhận. */
-  const promoMessage = (sms, config) => `"${promoText(sms, config, '\n')}"`;
-
-  /** Nút Copy Confirm SMS: 1 dòng, không ngoặc kép, xuống dòng thành \n để dán vào hệ thống gửi SMS. */
-  const buildPromoText = ({ sms, config }) => promoText(sms, config, ESCAPED_NEWLINE);
+  /** Trong tin gửi tiệm: bọc ngoặc kép, đúng như khách sẽ nhận. */
+  const promoMessage = (sms, config) => `"${buildPromoText({ sms, config })}"`;
 
   const hasInput = (sms) => !isBlank(sms.shop) || !isBlank(sms.shopPhone) || !isBlank(sms.recipients) || !isBlank(sms.message) ||
     Object.values(sms.customerTypes).some(type => type.on) || cleanItems(sms.customOptions).length > 0;
