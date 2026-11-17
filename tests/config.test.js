@@ -10,7 +10,7 @@
     LEGACY_KEYS.forEach(key => assert(context.typeOf(key), `thiếu loại "${key}"`));
   });
 
-  test('thứ tự Viết ticket: Hỗ trợ merchant, Chuyển CS/MKT; Xử lý yêu cầu cũ mở bằng Hỗ trợ merchant', () => {
+  test('thứ tự Viết ticket: Hỗ trợ merchant, Chuyển case; Xử lý yêu cầu cũ mở bằng Hỗ trợ merchant', () => {
     assertEqual(context.tickets.map(t => t.key), ['incident', 'transfer']);
     assertEqual(context.typeOf('request').key, 'incident');
   });

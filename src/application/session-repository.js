@@ -1,4 +1,4 @@
-// src/application/session-repository.js — Đọc/lưu phiên làm việc (loại đang chọn, chế độ xem, ticket đang nhập, form SMS Promotion / SMS Shipping / SMS Xin review).
+// src/application/session-repository.js — Đọc/lưu phiên làm việc (loại đang chọn, chế độ xem, ticket đang nhập, form SMS Promotion / SMS Shipping / SMS Xin review / Chuyển case).
 (function (TW) {
   'use strict';
 
@@ -6,6 +6,7 @@
   const { createEmptySms, sanitizeSms } = TW.domain.sms;
   const { createEmptyShipping, sanitizeShipping } = TW.domain.shipping;
   const { createEmptyReview, sanitizeReview } = TW.domain.review;
+  const { createEmptyPassCase, sanitizePassCase } = TW.domain.passCase;
   const { GROUPS, SMS_KINDS, createNavigation, navigationForType, normalizeSetupPath, normalizeSmsKind, resolveTypeKey } = TW.domain.navigation;
   const MODES = ['split', 'input', 'output'];
 
@@ -18,7 +19,8 @@
 
     const defaults = () => ({
       mode: 'split', swap: false, nav: createNavigation(context), ticket: createEmptyTicket({ app, blockKeys }),
-      sms: createEmptySms(context.sms), shipping: createEmptyShipping(), review: createEmptyReview(context.review)
+      sms: createEmptySms(context.sms), shipping: createEmptyShipping(), review: createEmptyReview(context.review),
+      passCase: createEmptyPassCase(context.passCase)
     });
 
     function sanitizeNav(nav, base) {
@@ -53,13 +55,14 @@
       }
       state.shipping = sanitizeShipping(raw.shipping);
       state.review = sanitizeReview(raw.review, context.review);
+      state.passCase = sanitizePassCase(raw.passCase, context.passCase);   // bản trước chưa có => mặc định
       return state;
     }
 
     /** false = không lưu được (localStorage đầy / bị chặn) */
     function save(state) {
-      const { mode, swap, nav, ticket, sms, shipping, review } = state;
-      return storage.write(app.storageKey, { type: resolveTypeKey(nav, context), mode, swap, nav, ticket, sms, shipping, review });
+      const { mode, swap, nav, ticket, sms, shipping, review, passCase } = state;
+      return storage.write(app.storageKey, { type: resolveTypeKey(nav, context), mode, swap, nav, ticket, sms, shipping, review, passCase });
     }
 
     return { load, save };

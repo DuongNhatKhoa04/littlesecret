@@ -12,6 +12,7 @@
   let smsConfig = null;
   let shippingConfig = null;
   let reviewConfig = null;
+  let passCaseConfig = null;
   let notificationConfig = null;
 
   function claimItemIds(key, checklist) {
@@ -37,6 +38,7 @@
     setSms(config) { smsConfig = config; },
     setShipping(config) { shippingConfig = config; },
     setReview(config) { reviewConfig = config; },
+    setPassCase(config) { passCaseConfig = config; },
     setNotifications(config) { notificationConfig = config; },
     addTicket(key, definition) { addType('ticket', key, definition); },
     addSetup(key, definition) { addType('setup', key, definition); },
@@ -45,6 +47,7 @@
     sms: () => smsConfig,
     shipping: () => shippingConfig,
     review: () => reviewConfig,
+    passCase: () => passCaseConfig,
     notifications: () => notificationConfig,
     type: (key) => types.get(key) || types.get(formerKeys.get(key)) || null,
     types: (group) => [...types.values()].filter(type => !group || type.group === group)

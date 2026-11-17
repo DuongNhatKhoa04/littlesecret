@@ -25,6 +25,7 @@
   const smsService = A.smsService.createSmsService({ context, store });
   const shippingService = A.shippingService.createShippingService({ store });
   const reviewService = A.reviewService.createReviewService({ context, store });
+  const passCaseService = A.passCaseService.createPassCaseService({ context, store });
   const navigationService = A.navigationService.createNavigationService({ context, store });
   const viewService = A.viewService.createViewService({ store });
   const images = A.imageService.createImageService({ files, imageStore, notices, onChecklistImage: ticketService.markDoneByImage });
@@ -51,14 +52,16 @@
   });
   const shippingForm = U.shippingForm.createShippingForm({ root: $('#form'), context, session, shippingService });
   const reviewForm = U.reviewForm.createReviewForm({ root: $('#form'), context, session, reviewService, staffService });
-  const activeForm = () => {   // 3 form dùng chung khu Nhập
+  const passCaseForm = U.passCaseForm.createPassCaseForm({ root: $('#form'), context, session, passCaseService });
+  const activeForm = () => {   // 4 form dùng chung khu Nhập
     if (session.isReview()) return reviewForm;
+    if (session.isPassCase()) return passCaseForm;
     return session.isShipping() ? shippingForm : form;
   };
   const picker = U.picker.createPicker({ root: $('#picker'), context, session, navigationService });
   const imagePanel = U.imagePanel.createImagePanel({ outputService, images, clipboard, openViewer: viewer.open });
   const output = U.outputView.createOutputView({ context, outputService, clipboard, ticketFill, imagePanel });
-  const header = U.header.createHeader({ context, session, viewService, ticketService, smsService, shippingService, reviewService, images, onShowOutput: output.render });
+  const header = U.header.createHeader({ context, session, viewService, ticketService, smsService, shippingService, reviewService, passCaseService, images, onShowOutput: output.render });
   const templateDialog = U.templateDialog.createTemplateDialog({ templateService, files });
   const offlineDialog = U.offlineDialog.createOfflineDialog({ offlineService });
   U.fillDialog.createFillDialog({ ticketFill });

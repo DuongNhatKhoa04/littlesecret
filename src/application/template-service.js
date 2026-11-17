@@ -51,7 +51,7 @@
     return {
       count: () => templates.length,
       /** Nhánh setup chưa có checklist / nhóm SMS: không có loại ticket để lưu. */
-      canSave: () => !!session.activeTypeKey(),
+      canSave: () => !!session.activeTypeKey() && !session.isPassCase(),   // Chuyển case chỉ là tin nhắn, không có ticket để lưu
       search: (query) => T.searchTemplates(templates, query),
       draft,
       exists: (name) => templates.some(t => t.name === name),

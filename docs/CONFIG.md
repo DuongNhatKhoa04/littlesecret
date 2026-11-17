@@ -224,6 +224,31 @@ setReview({   // const { setReview } = registry;
 | `languages` | Ngôn ngữ tin nhắn, theo thứ tự hiện trên form; ngôn ngữ đầu là mặc định. `id` lưu trong state: không đổi id đang có |
 | `languages[].lines` | Từng dòng tin nhắn, `''` = dòng trống. `{link}` thay bằng link của chi nhánh phụ trách bang |
 
+## 4d. Chuyển case — `config/tickets/pass-case.js`
+
+```js
+setPassCase({   // const { setPassCase } = registry;
+  labels: { team: 'Team nhận', urgent: 'GẤP', urgentNote: 'Tình trạng thực tế, vd …' },
+  fields: { shop: { label: 'Tên tiệm' }, phone: { label: 'CBN', kind: 'phone' }, role: { label: 'Vai trò tại tiệm', kind: 'choice', options: ['Owner', 'Manager', 'Staff'] } /* … */ },
+  teams: [{ id: 'sales', label: 'Sales', fields: ['shop', 'zip', 'mid', 'phone'], required: ['shop', 'zip', 'phone'], lines: ['LEAD: {leadInfo}', 'CBN: {cbn}'] } /* … */],
+  urgentLine: 'GẤP: {urgentNote}', urgentOnly: 'GẤP'
+});
+```
+
+| Trường | Ý nghĩa |
+|---|---|
+| `fields` | Mọi ô của form. Key = id lưu trong state: không đổi id đang có. `kind`: `text` (mặc định) · `phone` (tự format) · `choice` (`options`, bấm lại để bỏ chọn) · `multiline`. `ph` = chữ mờ, `inputMode` cho bàn phím mobile |
+| `teams` | Team nhận theo thứ tự trên form, team đầu là mặc định. `id` lưu trong state: không đổi id đang có |
+| `teams[].fields` / `required` | Thứ tự ô trên form / ô bắt buộc (trống thì khóa Copy) |
+| `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò). Dòng mà mọi `{…}` đều trống thì bỏ |
+| `teams[].urgent` / `tips` | Có ô tick GẤP / khung lưu ý trên form |
+| `urgentLine`, `urgentOnly` | Dòng đầu tin khi tick GẤP, có / không ghi tình trạng |
+| `thanks` | Câu cuối mọi tin (`Many thanks team!`) |
+| `teams[].tags` | Người cần tag, dòng ngay dưới `thanks`: `[{ names: ['@a', '@b'] }]` = luôn tag; thêm `from`, `to` (`'HH:MM'` giờ VN) = chỉ tag trong ca `[from, to)`, `from` > `to` là ca qua đêm. Đổi người / đổi ca = sửa ở đây |
+| `tagUtcOffsetMinutes` | Múi giờ của ca: `7 * 60` = giờ VN (không có giờ mùa hè) |
+
+Loại `transfer` trong `config/tickets/transfer.js` có `passCase: true` nên hiện form này thay cho form ticket.
+
 ---
 
 ## 5. Cấu hình chung — `config/app.js`

@@ -51,7 +51,7 @@ ticket-writer/
 ├─ config/                     DỮ LIỆU: chỉ khai báo, không có logic
 │  ├─ app.js                   version, Loại có sẵn, Kết luận, ký hiệu, nhãn, storage key
 │  ├─ notifications.js         danh sách cảnh báo lưu trữ (đầy / không lưu được): level, câu chữ, ngưỡng
-│  ├─ tickets/                 VIẾT TICKET: incident.js (Hỗ trợ merchant) · transfer.js
+│  ├─ tickets/                 VIẾT TICKET: incident.js (Hỗ trợ merchant) · transfer.js (Chuyển case) · pass-case.js (team, trường, câu chữ tin pass case)
 │  ├─ setup/                   SETUP / TRAINING
 │  │  ├─ catalog.js            danh mục Thiết bị → Hãng → Model, Quy trình (thêm model mới ở đây)
 │  │  └─ <device>/<brand>/<flow>/<checklist>.js
@@ -60,14 +60,14 @@ ticket-writer/
 │  ├─ core/                    namespace.js (TW) · registry.js (config đăng ký vào) · ports.js (typedef port)
 │  ├─ domain/                  QUY TẮC NGHIỆP VỤ: hàm thuần, không DOM, không storage
 │  │                           text · title · ticket · checklist · body · validation · navigation · image-slots · image-archive · template · offline-ticket ·
-│  │                           sms · sms-message · shipping · shipping-message · review · review-message · phone-link · qr-code
+│  │                           sms · sms-message · shipping · shipping-message · review · review-message · pass-case · pass-case-message · phone-link · qr-code
 │  ├─ application/             USE CASE: store + service, điều phối domain và port
 │  │                           context · store · session · session-repository · ticket/navigation/view/image/
-│  │                           output/category/template/offline/sms/shipping/review/staff/notice/theme/phone-service
+│  │                           output/category/template/offline/sms/shipping/review/pass-case/staff/notice/theme/phone-service
 │  ├─ infrastructure/          ADAPTER: storage (localStorage) · image-store (ảnh trên IndexedDB) · storage-quota (dung lượng) · phone-inbox (lấy ảnh từ phone-upload) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
 │  ├─ ui/                      GIAO DIỆN: dom (helper, ô nhập + nhãn) · combo (danh sách gợi ý dùng chung) · notice-bar (thanh cảnh báo) · theme-toggle (nút sáng/tối) · phone-button (nút Nhận ảnh iOS) · phone-dialog (mã QR cho iPad) · picker · ticket-form · category-combo · summary-combo · idea-list ·
 │  │                           checklist-view · image-zone · output-view · image-panel · image-viewer ·
-│  │                           template-dialog · offline-dialog · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form
+│  │                           template-dialog · offline-dialog · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form · pass-case-form
 │  └─ main.js                  COMPOSITION ROOT: tạo adapter, inject vào service, gắn UI
 ├─ tests/                      xem tests/README.md
 │  ├─ index.html               double-click để chạy test

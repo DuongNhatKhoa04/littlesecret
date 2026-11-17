@@ -1,4 +1,4 @@
-// src/application/session.js — Các giá trị suy ra từ state: loại đang mở, model, kết luận, khối SMS Promotion đang bật, đang ở SMS Shipping hay SMS Xin review…
+// src/application/session.js — Các giá trị suy ra từ state: loại đang mở, model, kết luận, khối SMS Promotion đang bật, đang ở SMS Shipping / SMS Xin review / Chuyển case…
 (function (TW) {
   'use strict';
 
@@ -20,10 +20,13 @@
       sms: () => store.get().sms,
       shipping: () => store.get().shipping,
       review: () => store.get().review,
+      passCase: () => store.get().passCase,
       /** Khối SMS Promotion đang bật: loại đang mở có khối này và đã tick. */
       smsActive: () => { const type = activeType(); return !!type && !!type.smsPromotion && store.get().sms.enabled; },
       isShipping: () => isSmsKind(SMS_KINDS.shipping),
       isReview: () => isSmsKind(SMS_KINDS.review),
+      /** Loại đang mở là Chuyển case: form + tin nhắn riêng thay cho ticket. */
+      isPassCase: () => { const type = activeType(); return !!type && !!type.passCase; },
       activeTypeKey,
       activeType,
       setupPath: () => normalizeSetupPath(context.catalog, nav().setupPath),

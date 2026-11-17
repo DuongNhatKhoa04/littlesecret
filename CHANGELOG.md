@@ -4,6 +4,8 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-17
 
+- `v2026-11-17.5` · Chuyển case: cuối tin thêm `Many thanks team!`, dòng dưới tag lead / sublead (Sales luôn tag; MKT theo ca giờ VN 8:00 PM – 8:30 AM / 8:30 AM – 12:00 PM). §22
+- `v2026-11-17.4` · `Chuyển CS/MKT` thành `Chuyển case`: chọn team Sales / MKT / CS / Tech, form theo team, ra tin nhắn group (không Title), khóa Copy khi thiếu trường bắt buộc, Tech có ô GẤP, CS / Tech có khung lưu ý. §22
 - `v2026-11-17.3` · Bảng màu Castorice: tím melrose làm màu chính, xanh anakiwa làm màu phụ (nút đã copy, khung SMS), chữ xanh tarawera; cả Sáng và Tối.
 - `v2026-11-17.1` · SMS Promotion: SMS không gửi được xuống dòng → Message xuống dòng thành 1 space (bỏ `\n`) ở cả tin gửi tiệm, mục Đã support và Copy Confirm SMS. §16
 

@@ -11,6 +11,7 @@
       sms: registry.sms(),
       shipping: registry.shipping(),
       review: registry.review(),
+      passCase: registry.passCase(),
       tickets: registry.types('ticket'),
       setups: registry.types('setup'),
       blockKeys: collectBlockKeys(registry.types()),

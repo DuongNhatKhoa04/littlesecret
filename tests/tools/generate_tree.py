@@ -69,7 +69,7 @@ def src_tree():
 
 def config_tree():
     kids = [('app.js', 'version · key · nhãn', 'CFG', None), ('notifications.js', 'cảnh báo lưu trữ', 'CFG', None),
-            ('tickets/', 'incident · transfer', 'DIR', count('config/tickets')),
+            ('tickets/', 'incident · transfer · pass-case', 'DIR', count('config/tickets')),
             ('setup/', 'catalog + checklist', 'DIR', count('config/setup')),
             ('sms/', 'promotion · shipping…', 'DIR', count('config/sms'))]
     xs = [112, 296, 480, 664, 848]

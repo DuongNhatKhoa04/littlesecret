@@ -202,18 +202,40 @@
       $('#outTitle').textContent === 'INTERNET - MẤT KẾT NỐI' && $$('.chip').length === 1 && cat.value === '' && focused() === 'f_summary',
       [$('#outTitle').textContent, $$('.chip').length, focused()]);
 
-    // Đổi loại giữ nội dung mục chung
-    $('textarea[data-key="s1"]').focus();
-    clickText('#picker', 'Chuyển CS/MKT');
+    // Chuyển case: form + tin nhắn group riêng, ticket đang nhập vẫn giữ
+    clickText('#picker', 'Chuyển case');
     await settle();
-    check('đổi sang Chuyển CS/MKT giữ nội dung s1', $('#outBody').textContent.includes('Yêu cầu:\n- Terminal lỗi'), $('#outBody').textContent);
-    check('Chuyển CS/MKT: không có ô Loại, title chỉ có Tóm tắt', !$('#f_category') && $('#outTitle').textContent === 'MẤT KẾT NỐI',
-      $('#outTitle').textContent);
-    check('đổi sang loại không có ô Loại: con trỏ về ô Tóm tắt', focused() === 'f_summary', focused());
+    check('Chuyển case: form riêng, ẩn Title, khóa Lưu template, chưa nhập => rỗng', !$('#f_summary') && $('#titleBlock').hidden && $('#tplSave').disabled && $('#outBody').textContent === '',
+      $('#outBody').textContent);
+    type($('#pass_shop'), 'ARIA NAIL BAR');
+    await settle();
+    check('Chuyển case Sales: thiếu trường bắt buộc => khóa Copy, báo thiếu', $('#copyBody').disabled && $('#warn').textContent.includes('ZIP Code, CBN'),
+      $('#warn').textContent);
+    type($('#pass_zip'), '75001');
+    type($('#pass_phone'), '5551234567');
+    clickText('#form', 'Owner');
+    await settle();
+    check('Chuyển case Sales: đủ => mở Copy, Phone tự format, cuối tin Many thanks team! + tag Sales',
+      !$('#copyBody').disabled &&
+      $('#outBody').textContent === 'LEAD: ARIA NAIL BAR – 75001\nCBN: (555) 123-4567 – Owner\nMany thanks team!\n@Stella_SalesAdmin @Kyo_SaleAdmin',
+      $('#outBody').textContent);
+    clickText('#form', 'Tech');
+    await settle();
+    check('Chuyển case Tech: có ô GẤP + lưu ý, giữ Phone đã nhập', !!$('.pass-urgent') && !!$('.pass-tips') && $('#pass_phone').value === '(555) 123-4567');
+    $('.pass-urgent input').click();
+    await settle();
+    type($('#pass_urgentNote'), 'Tiệm có khách đang chờ tính tiền');
+    await settle();
+    check('Chuyển case Tech: tick GẤP => dòng đầu tin, thiếu trường vẫn khóa Copy',
+      $('#outBody').textContent.startsWith('GẤP: Tiệm có khách đang chờ tính tiền\nCBN: (555) 123-4567 – Owner') && $('#copyBody').disabled, $('#outBody').textContent);
+    $('#resetBtn').click();
+    await settle();
+    check('Chuyển case: Ticket mới chỉ xóa form Chuyển case, về team đầu', $('#outBody').textContent === '' && $('#pass_shop').value === '');
     clickText('#picker', 'Hỗ trợ merchant');
     await settle();
-    check('về Hỗ trợ merchant: ô Loại + Loại đã chọn vẫn giữ, con trỏ ở ô Loại',
-      focused() === 'f_category' && $('#outTitle').textContent === 'INTERNET - MẤT KẾT NỐI', [focused(), $('#outTitle').textContent]);
+    check('về Hỗ trợ merchant: ticket, ô Loại + Loại đã chọn vẫn giữ, con trỏ ở ô Loại',
+      focused() === 'f_category' && $('#outTitle').textContent === 'INTERNET - MẤT KẾT NỐI' && $('#outBody').textContent.includes('Terminal lỗi'),
+      [focused(), $('#outTitle').textContent]);
 
     // Setup: nút đang tạm ẩn (config/app.js) nhưng vẫn nằm trong DOM nên kịch bản bấm được
     check('nhóm Setup / Training không hiện', $$('#picker button').find(x => x.textContent === 'Setup / Training').offsetParent === null);
@@ -553,9 +575,9 @@
     await settle();
     check('về Viết ticket: hiện lại Title, mở Lưu template', !$('#titleBlock').hidden && !$('#tplSave').disabled);
     check('Shipping: form SMS Promotion vẫn giữ', $('#sms_shop').value === 'GIỮ LẠI' && !$('.sms-fields').hidden && !$('#smsBlock').hidden, $('#sms_shop').value);
-    clickText('#picker', 'Chuyển CS/MKT');
+    clickText('#picker', 'Chuyển case');
     await settle();
-    check('Chuyển CS/MKT: không có khối SMS', !$('.sms-box') && $('#smsBlock').hidden);
+    check('Chuyển case: không có khối SMS', !$('.sms-box') && $('#smsBlock').hidden);
   } catch (error) {
     log.push('FAIL exception :: ' + error.stack);
   }

@@ -1,11 +1,11 @@
-// src/ui/header.js — Header: version, chế độ xem (Alt+M), đổi bên, Ticket mới (ở SMS Shipping / Xin review: chỉ xóa form đang mở).
+// src/ui/header.js — Header: version, chế độ xem (Alt+M), đổi bên, Ticket mới (ở SMS Shipping / Xin review / Chuyển case: chỉ xóa form đang mở).
 (function (TW) {
   'use strict';
 
   const { $, $$ } = TW.ui.dom;
   const NARROW_QUERY = '(max-width: 799px)';
 
-  function createHeader({ context, session, viewService, ticketService, smsService, shippingService, reviewService, images, onShowOutput }) {
+  function createHeader({ context, session, viewService, ticketService, smsService, shippingService, reviewService, passCaseService, images, onShowOutput }) {
     const narrow = window.matchMedia(NARROW_QUERY);
     const main = $('#main');
 
@@ -25,6 +25,10 @@
       }
       if (session.isReview()) {
         if (confirm('Xóa toàn bộ nội dung SMS Xin review?')) reviewService.reset();
+        return;
+      }
+      if (session.isPassCase()) {
+        if (confirm('Xóa toàn bộ nội dung Chuyển case?')) passCaseService.reset();
         return;
       }
       if (!confirm('Xóa toàn bộ nội dung ticket?')) return;

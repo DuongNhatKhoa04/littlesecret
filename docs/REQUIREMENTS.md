@@ -12,7 +12,7 @@ Tài liệu này mô tả **hành vi hiện có** của tool, tới từng câu 
 |---|---|---|
 | 1–3 | Mục đích, ràng buộc kỹ thuật, bố cục giao diện | Hiện hành |
 | 4–5 | Trường chung (Loại, Tóm tắt, Phone…), Title | Hiện hành |
-| 6 | Nhóm Viết ticket (Hỗ trợ merchant, Chuyển CS/MKT), Kết luận | Hiện hành |
+| 6 | Nhóm Viết ticket (Hỗ trợ merchant, Chuyển case), Kết luận | Hiện hành |
 | 7 | Nhóm Setup / Training (checklist) | Hiện hành, **nhóm đang tạm ẩn** (§14.2) |
 | 8–9 | Định dạng Nội dung, khu Kết quả & điều kiện Copy, Điền ticket | Hiện hành |
 | 10 | Ảnh: dán, chụp, đổi thứ tự, ZIP, PDF, xóa hết | Hiện hành |
@@ -24,6 +24,7 @@ Tài liệu này mô tả **hành vi hiện có** của tool, tới từng câu 
 | 19 | Ticket offline | Hiện hành |
 | 20 | Cảnh báo lưu trữ | Hiện hành |
 | 21 | Nhận ảnh iPad / iPhone (phone-upload) | Hiện hành; rủi ro ở SECURITY.md §3 |
+| 22 | Chuyển case (pass case cho Sales / MKT / CS / Tech) | Hiện hành |
 
 ---
 
@@ -84,7 +85,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 | Key | Nhãn nút | Các mục (theo thứ tự) |
 |---|---|---|
 | `incident` | Hỗ trợ merchant | Vấn đề (`s1`) · Đã support (`s2`) · **Kết luận** · Việc cần làm tiếp (`s5`, chỉ hiện khi Pending) · Note (`s6`). Cuối form có khối tùy chọn **SMS Promotion** (§16) |
-| `transfer` | Chuyển CS/MKT | Yêu cầu (`s1`). Không có ô Loại. Có Ngôn ngữ merchant. Cuối nội dung luôn có câu: `Nhờ team help merchant ạ. Many thanks team!` |
+| `transfer` | Chuyển case | Không còn form ticket: hiện form + tin nhắn Chuyển case (§22). Định nghĩa ticket cũ (Yêu cầu `s1`, không có ô Loại, Ngôn ngữ merchant, câu cuối `Nhờ team help merchant ạ. Many thanks team!`) vẫn giữ trong config để template cũ mở được và test golden so với bản gốc. |
 
 Mục cùng key giữa các loại (`s1`, `s2`, …) dùng chung dữ liệu → **đổi loại ticket vẫn giữ nội dung đã nhập**.
 
@@ -274,7 +275,7 @@ Việc cần làm tiếp:
 1. Tách 1 file HTML thành nhiều file nhỏ theo clean architecture, clean code, SOLID (quy ước ở CLAUDE.md). **Hành vi và output giữ nguyên** như mục 1–13, trừ cách chọn loại ticket (14.2), dòng Model (14.3), các bổ sung ở 14.4 và loại Hỗ trợ merchant (14.5).
 2. `index.html` là file chính: double-click là chạy, không cần server hay cài đặt. Các file khác nằm cùng folder; gửi đồng nghiệp bằng cách nén cả folder.
 3. Phần **Viết ticket** và phần **Setup / Training** tách riêng.
-4. **Viết ticket** gồm các loại, mỗi loại 1 file: Hỗ trợ merchant (đã gộp Xử lý vấn đề + Xử lý yêu cầu, §14.5), Chuyển CS/MKT. Chỉ có 2 team nhận chuyển là **CS** và **MKT**; giữ 1 loại `transfer` như hiện tại.
+4. **Viết ticket** gồm các loại, mỗi loại 1 file: Hỗ trợ merchant (đã gộp Xử lý vấn đề + Xử lý yêu cầu, §14.5), Chuyển case. Giữ 1 loại `transfer`; từ `v2026-11-17.4` chuyển cho 4 team Sales / MKT / CS / Tech bằng tin nhắn group (§22).
 5. **Setup / Training**: mỗi checklist 1 file, đặt theo Thiết bị → Hãng → Quy trình.
 6. Dữ liệu đã lưu ở bản cũ (ticket đang nhập, template, Loại tự thêm) vẫn dùng được ở bản mới.
 
@@ -286,7 +287,7 @@ Việc cần làm tiếp:
 
 **SMS** → chọn loại tin nhắn: `Shipping` (xem §17) | `Xin review` (xem §18). SMS Promotion nằm trong `Hỗ trợ merchant` (xem §16), không còn tab riêng.
 
-**Viết ticket** → chọn loại: `Hỗ trợ merchant` | `Chuyển CS/MKT`.
+**Viết ticket** → chọn loại: `Hỗ trợ merchant` | `Chuyển case`.
 
 **Setup / Training** → chọn lần lượt:
 
@@ -618,3 +619,54 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 - Màn hình không có mục nhận ảnh (vd SMS Shipping / Xin review) → không lấy ảnh, để chờ ở phone-upload.
 - Gọi phone-upload lỗi (chưa chạy / đã tắt / sai mã) → `Mất kết nối`, **ngừng hỏi** (không ghi lỗi đỏ liên tục vào Console). Bấm nút để thử lại.
 - Mở trang: lần trước đang bật thì tự bật lại (thử 1 lần).
+
+## 22. Chuyển case
+
+`Viết ticket` → `Chuyển case` (key `transfer`). FRT soạn tin pass case cho team khác, copy dán vào group của team đó. Không phải ticket: không có Title, không lưu template, không có ảnh. Câu chữ, trường, trường bắt buộc, lưu ý của từng team nằm trong `config/tickets/pass-case.js`, sửa không cần đụng `src/`.
+
+### 22.1 Form
+
+- **Team nhận**: `Sales` (mặc định) · `MKT` · `CS` · `Tech`. Đổi team giữ chữ đã nhập (trường cùng tên dùng chung giữa các team).
+- Trường theo team (★ = bắt buộc):
+
+| Team | Trường |
+|---|---|
+| Sales | Tên tiệm ★ · ZIP Code ★ · MID · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Note |
+| MKT | Tên tiệm ★ · ZIP Code ★ · MID · Package · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Note |
+| CS | Ticket ★ · Tên tiệm ★ · ZIP Code ★ · MID ★ · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Note |
+| Tech | Link Lead ★ · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Cần FaceTime? ★ · System ★ · Issue ★ · FRT đã làm ★ · Callback Time ★ |
+
+- **CBN**: ô Phone, tự format như §4. **Vai trò tại tiệm**: `Owner` / `Manager` / `Staff`, bấm lại lựa chọn đang chọn là bỏ chọn. **Cần FaceTime?**: `Có` / `Không`. **Issue**, **FRT đã làm**, **Note**: ô nhiều dòng.
+- **Tech** có ô tick **GẤP**; tick thì hiện ô **Tình trạng thực tế** (không bắt buộc).
+- **CS** và **Tech** có khung lưu ý (kiểm tra ticket, Proof, Dispute, quá tải cuộc gọi / phạm vi FRT, Reconnect Terminal, case khẩn cấp) theo thông báo pass case.
+
+### 22.2 Tin nhắn (output)
+
+```
+GẤP: <Tình trạng thực tế>          (chỉ Tech, khi tick GẤP; không ghi tình trạng thì chỉ `GẤP`)
+TICKET: <Ticket>                   (CS)
+LINK LEAD: <Link Lead>             (Tech)
+LEAD: <Tên tiệm> – <ZIP> – <MID>   (Sales, MKT, CS)
+PACKAGE: <Package>                 (MKT)
+CBN: <Phone> – <Tên> (<Vai trò>)
+FACETIME: / SYSTEM: / ISSUE: / FRT ĐÃ LÀM: / CALLBACK TIME:   (Tech)
+NOTE: <Note>                       (Sales, MKT, CS)
+Many thanks team!                  (mọi team)
+<tag lead / sublead>               (Sales luôn tag; MKT tag theo ca; CS, Tech chưa có)
+```
+
+- **Tag** (cách nhau 1 space):
+  - Sales: `@Stella_SalesAdmin @Kyo_SaleAdmin`.
+  - MKT, theo giờ VN lúc tạo tin: 8:00 PM – 8:30 AM → `@Chris_MKTSupport_Leader @Trivu_MarketingSupport @lucas_mktsupport`; 8:30 AM – 12:00 PM → `@Tina_Am_Leader @Sarah_Pham_AM @josie_am`. Ngoài 2 ca này (12:00 PM – 8:00 PM) không tag, chỉ còn `Many thanks team!`.
+  - Dán vào app chat chỉ ra chữ `@tên`; có app phải gõ `@` chọn lại người thì mới thành tag thật.
+
+- Giá trị đã trim. Phần nào trống thì bỏ phần đó (vd không có MID → `LEAD: <Tên tiệm> – <ZIP>`); cả dòng trống thì bỏ dòng. Ô nhiều dòng giữ xuống dòng.
+- Chỉ in trường của team đang chọn. Chưa nhập trường nào của team → tin nhắn rỗng.
+
+### 22.3 Khu Kết quả & Copy
+
+- Giống §17: ẩn Title, có Nội dung + `Copy nội dung` (`Alt+2`), không có khối Ảnh, Ctrl+V ảnh không làm gì.
+- **Copy nội dung** khóa khi tin nhắn rỗng hoặc còn trường bắt buộc trống; cảnh báo `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.`
+- `+ Lưu template` bị khóa.
+- `Ticket mới`: hỏi xác nhận → xóa form Chuyển case (về team Sales), không đụng ticket và các form SMS.
+- Form lưu riêng (`passCase` trong `storageKey`): F5 không mất, chuyển qua lại với Hỗ trợ merchant không mất dữ liệu bên nào. State bản trước chưa có → form trống.
