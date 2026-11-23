@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-24
 
+- `v2026-11-24.23` · Tài liệu: bản nháp báo cáo dự án `docs/PROJECT-REPORT.md` (tình hình, đề xuất, lợi ích, chi phí, rủi ro). Không đổi hành vi.
 - `v2026-11-24.22` · Sao lưu chỉ gồm gợi ý Tóm tắt (Viết ticket), gợi ý tên người support thêm (Chuyển case, theo team) và template; bỏ ticket đang nhập, Loại, tên nhân viên, giao diện. §23
 - `v2026-11-24.21` · Nút **Sao lưu** / **Khôi phục** ở header: tải 1 file JSON chứa ticket đang nhập, template, gợi ý tag người support thêm, gợi ý Tóm tắt, Loại, tên nhân viên, giao diện; máy mới chọn file đó để nạp lại (ghi đè, tải lại trang). Không gồm ảnh và link Nhận ảnh iOS. §23
 - `v2026-11-24.20` · Thêm `tests/tools/build_release.py`: gộp app thành 1 file `release/ticket-writer.html` (bỏ comment) để gửi đồng nghiệp không kèm source; `smoke_ui.py` chạy được trên trang bất kỳ.
