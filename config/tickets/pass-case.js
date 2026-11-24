@@ -11,7 +11,7 @@
     // kind: text (mặc định) | phone (tự format) | choice (options) | multiline.
     // images: true => có ô dán ảnh / chụp màn hình dưới trường, ảnh lưu như ảnh ticket (key ảnh theo id trường => không đổi id).
     fields: {
-      ticket: { label: 'Ticket', ph: 'Số ticket' },
+      ticket: { label: 'Link Ticket', ph: 'https://…' },
       lead: { label: 'Link Lead', ph: 'https://…' },
       shop: { label: 'Tên tiệm' },
       zip: { label: 'ZIP Code', inputMode: 'numeric' },
@@ -52,10 +52,14 @@
         ]
       },
       {
-        id: 'cs', label: 'CS',
-        fields: ['ticket', 'shop', 'zip', 'mid', 'phone', 'contact', 'role', 'note'],
-        required: ['ticket', 'shop', 'zip', 'mid', 'phone'],
-        lines: ['TICKET: {ticket}', 'LEAD: {leadInfo}', 'CBN: {cbn}', 'NOTE: {note}'],
+        id: 'cs', label: 'CS', thanks: 'Thanks team !',
+        fields: ['ticket', 'shop', 'zip', 'mid', 'phone', 'contact', 'role', 'issue'],
+        required: ['ticket', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
+        lines: ['{ticket}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
+        tags: [
+          { from: '20:00', to: '05:00', names: ['@xuanthor_cs', '@joyce_cs'] },
+          { from: '05:00', to: '20:00', names: ['@ThuTranCS'] }
+        ],
         tips: [
           'Kiểm tra Ticket: xem lại lịch sử ticket trước khi tạo mới để tránh trùng lặp; xem Notes của CS để chủ động cập nhật thông tin cho MC.',
           'Proof: với các case Check Fee, Missing Tip, Double Charge, hỗ trợ MC cung cấp Proof để CS kiểm tra.',

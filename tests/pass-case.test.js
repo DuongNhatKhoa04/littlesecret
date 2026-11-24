@@ -23,10 +23,21 @@
   const MKT_DAY = '@Sarah_Pham_AM @josie_am';
   const TECH_NIGHT = '@vinny_tech @brian_technical';
   const TECH_DAY = '@dustin_tech @NancyNguyen_Tech';
+  const CS_NIGHT = '@xuanthor_cs @joyce_cs';
+  const CS_DAY = '@ThuTranCS';
 
-  test('pass case: Sales / CS chỉ in trường của team, đã trim, Note trống thì bỏ dòng; cuối tin Many thanks team! + tag', () => {
+  test('pass case: Sales chỉ in trường của team, đã trim, Note trống thì bỏ dòng; cuối tin Many thanks team! + tag', () => {
     assertEqual(build('sales'), 'LEAD: ARIA NAIL BAR – 75001 – 8800123\nCBN: (555) 123-4567 – Mr. Vương (Owner)' + SALES_END);
-    assertEqual(build('cs'), 'TICKET: 12345\nLEAD: ARIA NAIL BAR – 75001 – 8800123\nCBN: (555) 123-4567 – Mr. Vương (Owner)\nMany thanks team!');
+  });
+
+  test('pass case: CS theo mẫu group CS: link ticket, Tên tiệm ZIP, MID, CBN, Issue, Thanks team !; tag ca 1-3 8:00 PM – 5:00 AM, ca 2 sau 5:00 AM', () => {
+    assertEqual(buildAt(vn(21), 'cs', { ...VALUES, ticket: 'https://crm/ticket/7' }), [
+      'https://crm/ticket/7', 'ARIA NAIL BAR 75001', 'MID: 8800123', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
+      'Terminal mất kết nối', '', 'Thanks team !', CS_NIGHT
+    ].join('\n'));
+    const tagLine = (now) => buildAt(now, 'cs').split('\n').pop();
+    assertEqual([vn(20), vn(4, 59), vn(5), vn(19, 59)].map(tagLine), [CS_NIGHT, CS_NIGHT, CS_DAY, CS_DAY]);
+    assertEqual(missing('cs', { shop: 'A', role: '' }), ['Link Ticket', 'ZIP Code', 'MID', 'CBN', 'Tên người liên hệ', 'Issue']);
   });
 
   test('pass case: MKT theo mẫu group MKT: link lead, Tên tiệm ZIP, MID, CBN Phone - Tên - Vai trò, dòng trống, Issue, Thanks team !', () => {
@@ -75,7 +86,6 @@
   test('pass case: chưa nhập trường nào của team => rỗng; trường bắt buộc còn thiếu theo thứ tự form', () => {
     assertEqual([build('sales', {}), build('sales', { issue: 'ABC' })], ['', '']);
     assertEqual(missing('sales', { shop: 'A' }), ['ZIP Code', 'CBN']);
-    assertEqual(missing('cs', { shop: 'A', zip: '1', phone: '2' }), ['Ticket', 'MID']);
     assertEqual(['sales', 'mkt', 'cs', 'tech'].map(team => missing(team)), [[], [], [], []]);
   });
 
