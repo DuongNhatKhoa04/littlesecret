@@ -78,6 +78,34 @@
       [TECH_NIGHT, TECH_NIGHT, TECH_NIGHT, TECH_DAY, TECH_DAY, TECH_DAY]);
   });
 
+  test('pass case: tag chỉnh tay theo team: bỏ tick = không tag, người thêm tay tag mọi ca (sau người của ca), trùng người ca thì không lặp', () => {
+    const tags = { mkt: { off: ['@josie_am'], extra: ['@helper', '@Sarah_Pham_AM'] } };
+    const tagLine = (now) => buildAt(now, 'mkt', VALUES, { tags }).split('\n').pop();
+    assertEqual([tagLine(vn(10)), tagLine(vn(22))], ['@Sarah_Pham_AM @helper', MKT_NIGHT + ' @helper @Sarah_Pham_AM']);
+    const listed = D.passCaseMessage.passCaseTags({ passCase: passCase('mkt', VALUES, { tags }), config, now: vn(10) });
+    assertEqual(listed, [
+      { name: '@Sarah_Pham_AM', on: true, extra: false }, { name: '@josie_am', on: false, extra: false }, { name: '@helper', on: true, extra: true }
+    ]);
+    assertEqual(buildAt(vn(10), 'mkt', VALUES, { tags: { mkt: { off: ['@Sarah_Pham_AM', '@josie_am'], extra: [] } } }).split('\n').pop(), 'Thanks team !');
+    assertEqual(['  an  vo ', '@x', '  '].map(D.passCase.toTagName), ['@an_vo', '@x', '']);
+  });
+
+  test('pass case: tag thêm / bỏ tick lưu lại theo team, Ticket mới vẫn giữ', () => {
+    const { storage, repository, store, service } = setup({ nav: { group: 'ticket', ticketType: 'transfer' } });
+    service.setTeam('cs');
+    assertEqual([service.addTag(' minh '), service.addTag('  ')], [true, false]);
+    service.setTagOn('@ThuTranCS', false);
+    service.setValue('shop', 'ARIA');
+    service.reset();
+    repository.save(store.get());
+    const reloaded = setup(storage.data[context.app.storageKey]).session.passCase();
+    assertEqual([reloaded.values.shop, reloaded.tags.cs, reloaded.tags.mkt], ['', { off: ['@ThuTranCS'], extra: ['@minh'] }, { off: [], extra: [] }]);
+    service.setTeam('cs');
+    service.removeTag('@minh');
+    service.setTagOn('@ThuTranCS', true);
+    assertEqual(store.get().passCase.tags.cs, { off: [], extra: [] });
+  });
+
   test('pass case: CBN / LEAD ghép phần nào có thì in phần đó', () => {
     assertEqual(build('sales', { shop: 'A', mid: '9', role: 'Staff' }), 'LEAD: A – 9\nCBN: Staff' + SALES_END);
     assertEqual(build('sales', { phone: '(555) 123-4567', contact: 'Ms Lan' }), 'CBN: (555) 123-4567 – Ms Lan' + SALES_END);

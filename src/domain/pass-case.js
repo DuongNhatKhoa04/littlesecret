@@ -4,7 +4,18 @@
 
   function createEmptyPassCase(config) {
     const values = Object.fromEntries(Object.keys(config.fields).map(id => [id, '']));
-    return { team: config.teams[0].id, urgent: false, values };
+    return { team: config.teams[0].id, urgent: false, values, tags: emptyTags(config) };
+  }
+
+  /** Tag chỉnh tay theo team: off = người ca này nghỉ (bỏ tick), extra = người thêm vào (support thêm). */
+  const emptyTags = (config) => Object.fromEntries(config.teams.map(team => [team.id, { off: [], extra: [] }]));
+  const stringList = (raw) => Array.isArray(raw) ? raw.filter(item => typeof item === 'string') : [];
+
+  function sanitizeTags(raw, config) {
+    const tags = emptyTags(config);
+    if (!raw || typeof raw !== 'object') return tags;
+    Object.keys(tags).forEach(id => { const saved = raw[id] || {}; tags[id] = { off: stringList(saved.off), extra: stringList(saved.extra) }; });
+    return tags;
   }
 
   /** Team / trường không còn trong config thì bỏ; bản trước chưa có pass case => mặc định. */
@@ -13,6 +24,7 @@
     if (!raw || typeof raw !== 'object') return passCase;
     if (config.teams.some(team => team.id === raw.team)) passCase.team = raw.team;
     passCase.urgent = raw.urgent === true;
+    passCase.tags = sanitizeTags(raw.tags, config);
     const saved = raw.values && typeof raw.values === 'object' ? raw.values : {};
     Object.keys(passCase.values).forEach(id => { if (typeof saved[id] === 'string') passCase.values[id] = saved[id]; });
     return passCase;
@@ -34,5 +46,12 @@
   /** Key ảnh của mọi trường có images (mọi team), để Ticket mới xóa hết ảnh Chuyển case. */
   const allPassCaseImageKeys = (config) => Object.keys(config.fields).filter(id => config.fields[id].images).map(imageKey);
 
-  TW.domain.passCase = { createEmptyPassCase, sanitizePassCase, findTeam, imageKey, passCaseImageSlots, allPassCaseImageKeys };
+  /** Tên tag gõ tay: bỏ khoảng trắng thừa, khoảng trắng giữa => _, thiếu @ thì thêm. Trống => ''. */
+  const TAG_PREFIX = '@';
+  function toTagName(text) {
+    const name = text.trim().replace(/\s+/g, '_');
+    return !name || name.startsWith(TAG_PREFIX) ? name : TAG_PREFIX + name;
+  }
+
+  TW.domain.passCase = { createEmptyPassCase, sanitizePassCase, findTeam, imageKey, passCaseImageSlots, allPassCaseImageKeys, toTagName };
 })(window.TW);

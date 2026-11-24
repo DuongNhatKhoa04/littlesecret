@@ -50,11 +50,24 @@
     return from <= to ? minutes >= from && minutes < to : minutes >= from || minutes < to;
   }
 
-  /** Many thanks team!, dòng dưới là tag lead / sublead của ca đang trực (nếu có). */
-  function closingLines(team, config, now) {
+  /**
+   * Người tag của team đang chọn: người ca đang trực (config) rồi tới người thêm tay (mọi ca), on = còn tick.
+   * @param {{ passCase: object, config: object, now: Date }} input
+   * @returns {{ name: string, on: boolean, extra: boolean }[]}
+   */
+  function passCaseTags({ passCase, config, now }) {
+    const team = findTeam(passCase, config);
+    const { off, extra } = passCase.tags[team.id];
     const minutes = localMinutes(now, config);
-    const names = (team.tags || []).filter(group => inShift(group, minutes)).flatMap(group => group.names);
-    return [team.thanks || config.thanks, ...(names.length ? [names.join(TAG_GAP)] : [])];
+    const shift = (team.tags || []).filter(group => inShift(group, minutes)).flatMap(group => group.names);
+    const added = extra.filter(name => !shift.includes(name));
+    return [...shift, ...added].map(name => ({ name, on: !off.includes(name), extra: added.includes(name) }));
+  }
+
+  /** Many thanks team!, dòng dưới là người được tag (nếu có). */
+  function closingLines(team, input) {
+    const names = passCaseTags(input).filter(tag => tag.on).map(tag => tag.name);
+    return [team.thanks || input.config.thanks, ...(names.length ? [names.join(TAG_GAP)] : [])];
   }
 
   /**
@@ -67,7 +80,7 @@
     const values = teamValues(passCase, team);
     if (team.fields.every(id => !values[id])) return '';
     const lines = team.lines.filter(line => hasValue(line, values)).filter(isKeptGap).map(line => fillTemplate(line, values));
-    return [...lines, ...closingLines(team, config, now)].join('\n');
+    return [...lines, ...closingLines(team, { passCase, config, now })].join('\n');
   }
 
   /** Nhãn các trường bắt buộc còn trống, theo thứ tự trên form. */
@@ -76,5 +89,5 @@
     return team.fields.filter(id => team.required.includes(id) && isBlank(passCase.values[id])).map(id => config.fields[id].label);
   }
 
-  TW.domain.passCaseMessage = { buildPassCaseMessage, missingPassCaseFields };
+  TW.domain.passCaseMessage = { buildPassCaseMessage, missingPassCaseFields, passCaseTags };
 })(window.TW);

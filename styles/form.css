@@ -93,5 +93,9 @@
 .pass-row > .field { flex: 1 1 0; min-width: min-content; }   /* cột rộng ít nhất bằng nhãn */
 .pass-row > .field > label { white-space: nowrap; }
 .pass-row > .field:has(.seg) { flex: 0 0 auto; }
+.pass-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.pass-tag { cursor: pointer; font-weight: 500; }
+.pass-tag:not(:has(input:checked)) { opacity: .55; text-decoration: line-through; }   /* bỏ tick = hôm nay nghỉ, không tag */
+.pass-tag-add { display: flex; gap: 8px; }
 .pass-multiline { resize: none; overflow: hidden; min-height: 60px; }
 .pass-tips { margin: 0 0 14px; padding: 10px 12px 10px 28px; color: var(--muted); font-size: 13px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }

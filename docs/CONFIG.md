@@ -244,7 +244,7 @@ setPassCase({   // const { setPassCase } = registry;
 | `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò), `{shopZip}` = Tên tiệm ZIP, `{caller}` = Phone - Tên - Vai trò, `{urgent}` = chữ GẤP của team khi tick. Dòng mà mọi `{…}` đều trống thì bỏ; `''` = dòng trống (không để 2 dòng trống liền nhau) |
 | `teams[].urgent` / `tips` | Chữ in ở `{urgent}` khi tick GẤP (có thì form có ô tick GẤP) / khung lưu ý trên form |
 | `thanks` / `teams[].thanks` | Câu cảm ơn cuối tin (`Many thanks team!`) / thay riêng cho team (`Thanks team !`) |
-| `teams[].tags` | Người cần tag, dòng ngay dưới `thanks`: `[{ names: ['@a', '@b'] }]` = luôn tag; thêm `from`, `to` (`'HH:MM'` giờ VN) = chỉ tag trong ca `[from, to)`, `from` > `to` là ca qua đêm. Đổi người / đổi ca = sửa ở đây |
+| `teams[].tags` | Người cần tag, dòng ngay dưới `thanks`: `[{ names: ['@a', '@b'] }]` = luôn tag; thêm `from`, `to` (`'HH:MM'` giờ VN) = chỉ tag trong ca `[from, to)`, `from` > `to` là ca qua đêm. Đổi người / đổi ca = sửa ở đây. Người nghỉ / support thêm trong ngày thì người dùng tự tick / thêm trên form (lưu trên máy), không sửa config |
 | `tagUtcOffsetMinutes` | Múi giờ của ca: `7 * 60` = giờ VN (không có giờ mùa hè) |
 
 Loại `transfer` trong `config/tickets/transfer.js` có `passCase: true` nên hiện form này thay cho form ticket.

@@ -5,7 +5,10 @@
   const { setPassCase } = registry;
 
   setPassCase({
-    labels: { team: 'Team nhận', urgent: 'GẤP' },
+    labels: {
+      team: 'Team nhận', urgent: 'GẤP',
+      tags: 'Tag (bỏ tick người hôm nay nghỉ)', tagAdd: 'Thêm', tagPh: '@tên người support thêm', tagRemove: 'Bỏ'
+    },
 
     // Mọi trường của form. Đổi team vẫn giữ chữ đã nhập (trường cùng id = cùng ý nghĩa). id lưu trong state => không đổi id đang có.
     // kind: text (mặc định) | phone (tự format) | choice (options) | multiline.

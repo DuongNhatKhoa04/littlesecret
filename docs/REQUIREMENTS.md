@@ -677,6 +677,8 @@ Thanks team !                       Thanks team !
   - MKT, theo giờ VN lúc tạo tin: 8:00 PM – 6:00 AM (C1-3) → `@Chris_MKTSupport_Leader @Trivu_MarketingSupport @lucas_mktsupport`; 6:00 AM – 8:00 PM (MKT/AM ca 2) → `@Sarah_Pham_AM @josie_am`.
   - CS, theo giờ VN: 8:00 PM – 5:00 AM (ca 1-3) → `@xuanthor_cs @joyce_cs`; 5:00 AM – 8:00 PM (ca 2) → `@ThuTranCS`.
   - Tech, theo giờ VN: 8:00 PM – 4:00 AM (ca 1-3) → `@vinny_tech @brian_technical`; 4:00 AM – 8:00 PM (ca 2) → `@dustin_tech @NancyNguyen_Tech`.
+  - **Chỉnh tay trên form** (ô Tag, dưới các trường): hiện người của ca đang trực, mỗi người 1 ô tick; bỏ tick = hôm nay nghỉ, không tag. Ô Thêm (Enter hoặc nút Thêm) thêm người support thêm cho team: tự bỏ khoảng trắng thừa, khoảng trắng giữa thành `_`, thiếu `@` thì thêm; người thêm tay được tag ở **mọi ca**, đứng sau người của ca, có nút × để bỏ. Trùng người của ca thì không lặp.
+  - Tag chỉnh tay lưu theo từng team (`passCase.tags`: `off` = bỏ tick, `extra` = thêm tay), F5 và **Ticket mới vẫn giữ**; chỉ đổi khi người dùng tự tick / thêm / bỏ.
   - Dán vào app chat chỉ ra chữ `@tên`; có app phải gõ `@` chọn lại người thì mới thành tag thật.
 
 - Giá trị đã trim. Phần nào trống thì bỏ phần đó (vd không có MID → `LEAD: <Tên tiệm> – <ZIP>`); cả dòng trống thì bỏ dòng. Ô nhiều dòng giữ xuống dòng.

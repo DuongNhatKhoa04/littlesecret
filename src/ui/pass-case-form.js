@@ -2,10 +2,12 @@
 (function (TW) {
   'use strict';
 
-  const { el, segmented, autoGrow, labeledField, textInput, maskPhone } = TW.ui.dom;
+  const { el, button, segmented, autoGrow, labeledField, textInput, maskPhone } = TW.ui.dom;
   const { findTeam, imageKey } = TW.domain.passCase;
+  const { passCaseTags } = TW.domain.passCaseMessage;
   const REQUIRED_BADGE = 'Bắt buộc';
   const ID_PREFIX = 'pass_';
+  const TAG_INPUT_ID = 'pass_tagAdd';
 
   function createPassCaseForm({ root, context, session, passCaseService, imageZone }) {
     const config = context.passCase;
@@ -103,6 +105,33 @@
       return wrap;
     }
 
+    /** 1 người: ô tick (bỏ tick = hôm nay nghỉ); người thêm tay có thêm nút × để xóa khỏi danh sách. */
+    function tagChip(tag) {
+      const chip = el('label', 'chip pass-tag');
+      const box = el('input');
+      Object.assign(box, { type: 'checkbox', checked: tag.on });
+      box.addEventListener('change', () => passCaseService.setTagOn(tag.name, box.checked));
+      chip.append(box, el('span', '', tag.name));
+      if (tag.extra) chip.append(button('', '×', { skipTab: true, ariaLabel: `${labels.tagRemove} ${tag.name}`, onClick: () => passCaseService.removeTag(tag.name) }));
+      return chip;
+    }
+
+    /** Thêm xong form dựng lại => focus lại ô thêm để nhập tiếp người khác. */
+    function tagAdder() {
+      const input = textInput({ id: TAG_INPUT_ID, value: '', onInput: () => {}, placeholder: labels.tagPh });
+      const add = () => { if (passCaseService.addTag(input.value)) document.getElementById(TAG_INPUT_ID).focus(); };
+      input.addEventListener('keydown', (event) => { if (event.key === 'Enter') { event.preventDefault(); add(); } });
+      const wrap = el('div', 'pass-tag-add');
+      wrap.append(input, button('ghost', labels.tagAdd, { onClick: add }));
+      return wrap;
+    }
+
+    function tagsField() {
+      const list = el('div', 'pass-tags');
+      list.append(...passCaseTags({ passCase: session.passCase(), config, now: new Date() }).map(tagChip));
+      return labeledField(labels.tags, list, tagAdder());
+    }
+
     function tipsNode(team) {
       const list = el('ul', 'pass-tips');
       team.tips.forEach(tip => list.append(el('li', '', tip)));
@@ -114,7 +143,7 @@
       root.textContent = '';
       root.append(teamField(team));
       if (team.urgent) root.append(urgentField());
-      root.append(...fieldNodes(team));
+      root.append(...fieldNodes(team), tagsField());
       if (team.tips) root.append(tipsNode(team));
     }
 

@@ -235,9 +235,19 @@
     check('Chuyển case Tech: tick GẤP => 🔥🔥🔥 URGENT!! trước Tên tiệm, thiếu trường vẫn khóa Copy',
       $('#outBody').textContent.startsWith('🔥🔥🔥 URGENT!!\nARIA NAIL BAR\nCBN: (555) 123-4567 - Owner') && $('#copyBody').disabled && !$('#pass_urgentNote'),
       $('#outBody').textContent);
+    type($('#pass_tagAdd'), 'support moi');
+    $('.pass-tag-add button').click();
+    await settle();
+    [...document.querySelectorAll('.pass-tag input')][0].click();
+    await settle();
+    const techTagLine = $('#outBody').textContent.split('\n').pop();
+    check('Chuyển case: thêm tag tay (tự thêm @, _), bỏ tick người đầu => không tag người đó, focus lại ô thêm',
+      techTagLine.endsWith('@support_moi') && !techTagLine.includes($('.pass-tag span').textContent) && document.activeElement === $('#pass_tagAdd'), techTagLine);
     $('#resetBtn').click();
     await settle();
     check('Chuyển case: Ticket mới chỉ xóa form Chuyển case, về team đầu', $('#outBody').textContent === '' && $('#pass_shop').value === '');
+    check('Chuyển case: Ticket mới giữ tag tay', JSON.stringify(JSON.parse(localStorage.getItem('ticketWriter.v1') || '{}').passCase?.tags?.tech || {}).includes('@support_moi'),
+      localStorage.getItem('ticketWriter.v1'));
     clickText('#picker', 'Hỗ trợ merchant');
     await settle();
     check('về Hỗ trợ merchant: ticket, ô Loại + Loại đã chọn vẫn giữ, con trỏ ở ô Loại',
