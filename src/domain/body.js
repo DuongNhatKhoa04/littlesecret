@@ -8,7 +8,7 @@
   const BLOCK_GAP = '\n\n';
 
   function contactBlock({ type, ticket, model, app }) {
-    const phone = [ticket.phone.trim(), ticket.merchant.trim()].filter(Boolean).join(' - ');   // (111) 111-1111 - Mr. Vương
+    const phone = [ticket.phone.trim(), ticket.merchant.trim(), ticket.role].filter(Boolean).join(' - ');   // (111) 111-1111 - Mr. Vương - Owner
     const lines = [];
     if (phone) lines.push(`${app.labels.phoneOut}: ${phone}` + (type.showLang && ticket.lang ? ` - ${ticket.lang}` : ''));
     if (model) lines.push(`${app.labels.modelOut}: ${model}`);
@@ -41,9 +41,9 @@
   const hasSectionContent = (type, ticket) => type.sections
     .some(section => !isConclusionSection(section) && cleanItems(ticket.blocks[section.key] || []).length > 0);
 
-  /** Chưa có Phone / Tên merchant, chưa đụng checklist, các mục đều trống => nội dung rỗng (không in footer). */
+  /** Chưa có Phone / Tên merchant / Vai trò, chưa đụng checklist, các mục đều trống => nội dung rỗng (không in footer). */
   function hasContent({ type, ticket, imageCounts, sectionExtras = {} }) {
-    return !!ticket.phone.trim() || !!ticket.merchant.trim() || hasSectionContent(type, ticket) ||
+    return !!ticket.phone.trim() || !!ticket.merchant.trim() || !!ticket.role || hasSectionContent(type, ticket) ||
       Object.values(sectionExtras).some(Boolean) || (!!type.checklist && isTouched(type.checklist, ticket.chk, imageCounts));
   }
 

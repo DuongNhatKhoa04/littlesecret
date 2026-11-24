@@ -94,6 +94,14 @@
     type($('#f_merchant'), 'Mr. Vương');
     key($('#f_merchant'), { key: 'Enter' });
     check('Enter ở Tên merchant => sang ý đầu Vấn đề (bỏ qua nút phụ)', focused() === 's1', focused());
+    const roleButton = () => $$('.contact-row .seg button').find(node => node.textContent === 'Owner');
+    roleButton().click();
+    await settle();
+    const withRole = $('#outBody').textContent;
+    roleButton().click();
+    await settle();
+    check('Vai trò tại tiệm cùng hàng Phone: chọn => "Phone: … - Mr. Vương - Owner", bấm lại => bỏ',
+      withRole.includes(' - Mr. Vương - Owner') && !$('#outBody').textContent.includes('Owner') && !!$('.contact-row #f_merchant'), withRole);
     type($('textarea[data-key="s1"]'), 'terminal lỗi');
     await settle();
     check('title', $('#outTitle').textContent === 'MẤT KẾT NỐI', $('#outTitle').textContent);

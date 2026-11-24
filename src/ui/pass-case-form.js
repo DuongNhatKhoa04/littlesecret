@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { el, button, segmented, autoGrow, labeledField, textInput, maskPhone } = TW.ui.dom;
+  const { el, button, segmented, toggleSegmented, autoGrow, labeledField, textInput, maskPhone } = TW.ui.dom;
   const { findTeam, imageKey, toTagName } = TW.domain.passCase;
   const { passCaseTags } = TW.domain.passCaseMessage;
   const { attachSuggestions } = TW.ui.combo;
@@ -31,18 +31,7 @@
     }
 
     /** Bấm lại lựa chọn đang chọn => bỏ chọn (vd Vai trò không rõ). */
-    function choiceInput(id, field) {
-      const options = field.options.map(option => ({ id: option, label: option }));
-      const group = segmented({
-        options, value: value(id), ariaLabel: field.label,
-        onSelect: (option) => {
-          const next = value(id) === option ? '' : option;
-          passCaseService.setValue(id, next);
-          group.querySelectorAll('button').forEach(node => node.setAttribute('aria-pressed', String(node.textContent === next)));
-        }
-      });
-      return group;
-    }
+    const choiceInput = (id, field) => toggleSegmented({ options: field.options, value: value(id), ariaLabel: field.label, onChange: onInput(id) });
 
     function control(id, field) {
       if (field.kind === 'multiline') return multilineInput(id, field);

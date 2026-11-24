@@ -3,7 +3,7 @@
   'use strict';
 
   const { cleanItems } = TW.domain.text;
-  const TEXT_FIELDS = ['category', 'summary', 'phone', 'merchant'];
+  const TEXT_FIELDS = ['category', 'summary', 'phone', 'merchant', 'role'];
 
   const isConclusionSection = (section) => section.kind === 'conclusion';
   const isStringList = (value) => Array.isArray(value) && value.length > 0 && value.every(x => typeof x === 'string');
@@ -24,7 +24,7 @@
 
   function createEmptyTicket({ app, blockKeys }) {
     return {
-      category: '', summary: '', phone: '', merchant: '', lang: app.langs[0], conclusion: app.defaultConclusion,
+      category: '', summary: '', phone: '', merchant: '', role: '', lang: app.langs[0], conclusion: app.defaultConclusion,
       blocks: copyBlocks(null, blockKeys), chk: {}
     };
   }
@@ -49,6 +49,7 @@
     const ticket = createEmptyTicket({ app, blockKeys });
     if (!raw || typeof raw !== 'object') return ticket;
     TEXT_FIELDS.forEach(field => { if (typeof raw[field] === 'string') ticket[field] = raw[field]; });
+    if (!app.roles.includes(ticket.role)) ticket.role = '';   // bản trước chưa có Vai trò / giá trị lạ => chưa chọn
     if (app.langs.includes(raw.lang)) ticket.lang = raw.lang;
     if (findConclusion(app, raw.conclusion)) ticket.conclusion = raw.conclusion;
     ticket.blocks = copyBlocks(raw.blocks, blockKeys);

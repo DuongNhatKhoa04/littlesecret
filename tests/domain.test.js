@@ -68,12 +68,14 @@
     assertEqual(items[0], 'PAX');   // không sửa mảng gốc
   });
 
-  test('dòng Phone kèm Tên merchant nếu có', () => {
+  test('dòng Phone kèm Tên merchant, Vai trò nếu có', () => {
     const type = context.typeOf('incident');
     const body = (ticket) => D.body.buildBody({ type, ticket: D.ticket.sanitizeTicket(ticket, context), imageCounts: {}, model: '', app: context.app });
     assertEqual(body({ phone: '(111) 111-1111', merchant: ' Mr. Vương ' }), 'Phone: (111) 111-1111 - Mr. Vương');
     assertEqual(body({ phone: '(111) 111-1111' }), 'Phone: (111) 111-1111');
     assertEqual(body({ merchant: 'Mr. Vương' }), 'Phone: Mr. Vương');
+    assertEqual(body({ phone: '(111) 111-1111', merchant: 'Mr. Vương', role: 'Owner' }), 'Phone: (111) 111-1111 - Mr. Vương - Owner');
+    assertEqual([body({ role: 'Partner' }), body({ phone: '1', role: 'Boss' })], ['Phone: Partner', 'Phone: 1']);   // vai trò lạ => bỏ
   });
 
   test('sanitize: bỏ dữ liệu hỏng, giữ phần hợp lệ', () => {

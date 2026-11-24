@@ -66,6 +66,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 | **Tóm tắt** | Đưa vào title. `Enter`: sang ô kế tiếp (như Tab). |
 | **Phone** | Ô text (bàn phím số trên mobile), **chỉ nhận số**, tối đa 10 số, gõ / dán tới đâu tự format tới đó thành `(111) 111-1111` (dán `+1 …` 11 số thì bỏ số `1` đầu). `Enter`: sang ô kế tiếp (như Tab). |
 | **Tên merchant** | Cạnh ô Phone, không bắt buộc (vd `Mr. Vương`). `Enter`: sang ô kế tiếp. |
+| **Vai trò tại tiệm** | Cùng hàng Phone + Tên merchant (màn hình hẹp thì xuống hàng), không bắt buộc: `Owner` / `Manager` / `Staff` / `Partner` (`roles` trong `config/app.js`). Bấm lại lựa chọn đang chọn là bỏ chọn. Là nút phụ: `Enter` ở Tên merchant vẫn sang thẳng ý đầu tiên. State bản trước chưa có → chưa chọn. |
 | **Ngôn ngữ merchant** | Chỉ ở loại có `showLang` (Chuyển CS/MKT). Chọn `ENG` / `VIE`, mặc định `ENG`. |
 
 - Con trỏ tự vào ô **Loại** (loại không có ô Loại thì ô **Tóm tắt**) khi mở trang, đổi loại ticket, bấm `Ticket mới` hoặc dùng template (ở nhóm Viết ticket và Setup).
@@ -149,7 +150,7 @@ Nội dung chi tiết từng bước: xem file config tương ứng (nguồn s�
 
 Các khối cách nhau **1 dòng trống**, theo thứ tự:
 
-1. `Phone: <số>` — có Tên merchant thì thêm ` - <tên>` (vd `Phone: (111) 111-1111 - Mr. Vương`); loại có ngôn ngữ thì thêm ` - ENG`/` - VIE`. Bỏ nếu không nhập cả Phone lẫn Tên merchant. (Bản mới: ticket setup thêm dòng `Model:` ngay dưới, xem §14.3.)
+1. `Phone: <số>` — có Tên merchant thì thêm ` - <tên>`, có Vai trò thì thêm ` - <vai trò>` (vd `Phone: (111) 111-1111 - Mr. Vương - Owner`); loại có ngôn ngữ thì thêm ` - ENG`/` - VIE`. Bỏ nếu không nhập Phone, Tên merchant lẫn Vai trò. (Bản mới: ticket setup thêm dòng `Model:` ngay dưới, xem §14.3.)
 2. Checklist (nếu có): mỗi nhóm 1 khối. Tên checklist **không** in ra.
    ```
    <Tên nhóm>:

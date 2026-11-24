@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-24.18',      // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-24.19',      // hiện cạnh tên app để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
     offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu offline (chọn 1, bắt buộc)
@@ -34,6 +34,7 @@
     categories: ['ABC', 'CLOVER', 'PAX', 'INTERNET', "VALOR"],
 
     marks: { done: '[x]', todo: '[ ]', na: '[N/A]' },   // ký hiệu từng dòng checklist trong nội dung
+    roles: ['Owner', 'Manager', 'Staff', 'Partner'],     // Vai trò tại tiệm (Viết ticket), bấm lại = bỏ chọn
     langs: ['ENG', 'VIE'],                               // ngôn ngữ merchant (loại có showLang)
     defaultConclusion: 'Resolved',
 
@@ -70,7 +71,7 @@
 
     labels: {
       category: 'Loại', summary: 'Tóm tắt (đưa vào title)', lang: 'Ngôn ngữ merchant',
-      phone: 'Phone', merchant: 'Tên merchant', phoneOut: 'Phone',     // phoneOut = nhãn dòng SĐT trong nội dung ticket
+      phone: 'Phone', merchant: 'Tên merchant', role: 'Vai trò tại tiệm', phoneOut: 'Phone',     // phoneOut = nhãn dòng SĐT trong nội dung ticket
       modelOut: 'Model',                     // nhãn dòng Model trong nội dung ticket setup
       device: 'Thiết bị', brand: 'Hãng', model: 'Model', flow: 'Quy trình', checklist: 'Checklist'
     }

@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-24
 
+- `v2026-11-24.19` · Viết ticket: thêm **Vai trò tại tiệm** (Owner / Manager / Staff / Partner, không bắt buộc, bấm lại = bỏ chọn) cùng hàng Phone + Tên merchant; in `Phone: <SĐT> - <Tên> - <Vai trò>`. §4 §8
 - `v2026-11-24.18` · Header: thêm `· Developed by Ryan` cạnh version.
 - `v2026-11-24.17` · Chuyển case: khóa cả nút Mở file offline. §19
 - `v2026-11-24.16` · Lưu offline: thêm ô **Tier** bắt buộc (0.5 / 1 / 1.5 / 2 / 2.5 / 3), lưu vào file và báo khi mở lại (file cũ chưa có Tier vẫn mở được); khóa Lưu offline ở Chuyển case. §19

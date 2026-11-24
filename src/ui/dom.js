@@ -96,6 +96,24 @@
     return wrap;
   }
 
+  /**
+   * Chọn 1 trong các chữ options; bấm lại nút đang chọn => bỏ chọn ('') (vd Vai trò không rõ).
+   * skipTab: nút không nhận Tab / Enter sang ô kế tiếp (nút phụ trong form).
+   */
+  function toggleSegmented({ options, value, ariaLabel, onChange, skipTab = false }) {
+    let current = value;
+    const group = segmented({
+      options: options.map(option => ({ id: option, label: option })), value, ariaLabel,
+      onSelect: (option) => {
+        current = current === option ? '' : option;
+        onChange(current);
+        group.querySelectorAll('button').forEach(node => node.setAttribute('aria-pressed', String(node.textContent === current)));
+      }
+    });
+    if (skipTab) group.querySelectorAll('button').forEach(node => { node.tabIndex = -1; });
+    return group;
+  }
+
   /** Nhận ảnh kéo thả vào target. */
   function acceptImageDrop(target, onFiles) {
     target.addEventListener('dragover', (event) => {
@@ -161,6 +179,6 @@
     return value;
   }
 
-  TW.ui.dom = { $, $$, el, button, link, fileInput, autoGrow, flash, choiceGroup, segmented, acceptImageDrop, isComposing, focusNext,
+  TW.ui.dom = { $, $$, el, button, link, fileInput, autoGrow, flash, choiceGroup, segmented, toggleSegmented, acceptImageDrop, isComposing, focusNext,
     labeledField, textInput, maskPhone };
 })(window.TW);

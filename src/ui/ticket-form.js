@@ -2,7 +2,7 @@
 (function (TW) {
   'use strict';
 
-  const { $$, el, button, choiceGroup, autoGrow, isComposing, focusNext, labeledField, textInput, maskPhone } = TW.ui.dom;
+  const { $$, el, button, choiceGroup, toggleSegmented, autoGrow, isComposing, focusNext, labeledField, textInput, maskPhone } = TW.ui.dom;
   const { isConclusionSection, isSectionHidden } = TW.domain.ticket;
 
   const IDEA_HINT = 'Enter: ý mới · Shift+Enter: xuống dòng · Tab: field kế tiếp · Ctrl+V: dán ảnh';
@@ -23,10 +23,16 @@
 
     const summaryField = () => summaryCombo.attach(textField('summary'));
 
-    /** Phone + Tên merchant (không bắt buộc) cùng 1 hàng; in ra "Phone: (111) 111-1111 - Mr. Vương". */
+    /** Vai trò: nút phụ, Enter ở Tên merchant vẫn sang thẳng ý đầu tiên. */
+    const roleField = () => labeledField(app.labels.role, toggleSegmented({
+      options: app.roles, value: session.ticket().role, ariaLabel: app.labels.role, skipTab: true,
+      onChange: (role) => ticketService.setField('role', role)
+    }));
+
+    /** Phone + Tên merchant + Vai trò (không bắt buộc) cùng 1 hàng; in ra "Phone: (111) 111-1111 - Mr. Vương - Owner". */
     function contactRow() {
-      const row = el('div', 'field-row');
-      row.append(textField('phone', { inputMode: 'tel', format: maskPhone }), textField('merchant'));
+      const row = el('div', 'field-row contact-row');
+      row.append(textField('phone', { inputMode: 'tel', format: maskPhone }), textField('merchant'), roleField());
       return row;
     }
 
