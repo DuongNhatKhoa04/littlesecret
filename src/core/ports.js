@@ -33,6 +33,14 @@
  */
 
 /**
+ * Lấy Link Lead / DBA / MID / ZIP từ trang Lead (hệ thống ngoài) qua bookmarklet + clipboard, để điền Chuyển case.
+ * @typedef {Object} ShopGrab
+ * @property {() => string} bookmarkletUrl   link javascript: để kéo lên thanh bookmark
+ * @property {(text: string) => any} parse   dữ liệu thô của bookmark trong chữ (vd chữ Ctrl+V); null = không phải
+ * @property {() => Promise<{ status: 'ok' | 'none' | 'blocked', data?: any }>} read   đọc clipboard; blocked = trình duyệt chặn đọc
+ */
+
+/**
  * @typedef {Object} FileAdapter
  * @property {(file: File) => Promise<string | null>} readAsDataUrl   null = không đọc được
  * @property {(file: File) => Promise<any>} readJson                  undefined = không phải JSON hợp lệ; file .zip thì đọc file .json bên trong

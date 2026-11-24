@@ -3,7 +3,8 @@
   'use strict';
 
   const { createEmptyPassCase, allPassCaseImageKeys, toTagName } = TW.domain.passCase;
-  const without = (list, name) => list.filter(item => item !== name);
+  const { sanitizeShopInfo } = TW.domain.shopInfo;
+  const without =(list, name) => list.filter(item => item !== name);
 
   /** Ticket mới: bỏ người support thêm tay, giữ người chính theo ca và ô tick của họ. */
   const keepShiftTags = (tags) => Object.fromEntries(Object.entries(tags).map(([id, team]) => [id, { off: team.off, extra: [] }]));
@@ -21,6 +22,16 @@
       setValue(id, value) {
         if (!(id in config.fields)) throw new Error(`Không sửa được trường "${id}"`);
         store.update(state => { state.passCase.values[id] = value; }, {});
+      },
+      /**
+       * Điền thông tin tiệm lấy từ trang Lead: ghi đè trường lấy được, trường không lấy được giữ nguyên.
+       * Ô nhập tự giữ giá trị => không dựng lại form, UI tự đặt lại chữ trong ô. Trả về id các trường đã điền.
+       */
+      fillShopInfo(raw) {
+        const info = sanitizeShopInfo(raw) || {};
+        const ids = Object.keys(info).filter(id => id in config.fields);
+        if (ids.length) store.update(state => { ids.forEach(id => { state.passCase.values[id] = info[id]; }); }, {});
+        return ids;
       },
       /** Đổi team: các ô hiện trên form đổi theo => dựng lại form. */
       setTeam(team) {

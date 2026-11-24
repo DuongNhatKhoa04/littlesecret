@@ -6,13 +6,15 @@
   const { findTeam, imageKey, toTagName } = TW.domain.passCase;
   const { passCaseTags } = TW.domain.passCaseMessage;
   const { attachSuggestions } = TW.ui.combo;
+  const { createShopPaste } = TW.ui.shopPaste;
   const REQUIRED_BADGE = 'Bắt buộc';
   const ID_PREFIX = 'pass_';
   const TAG_INPUT_ID = 'pass_tagAdd';
   const TAG_LIST_ID = 'pass_tagHistory';
 
-  function createPassCaseForm({ root, context, session, passCaseService, imageZone, tagHistory }) {
+  function createPassCaseForm({ root, context, session, passCaseService, imageZone, tagHistory, shopGrab }) {
     const config = context.passCase;
+    const shopPaste = createShopPaste({ root, context, session, passCaseService, shopGrab, idPrefix: ID_PREFIX });
     const { labels } = config;
     const value = (id) => session.passCase().values[id];
     const onInput = (id) => (text) => passCaseService.setValue(id, text);
@@ -145,7 +147,7 @@
     function build() {
       const team = findTeam(session.passCase(), config);
       root.textContent = '';
-      root.append(teamField(team));
+      root.append(teamField(team), shopPaste.node());
       root.append(...fieldNodes(team), tagsField(team));
       if (team.tips) root.append(tipsNode(team));
     }

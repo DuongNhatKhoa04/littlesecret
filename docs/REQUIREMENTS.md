@@ -24,7 +24,7 @@ Tài liệu này mô tả **hành vi hiện có** của tool, tới từng câu 
 | 19 | Ticket offline | Hiện hành |
 | 20 | Cảnh báo lưu trữ | Hiện hành |
 | 21 | Nhận ảnh iPad / iPhone (phone-upload) | Hiện hành; rủi ro ở SECURITY.md §3 |
-| 22 | Chuyển case (pass case cho Sales / MKT / CS / Tech) | Hiện hành |
+| 22 | Chuyển case (pass case cho Sales / MKT / CS / Tech), lấy thông tin tiệm từ trang Lead (§22.4) | Hiện hành |
 | 23 | Sao lưu / khôi phục dữ liệu | Hiện hành |
 
 ---
@@ -698,6 +698,23 @@ Thanks team !                       Thanks team !
 - `+ Lưu template` bị khóa.
 - `Ticket mới`: hỏi xác nhận → xóa form Chuyển case (về team Sales) và ảnh Issue, không đụng ticket, ảnh ticket và các form SMS. `Ticket mới` ở Viết ticket xóa hết ảnh, kể cả ảnh Chuyển case (cùng 1 cuộc gọi).
 - Form lưu riêng (`passCase` trong `storageKey`): F5 không mất, chuyển qua lại với Hỗ trợ merchant không mất dữ liệu bên nào. State bản trước chưa có → form trống.
+
+### 22.4 Lấy thông tin tiệm từ trang Lead
+
+- Bookmark **Lấy thông tin tiệm**: kéo từ hộp `Cài bookmark "Điền ticket"` (cùng hộp với bookmark Điền ticket, §9). Bấm ở Ticket Writer thì không làm gì.
+- Chạy trên trang Lead của portal (tab đang đứng), lấy:
+  - **Link Lead** = địa chỉ trang đang mở.
+  - **DBA**, **MID**: ô theo selector `shopGrab.shop`, `shopGrab.mid` (`config/app.js`).
+  - **Business ZIP**: ô chọn không có name cố định → lấy mọi ô `shopGrab.zip` có giá trị, giữ giá trị dạng ZIP (`shopGrab.zipPattern`: 5 số, hoặc 5 số + `-` + 4 số). Có từ 2 giá trị ZIP khác nhau → bỏ trống ZIP (không đoán).
+- Không thấy cả DBA, MID, ZIP → báo `không thấy DBA, MID, Business ZIP. Mở đúng trang Lead rồi bấm lại.`, không đụng clipboard. Thấy một phần → vẫn copy, báo đã copy gì và `Không thấy: …`.
+- Copy JSON có đánh dấu `ticket-writer-shop` (không phải chữ để đọc); Clipboard API bị chặn → dùng cách copy dự phòng; vẫn không được → hiện ô chứa chữ để tự Ctrl+C.
+- Ở Chuyển case (mọi team) có nút **Dán thông tin tiệm** + nút `?` (mở hộp hướng dẫn bookmark), ngay dưới Team nhận:
+  - Đọc clipboard (lần đầu Chrome hỏi quyền). Có dữ liệu của bookmark → điền **Link Lead**, **Tên tiệm**, **MID**, **ZIP Code**: trường lấy được thì ghi đè, trường không lấy được giữ nguyên chữ cũ. Báo cạnh nút `Đã điền: <các trường>`.
+  - Trường điền vào là dữ liệu chung của form (§22.1): team đang chọn không có trường đó (vd CS không có Link Lead) thì không hiện, đổi team mới thấy.
+  - Clipboard không phải dữ liệu của bookmark → báo `Clipboard chưa có thông tin tiệm: …`, không đổi form. Chrome chặn đọc clipboard → báo `Chrome chặn đọc clipboard: bấm vào ô Tên tiệm rồi Ctrl+V.`
+  - Ctrl+V chữ của bookmark vào ô bất kỳ của form Chuyển case → điền như bấm nút, không dán chữ thô vào ô. Chữ khác dán như thường.
+- Dữ liệu từ clipboard: chỉ nhận chuỗi, đã trim, tối đa 300 ký tự mỗi trường.
+- Trang Lead đổi giao diện (đổi `name` ô) → bookmark báo không thấy; sửa `shopGrab` trong `config/app.js` rồi mọi người kéo lại bookmark.
 
 ## 23. Sao lưu / khôi phục dữ liệu (chuyển máy / trình duyệt)
 

@@ -60,14 +60,14 @@ ticket-writer/
 │  ├─ core/                    namespace.js (TW) · registry.js (config đăng ký vào) · ports.js (typedef port)
 │  ├─ domain/                  QUY TẮC NGHIỆP VỤ: hàm thuần, không DOM, không storage
 │  │                           text · title · ticket · checklist · body · validation · navigation · image-slots · image-archive · template · offline-ticket · backup ·
-│  │                           sms · sms-message · shipping · shipping-message · review · review-message · pass-case · pass-case-message · phone-link · qr-code
+│  │                           sms · sms-message · shipping · shipping-message · review · review-message · pass-case · pass-case-message · shop-info · phone-link · qr-code
 │  ├─ application/             USE CASE: store + service, điều phối domain và port
 │  │                           context · store · session · session-repository · ticket/navigation/view/image/
 │  │                           output/category/template/offline/backup/sms/shipping/review/pass-case/staff/summary-history/tag-history/notice/theme/phone-service
-│  ├─ infrastructure/          ADAPTER: storage (localStorage) · image-store (ảnh trên IndexedDB) · storage-quota (dung lượng) · phone-inbox (lấy ảnh từ phone-upload) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
+│  ├─ infrastructure/          ADAPTER: storage (localStorage) · image-store (ảnh trên IndexedDB) · storage-quota (dung lượng) · phone-inbox (lấy ảnh từ phone-upload) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · shop-grab (bookmarklet lấy thông tin tiệm) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
 │  ├─ ui/                      GIAO DIỆN: dom (helper, ô nhập + nhãn) · combo (danh sách gợi ý dùng chung) · notice-bar (thanh cảnh báo) · theme-toggle (nút sáng/tối) · phone-button (nút Nhận ảnh iOS) · phone-dialog (mã QR cho iPad) · picker · ticket-form · category-combo · summary-combo · idea-list ·
 │  │                           checklist-view · image-zone · output-view · image-panel · image-viewer ·
-│  │                           template-dialog · offline-dialog · backup-buttons · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form · pass-case-form
+│  │                           template-dialog · offline-dialog · backup-buttons · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form · shop-paste (nút Dán thông tin tiệm) · pass-case-form
 │  └─ main.js                  COMPOSITION ROOT: tạo adapter, inject vào service, gắn UI
 ├─ tests/                      xem tests/README.md
 │  ├─ index.html               double-click để chạy test
@@ -136,7 +136,7 @@ File config:
 - **S — Single Responsibility**: 1 file = 1 trách nhiệm. Ví dụ ghép title, ghép nội dung, kiểm tra điều kiện copy là 3 file domain riêng; ô chọn Loại, checklist, khối ảnh là 3 view riêng.
 - **O — Open/Closed**: thêm loại ticket hoặc checklist = **thêm 1 file config**, không sửa `src/`. Hiện có 2 kiểu mục (nhập ý / Kết luận). Khi cần kiểu thứ 3: tách thành bảng renderer + composer theo `kind`, không nối thêm `if/else`.
 - **L — Liskov**: mọi loại ticket và checklist theo cùng 1 schema (docs/CONFIG.md); code xử lý loại nào cũng không cần biết đang là loại gì. Adapter thay thế được nhau (vd storage thật ↔ storage giả trong test).
-- **I — Interface Segregation**: port nhỏ, chỉ đúng hàm cần: `KeyValueStore { read(key), write(key, value) }`, `TextClipboard { writeText }`, `ImageClipboard { writeImage, readImages }`, `ImageStore { loadAll, save, clear }`, `StorageQuota { estimate }`, `PhoneInbox { next, info, rotate }`, `ScreenCapture { capture }`, `TicketFill { payload, bookmarkletUrl }`, `FileAdapter { readAsDataUrl, readJson, download, downloadZip, createPdf, downloadPdf }`. Typedef đặt ở `src/core/ports.js`.
+- **I — Interface Segregation**: port nhỏ, chỉ đúng hàm cần: `KeyValueStore { read(key), write(key, value) }`, `TextClipboard { writeText }`, `ImageClipboard { writeImage, readImages }`, `ImageStore { loadAll, save, clear }`, `StorageQuota { estimate }`, `PhoneInbox { next, info, rotate }`, `ScreenCapture { capture }`, `TicketFill { payload, bookmarkletUrl }`, `ShopGrab { bookmarkletUrl, parse, read }`, `FileAdapter { readAsDataUrl, readJson, download, downloadZip, createPdf, downloadPdf }`. Typedef đặt ở `src/core/ports.js`.
 - **D — Dependency Inversion**: service nhận port qua tham số factory, không tự tạo. Chỉ `main.js` biết adapter cụ thể nào được dùng.
 
 ## Clean code
@@ -174,7 +174,7 @@ Những file / vùng dưới đây chỉ sửa khi người dùng yêu cầu rõ
 |---|---|
 | `tests/golden-expected.js` | Sinh tự động từ bản gốc, là chuẩn so output. Bản gốc không có trong repo nên không sinh lại được. |
 | Câu chữ trong `config/setup/**`, `config/sms/*`, `config/tickets/*` | Nội dung nghiệp vụ người dùng viết (xem Nội dung checklist). |
-| `ticketFill` trong `config/app.js` | Selector của trang ticket system bên ngoài; đổi thì mọi người phải kéo lại bookmark. |
+| `ticketFill`, `shopGrab` trong `config/app.js` | Selector của trang ticket system bên ngoài; đổi thì mọi người phải kéo lại bookmark. |
 | Các key lưu trữ, `id` mục checklist, key loại | Xem Không được phá. |
 | `phone-upload/phone-upload.ps1` | Mở port mạng trên máy công ty; đổi phải đọc [docs/SECURITY.md](docs/SECURITY.md) và có người duyệt ([docs/REVIEW.md](docs/REVIEW.md)). |
 | Số mục § trong `docs/REQUIREMENTS.md` | Code, test, tài liệu tham chiếu theo số. Thêm mục mới thì đánh số tiếp theo. |

@@ -181,6 +181,26 @@
     assertEqual([store.get().passCase, store.get().ticket.summary], [D.passCase.createEmptyPassCase(config), 'giữ']);
   });
 
+  test('thông tin tiệm: chỉ giữ chuỗi đã trim (Link Lead, Tên tiệm, MID, ZIP), cắt chuỗi quá dài; dữ liệu hỏng => null', () => {
+    const { sanitizeShopInfo } = D.shopInfo;
+    assertEqual(sanitizeShopInfo({ app: 'x', lead: ' https://portal/lead/1 ', shop: ' TEST NAILS ', mid: '123', zip: 75001, phone: '1' }),
+      { lead: 'https://portal/lead/1', shop: 'TEST NAILS', mid: '123' });
+    assertEqual([sanitizeShopInfo(null), sanitizeShopInfo('abc'), sanitizeShopInfo({ shop: '  ' })], [null, null, null]);
+    assertEqual(sanitizeShopInfo({ shop: 'A'.repeat(500) }).shop.length, 300);
+  });
+
+  test('pass case: Dán thông tin tiệm ghi đè trường lấy được, giữ trường khác; không có gì => không đổi', () => {
+    const { store, service } = setup({ nav: { group: 'ticket', ticketType: 'transfer' } });
+    service.setValue('shop', 'CŨ');
+    service.setValue('zip', '11111');
+    service.setValue('phone', '(555) 123-4567');
+    const filled = service.fillShopInfo({ app: 'x', lead: 'https://portal/lead/9', shop: 'TEST NAILS', mid: '8800123', zip: '' });
+    const values = store.get().passCase.values;
+    assertEqual([filled, values.lead, values.shop, values.mid, values.zip, values.phone],
+      [['lead', 'shop', 'mid'], 'https://portal/lead/9', 'TEST NAILS', '8800123', '11111', '(555) 123-4567']);
+    assertEqual([service.fillShopInfo(null), store.get().passCase.values.shop], [[], 'TEST NAILS']);
+  });
+
   test('pass case: Issue có ảnh (MKT / Tech): Ctrl+V vào Issue, khối Ảnh chỉ ảnh Chuyển case; Ticket mới chỉ xóa ảnh Chuyển case', async () => {
     const { images, output, service } = setup({ nav: { group: 'ticket', ticketType: 'transfer' } });
     const png = () => new Blob([''], { type: 'image/png' });

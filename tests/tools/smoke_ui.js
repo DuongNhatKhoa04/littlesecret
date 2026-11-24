@@ -271,6 +271,18 @@
     $('.pass-tag button').click();
     $$('.pass-tag input')[0].click();
     await settle();
+    clickText('#form', 'MKT');
+    await settle();
+    // Ctrl+V chữ do bookmark "Lấy thông tin tiệm" copy (đọc clipboard thật thì headless bị chặn): điền form, không dán thô vào ô
+    const shopData = new DataTransfer();
+    shopData.setData('text/plain', JSON.stringify({ app: 'ticket-writer-shop', lead: 'https://portal/lead/1', shop: 'SMOKE NAILS', mid: '123', zip: '75001' }));
+    $('#pass_contact').dispatchEvent(new ClipboardEvent('paste', { clipboardData: shopData, bubbles: true, cancelable: true }));
+    await settle();
+    check('Chuyển case: có nút Dán thông tin tiệm; Ctrl+V chữ của bookmark => điền Link Lead, Tên tiệm, MID, ZIP',
+      !!$$('.pass-shop button').find(node => node.textContent === 'Dán thông tin tiệm') && $('#pass_shop').value === 'SMOKE NAILS' && $('#pass_zip').value === '75001' &&
+      $('#pass_contact').value === '' && $('#outBody').textContent.startsWith('https://portal/lead/1\nSMOKE NAILS'), $('#outBody').textContent);
+    $('#resetBtn').click();
+    await settle();
     clickText('#picker', 'Hỗ trợ merchant');
     await settle();
     check('về Hỗ trợ merchant: ticket, ô Loại + Loại đã chọn vẫn giữ, con trỏ ở ô Loại',

@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-24.23',      // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-24.24',      // hiện cạnh tên app để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
     offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu offline (chọn 1, bắt buộc)
@@ -31,6 +31,15 @@
       description: 'textarea[name="description"]',
       comment: '.checklist .comment input', commentText: 'done',   // ô Comment ở khung Checklist: không có name / placeholder
       uploadLabel: 'p.button-text', uploadText: 'Upload File(s)'                        // nút tìm theo chữ trên nút
+    },
+
+    // Bookmark "Lấy thông tin tiệm" trên trang Lead (portal): ô DBA, MID, Business ZIP; Link Lead = địa chỉ trang đang mở.
+    // ZIP là ô chọn (react-select) không có name cố định => lấy mọi ô chọn có giá trị, giữ ô có dạng ZIP; trùng nhiều ô khác nhau thì bỏ ZIP.
+    // Đổi ở đây thì phải kéo lại bookmark.
+    shopGrab: {
+      shop: 'input[name="lf_3901"]',
+      mid: 'input[name="lf_3548"]',
+      zip: '.react-select__input-container[data-value]', zipPattern: '^\\d{5}(-\\d{4})?$'
     },
 
     // Loại có sẵn trong ô Loại. Người dùng gõ thêm loại mới thì lưu riêng trên máy họ.

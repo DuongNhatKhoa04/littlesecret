@@ -11,6 +11,7 @@
   const files = I.files.createFileAdapter();
   const screenCapture = I.screenCapture.createScreenCapture();
   const ticketFill = I.ticketFill.createTicketFill(registry.app().ticketFill);
+  const shopGrab = I.shopGrab.createShopGrab(registry.app().shopGrab);
   const imageStore = I.imageStore.createImageStore(registry.app().imageDbName);
   const quota = I.storageQuota.createStorageQuota();
   const phoneInbox = I.phoneInbox.createPhoneInbox();
@@ -53,7 +54,7 @@
   });
   const shippingForm = U.shippingForm.createShippingForm({ root: $('#form'), context, session, shippingService });
   const reviewForm = U.reviewForm.createReviewForm({ root: $('#form'), context, session, reviewService, staffService });
-  const passCaseForm = U.passCaseForm.createPassCaseForm({ root: $('#form'), context, session, passCaseService, imageZone, tagHistory });
+  const passCaseForm = U.passCaseForm.createPassCaseForm({ root: $('#form'), context, session, passCaseService, imageZone, tagHistory, shopGrab });
   const activeForm = () => {   // 4 form dùng chung khu Nhập
     if (session.isReview()) return reviewForm;
     if (session.isPassCase()) return passCaseForm;
@@ -66,7 +67,7 @@
   const templateDialog = U.templateDialog.createTemplateDialog({ templateService, files });
   U.backupButtons.createBackupButtons({ backupService: A.backupService.createBackupService({ context, storage, files }) });
   const offlineDialog = U.offlineDialog.createOfflineDialog({ offlineService, tiers: context.app.offlineTiers });
-  U.fillDialog.createFillDialog({ ticketFill });
+  U.fillDialog.createFillDialog({ ticketFill, shopGrab });
   const paste = U.pasteHandler.installPasteHandler({ outputService, imageZone });
   const phoneService = A.phoneService.createPhoneService({
     context, storage, inbox: phoneInbox,

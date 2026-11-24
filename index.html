@@ -152,7 +152,7 @@
 
 <dialog id="fillDlg" aria-label="Điền ticket">
   <div class="dhead">
-    <b>Điền ticket: Subject, Description, Comment (Checklist) rồi bấm Upload File(s)</b><span class="spacer"></span>
+    <b>Bookmark: Điền ticket · Lấy thông tin tiệm</b><span class="spacer"></span>
     <button type="button" class="ghost" id="fillClose">Đóng</button>
   </div>
   <div class="fill-guide">
@@ -168,6 +168,12 @@
       <li>Trang không có ô Comment (ticket không có khung Checklist) thì bỏ qua ô này. Thiếu Subject / Description / nút Upload thì không điền gì và báo thiếu cái nào.</li>
     </ol>
     <p class="status">Bản Ticket Writer mới có sửa phần điền ticket thì kéo lại nút ở trên (xóa bookmark cũ).</p>
+    <h3>Lấy thông tin tiệm (Chuyển case)</h3>
+    <ol>
+      <li>Kéo nút này thả lên thanh bookmark (đừng bấm): <a class="bm-link" id="shopBookmarklet" title="Kéo lên thanh bookmark">Lấy thông tin tiệm</a></li>
+      <li>Mở trang Lead trên portal, bấm bookmark <b>Lấy thông tin tiệm</b>: copy Link Lead, DBA, MID, Business ZIP và báo lấy được gì.</li>
+      <li>Về Ticket Writer → <b>Chuyển case</b> → bấm <b>Dán thông tin tiệm</b>: điền Link Lead, Tên tiệm, MID, ZIP Code (ghi đè chữ cũ). Lần đầu Chrome hỏi quyền xem clipboard → <b>Allow</b>; bị chặn thì bấm vào ô Tên tiệm rồi <kbd>Ctrl</kbd>+<kbd>V</kbd>.</li>
+    </ol>
   </div>
 </dialog>
 
@@ -215,6 +221,7 @@
 <script src="src/domain/shipping-message.js"></script>
 <script src="src/domain/pass-case.js"></script>
 <script src="src/domain/pass-case-message.js"></script>
+<script src="src/domain/shop-info.js"></script>
 <script src="src/domain/review.js"></script>
 <script src="src/domain/review-message.js"></script>
 <script src="src/domain/phone-link.js"></script>
@@ -252,6 +259,7 @@
 <script src="src/infrastructure/clipboard.js"></script>
 <script src="src/infrastructure/screen-capture.js"></script>
 <script src="src/infrastructure/ticket-fill.js"></script>
+<script src="src/infrastructure/shop-grab.js"></script>
 <script src="src/infrastructure/zip.js"></script>
 <script src="src/infrastructure/pdf-image.js"></script>
 <script src="src/infrastructure/pdf.js"></script>
@@ -271,6 +279,7 @@
 <script src="src/ui/ticket-form.js"></script>
 <script src="src/ui/sms-form.js"></script>
 <script src="src/ui/shipping-form.js"></script>
+<script src="src/ui/shop-paste.js"></script>
 <script src="src/ui/pass-case-form.js"></script>
 <script src="src/ui/review-form.js"></script>
 <script src="src/ui/picker.js"></script>

@@ -26,6 +26,7 @@ Lưu ý:
 |---|---|---|
 | Clipboard | `Copy title / nội dung / ảnh`, `Copy để điền` (JSON có đánh dấu `ticket-writer-fill`) | App khác trên máy đọc được clipboard. Không có cách chặn; không copy dữ liệu nhạy cảm hơn mức cần. |
 | Bookmark *Điền ticket* | Chạy trên trang ticket system, đọc clipboard, chỉ điền khi thấy đánh dấu của Ticket Writer, thiếu ô nào thì không điền gì | Selector ở `config/app.js` (`ticketFill`); trang ticket đổi giao diện thì bookmark không điền (không điền nhầm chỗ). |
+| Bookmark *Lấy thông tin tiệm* | Chạy trên trang Lead (portal), chỉ đọc 3 ô DBA / MID / Business ZIP + địa chỉ trang, copy vào clipboard (JSON có đánh dấu `ticket-writer-shop`); Ticket Writer đọc lại khi bấm `Dán thông tin tiệm` | Không gửi đi đâu ngoài clipboard. Chữ trong clipboard là dữ liệu không tin cậy: chỉ nhận chuỗi, trim, tối đa 300 ký tự (`sanitizeShopInfo`). Selector ở `config/app.js` (`shopGrab`). |
 | Chụp màn hình | `getDisplayMedia`, giữ luồng chia sẻ để lần sau chụp ngay | Chrome luôn hiện thanh "Đang chia sẻ màn hình"; bấm Dừng chia sẻ khi không cần. |
 | phone-upload | iPad → máy tính qua LAN, Ticket Writer lấy qua `127.0.0.1` | Xem §3. |
 
