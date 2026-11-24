@@ -705,6 +705,7 @@ Thanks team !                       Thanks team !
 - Chạy trên tab portal đang đứng. Trang có dòng tiêu đề ticket `Ticket #… for <Tên tiệm> / <MID>` (`shopGrab.ticketHeader`) là **trang ticket**, lấy:
   - **Link Ticket** = địa chỉ trang đang mở (kể cả `?bucket=…&rank=…#`). Đây cũng là link mà app chat in trong ngoặc khi copy dòng tiêu đề, vì MID trên trang là link `href="#"`.
   - **Tên tiệm**, **MID**: tách dòng tiêu đề bằng `shopGrab.ticketPattern`; Tên tiệm có `/` vẫn đúng (MID = phần sau dấu ` / ` cuối).
+  - **Nội dung** ticket (`shopGrab.description`, thẻ `.description-text`) → ô **Issue**: giữ xuống dòng, 3 dòng trống trở lên gộp còn 1 dòng trống, tối đa 3000 ký tự. Không có thì báo `Không thấy: Nội dung`, vẫn copy phần còn lại.
 - Không có dòng đó → **trang Lead**, lấy:
   - **Link Lead** = địa chỉ trang đang mở.
   - **DBA**, **MID**: ô theo selector `shopGrab.shop`, `shopGrab.mid` (`config/app.js`).
@@ -712,11 +713,11 @@ Thanks team !                       Thanks team !
 - Không thấy trường nào → báo `không thấy Tên tiệm, MID. Mở đúng trang ticket / Lead rồi bấm lại.`, không đụng clipboard. Thấy một phần → vẫn copy, báo đã copy gì (`+ link ticket` / `+ link lead`) và `Không thấy: …`.
 - Copy JSON có đánh dấu `ticket-writer-shop` (không phải chữ để đọc); Clipboard API bị chặn → dùng cách copy dự phòng; vẫn không được → hiện ô chứa chữ để tự Ctrl+C.
 - Ở Chuyển case (mọi team) có nút **Dán thông tin tiệm** + nút `?` (mở hộp hướng dẫn bookmark), ngay dưới Team nhận:
-  - Đọc clipboard (Chrome hỏi quyền; Ticket Writer chạy `file://` nên Chrome có thể hỏi lại mỗi lần). Cạnh nút luôn ghi `hoặc Ctrl+V ở trang này (không cần cho phép)`. Có dữ liệu của bookmark → điền các trường lấy được (**Link Ticket** hoặc **Link Lead**, **Tên tiệm**, **MID**, **ZIP Code**): trường lấy được thì ghi đè, trường không lấy được giữ nguyên chữ cũ. Báo cạnh nút `Đã điền: <các trường>`.
+  - Đọc clipboard (Chrome hỏi quyền; Ticket Writer chạy `file://` nên Chrome có thể hỏi lại mỗi lần). Cạnh nút luôn ghi `hoặc Ctrl+V ở trang này (không cần cho phép)`. Có dữ liệu của bookmark → điền các trường lấy được (**Link Ticket** hoặc **Link Lead**, **Tên tiệm**, **MID**, **ZIP Code**, **Issue**): trường lấy được thì ghi đè, trường không lấy được giữ nguyên chữ cũ. Báo cạnh nút `Đã điền: <các trường>`.
   - Trường điền vào là dữ liệu chung của form (§22.1): team đang chọn không có trường đó (vd CS không có Link Lead, Sales không có Link Ticket) thì không hiện, đổi team mới thấy.
   - Clipboard không phải dữ liệu của bookmark → báo `Clipboard chưa có thông tin tiệm: …`, không đổi form. Chrome chặn đọc clipboard → báo `Chrome chặn đọc clipboard: bấm Ctrl+V ở trang này.`
   - **Ctrl+V** chữ của bookmark ở bất kỳ đâu trên trang khi đang mở Chuyển case (trong ô nhập hay không) → điền như bấm nút, không dán chữ thô vào ô; không cần quyền clipboard nên Chrome không bao giờ hỏi. Chữ khác dán như thường.
-- Dữ liệu từ clipboard: chỉ nhận chuỗi, đã trim, tối đa 300 ký tự mỗi trường.
+- Dữ liệu từ clipboard: chỉ nhận chuỗi, đã trim, tối đa 300 ký tự mỗi trường (Issue 3000).
 - Trang Lead đổi giao diện (đổi `name` ô) → bookmark báo không thấy; sửa `shopGrab` trong `config/app.js` rồi mọi người kéo lại bookmark.
 
 ### 22.5 Tech: Assign (supervisor giao case)
@@ -740,7 +741,7 @@ Thank you <@tech …>
   - Chữ thường (Kết quả hiện bản này): link trong ngoặc `(…)` như trên, cho app không đọc HTML.
   - Tin không có link (mọi tin khác, Assign chưa có Link Ticket) → chỉ copy chữ thường như cũ.
 - Thiếu Tên tiệm / MID thì dòng đầu chỉ còn phần có; thiếu Link Ticket thì bỏ `(…)`. Chưa chọn tech → dòng cuối chỉ `Thank you`.
-- Lấy nhanh Link Ticket + Tên tiệm + MID: bookmark Lấy thông tin tiệm trên trang ticket (§22.4) rồi Ctrl+V.
+- Lấy nhanh Link Ticket + Tên tiệm + MID + nội dung (vào Issue): bookmark Lấy thông tin tiệm trên trang ticket (§22.4) rồi Ctrl+V.
 
 ## 23. Sao lưu / khôi phục dữ liệu (chuyển máy / trình duyệt)
 

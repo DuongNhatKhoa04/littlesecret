@@ -1,4 +1,4 @@
-// src/infrastructure/shop-grab.js — Bookmark "Lấy thông tin tiệm": chạy trên trang ticket (Link Ticket / Tên tiệm / MID) hoặc Lead (Link Lead / DBA / MID / ZIP), copy lại; Ticket Writer đọc lại để điền Chuyển case.
+// src/infrastructure/shop-grab.js — Bookmark "Lấy thông tin tiệm": chạy trên trang ticket (Link Ticket / Tên tiệm / MID / nội dung) hoặc Lead (Link Lead / DBA / MID / ZIP), copy lại; Ticket Writer đọc lại để điền Chuyển case.
 // Ticket Writer không chạm được vào tab khác, nên đưa dữ liệu qua clipboard (chiều ngược với ticket-fill.js).
 (function (TW) {
   'use strict';
@@ -11,7 +11,11 @@
     function fromTicket() {
       const header = document.querySelector(config.ticketHeader);
       const match = header && header.textContent.replace(/\s+/g, ' ').trim().match(new RegExp(config.ticketPattern));
-      return match && { data: { ticket: location.href, shop: match[1].trim(), mid: match[2] }, labels: { shop: 'Tên tiệm', mid: 'MID' } };
+      if (!match) return null;
+      // innerText giữ xuống dòng của nội dung nhiều đoạn (textContent dính liền các đoạn)
+      const description = document.querySelector(config.description);
+      const issue = description ? description.innerText.replace(/\n{3,}/g, '\n\n').trim() : '';
+      return { data: { ticket: location.href, shop: match[1].trim(), mid: match[2], issue }, labels: { shop: 'Tên tiệm', mid: 'MID', issue: 'Nội dung' } };
     }
     function fromLead() {
       const valueOf = (selector) => { const node = document.querySelector(selector); return node ? node.value.trim() : ''; };
@@ -41,7 +45,7 @@
     const text = JSON.stringify({ app: mark, ...data });
     if (!await copy(text)) { prompt('Ticket Writer: không copy được. Bấm Ctrl+C rồi OK:', text); return; }
     const found = [data.shop, data.mid && 'MID ' + data.mid, data.zip && 'ZIP ' + data.zip].filter(Boolean).join(' · ');
-    alert('Ticket Writer: đã copy ' + found + (data.ticket ? ' + link ticket' : ' + link lead') + (missing.length ? '\nKhông thấy: ' + missing.join(', ') : '') +
+    alert('Ticket Writer: đã copy ' + found + (data.ticket ? ' + link ticket' : ' + link lead') + (data.issue ? ' + nội dung' : '') + (missing.length ? '\nKhông thấy: ' + missing.join(', ') : '') +
       '\nVề Ticket Writer → Chuyển case → bấm Ctrl+V.');
   }
 
@@ -52,7 +56,7 @@
     return data && data.app === MARK ? data : null;
   }
 
-  /** @param {{ ticketHeader: string, ticketPattern: string, shop: string, mid: string, zip: string, zipPattern: string }} config  @returns {ShopGrab} */
+  /** @param {{ ticketHeader: string, ticketPattern: string, description: string, shop: string, mid: string, zip: string, zipPattern: string }} config  @returns {ShopGrab} */
   function createShopGrab(config) {
     const code = `void (${grabShopPage})(${JSON.stringify(config)}, ${JSON.stringify(MARK)})`;
     return {

@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-24.29',      // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-24.30',      // hiện cạnh tên app để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
     offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu offline (chọn 1, bắt buộc)
@@ -34,11 +34,13 @@
     },
 
     // Bookmark "Lấy thông tin tiệm" (portal). Đổi ở đây thì phải kéo lại bookmark.
-    // Trang ticket: dòng tiêu đề `Ticket #… for <Tên tiệm> / <MID>` (ticketHeader, tách bằng ticketPattern); Link Ticket = địa chỉ trang đang mở.
+    // Trang ticket: dòng tiêu đề `Ticket #… for <Tên tiệm> / <MID>` (ticketHeader, tách bằng ticketPattern), nội dung ticket (description);
+    //   Link Ticket = địa chỉ trang đang mở.
     // Trang Lead: ô DBA, MID, Business ZIP; Link Lead = địa chỉ trang đang mở.
     // ZIP là ô chọn (react-select) không có name cố định => lấy mọi ô chọn có giá trị, giữ ô có dạng ZIP; trùng nhiều ô khác nhau thì bỏ ZIP.
     shopGrab: {
       ticketHeader: '.last-item-display .mid', ticketPattern: '^for (.+) / (\\S+)$',
+      description: '.description-text',   // trang ticket: nội dung ticket => ô Issue
       shop: 'input[name="lf_3901"]',
       mid: 'input[name="lf_3548"]',
       zip: '.react-select__input-container[data-value]', zipPattern: '^\\d{5}(-\\d{4})?$'

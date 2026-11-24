@@ -266,7 +266,7 @@ Loại `transfer` trong `config/tickets/transfer.js` có `passCase: true` nên h
 | `imageDbName` | Tên database IndexedDB chứa ảnh. **Không đổi** |
 | `themes` | Nút giao diện ở header: `{ id, label }`, bấm sang mục kế tiếp, mục đầu là mặc định. `auto` = theo hệ điều hành. `id` lưu trên máy: không đổi id đang có. Màu từng giao diện ở `styles/tokens.css` |
 | `ticketFill` | Bookmark `Điền ticket`: selector ô `subject` / `description` / `comment` (ô Comment ở khung Checklist), `commentText` (`done`), nút bấm sau khi điền = phần tử `uploadLabel` có chữ `uploadText`. Đổi thì người dùng phải kéo lại bookmark |
-| `shopGrab` | Bookmark `Lấy thông tin tiệm` (Chuyển case, REQUIREMENTS §22.4). Trang ticket: `ticketHeader` = dòng `for <Tên tiệm> / <MID>`, tách bằng `ticketPattern` (nhóm 1 = Tên tiệm, nhóm 2 = MID). Trang Lead: selector ô DBA `shop`, ô MID `mid`; `zip` = mọi ô chọn có giá trị, giữ giá trị khớp `zipPattern`. Đổi thì người dùng phải kéo lại bookmark |
+| `shopGrab` | Bookmark `Lấy thông tin tiệm` (Chuyển case, REQUIREMENTS §22.4). Trang ticket: `ticketHeader` = dòng `for <Tên tiệm> / <MID>`, tách bằng `ticketPattern` (nhóm 1 = Tên tiệm, nhóm 2 = MID); `description` = thẻ nội dung ticket (vào ô Issue). Trang Lead: selector ô DBA `shop`, ô MID `mid`; `zip` = mọi ô chọn có giá trị, giữ giá trị khớp `zipPattern`. Đổi thì người dùng phải kéo lại bookmark |
 | `categories` | Loại có sẵn (`ABC`, `CLOVER`, `PAX`, `INTERNET`) |
 | `marks` | Ký hiệu checklist trong nội dung: `[x]`, `[ ]`, `[N/A]` |
 | `langs` | `ENG`, `VIE` |

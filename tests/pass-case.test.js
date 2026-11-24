@@ -230,12 +230,13 @@
     assertEqual([store.get().passCase.assign, store.get().passCase.tags.techAssign.extra], [false, []]);
   });
 
-  test('thông tin tiệm: chỉ giữ chuỗi đã trim (Link Lead, Tên tiệm, MID, ZIP), cắt chuỗi quá dài; dữ liệu hỏng => null', () => {
+  test('thông tin tiệm: chỉ giữ chuỗi đã trim (Link Ticket / Lead, Tên tiệm, MID, ZIP, nội dung), cắt chuỗi quá dài (nội dung 3000); dữ liệu hỏng => null', () => {
     const { sanitizeShopInfo } = D.shopInfo;
     assertEqual(sanitizeShopInfo({ app: 'x', lead: ' https://portal/lead/1 ', shop: ' TEST NAILS ', mid: '123', zip: 75001, phone: '1' }),
       { lead: 'https://portal/lead/1', shop: 'TEST NAILS', mid: '123' });
     assertEqual([sanitizeShopInfo(null), sanitizeShopInfo('abc'), sanitizeShopInfo({ shop: '  ' })], [null, null, null]);
     assertEqual(sanitizeShopInfo({ shop: 'A'.repeat(500) }).shop.length, 300);
+    assertEqual([sanitizeShopInfo({ issue: ' PAX - SUCCESS\nFIRST ' }).issue, sanitizeShopInfo({ issue: 'x'.repeat(5000) }).issue.length], ['PAX - SUCCESS\nFIRST', 3000]);
   });
 
   test('pass case: Dán thông tin tiệm ghi đè trường lấy được, giữ trường khác; không có gì => không đổi', () => {
