@@ -186,9 +186,11 @@
     const values = { ...VALUES, ticket, shop: 'TEST NAILS BAR', mid: '123456789012', issue: 'Phase 1' };
     const tags = { techAssign: { off: [], extra: ['@ryan-ts'] } };
     assertEqual(buildAt(vn(21), 'tech', values, { assign: true, tags }),
+      `TEST NAILS BAR / 123456789012 (${ticket})\nPhase 1\n(555) 123-4567\nThank you @ryan-ts`);
+    assertEqual(buildAt(vn(21), 'tech', { ...values, phone: '' }, { assign: true, tags }),
       `TEST NAILS BAR / 123456789012 (${ticket})\nPhase 1\nThank you @ryan-ts`);
-    assertEqual(build('tech', { shop: 'A' }, { assign: true }), 'A\nThank you');
-    assertEqual(build('tech', { ...values, shop: '', mid: '' }, { assign: true }), `${ticket}\nPhase 1\nThank you`);
+    assertEqual(build('tech', { shop: 'A', phone: '1' }, { assign: true }), 'A\n1\nThank you');
+    assertEqual(build('tech', { ...values, shop: '', mid: '', phone: '' }, { assign: true }), `${ticket}\nPhase 1\nThank you`);
     assertEqual(missing('tech', { shop: 'A' }, { assign: true }), ['Link Ticket', 'MID', 'Issue']);
     // Bỏ tick: mẫu Tech như cũ; team khác không có Assign thì tick không có tác dụng
     assertEqual(build('tech', VALUES, { assign: false }).startsWith('https://crm/lead/9\nARIA NAIL BAR\nCBN:'), true);
@@ -203,7 +205,7 @@
     const tags = { techAssign: { off: [], extra: ['@ryan-ts'] } };
     const values = { ...VALUES, ticket: 'https://portal/ticket/1?a=1&b=2#', shop: 'A & B <NAILS>', mid: '4223', issue: 'Phase 1\n"x"' };
     assertEqual(html('tech', values, { assign: true, tags }),
-      'A &amp; B &lt;NAILS&gt; / <a href="https://portal/ticket/1?a=1&amp;b=2#">4223</a><br>Phase 1<br>&quot;x&quot;<br>Thank you @ryan-ts');
+      'A &amp; B &lt;NAILS&gt; / <a href="https://portal/ticket/1?a=1&amp;b=2#">4223</a><br>Phase 1<br>&quot;x&quot;<br>(555) 123-4567<br>Thank you @ryan-ts');
     assertEqual(html('tech', { ...values, mid: '' }, { assign: true }).startsWith('<a href="https://portal/ticket/1?a=1&amp;b=2#">A &amp; B &lt;NAILS&gt;</a><br>'), true);
     assertEqual([html('tech', { ...values, ticket: '' }, { assign: true }), html('cs', values), html('tech', values)], ['', '', '']);
     const { output, service } = setup({ nav: { group: 'ticket', ticketType: 'transfer' }, passCase: { team: 'tech', assign: true, values } });

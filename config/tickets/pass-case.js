@@ -89,9 +89,9 @@
         // tagId: nhóm tag + gợi ý tên riêng (lưu trong state) => không đổi. inlineTags: tag nối ngay sau câu cảm ơn.
         assign: {
           tagId: 'techAssign',
-          fields: ['ticket', 'shop', 'mid', 'issue'],
+          fields: ['ticket', 'shop', 'mid', 'phone', 'issue'],
           required: ['ticket', 'shop', 'mid', 'issue'],
-          lines: ['{ticketHeader}', '{issue}'],
+          lines: ['{ticketHeader}', '{issue}', '{phone}'],
           thanks: 'Thank you', inlineTags: true,
           urgent: '', tags: [], tips: null,
           labels: { tags: 'Tech nhận case', tagPh: '@tên tech' }   // thay nhãn ô Tag của team (labels ở trên)

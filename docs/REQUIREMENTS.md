@@ -723,7 +723,7 @@ Thanks team !                       Thanks team !
 
 - Team **Tech** có ô tick **Assign** cạnh Team nhận (team khác không có). Đổi team vẫn giữ tick; F5 vẫn giữ; `Ticket mới` bỏ tick.
 - Tick Assign → form và tin nhắn thay hẳn mẫu Tech (§22.2):
-  - Trường: Link Ticket ★ · Tên tiệm ★ · MID ★ · Issue ★ (có ảnh như §22.1). Không có CBN / Tên người liên hệ / Vai trò (chưa thống nhất ticket nên bỏ Phone), không có ô GẤP, không có khung lưu ý. Chữ đã nhập ở trường khác vẫn giữ, bỏ tick là hiện lại.
+  - Trường: Link Ticket ★ · Tên tiệm ★ · MID ★ · CBN (không bắt buộc, tự format như §4) · Issue ★ (có ảnh như §22.1). Không có Tên người liên hệ / Vai trò, không có ô GẤP, không có khung lưu ý. Chữ đã nhập ở trường khác vẫn giữ, bỏ tick là hiện lại.
   - Ô Tag đổi nhãn **Tech nhận case**, ô gõ `@tên tech`: supervisor gõ tên tech (tự thêm `@`, gợi ý tên đã gõ như §22.2). Không tag theo ca.
   - Tech nhận case lưu nhóm riêng (`passCase.tags.techAssign`, gợi ý `techAssign` trong `ticketWriter.passTags.v1`), không lẫn người support thêm của Tech thường.
 - Tin nhắn:
@@ -731,6 +731,7 @@ Thanks team !                       Thanks team !
 ```
 <Tên tiệm> / <MID> (<Link Ticket>)
 <Issue>
+<CBN>                               (bỏ dòng khi trống)
 Thank you <@tech …>
 ```
 
