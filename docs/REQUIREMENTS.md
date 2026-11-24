@@ -554,7 +554,7 @@ Lưu ticket ra file trên máy, khi ticket system vào lại được thì mở 
 
 ### 19.2 Mở file offline
 
-- Nút `Mở file offline` → nếu đang có nội dung hoặc ảnh thì hỏi xác nhận → chọn file `.zip` (đọc file `.json` bên trong, không cần giải nén) hoặc file `.json`.
+- Nút `Mở file offline` khóa ở **Chuyển case**. Loại khác → nếu đang có nội dung hoặc ảnh thì hỏi xác nhận → chọn file `.zip` (đọc file `.json` bên trong, không cần giải nén) hoặc file `.json`.
 - File đúng → chuyển về đúng loại ticket / nhánh setup trong file, thay toàn bộ ticket đang nhập, bỏ ảnh đang dán; báo mã, Business zipcode, Ticket type, Tier (file lưu trước khi có Tier → `(chưa có)`), file ZIP chứa ảnh (+ PDF).
 - File không phải ticket offline / loại ticket trong file không còn → báo, không đổi gì.
 - Ảnh không tự nạp lại: giải nén ZIP rồi dán / kéo thả vào từng mục (tên ảnh trong ZIP ghi mục nào).

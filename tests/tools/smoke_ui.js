@@ -219,7 +219,7 @@
       !$('#copyBody').disabled &&
       $('#outBody').textContent === 'LEAD: ARIA NAIL BAR – 75001\nCBN: (555) 123-4567 – Owner\nMany thanks team!\n@Stella_SalesAdmin @Kyo_SaleAdmin',
       $('#outBody').textContent);
-    check('Chuyển case: nút Lưu offline bị khóa', $('#offSave').disabled);
+    check('Chuyển case: nút Lưu offline và Mở file offline bị khóa', $('#offSave').disabled && $('#offOpen').disabled);
     clickText('#form', 'MKT');
     await settle();
     check('Chuyển case MKT: Issue có ô dán ảnh + Thêm ảnh + Chụp màn hình, MKT bắt buộc cả Tên người liên hệ',

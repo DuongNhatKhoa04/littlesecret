@@ -19,8 +19,11 @@
     const withPdf = $('#offPdf');
     const picker = $('#offImport');
 
-    /** Gọi khi đổi loại: không có ticket để lưu (nhóm SMS, nhánh setup chưa có checklist, Chuyển case) thì khóa nút. */
-    function render() { $('#offSave').disabled = !offlineService.canSave(); }
+    /** Gọi khi đổi loại: không có ticket để lưu (nhóm SMS, nhánh setup chưa có checklist, Chuyển case) thì khóa nút Lưu; Chuyển case khóa cả nút Mở. */
+    function render() {
+      $('#offSave').disabled = !offlineService.canSave();
+      $('#offOpen').disabled = !offlineService.canOpen();
+    }
 
     function askInfo() {
       if (!offlineService.hasContent()) { alert(EMPTY_TICKET); return; }

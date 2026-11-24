@@ -54,6 +54,7 @@
 
     /** Thay ticket đang nhập bằng ticket trong file; ảnh đang dán là của ticket khác nên bỏ. null = file không đúng dạng. */
     async function openFile(file) {
+      if (session.isPassCase()) return null;
       const record = O.parseOfflineFile(await files.readJson(file), typeExists);
       if (!record) return null;
       images.clear();
@@ -66,6 +67,8 @@
 
     return {
       canSave,
+      /** Chuyển case không có ticket offline: mở file ở đây dễ nhầm là đè form Chuyển case. */
+      canOpen: () => !session.isPassCase(),
       hasContent() { const { title, body } = outputService.compute(); return !!(title || body); },
       hasImages: () => outputService.imageList().length > 0,
       save,

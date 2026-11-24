@@ -114,7 +114,7 @@
     const saved = source.downloads[0].text;
 
     const { offline, ticketService, session, store, images } = setup();
-    A.navigationService.createNavigationService({ context, store }).selectTicketType('transfer');
+    A.navigationService.createNavigationService({ context, store }).selectGroup('sms');
     ticketService.setField('summary', 'đang nhập');
     await images.add('s1', [image()]);
     assertEqual([offline.needsConfirmToOpen(), await offline.openFile(jsonFile('không phải json')), session.ticket().summary], [true, null, 'đang nhập']);
@@ -129,10 +129,12 @@
     assertEqual(offline.canSave(), false);
   });
 
-  test('offline: Chuyển case không lưu được (tin nhắn group, không phải ticket)', async () => {
+  test('offline: Chuyển case không lưu, không mở file được (tin nhắn group, không phải ticket)', async () => {
     const { offline, store, downloads } = setup();
     A.navigationService.createNavigationService({ context, store }).selectTicketType('transfer');
     store.update(state => { state.passCase.values.shop = 'ARIA'; });
     assertEqual([offline.canSave(), await offline.save({ zipcode: '1', ticketType: 'A', tier: '1', withPdf: false }), downloads], [false, null, []]);
+    const file = new File([JSON.stringify({ format: 'ticket-writer-offline', id: 'OFF-1', type: 'incident', ticket: {} })], 'a.json', { type: 'application/json' });
+    assertEqual([offline.canOpen(), await offline.openFile(file), store.get().passCase.values.shop], [false, null, 'ARIA']);
   });
 })(window.TW);
