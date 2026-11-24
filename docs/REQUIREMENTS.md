@@ -734,6 +734,10 @@ Thanks team !                       Thanks team !
 Thank you <@tech …>
 ```
 
+- **Copy nội dung** ghi 2 bản vào clipboard (giống copy dòng tiêu đề trên portal):
+  - HTML: Link Ticket **nhúng vào MID** (`<a href="<Link Ticket>">MID</a>`), không có `(…)`; Telegram Desktop dán ra MID là link. Chưa có MID → nhúng vào Tên tiệm.
+  - Chữ thường (Kết quả hiện bản này): link trong ngoặc `(…)` như trên, cho app không đọc HTML.
+  - Tin không có link (mọi tin khác, Assign chưa có Link Ticket) → chỉ copy chữ thường như cũ.
 - Thiếu Tên tiệm / MID thì dòng đầu chỉ còn phần có; thiếu Link Ticket thì bỏ `(…)`. Chưa chọn tech → dòng cuối chỉ `Thank you`.
 - Lấy nhanh Link Ticket + Tên tiệm + MID: bookmark Lấy thông tin tiệm trên trang ticket (§22.4) rồi Ctrl+V.
 

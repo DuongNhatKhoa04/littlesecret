@@ -15,13 +15,28 @@
 
   const joinFilled = (parts, gap = PART_GAP) => parts.filter(part => part).join(gap);
 
-  /** Dòng đầu tin Assign: `Tên tiệm / MID (link ticket)`, giống chữ copy từ dòng tiêu đề trang ticket. */
-  function ticketHeader({ shop, mid, ticket }) {
-    const head = joinFilled([shop, mid], SLASH_GAP);
-    return head && ticket ? `${head} (${ticket})` : head || ticket;
+  // Cách in tin: chữ thường (link in trong ngoặc) hoặc HTML (link nhúng vào chữ, Telegram Desktop nhận khi dán).
+  const HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+  const escapeHtml = (text) => text.replace(/[&<>"]/g, char => HTML_ESCAPES[char]);
+  const PLAIN = { text: (text) => text, link: (label, url) => (label === url ? url : `${label} (${url})`), newline: '\n' };
+  // Ô nhiều dòng (Issue): HTML coi xuống dòng là khoảng trắng => đổi thành <br>
+  const HTML = {
+    text: (text) => escapeHtml(text).replace(/\n/g, '<br>'),
+    link: (label, url) => `<a href="${escapeHtml(url)}">${escapeHtml(label)}</a>`,
+    newline: '<br>'
+  };
+
+  /**
+   * Dòng đầu tin Assign: `Tên tiệm / MID` + link ticket gắn vào MID (không có MID thì gắn vào Tên tiệm),
+   * giống dòng tiêu đề trang ticket (MID là link). Chữ thường: `Tên tiệm / MID (link)`.
+   */
+  function ticketHeader({ shop, mid, ticket }, render) {
+    if (!ticket) return render.text(joinFilled([shop, mid], SLASH_GAP));
+    const linked = render.link(mid || shop || ticket, ticket);
+    return shop && mid ? render.text(shop) + SLASH_GAP + linked : linked;
   }
 
-  /** Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {leadInfo}, {cbn}, {shopZip}, {caller}, {ticketHeader} và {urgent} (chữ GẤP của team khi tick). */
+  /** Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {leadInfo}, {cbn}, {shopZip}, {caller} và {urgent} (chữ GẤP của team khi tick). */
   function teamValues(passCase, team) {
     const values = Object.fromEntries(team.fields.map(id => [id, passCase.values[id].trim()]));
     const person = values.contact && values.role ? `${values.contact} (${values.role})` : values.contact || values.role;
@@ -31,7 +46,6 @@
       cbn: joinFilled([values.phone, person]),
       shopZip: joinFilled([values.shop, values.zip], WORD_GAP),
       caller: joinFilled([values.phone, values.contact, values.role], DASH_GAP),
-      ticketHeader: ticketHeader(values),
       urgent: team.urgent && passCase.urgent ? team.urgent : ''
     };
   }
@@ -80,17 +94,36 @@
     return [thanks, ...(names.length ? [names.join(TAG_GAP)] : [])];
   }
 
+  /** Giá trị theo cách in: chữ đã escape (HTML), {ticketHeader} có link. */
+  function renderedValues(passCase, team, render) {
+    const values = teamValues(passCase, team);
+    const rendered = Object.fromEntries(Object.entries(values).map(([name, value]) => [name, render.text(value)]));
+    return { ...rendered, ticketHeader: ticketHeader(values, render) };
+  }
+
+  function composeMessage(input, render) {
+    const team = findTeam(input.passCase, input.config);
+    const values = renderedValues(input.passCase, team, render);
+    if (team.fields.every(id => !values[id])) return '';
+    const lines = team.lines.filter(line => hasValue(line, values)).filter(isKeptGap).map(line => fillTemplate(render.text(line), values));
+    return [...lines, ...closingLines(team, input).map(render.text)].join(render.newline);
+  }
+
   /**
    * Chưa nhập trường nào của team đang chọn => rỗng. Dòng mà mọi chỗ {…} đều trống thì bỏ.
    * @param {{ passCase: object, config: object, now: Date }} input   now: chọn ca để tag
    * @returns {string}
    */
-  function buildPassCaseMessage({ passCase, config, now }) {
-    const team = findTeam(passCase, config);
-    const values = teamValues(passCase, team);
-    if (team.fields.every(id => !values[id])) return '';
-    const lines = team.lines.filter(line => hasValue(line, values)).filter(isKeptGap).map(line => fillTemplate(line, values));
-    return [...lines, ...closingLines(team, { passCase, config, now })].join('\n');
+  const buildPassCaseMessage = (input) => composeMessage(input, PLAIN);
+
+  /**
+   * Bản HTML của tin để copy kèm chữ thường: link nhúng vào chữ (vd MID của tin Assign). Tin không có link => '' (chỉ copy chữ thường).
+   * @param {{ passCase: object, config: object, now: Date }} input
+   * @returns {string}
+   */
+  function buildPassCaseHtml(input) {
+    const html = composeMessage(input, HTML);
+    return html.includes('<a ') ? html : '';
   }
 
   /** Nhãn các trường bắt buộc còn trống, theo thứ tự trên form. */
@@ -99,5 +132,5 @@
     return team.fields.filter(id => team.required.includes(id) && isBlank(passCase.values[id])).map(id => config.fields[id].label);
   }
 
-  TW.domain.passCaseMessage = { buildPassCaseMessage, missingPassCaseFields, passCaseTags };
+  TW.domain.passCaseMessage = { buildPassCaseMessage, buildPassCaseHtml, missingPassCaseFields, passCaseTags };
 })(window.TW);

@@ -14,6 +14,12 @@
  */
 
 /**
+ * Copy chữ kèm bản HTML (link nhúng vào chữ): app đọc được HTML (Telegram Desktop) giữ link, app khác lấy chữ thường.
+ * @typedef {Object} RichClipboard
+ * @property {(text: string, html: string) => Promise<boolean>} writeRich
+ */
+
+/**
  * @typedef {Object} ImageClipboard
  * @property {(image: StoredImage) => Promise<boolean>} writeImage
  * @property {() => Promise<File[] | null>} readImages   null = trình duyệt không hỗ trợ / bị từ chối quyền

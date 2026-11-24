@@ -198,6 +198,20 @@
       ['tech', 'techAssign', '', []]);
   });
 
+  test('pass case: bản HTML để copy: Assign nhúng link ticket vào MID (Telegram Desktop giữ link), escape chữ, <br>; tin không có link => rỗng', () => {
+    const html = (team, values, extra) => D.passCaseMessage.buildPassCaseHtml({ passCase: passCase(team, values, extra), config, now: vn(21) });
+    const tags = { techAssign: { off: [], extra: ['@ryan-ts'] } };
+    const values = { ...VALUES, ticket: 'https://portal/ticket/1?a=1&b=2#', shop: 'A & B <NAILS>', mid: '4223', issue: 'Phase 1\n"x"' };
+    assertEqual(html('tech', values, { assign: true, tags }),
+      'A &amp; B &lt;NAILS&gt; / <a href="https://portal/ticket/1?a=1&amp;b=2#">4223</a><br>Phase 1<br>&quot;x&quot;<br>Thank you @ryan-ts');
+    assertEqual(html('tech', { ...values, mid: '' }, { assign: true }).startsWith('<a href="https://portal/ticket/1?a=1&amp;b=2#">A &amp; B &lt;NAILS&gt;</a><br>'), true);
+    assertEqual([html('tech', { ...values, ticket: '' }, { assign: true }), html('cs', values), html('tech', values)], ['', '', '']);
+    const { output, service } = setup({ nav: { group: 'ticket', ticketType: 'transfer' }, passCase: { team: 'tech', assign: true, values } });
+    assertEqual([output.compute().body.startsWith('A & B <NAILS> / 4223 (https://portal/ticket/1?a=1&b=2#)\nPhase 1\n"x"'), output.compute().bodyHtml.includes('<a href=')], [true, true]);
+    service.setAssign(false);
+    assertEqual(output.compute().bodyHtml, '');
+  });
+
   test('pass case: Assign có nhóm tag + gợi ý riêng (không lẫn người support thêm của Tech); state cũ chưa có assign => không tick', () => {
     const { store, session, service, tagHistory } = setup({ nav: { group: 'ticket', ticketType: 'transfer' }, passCase: { team: 'tech', values: {} } });
     assertEqual([session.passCase().assign, session.passCase().tags.techAssign], [false, { off: [], extra: [] }]);
