@@ -21,9 +21,6 @@
       setUrgent(on) {
         store.update(state => { state.passCase.urgent = on; }, { rebuild: true });
       },
-      setUrgentNote(note) {
-        store.update(state => { state.passCase.urgentNote = note; }, {});
-      },
       reset() {
         images.clearKeys(allPassCaseImageKeys(config));
         store.update(state => { state.passCase = createEmptyPassCase(config); }, { rebuild: true });

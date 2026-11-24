@@ -232,10 +232,9 @@
     check('Chuyển case Tech: có ô GẤP + lưu ý, giữ Phone đã nhập', !!$('.pass-urgent') && !!$('.pass-tips') && $('#pass_phone').value === '(555) 123-4567');
     $('.pass-urgent input').click();
     await settle();
-    type($('#pass_urgentNote'), 'Tiệm có khách đang chờ tính tiền');
-    await settle();
-    check('Chuyển case Tech: tick GẤP => dòng đầu tin, thiếu trường vẫn khóa Copy',
-      $('#outBody').textContent.startsWith('GẤP: Tiệm có khách đang chờ tính tiền\nCBN: (555) 123-4567 – Owner') && $('#copyBody').disabled, $('#outBody').textContent);
+    check('Chuyển case Tech: tick GẤP => 🔥🔥🔥 URGENT!! trước Tên tiệm, thiếu trường vẫn khóa Copy',
+      $('#outBody').textContent.startsWith('🔥🔥🔥 URGENT!!\nARIA NAIL BAR\nCBN: (555) 123-4567 - Owner') && $('#copyBody').disabled && !$('#pass_urgentNote'),
+      $('#outBody').textContent);
     $('#resetBtn').click();
     await settle();
     check('Chuyển case: Ticket mới chỉ xóa form Chuyển case, về team đầu', $('#outBody').textContent === '' && $('#pass_shop').value === '');

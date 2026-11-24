@@ -228,22 +228,22 @@ setReview({   // const { setReview } = registry;
 
 ```js
 setPassCase({   // const { setPassCase } = registry;
-  labels: { team: 'Team nhận', urgent: 'GẤP', urgentNote: 'Tình trạng thực tế, vd …' },
+  labels: { team: 'Team nhận', urgent: 'GẤP' },
   fields: { shop: { label: 'Tên tiệm' }, phone: { label: 'CBN', kind: 'phone' }, role: { label: 'Vai trò tại tiệm', kind: 'choice', options: ['Owner', 'Manager', 'Staff'] } /* … */ },
-  teams: [{ id: 'sales', label: 'Sales', fields: ['shop', 'zip', 'mid', 'phone'], required: ['shop', 'zip', 'phone'], lines: ['LEAD: {leadInfo}', 'CBN: {cbn}'] } /* … */],
-  urgentLine: 'GẤP: {urgentNote}', urgentOnly: 'GẤP'
+  rows: [['shop', 'zip'], ['phone', 'contact', 'role']],
+  teams: [{ id: 'sales', label: 'Sales', fields: ['shop', 'zip', 'mid', 'phone'], required: ['shop', 'zip', 'phone'], lines: ['LEAD: {leadInfo}', 'CBN: {cbn}'] } /* … */]
 });
 ```
 
 | Trường | Ý nghĩa |
 |---|---|
-| `fields` | Mọi ô của form. Key = id lưu trong state: không đổi id đang có. `kind`: `text` (mặc định) · `phone` (tự format) · `choice` (`options`, bấm lại để bỏ chọn) · `multiline`. `ph` = chữ mờ, `inputMode` cho bàn phím mobile |
+| `fields` | Mọi ô của form. Key = id lưu trong state: không đổi id đang có. `kind`: `text` (mặc định) · `phone` (tự format) · `choice` (`options`, bấm lại để bỏ chọn) · `multiline`. `ph` = chữ mờ, `inputMode` cho bàn phím mobile. `images: true` = có ô dán ảnh / chụp màn hình (key ảnh `pass:<id>`) |
+| `rows` | Trường xếp chung 1 hàng trên form (chỉ đổi cách xếp), khi team có từ 2 trường của hàng |
 | `teams` | Team nhận theo thứ tự trên form, team đầu là mặc định. `id` lưu trong state: không đổi id đang có |
 | `teams[].fields` / `required` | Thứ tự ô trên form / ô bắt buộc (trống thì khóa Copy) |
-| `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò). Dòng mà mọi `{…}` đều trống thì bỏ |
-| `teams[].urgent` / `tips` | Có ô tick GẤP / khung lưu ý trên form |
-| `urgentLine`, `urgentOnly` | Dòng đầu tin khi tick GẤP, có / không ghi tình trạng |
-| `thanks` | Câu cuối mọi tin (`Many thanks team!`) |
+| `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò), `{shopZip}` = Tên tiệm ZIP, `{caller}` = Phone - Tên - Vai trò, `{urgent}` = chữ GẤP của team khi tick. Dòng mà mọi `{…}` đều trống thì bỏ; `''` = dòng trống (không để 2 dòng trống liền nhau) |
+| `teams[].urgent` / `tips` | Chữ in ở `{urgent}` khi tick GẤP (có thì form có ô tick GẤP) / khung lưu ý trên form |
+| `thanks` / `teams[].thanks` | Câu cảm ơn cuối tin (`Many thanks team!`) / thay riêng cho team (`Thanks team !`) |
 | `teams[].tags` | Người cần tag, dòng ngay dưới `thanks`: `[{ names: ['@a', '@b'] }]` = luôn tag; thêm `from`, `to` (`'HH:MM'` giờ VN) = chỉ tag trong ca `[from, to)`, `from` > `to` là ca qua đêm. Đổi người / đổi ca = sửa ở đây |
 | `tagUtcOffsetMinutes` | Múi giờ của ca: `7 * 60` = giờ VN (không có giờ mùa hè) |
 

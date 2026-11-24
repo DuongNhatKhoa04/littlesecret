@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-24
 
+- `v2026-11-24.5` · Chuyển case Tech: theo mẫu group Tech (Link Lead, `🔥🔥🔥 URGENT!!` khi tick GẤP, Tên tiệm, `CBN: Phone - Tên - Vai trò`, Issue, `Thanks team !`); bỏ Cần FaceTime? / System / FRT đã làm / Callback Time và ô Tình trạng thực tế; bắt buộc mọi trường trừ Vai trò; tag ca 1-3 8:00 PM – 4:00 AM, ca 2 4:00 AM – 8:00 PM. Bỏ hẳn trường Package (không team nào dùng). §22
 - `v2026-11-24.4` · Chuyển case: form xếp Tên tiệm + ZIP Code chung 1 hàng, CBN + Tên người liên hệ + Vai trò tại tiệm chung 1 hàng. §22
 - `v2026-11-24.3` · Chuyển case: MKT bắt buộc mọi trường trừ Vai trò tại tiệm. Issue (MKT, Tech) có ô dán ảnh / Thêm ảnh / Chụp màn hình, ảnh vào khối Ảnh (copy, ZIP, PDF), F5 không mất; Ticket mới ở Chuyển case chỉ xóa ảnh Chuyển case. §22
 - `v2026-11-24.2` · Chuyển case: Vai trò tại tiệm thêm lựa chọn `Partner`. §22

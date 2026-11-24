@@ -92,7 +92,7 @@
       segmented({ options: config.teams, value: team.id, ariaLabel: labels.team, onSelect: passCaseService.setTeam }));
 
     function urgentField() {
-      const { urgent, urgentNote } = session.passCase();
+      const { urgent } = session.passCase();
       const toggle = el('label', 'pass-urgent');
       const box = el('input');
       Object.assign(box, { type: 'checkbox', checked: urgent });
@@ -100,12 +100,6 @@
       toggle.append(box, el('b', '', labels.urgent));
       const wrap = el('div', 'field');
       wrap.append(toggle);
-      if (urgent) {
-        wrap.append(textInput({
-          id: ID_PREFIX + 'urgentNote', value: urgentNote, onInput: passCaseService.setUrgentNote,
-          placeholder: labels.urgentNote
-        }));
-      }
       return wrap;
     }
 

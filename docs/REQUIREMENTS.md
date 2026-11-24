@@ -635,47 +635,46 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 | Sales | Tên tiệm ★ · ZIP Code ★ · MID · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Note |
 | MKT | Link Lead ★ · Tên tiệm ★ · ZIP Code ★ · MID ★ · CBN ★ · Tên người liên hệ ★ · Vai trò tại tiệm · Issue ★ |
 | CS | Ticket ★ · Tên tiệm ★ · ZIP Code ★ · MID ★ · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Note |
-| Tech | Link Lead ★ · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Cần FaceTime? ★ · System ★ · Issue ★ · FRT đã làm ★ · Callback Time ★ |
+| Tech | Link Lead ★ · Tên tiệm ★ · CBN ★ · Tên người liên hệ ★ · Vai trò tại tiệm · Issue ★ |
 
 - Xếp chung 1 hàng (mọi team có các trường này): **Tên tiệm + ZIP Code**; **CBN + Tên người liên hệ + Vai trò tại tiệm** (màn hình hẹp thì Vai trò xuống hàng). Khai báo ở `rows` trong config.
-- **CBN**: ô Phone, tự format như §4. **Vai trò tại tiệm**: `Owner` / `Manager` / `Staff` / `Partner`, bấm lại lựa chọn đang chọn là bỏ chọn. **Cần FaceTime?**: `Có` / `Không`. **Issue**, **FRT đã làm**, **Note**: ô nhiều dòng.
+- **CBN**: ô Phone, tự format như §4. **Vai trò tại tiệm**: `Owner` / `Manager` / `Staff` / `Partner`, bấm lại lựa chọn đang chọn là bỏ chọn. **Issue**, **Note**: ô nhiều dòng.
 - **Issue** (MKT, Tech) có ô dán ảnh + `+ Thêm ảnh (Ctrl+V)` + nút chụp màn hình, giống mục ticket (§10): Ctrl+V ảnh khi đang gõ trong Issue cũng vào ảnh Issue. Đổi qua lại MKT / Tech giữ ảnh (cùng trường Issue).
-- **Tech** có ô tick **GẤP**; tick thì hiện ô **Tình trạng thực tế** (không bắt buộc).
+- **Tech** có ô tick **GẤP** (tình trạng thực tế ghi trong Issue).
 - **CS** và **Tech** có khung lưu ý (kiểm tra ticket, Proof, Dispute, quá tải cuộc gọi / phạm vi FRT, Reconnect Terminal, case khẩn cấp) theo thông báo pass case.
 
 ### 22.2 Tin nhắn (output)
 
 ```
-GẤP: <Tình trạng thực tế>          (chỉ Tech, khi tick GẤP; không ghi tình trạng thì chỉ `GẤP`)
 TICKET: <Ticket>                   (CS)
-LINK LEAD: <Link Lead>             (Tech)
-LEAD: <Tên tiệm> – <ZIP> – <MID>   (Sales, CS)
+LEAD: <Tên tiệm> – <ZIP> – <MID>
 CBN: <Phone> – <Tên> (<Vai trò>)
-FACETIME: / SYSTEM: / ISSUE: / FRT ĐÃ LÀM: / CALLBACK TIME:   (Tech)
-NOTE: <Note>                       (Sales, CS)
+NOTE: <Note>
 Many thanks team!
-<tag lead / sublead>               (Sales luôn tag; CS, Tech chưa có)
+<tag lead / sublead>               (Sales luôn tag; CS chưa có)
 ```
 
-MKT (Sales, CS, Tech dùng khung trên) theo mẫu riêng của group MKT:
+MKT và Tech theo mẫu riêng của group từng team:
 
 ```
-<Link Lead>
-<Tên tiệm> <ZIP>
-MID: <MID>
-CBN: <Phone> - <Tên> - <Vai trò>
+MKT                                 Tech
+<Link Lead>                         <Link Lead>
+<Tên tiệm> <ZIP>                    🔥🔥🔥 URGENT!!        (chỉ khi tick GẤP)
+MID: <MID>                          <Tên tiệm>
+CBN: <Phone> - <Tên> - <Vai trò>    CBN: <Phone> - <Tên> - <Vai trò>
 
-<Issue>
+<Issue>                             <Issue>
 
-Thanks team !
-<tag theo ca>
+Thanks team !                       Thanks team !
+<tag theo ca>                       <tag theo ca>
 ```
 
-- MKT: dòng trống giữ nguyên; dòng bị bỏ (vd không có Issue) thì không để lại 2 dòng trống liền nhau.
+- MKT, Tech: dòng trống giữ nguyên; dòng bị bỏ (vd không có Issue) thì không để lại 2 dòng trống liền nhau.
 
 - **Tag** (cách nhau 1 space):
   - Sales: `@Stella_SalesAdmin @Kyo_SaleAdmin`.
   - MKT, theo giờ VN lúc tạo tin: 8:00 PM – 6:00 AM (C1-3) → `@Chris_MKTSupport_Leader @Trivu_MarketingSupport @lucas_mktsupport`; 6:00 AM – 8:00 PM (MKT/AM ca 2) → `@Sarah_Pham_AM @josie_am`.
+  - Tech, theo giờ VN: 8:00 PM – 4:00 AM (ca 1-3) → `@vinny_tech @brian_technical`; 4:00 AM – 8:00 PM (ca 2) → `@dustin_tech @NancyNguyen_Tech`.
   - Dán vào app chat chỉ ra chữ `@tên`; có app phải gõ `@` chọn lại người thì mới thành tag thật.
 
 - Giá trị đã trim. Phần nào trống thì bỏ phần đó (vd không có MID → `LEAD: <Tên tiệm> – <ZIP>`); cả dòng trống thì bỏ dòng. Ô nhiều dòng giữ xuống dòng.

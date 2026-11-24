@@ -14,7 +14,7 @@
 
   const joinFilled = (parts, gap = PART_GAP) => parts.filter(part => part).join(gap);
 
-  /** Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {leadInfo}, {cbn}, {shopZip}, {caller}. */
+  /** Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {leadInfo}, {cbn}, {shopZip}, {caller} và {urgent} (chữ GẤP của team khi tick). */
   function teamValues(passCase, team) {
     const values = Object.fromEntries(team.fields.map(id => [id, passCase.values[id].trim()]));
     const person = values.contact && values.role ? `${values.contact} (${values.role})` : values.contact || values.role;
@@ -23,7 +23,8 @@
       leadInfo: joinFilled([values.shop, values.zip, values.mid]),
       cbn: joinFilled([values.phone, person]),
       shopZip: joinFilled([values.shop, values.zip], WORD_GAP),
-      caller: joinFilled([values.phone, values.contact, values.role], DASH_GAP)
+      caller: joinFilled([values.phone, values.contact, values.role], DASH_GAP),
+      urgent: team.urgent && passCase.urgent ? team.urgent : ''
     };
   }
 
@@ -35,12 +36,6 @@
 
   /** Dòng trống ở đầu tin hoặc ngay sau dòng trống khác thì bỏ: dòng {…} bị bỏ không để lại 2 dòng trống. */
   const isKeptGap = (line, index, lines) => line !== '' || (index > 0 && lines[index - 1] !== '');
-
-  function urgentLines(passCase, team, config) {
-    if (!team.urgent || !passCase.urgent) return [];
-    const note = passCase.urgentNote.trim();
-    return [note ? fillTemplate(config.urgentLine, { urgentNote: note }) : config.urgentOnly];
-  }
 
   const toMinutes = (hhmm) => { const [hours, minutes] = hhmm.split(':').map(Number); return hours * 60 + minutes; };
 
@@ -72,7 +67,7 @@
     const values = teamValues(passCase, team);
     if (team.fields.every(id => !values[id])) return '';
     const lines = team.lines.filter(line => hasValue(line, values)).filter(isKeptGap).map(line => fillTemplate(line, values));
-    return [...urgentLines(passCase, team, config), ...lines, ...closingLines(team, config, now)].join('\n');
+    return [...lines, ...closingLines(team, config, now)].join('\n');
   }
 
   /** Nhãn các trường bắt buộc còn trống, theo thứ tự trên form. */

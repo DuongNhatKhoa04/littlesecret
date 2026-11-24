@@ -4,7 +4,7 @@
 
   function createEmptyPassCase(config) {
     const values = Object.fromEntries(Object.keys(config.fields).map(id => [id, '']));
-    return { team: config.teams[0].id, urgent: false, urgentNote: '', values };
+    return { team: config.teams[0].id, urgent: false, values };
   }
 
   /** Team / trường không còn trong config thì bỏ; bản trước chưa có pass case => mặc định. */
@@ -13,7 +13,6 @@
     if (!raw || typeof raw !== 'object') return passCase;
     if (config.teams.some(team => team.id === raw.team)) passCase.team = raw.team;
     passCase.urgent = raw.urgent === true;
-    if (typeof raw.urgentNote === 'string') passCase.urgentNote = raw.urgentNote;
     const saved = raw.values && typeof raw.values === 'object' ? raw.values : {};
     Object.keys(passCase.values).forEach(id => { if (typeof saved[id] === 'string') passCase.values[id] = saved[id]; });
     return passCase;
