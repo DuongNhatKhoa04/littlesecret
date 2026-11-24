@@ -141,8 +141,10 @@
     function build() {
       const team = findTeam(session.passCase(), config);
       root.textContent = '';
-      root.append(teamField(team));
-      if (team.urgent) root.append(urgentField());
+      // GẤP cạnh Team nhận: đầu form, tick được ngay không phải kéo xuống.
+      const top = el('div', 'pass-row');
+      top.append(teamField(team), ...(team.urgent ? [urgentField()] : []));
+      root.append(top);
       root.append(...fieldNodes(team), tagsField());
       if (team.tips) root.append(tipsNode(team));
     }

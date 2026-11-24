@@ -64,11 +64,13 @@
     assertEqual(missing('tech', { lead: 'x', role: '' }), ['Tên tiệm', 'CBN', 'Tên người liên hệ', 'Issue']);
   });
 
-  test('pass case: GẤP chỉ ở team có urgent: tick => 🔥🔥🔥 URGENT!! ngay dưới link lead', () => {
-    const urgent = (team) => build(team, VALUES, { urgent: true }).split('\n').slice(0, 3);
-    assertEqual([urgent('tech'), urgent('sales')], [
+  test('pass case: GẤP mọi team: tick => 🔥🔥🔥 URGENT!! đầu tin (Sales) / ngay dưới link lead, link ticket', () => {
+    const urgent = (team) => build(team, { ...VALUES, ticket: 'https://crm/ticket/7' }, { urgent: true }).split('\n').slice(0, 3);
+    assertEqual(['tech', 'mkt', 'cs', 'sales'].map(urgent), [
       ['https://crm/lead/9', '🔥🔥🔥 URGENT!!', 'ARIA NAIL BAR'],
-      ['LEAD: ARIA NAIL BAR – 75001 – 8800123', 'CBN: (555) 123-4567 – Mr. Vương (Owner)', 'Many thanks team!']
+      ['https://crm/lead/9', '🔥🔥🔥 URGENT!!', 'ARIA NAIL BAR 75001'],
+      ['https://crm/ticket/7', '🔥🔥🔥 URGENT!!', 'ARIA NAIL BAR 75001'],
+      ['🔥🔥🔥 URGENT!!', 'LEAD: ARIA NAIL BAR – 75001 – 8800123', 'CBN: (555) 123-4567 – Mr. Vương (Owner)']
     ]);
   });
 

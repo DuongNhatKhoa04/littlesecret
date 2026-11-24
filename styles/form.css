@@ -92,7 +92,8 @@
 .pass-row { display: flex; flex-wrap: wrap; align-items: flex-end; column-gap: 12px; }   /* nhãn dài xuống dòng thì ô nhập vẫn thẳng hàng */
 .pass-row > .field { flex: 1 1 0; min-width: min-content; }   /* cột rộng ít nhất bằng nhãn */
 .pass-row > .field > label { white-space: nowrap; }
-.pass-row > .field:has(.seg) { flex: 0 0 auto; }
+.pass-row > .field:has(.seg), .pass-row > .field:has(.pass-urgent) { flex: 0 0 auto; }
+.pass-row .pass-urgent { margin-bottom: 0; }
 .pass-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
 .pass-tag { cursor: pointer; font-weight: 500; }
 .pass-tag:not(:has(input:checked)) { opacity: .55; text-decoration: line-through; }   /* bỏ tick = hôm nay nghỉ, không tag */

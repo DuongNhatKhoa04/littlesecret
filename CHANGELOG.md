@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-24
 
+- `v2026-11-24.10` · Chuyển case: ô GẤP có ở cả Sales / MKT / CS (🔥🔥🔥 URGENT!! đầu tin Sales, dưới link lead / link ticket ở MKT / CS); ô tick nằm cạnh Team nhận ở đầu form. §22
 - `v2026-11-24.9` · Chuyển case Tech ca 2: chỉ tag `@dustin_tech`, bỏ `@NancyNguyen_Tech`; bỏ `optional` trong config tag. §22
 - `v2026-11-24.8` · Chuyển case Tech ca 2: `@dustin_tech` cố định, `@NancyNguyen_Tech` optional (mặc định không tick, tick khi đi làm); config tag có thêm `optional`. §22
 - `v2026-11-24.7` · Chuyển case: ô Tag trên form: bỏ tick người hôm nay nghỉ, thêm người support thêm (tự thêm `@`, tag mọi ca, có × để bỏ); lưu theo team, F5 và Ticket mới vẫn giữ. §22

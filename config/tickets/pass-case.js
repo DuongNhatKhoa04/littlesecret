@@ -38,27 +38,27 @@
     // thanks: thay câu cảm ơn chung (thanks bên dưới) cho riêng team này.
     teams: [
       {
-        id: 'sales', label: 'Sales',
+        id: 'sales', label: 'Sales', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['shop', 'zip', 'mid', 'phone', 'contact', 'role', 'note'],
         required: ['shop', 'zip', 'phone'],
-        lines: ['LEAD: {leadInfo}', 'CBN: {cbn}', 'NOTE: {note}'],
+        lines: ['{urgent}', 'LEAD: {leadInfo}', 'CBN: {cbn}', 'NOTE: {note}'],
         tags: [{ names: ['@Stella_SalesAdmin', '@Kyo_SaleAdmin'] }]
       },
       {
-        id: 'mkt', label: 'MKT', thanks: 'Thanks team !',
+        id: 'mkt', label: 'MKT', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['lead', 'shop', 'zip', 'mid', 'phone', 'contact', 'role', 'issue'],
         required: ['lead', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
-        lines: ['{lead}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
+        lines: ['{lead}', '{urgent}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
         tags: [
           { from: '20:00', to: '06:00', names: ['@Chris_MKTSupport_Leader', '@Trivu_MarketingSupport', '@lucas_mktsupport'] },
           { from: '06:00', to: '20:00', names: ['@Sarah_Pham_AM', '@josie_am'] }
         ]
       },
       {
-        id: 'cs', label: 'CS', thanks: 'Thanks team !',
+        id: 'cs', label: 'CS', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['ticket', 'shop', 'zip', 'mid', 'phone', 'contact', 'role', 'issue'],
         required: ['ticket', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
-        lines: ['{ticket}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
+        lines: ['{ticket}', '{urgent}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
         tags: [
           { from: '20:00', to: '05:00', names: ['@xuanthor_cs', '@joyce_cs'] },
           { from: '05:00', to: '20:00', names: ['@ThuTranCS'] }

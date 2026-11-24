@@ -640,7 +640,7 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 - Xếp chung 1 hàng (mọi team có các trường này): **Tên tiệm + ZIP Code**; **CBN + Tên người liên hệ + Vai trò tại tiệm** (màn hình hẹp thì Vai trò xuống hàng). Khai báo ở `rows` trong config.
 - **CBN**: ô Phone, tự format như §4. **Vai trò tại tiệm**: `Owner` / `Manager` / `Staff` / `Partner`, bấm lại lựa chọn đang chọn là bỏ chọn. **Issue**, **Note**: ô nhiều dòng.
 - **Issue** (MKT, CS, Tech) có ô dán ảnh + `+ Thêm ảnh (Ctrl+V)` + nút chụp màn hình, giống mục ticket (§10): Ctrl+V ảnh khi đang gõ trong Issue cũng vào ảnh Issue. Đổi qua lại MKT / CS / Tech giữ ảnh (cùng trường Issue).
-- **Tech** có ô tick **GẤP** (tình trạng thực tế ghi trong Issue).
+- Mọi team có ô tick **GẤP**, nằm cùng hàng với Team nhận ở đầu form (tình trạng thực tế ghi trong Issue / Note). Đổi team vẫn giữ tick.
 - **CS** và **Tech** có khung lưu ý (kiểm tra ticket, Proof, Dispute, quá tải cuộc gọi / phạm vi FRT, Reconnect Terminal, case khẩn cấp) theo thông báo pass case.
 
 ### 22.2 Tin nhắn (output)
@@ -648,6 +648,7 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 Sales:
 
 ```
+🔥🔥🔥 URGENT!!                     (chỉ khi tick GẤP)
 LEAD: <Tên tiệm> – <ZIP> – <MID>
 CBN: <Phone> – <Tên> (<Vai trò>)
 NOTE: <Note>
@@ -660,8 +661,9 @@ MKT, CS, Tech theo mẫu riêng của group từng team:
 ```
 MKT / CS                            Tech
 <Link Lead> / <Link Ticket>         <Link Lead>
-<Tên tiệm> <ZIP>                    🔥🔥🔥 URGENT!!        (chỉ khi tick GẤP)
-MID: <MID>                          <Tên tiệm>
+🔥🔥🔥 URGENT!!                      🔥🔥🔥 URGENT!!        (chỉ khi tick GẤP)
+<Tên tiệm> <ZIP>                    <Tên tiệm>
+MID: <MID>
 CBN: <Phone> - <Tên> - <Vai trò>    CBN: <Phone> - <Tên> - <Vai trò>
 
 <Issue>                             <Issue>
