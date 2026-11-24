@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-24
 
+- `v2026-11-24.20` · Thêm `tests/tools/build_release.py`: gộp app thành 1 file `release/ticket-writer.html` (bỏ comment) để gửi đồng nghiệp không kèm source; `smoke_ui.py` chạy được trên trang bất kỳ.
 - `v2026-11-24.19` · Viết ticket: thêm **Vai trò tại tiệm** (Owner / Manager / Staff / Partner, không bắt buộc, bấm lại = bỏ chọn) cùng hàng Phone + Tên merchant; in `Phone: <SĐT> - <Tên> - <Vai trò>`. §4 §8
 - `v2026-11-24.18` · Header: thêm `· Developed by Ryan` cạnh version.
 - `v2026-11-24.17` · Chuyển case: khóa cả nút Mở file offline. §19

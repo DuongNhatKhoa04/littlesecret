@@ -1,6 +1,6 @@
 """Bấm thử giao diện thật bằng Chrome headless (dev tool, không bắt buộc).
 
-Dùng:  python tests/tools/smoke_ui.py
+Dùng:  python tests/tools/smoke_ui.py  [trang.html]   (mặc định index.html; vd release/ticket-writer.html)
 Tạo tạm _smoke.html (bản sao index.html + kịch bản smoke_ui.js) cạnh index.html, chạy, rồi xóa.
 Chạy theo giờ thật (không dùng --virtual-time-budget): giờ ảo trôi hết trong lúc trình duyệt giải mã ảnh / tạo file,
 nên các bước dán ảnh, ZIP, PDF chập chờn hoặc treo. Trang tự gửi kết quả về server nhỏ trên 127.0.0.1 khi chạy xong.
@@ -59,7 +59,8 @@ def run_page(page):
 
 
 def main():
-    source = (ROOT / "index.html").read_text(encoding="utf-8")
+    # Tham số (tùy chọn): trang khác index.html, vd bản gộp release/ticket-writer.html của build_release.py
+    source = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / "index.html").read_text(encoding="utf-8")
     page = source.replace("<body>", "<body>\n" + CATCH, 1).replace(
         "</body>", '<script src="tests/tools/smoke_ui.js"></script>\n</body>')
     temp = ROOT / "_smoke.html"

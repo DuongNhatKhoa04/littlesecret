@@ -17,7 +17,11 @@ Chạy hoàn toàn trên máy: không server, không Internet, không cài gì. 
 
 ## Gửi cho đồng nghiệp
 
-Nén **cả folder** (giữ nguyên cấu trúc) → bên kia giải nén → double-click `index.html`. Trước khi gửi bản mới: làm theo [docs/REVIEW.md](docs/REVIEW.md).
+**Không gửi source (khuyên dùng)**: chạy `python tests/tools/build_release.py` → gửi **1 file** `release/ticket-writer.html` (gộp toàn bộ CSS + JS, bỏ comment; không có docs, tests, cấu trúc thư mục). Bên kia double-click file đó là chạy. Kiểm tra bản gộp: `python tests/tools/smoke_ui.py release/ticket-writer.html`.
+
+Gửi cả source: nén **cả folder** (giữ nguyên cấu trúc) → bên kia giải nén → double-click `index.html`.
+
+Đổi giữa 2 cách không mất dữ liệu đã lưu (Chrome cho mọi trang `file://` chung 1 kho lưu trữ). Trước khi gửi bản mới: làm theo [docs/REVIEW.md](docs/REVIEW.md).
 
 Không có gì bí mật nằm trong folder: mã bí mật của phone-upload lưu ở `%LOCALAPPDATA%\TicketWriter\` của từng máy.
 

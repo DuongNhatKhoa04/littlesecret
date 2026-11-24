@@ -1,5 +1,8 @@
 __pycache__/
 
+# Bản gộp gửi đồng nghiệp (build_release.py): sinh lại được, không commit
+release/
+
 # Skill cài bằng npx skills: không đưa vào repo, cài lại từ skills-lock.json
 .agents/
 .claude/skills/

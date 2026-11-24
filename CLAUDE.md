@@ -33,7 +33,7 @@ Tool web 1 trang giúp support viết ticket (Title + Nội dung để copy) và
 ## Chạy & chia sẻ
 
 - **`index.html` là file chính**: double-click là chạy (giao thức `file://`), không cần server, không cần cài gì.
-- Gửi đồng nghiệp: nén **cả folder dự án** (giữ nguyên cấu trúc; sơ đồ dưới gọi là `ticket-writer/`, repo hiện tên `littlesecret/`), bên kia giải nén rồi double-click `index.html`. Trước khi gửi: [docs/REVIEW.md](docs/REVIEW.md).
+- Gửi đồng nghiệp: nén **cả folder dự án** (giữ nguyên cấu trúc; sơ đồ dưới gọi là `ticket-writer/`, repo hiện tên `littlesecret/`), bên kia giải nén rồi double-click `index.html`. Không muốn gửi source: `python tests/tools/build_release.py` → gửi 1 file `release/ticket-writer.html` (không commit `release/`). Trước khi gửi: [docs/REVIEW.md](docs/REVIEW.md).
 - Vì chạy trên `file://`:
   - Dùng `<script src="...">` thường. **Không** dùng ES module (`type="module"`, `import`/`export`): trình duyệt chặn trên `file://`.
   - **Không** `fetch()`/XHR file trong folder. Cấu hình viết thành file `.js`. (Ngoại lệ duy nhất: `phone-inbox` gọi `http://127.0.0.1` tới phone-upload, không phải đọc file.)

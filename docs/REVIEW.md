@@ -40,7 +40,8 @@ Thay đổi chạm vào các vùng này → người phụ trách đọc diff tr
 
 **Gửi đi**
 
-- [ ] Nén cả folder dự án. Không kèm Downloads, không kèm file ticket offline / ZIP ảnh của merchant.
+- [ ] Không gửi source: `python tests/tools/build_release.py` rồi `python tests/tools/smoke_ui.py release/ticket-writer.html` xanh → gửi 1 file `release/ticket-writer.html`. Gửi cả source: nén cả folder dự án.
+- [ ] Không kèm Downloads, không kèm file ticket offline / ZIP ảnh của merchant.
 - [ ] Báo đồng nghiệp: version mới, đổi gì (copy từ CHANGELOG), có phải kéo lại bookmark *Điền ticket* / chạy lại phone-upload không.
 
 ## 3. Review thay đổi do AI (Claude) làm
