@@ -4,6 +4,9 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-24
 
+- `v2026-11-24.13` · Chuyển case: ô GẤP chưa tick có nền đỏ chìm (thay màu xanh SMS), tick thì đỏ đậm như cũ. §22
+- `v2026-11-24.12` · Chuyển case: ô GẤP có nền xanh khung SMS Promotion khi chưa tick (tick vẫn đỏ). §22
+- `v2026-11-24.11` · Chuyển case: ô GẤP chuyển xuống ngay dưới Issue (Sales: dưới Note); tick không dựng lại form. §22
 - `v2026-11-24.10` · Chuyển case: ô GẤP có ở cả Sales / MKT / CS (🔥🔥🔥 URGENT!! đầu tin Sales, dưới link lead / link ticket ở MKT / CS); ô tick nằm cạnh Team nhận ở đầu form. §22
 - `v2026-11-24.9` · Chuyển case Tech ca 2: chỉ tag `@dustin_tech`, bỏ `@NancyNguyen_Tech`; bỏ `optional` trong config tag. §22
 - `v2026-11-24.8` · Chuyển case Tech ca 2: `@dustin_tech` cố định, `@NancyNguyen_Tech` optional (mặc định không tick, tick khi đi làm); config tag có thêm `optional`. §22

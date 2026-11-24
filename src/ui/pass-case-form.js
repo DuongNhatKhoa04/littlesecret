@@ -64,9 +64,14 @@
       return node;
     }
 
+    /** Ô GẤP nằm ngay dưới ô nhiều dòng đầu tiên của team (Issue / Note): viết xong mô tả là tick luôn. */
+    const urgentFieldId = (team) => team.urgent && team.fields.find(id => config.fields[id].kind === 'multiline');
+
     function fieldNode(team, id) {
       const field = config.fields[id];
-      const node = withBadge(labeledField(field.label, control(id, field)), team.required.includes(id));
+      const input = control(id, field);
+      const node = withBadge(labeledField(field.label, input), team.required.includes(id));
+      if (id === urgentFieldId(team)) input.after(urgentToggle());
       return field.images ? withImages(node, id) : node;
     }
 
@@ -93,16 +98,13 @@
     const teamField = (team) => labeledField(labels.team,
       segmented({ options: config.teams, value: team.id, ariaLabel: labels.team, onSelect: passCaseService.setTeam }));
 
-    function urgentField() {
-      const { urgent } = session.passCase();
+    function urgentToggle() {
       const toggle = el('label', 'pass-urgent');
       const box = el('input');
-      Object.assign(box, { type: 'checkbox', checked: urgent });
+      Object.assign(box, { type: 'checkbox', checked: session.passCase().urgent });
       box.addEventListener('change', () => passCaseService.setUrgent(box.checked));
       toggle.append(box, el('b', '', labels.urgent));
-      const wrap = el('div', 'field');
-      wrap.append(toggle);
-      return wrap;
+      return toggle;
     }
 
     /** 1 người: ô tick (bỏ tick = hôm nay nghỉ); người thêm tay có thêm nút × để xóa khỏi danh sách. */
@@ -141,10 +143,7 @@
     function build() {
       const team = findTeam(session.passCase(), config);
       root.textContent = '';
-      // GẤP cạnh Team nhận: đầu form, tick được ngay không phải kéo xuống.
-      const top = el('div', 'pass-row');
-      top.append(teamField(team), ...(team.urgent ? [urgentField()] : []));
-      root.append(top);
+      root.append(teamField(team));
       root.append(...fieldNodes(team), tagsField());
       if (team.tips) root.append(tipsNode(team));
     }

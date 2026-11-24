@@ -21,8 +21,9 @@
         if (!config.teams.some(item => item.id === team)) return;
         store.update(state => { state.passCase.team = team; }, { rebuild: true });
       },
+      /** Ô tick tự giữ trạng thái => không dựng lại form, con trỏ không bị mất. */
       setUrgent(on) {
-        store.update(state => { state.passCase.urgent = on; }, { rebuild: true });
+        store.update(state => { state.passCase.urgent = on; }, {});
       },
       /** Bỏ tick = hôm nay người đó không đi làm. */
       setTagOn(name, on) {

@@ -12,6 +12,7 @@
   --done-bg: #dff4ff; --done-ink: #0b3b5a; --done-line: #7cd7ff;                     /* nút đã copy (Copy lại) */
   --warn-bg: #fff0cc; --warn-ink: #7a4a00; --ok: #0d7f5f; --out-bg: #fcfbff;
   --err-bg: #fdd8d8; --err-ink: #a3141c;
+  --urgent-bg: #fdf1f1; --urgent-line: #efb9be;   /* ô GẤP chưa tick: đỏ chìm, tick thì dùng --err-* */
   --sms-bg: #eef8ff; --sms-line: #7cd7ff;
   --radius: 8px;
   scrollbar-color: var(--btn-hover) transparent;
@@ -27,6 +28,7 @@
     --done-bg: #7cd7ff; --done-ink: #062033; --done-line: #7cd7ff;
     --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #171230;
     --err-bg: #4a1a22; --err-ink: #ffb3bd;
+    --urgent-bg: #2b1621; --urgent-line: #6e2f3c;
     --sms-bg: #142a40; --sms-line: #7cd7ff;
   }
 }
@@ -39,6 +41,7 @@
   --done-bg: #7cd7ff; --done-ink: #062033; --done-line: #7cd7ff;
   --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #171230;
   --err-bg: #4a1a22; --err-ink: #ffb3bd;
+  --urgent-bg: #2b1621; --urgent-line: #6e2f3c;
   --sms-bg: #142a40; --sms-line: #7cd7ff;
 }
 :root[data-theme="light"] { color-scheme: light; }
