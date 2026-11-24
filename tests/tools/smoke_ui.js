@@ -301,9 +301,9 @@
     type($('#pass_tagAdd'), 'ryan-ts');
     $('.pass-tag-add button').click();
     await settle();
-    check('Chuyển case Tech Assign: form Link Ticket / Tên tiệm / MID / Issue (không CBN, không GẤP); tin `Tên tiệm / MID (link)`, Issue, `thank you @tech`',
+    check('Chuyển case Tech Assign: form Link Ticket / Tên tiệm / MID / Issue (không CBN, không GẤP); tin `Tên tiệm / MID (link)`, Issue, `Thank you @tech`',
       !!$('#pass_ticket') && !$('#pass_phone') && !$('.pass-urgent') && !$('#copyBody').disabled &&
-      $('#outBody').textContent === 'ASSIGN NAILS / 4966 (https://portal/v2/helpdesk/ticket/9#)\nPhase 1\nthank you @ryan-ts', $('#outBody').textContent);
+      $('#outBody').textContent === 'ASSIGN NAILS / 4966 (https://portal/v2/helpdesk/ticket/9#)\nPhase 1\nThank you @ryan-ts', $('#outBody').textContent);
     $('#pass_assign').click();
     await settle();
     check('Chuyển case Tech: bỏ tick Assign => mẫu Tech như cũ, không tag tech của Assign',

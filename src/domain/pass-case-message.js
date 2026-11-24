@@ -72,7 +72,7 @@
     return [...shift, ...added].map(name => ({ name, on: !off.includes(name), extra: added.includes(name) }));
   }
 
-  /** Many thanks team!, dòng dưới là người được tag (nếu có). inlineTags: tag nối ngay sau câu cảm ơn (vd `thank you @tech`). */
+  /** Many thanks team!, dòng dưới là người được tag (nếu có). inlineTags: tag nối ngay sau câu cảm ơn (vd `Thank you @tech`). */
   function closingLines(team, input) {
     const names = passCaseTags(input).filter(tag => tag.on).map(tag => tag.name);
     const thanks = team.thanks || input.config.thanks;

@@ -731,10 +731,10 @@ Thanks team !                       Thanks team !
 ```
 <Tên tiệm> / <MID> (<Link Ticket>)
 <Issue>
-thank you <@tech …>
+Thank you <@tech …>
 ```
 
-- Thiếu Tên tiệm / MID thì dòng đầu chỉ còn phần có; thiếu Link Ticket thì bỏ `(…)`. Chưa chọn tech → dòng cuối chỉ `thank you`.
+- Thiếu Tên tiệm / MID thì dòng đầu chỉ còn phần có; thiếu Link Ticket thì bỏ `(…)`. Chưa chọn tech → dòng cuối chỉ `Thank you`.
 - Lấy nhanh Link Ticket + Tên tiệm + MID: bookmark Lấy thông tin tiệm trên trang ticket (§22.4) rồi Ctrl+V.
 
 ## 23. Sao lưu / khôi phục dữ liệu (chuyển máy / trình duyệt)

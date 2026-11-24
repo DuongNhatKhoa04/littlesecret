@@ -181,14 +181,14 @@
     assertEqual([store.get().passCase, store.get().ticket.summary], [D.passCase.createEmptyPassCase(config), 'giữ']);
   });
 
-  test('pass case: Tech tick Assign => `Tên tiệm / MID (link ticket)`, Issue, `thank you @tech` (chỉ tech tự thêm, không tag theo ca, không CBN)', () => {
+  test('pass case: Tech tick Assign => `Tên tiệm / MID (link ticket)`, Issue, `Thank you @tech` (chỉ tech tự thêm, không tag theo ca, không CBN)', () => {
     const ticket = 'https://portal/v2/helpdesk/ticket/351948?bucket=1&rank=20#';
     const values = { ...VALUES, ticket, shop: 'TEST NAILS BAR', mid: '123456789012', issue: 'Phase 1' };
     const tags = { techAssign: { off: [], extra: ['@ryan-ts'] } };
     assertEqual(buildAt(vn(21), 'tech', values, { assign: true, tags }),
-      `TEST NAILS BAR / 123456789012 (${ticket})\nPhase 1\nthank you @ryan-ts`);
-    assertEqual(build('tech', { shop: 'A' }, { assign: true }), 'A\nthank you');
-    assertEqual(build('tech', { ...values, shop: '', mid: '' }, { assign: true }), `${ticket}\nPhase 1\nthank you`);
+      `TEST NAILS BAR / 123456789012 (${ticket})\nPhase 1\nThank you @ryan-ts`);
+    assertEqual(build('tech', { shop: 'A' }, { assign: true }), 'A\nThank you');
+    assertEqual(build('tech', { ...values, shop: '', mid: '' }, { assign: true }), `${ticket}\nPhase 1\nThank you`);
     assertEqual(missing('tech', { shop: 'A' }, { assign: true }), ['Link Ticket', 'MID', 'Issue']);
     // Bỏ tick: mẫu Tech như cũ; team khác không có Assign thì tick không có tác dụng
     assertEqual(build('tech', VALUES, { assign: false }).startsWith('https://crm/lead/9\nARIA NAIL BAR\nCBN:'), true);

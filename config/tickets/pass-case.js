@@ -92,7 +92,7 @@
           fields: ['ticket', 'shop', 'mid', 'issue'],
           required: ['ticket', 'shop', 'mid', 'issue'],
           lines: ['{ticketHeader}', '{issue}'],
-          thanks: 'thank you', inlineTags: true,
+          thanks: 'Thank you', inlineTags: true,
           urgent: '', tags: [], tips: null,
           labels: { tags: 'Tech nhận case', tagPh: '@tên tech' }   // thay nhãn ô Tag của team (labels ở trên)
         }
