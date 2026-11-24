@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-24.20',      // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-24.22',      // hiện cạnh tên app để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
     offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu offline (chọn 1, bắt buộc)
@@ -18,6 +18,9 @@
     themeKey: 'ticketWriter.theme.v1',         // giao diện sáng / tối / tự động, lưu riêng để Ticket mới không đổi
     summaryKey: 'ticketWriter.summaries.v1',   // Tóm tắt đã dùng, gợi ý khi gõ ô Tóm tắt
     tagKey: 'ticketWriter.passTags.v1',        // tên tag đã thêm tay ở Chuyển case theo team, gợi ý khi gõ ô Thêm tag
+    // Key đưa vào file Sao lưu (tên trường ở trên): gợi ý Tóm tắt, gợi ý tên người support thêm (Chuyển case), template.
+    // Không có ticket đang nhập (thông tin merchant), ảnh, mã phone-upload (gắn với từng máy).
+    backupKeys: ['summaryKey', 'tagKey', 'templateKey'],
     phoneKey: 'ticketWriter.phone.v1',         // link phone-upload + đang bật nhận ảnh iOS hay không
     imageDbName: 'ticketWriter.images.v1',     // tên database IndexedDB chứa ảnh đang dán (KHÔNG ĐỔI)
 

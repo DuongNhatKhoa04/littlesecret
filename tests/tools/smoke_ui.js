@@ -620,6 +620,20 @@
     clickText('#picker', 'Chuyển case');
     await settle();
     check('Chuyển case: không có khối SMS', !$('.sms-box') && $('#smsBlock').hidden);
+
+    const backup = await captureDownload($('#backupSave'));
+    const backupFile = JSON.parse(new TextDecoder().decode(backup.bytes) || '{}');
+    check('Sao lưu: tải 1 file JSON có gợi ý Tóm tắt, gợi ý tag; không có ticket đang nhập, tên nhân viên, mã phone-upload',
+      backup.names.length === 1 && /^ticket-writer-backup-\d{8}-\d{4}\.json$/.test(backup.names[0]) && backupFile.format === 'ticket-writer-backup' &&
+      Array.isArray(backupFile.data['ticketWriter.summaries.v1']) && 'ticketWriter.passTags.v1' in backupFile.data &&
+      !['ticketWriter.v1', 'ticketWriter.staff.v1', 'ticketWriter.phone.v1'].some(key => key in backupFile.data),
+      [backup.names, Object.keys(backupFile.data || {})]);
+    const notBackup = new DataTransfer();
+    notBackup.items.add(new File(['{"format":"khac"}'], 'x.json', { type: 'application/json' }));
+    $('#backupImport').files = notBackup.files;
+    $('#backupImport').dispatchEvent(new Event('change'));
+    await until(() => String(alerts[alerts.length - 1]).startsWith('File không phải file sao lưu'), 5000);
+    check('Khôi phục: file không phải sao lưu => báo, không tải lại trang', String(alerts[alerts.length - 1]).startsWith('File không phải file sao lưu'), alerts.slice(-1));
   } catch (error) {
     log.push('FAIL exception :: ' + error.stack);
   }

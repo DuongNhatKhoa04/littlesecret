@@ -11,14 +11,14 @@ Mọi thứ nằm trên **máy đang dùng**, trong profile trình duyệt / tà
 | Ticket đang nhập, form SMS, chế độ xem (`ticketWriter.v1`) | localStorage | `Ticket mới`, xóa dữ liệu trình duyệt |
 | Template, Loại tự thêm, tên nhân viên, giao diện, link phone-upload | localStorage (key ở REQUIREMENTS §12) | Xóa trong app / xóa dữ liệu trình duyệt |
 | Ảnh đang dán | IndexedDB `ticketWriter.images.v1` | `Ticket mới`, `Xóa hết ảnh`, `Mở file offline`, xóa dữ liệu trình duyệt |
-| File tải xuống: ZIP / PDF ảnh, ticket offline (`OFF-….json/.zip`), `ticket-templates.json` | Thư mục Downloads | Người dùng tự xóa |
+| File tải xuống: ZIP / PDF ảnh, ticket offline (`OFF-….json/.zip`), `ticket-templates.json`, sao lưu (`ticket-writer-backup-….json`) | Thư mục Downloads | Người dùng tự xóa |
 | Mã bí mật phone-upload | `%LOCALAPPDATA%\TicketWriter\` | Người dùng tự xóa |
 | Ảnh iPad gửi lên chưa được lấy | Bộ nhớ cửa sổ phone-upload | Tắt cửa sổ |
 
 Lưu ý:
 
 - Trên `file://`, Chrome dùng **chung 1 vùng lưu trữ cho mọi trang `file://`** của profile đó. Trang HTML khác mở bằng double-click trên cùng máy, cùng profile đọc được localStorage / IndexedDB của Ticket Writer. Không mở file HTML lạ bằng profile đang dùng Ticket Writer.
-- File trong Downloads (ticket offline, ZIP, PDF) chứa thông tin merchant: xử lý như tài liệu nội bộ, xóa khi xong việc.
+- File trong Downloads (ticket offline, ZIP, PDF, sao lưu) chứa thông tin merchant: xử lý như tài liệu nội bộ, xóa khi xong việc. File sao lưu (gợi ý Tóm tắt, tên tag, template) không có ticket đang nhập nhưng vẫn là dữ liệu nội bộ: chép sang máy mới bằng USB / ổ công ty, không gửi qua chat / email ngoài.
 
 ## 2. Dữ liệu đi đâu
 

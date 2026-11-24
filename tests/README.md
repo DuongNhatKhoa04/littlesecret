@@ -33,6 +33,7 @@ Double-click `tests/index.html`. Dòng đầu hiện `PASS x/x` (xanh) hoặc `F
 | `shipping.test.js` | SMS Shipping: tin nhắn đúng mẫu, trường còn thiếu, đọc/lưu state, Kết quả không có title. |
 | `pass-case.test.js` | Chuyển case: tin theo team (Sales / MKT / CS / Tech), GẤP, trường bắt buộc, đọc/lưu state, Kết quả không có title, Ticket mới chỉ xóa form này, tag chỉnh tay theo ca, gợi ý tag riêng từng team (đọc bản cũ). |
 | `review.test.js` | SMS Xin review: bảng bang → chi nhánh → link, tin nhắn 2 ngôn ngữ, đọc/lưu state, Kết quả không có title, tên nhân viên. |
+| `backup.test.js` | Sao lưu / khôi phục: chỉ gợi ý Tóm tắt, gợi ý tag, template vào file (không có ticket đang nhập, mã phone-upload), file sai, ghi đè / giữ key, bỏ key lạ, bộ nhớ đầy. Không đọc `File` thật (headless giờ ảo đôi khi treo khi đọc Blob). |
 | `offline.test.js` | Ticket offline: mã OFF-…, mỗi lần lưu chỉ tải 1 file (ZIP chứa JSON + ảnh + PDF cùng tên), đọc file, mở lại vào form. Test async (runner chờ từng test). |
 
 ## Chưa có test tự động

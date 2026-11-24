@@ -26,6 +26,9 @@
     <button type="button" class="ghost" id="offSave" title="Ticket system không vào được: tải ticket này ra 1 file (kèm Business zipcode + Ticket type + Tier), có ảnh thì gói chung vào ZIP">Lưu offline</button>
     <button type="button" class="ghost" id="offOpen" title="Chọn file .zip / .json đã tải bằng Lưu offline để nạp lại vào form, rồi Copy để điền">Mở file offline</button>
     <input type="file" id="offImport" accept=".zip,.json,application/zip,application/json" hidden>
+    <button type="button" class="ghost" id="backupSave" title="Chuyển máy / trình duyệt: tải 1 file chứa gợi ý Tóm tắt (Viết ticket), gợi ý tên người support thêm (Chuyển case: Sales / MKT / CS / Tech) và template">Sao lưu</button>
+    <button type="button" class="ghost" id="backupOpen" title="Chọn file Sao lưu (ticket-writer-backup-….json) để nạp lại gợi ý Tóm tắt, gợi ý tag và template vào máy này">Khôi phục</button>
+    <input type="file" id="backupImport" accept=".json,application/json" hidden>
     <button type="button" class="ghost wide-only" id="swapBtn" title="Đổi vị trí Nhập / Kết quả (chỉ ở chế độ Chia đôi)">⇄ Đổi bên</button>
     <button type="button" class="ghost" id="phoneBtn" hidden></button>
     <button type="button" class="ghost" id="themeBtn" title="Đổi giao diện: Tự động (theo Windows) → Sáng → Tối"></button>
@@ -205,6 +208,7 @@
 <script src="src/domain/image-archive.js"></script>
 <script src="src/domain/template.js"></script>
 <script src="src/domain/offline-ticket.js"></script>
+<script src="src/domain/backup.js"></script>
 <script src="src/domain/sms.js"></script>
 <script src="src/domain/sms-message.js"></script>
 <script src="src/domain/shipping.js"></script>
@@ -229,6 +233,7 @@
 <script src="src/application/category-service.js"></script>
 <script src="src/application/template-service.js"></script>
 <script src="src/application/offline-service.js"></script>
+<script src="src/application/backup-service.js"></script>
 <script src="src/application/sms-service.js"></script>
 <script src="src/application/shipping-service.js"></script>
 <script src="src/application/pass-case-service.js"></script>
@@ -274,6 +279,7 @@
 <script src="src/ui/image-viewer.js"></script>
 <script src="src/ui/template-dialog.js"></script>
 <script src="src/ui/offline-dialog.js"></script>
+<script src="src/ui/backup-buttons.js"></script>
 <script src="src/ui/fill-dialog.js"></script>
 <script src="src/ui/header.js"></script>
 <script src="src/ui/paste-handler.js"></script>

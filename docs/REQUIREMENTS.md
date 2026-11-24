@@ -25,6 +25,7 @@ Tài liệu này mô tả **hành vi hiện có** của tool, tới từng câu 
 | 20 | Cảnh báo lưu trữ | Hiện hành |
 | 21 | Nhận ảnh iPad / iPhone (phone-upload) | Hiện hành; rủi ro ở SECURITY.md §3 |
 | 22 | Chuyển case (pass case cho Sales / MKT / CS / Tech) | Hiện hành |
+| 23 | Sao lưu / khôi phục dữ liệu | Hiện hành |
 
 ---
 
@@ -48,7 +49,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 ## 3. Bố cục giao diện
 
-**Header**: tên app + version · các nút chọn **loại ticket** (bản mới: chọn theo cấp, xem §14.2) · chế độ xem (`Chia đôi` / `Nhập` / `Kết quả`) · `Template` · `+ Lưu template` · `Lưu offline` · `Mở file offline` (§19) · `⇄ Đổi bên` · `Nhận ảnh iOS` (§21) · nút giao diện (`◐ Tự động` / `☀ Sáng` / `☾ Tối`) · `Ticket mới`.
+**Header**: tên app + version · các nút chọn **loại ticket** (bản mới: chọn theo cấp, xem §14.2) · chế độ xem (`Chia đôi` / `Nhập` / `Kết quả`) · `Template` · `+ Lưu template` · `Lưu offline` · `Mở file offline` (§19) · `Sao lưu` · `Khôi phục` (§23) · `⇄ Đổi bên` · `Nhận ảnh iOS` (§21) · nút giao diện (`◐ Tự động` / `☀ Sáng` / `☾ Tối`) · `Ticket mới`.
 
 **Chế độ xem**
 - `Chia đôi`: trái Nhập, phải Kết quả. `⇄ Đổi bên` đảo trái/phải (chỉ bật ở Chia đôi).
@@ -697,3 +698,18 @@ Thanks team !                       Thanks team !
 - `+ Lưu template` bị khóa.
 - `Ticket mới`: hỏi xác nhận → xóa form Chuyển case (về team Sales) và ảnh Issue, không đụng ticket, ảnh ticket và các form SMS. `Ticket mới` ở Viết ticket xóa hết ảnh, kể cả ảnh Chuyển case (cùng 1 cuộc gọi).
 - Form lưu riêng (`passCase` trong `storageKey`): F5 không mất, chuyển qua lại với Hỗ trợ merchant không mất dữ liệu bên nào. State bản trước chưa có → form trống.
+
+## 23. Sao lưu / khôi phục dữ liệu (chuyển máy / trình duyệt)
+
+Dữ liệu lưu trong trình duyệt (§12) không tự theo sang máy khác, trình duyệt khác hay profile Chrome khác. Đổi folder / file app (vd sang bản gộp `release/ticket-writer.html`) thì **không** cần: Chrome cho mọi trang `file://` chung 1 kho.
+
+- Nút `Sao lưu` ở header → tải **1 file** `ticket-writer-backup-YYYYMMDD-HHmm.json` (giờ máy). Gồm các key trong `backupKeys` (`config/app.js`), key chưa có dữ liệu thì không ghi:
+  - `ticketWriter.summaries.v1`: gợi ý Tóm tắt (Viết ticket, §12).
+  - `ticketWriter.passTags.v1`: gợi ý tên người support thêm của Chuyển case, riêng Sales / MKT / CS / Tech (§22).
+  - `ticketWriter.templates.v1`: template (§11).
+  - **Không** có: ticket / form đang nhập (thông tin merchant), Loại tự thêm, tên nhân viên, giao diện, ảnh đang dán, link Nhận ảnh iOS (mã gắn với từng máy).
+- Nút `Khôi phục` → hỏi xác nhận (dữ liệu trong file **thay** dữ liệu đang có trên máy này) → chọn file sao lưu:
+  - Đúng file → ghi đè từng key có trong file; key file không có thì giữ nguyên; key ngoài `backupKeys` trong file thì bỏ. Rồi **tải lại trang** để mọi phần dùng dữ liệu mới. Ticket đang nhập, ảnh đang dán không đổi.
+  - Không phải file sao lưu (vd file ticket offline, file template) → báo, không đổi gì.
+  - Bộ nhớ trình duyệt đầy / bị chặn → báo có dữ liệu không ghi được, phần đã ghi vẫn giữ.
+- File sao lưu không chứa ticket đang nhập; template có thể có câu chữ nội bộ: xem SECURITY.md §1.
