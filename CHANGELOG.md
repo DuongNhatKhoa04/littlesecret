@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-24
 
+- `v2026-11-24.31` · Chuyển case: bỏ tính năng Tech **Assign** (giao case tay nhanh hơn): bỏ ô tick, mẫu tin, ô Tech nhận case, copy kèm HTML. Bookmark Lấy thông tin tiệm trên trang ticket vẫn giữ (Link Ticket, Tên tiệm, MID, nội dung → Issue). §22.5
 - `v2026-11-24.30` · Bookmark Lấy thông tin tiệm trên trang ticket: lấy thêm nội dung ticket (`.description-text`) vào ô Issue (giữ xuống dòng, tối đa 3000 ký tự). Phải kéo lại bookmark. §22.4
 - `v2026-11-24.29` · Chuyển case Tech Assign: thêm ô CBN (Phone, không bắt buộc), in dòng riêng giữa Issue và `Thank you`. §22.5
 - `v2026-11-24.28` · Chuyển case Tech Assign: Copy nội dung copy kèm bản HTML có Link Ticket nhúng vào MID → dán vào Telegram Desktop MID là link (bản chữ thường vẫn có `(link)`). §22.5

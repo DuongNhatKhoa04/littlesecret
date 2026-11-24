@@ -24,7 +24,7 @@ Tài liệu này mô tả **hành vi hiện có** của tool, tới từng câu 
 | 19 | Ticket offline | Hiện hành |
 | 20 | Cảnh báo lưu trữ | Hiện hành |
 | 21 | Nhận ảnh iPad / iPhone (phone-upload) | Hiện hành; rủi ro ở SECURITY.md §3 |
-| 22 | Chuyển case (pass case cho Sales / MKT / CS / Tech), lấy thông tin tiệm từ trang ticket / Lead (§22.4), Tech Assign (§22.5) | Hiện hành |
+| 22 | Chuyển case (pass case cho Sales / MKT / CS / Tech), lấy thông tin tiệm từ trang ticket / Lead (§22.4); Tech Assign (§22.5) đã bỏ | Hiện hành |
 | 23 | Sao lưu / khôi phục dữ liệu | Hiện hành |
 
 ---
@@ -720,28 +720,9 @@ Thanks team !                       Thanks team !
 - Dữ liệu từ clipboard: chỉ nhận chuỗi, đã trim, tối đa 300 ký tự mỗi trường (Issue 3000).
 - Trang Lead đổi giao diện (đổi `name` ô) → bookmark báo không thấy; sửa `shopGrab` trong `config/app.js` rồi mọi người kéo lại bookmark.
 
-### 22.5 Tech: Assign (supervisor giao case)
+### 22.5 Tech: Assign (đã bỏ)
 
-- Team **Tech** có ô tick **Assign** cạnh Team nhận (team khác không có). Đổi team vẫn giữ tick; F5 vẫn giữ; `Ticket mới` bỏ tick.
-- Tick Assign → form và tin nhắn thay hẳn mẫu Tech (§22.2):
-  - Trường: Link Ticket ★ · Tên tiệm ★ · MID ★ · CBN (không bắt buộc, tự format như §4) · Issue ★ (có ảnh như §22.1). Không có Tên người liên hệ / Vai trò, không có ô GẤP, không có khung lưu ý. Chữ đã nhập ở trường khác vẫn giữ, bỏ tick là hiện lại.
-  - Ô Tag đổi nhãn **Tech nhận case**, ô gõ `@tên tech`: supervisor gõ tên tech (tự thêm `@`, gợi ý tên đã gõ như §22.2). Không tag theo ca.
-  - Tech nhận case lưu nhóm riêng (`passCase.tags.techAssign`, gợi ý `techAssign` trong `ticketWriter.passTags.v1`), không lẫn người support thêm của Tech thường.
-- Tin nhắn:
-
-```
-<Tên tiệm> / <MID> (<Link Ticket>)
-<Issue>
-<CBN>                               (bỏ dòng khi trống)
-Thank you <@tech …>
-```
-
-- **Copy nội dung** ghi 2 bản vào clipboard (giống copy dòng tiêu đề trên portal):
-  - HTML: Link Ticket **nhúng vào MID** (`<a href="<Link Ticket>">MID</a>`), không có `(…)`; Telegram Desktop dán ra MID là link. Chưa có MID → nhúng vào Tên tiệm.
-  - Chữ thường (Kết quả hiện bản này): link trong ngoặc `(…)` như trên, cho app không đọc HTML.
-  - Tin không có link (mọi tin khác, Assign chưa có Link Ticket) → chỉ copy chữ thường như cũ.
-- Thiếu Tên tiệm / MID thì dòng đầu chỉ còn phần có; thiếu Link Ticket thì bỏ `(…)`. Chưa chọn tech → dòng cuối chỉ `Thank you`.
-- Lấy nhanh Link Ticket + Tên tiệm + MID + nội dung (vào Issue): bookmark Lấy thông tin tiệm trên trang ticket (§22.4) rồi Ctrl+V.
+Có từ `v2026-11-24.26` tới `v2026-11-24.30`, bỏ ở `v2026-11-24.31` vì giao case tay nhanh hơn. Ô tick Assign, mẫu tin `Tên tiệm / MID (link)` · Issue · `Thank you @tech`, nhóm tag `techAssign` và copy kèm HTML (link nhúng vào MID) đều đã gỡ. State / gợi ý tag lưu từ các bản đó (`assign`, `techAssign`) được bỏ qua khi đọc. Bookmark Lấy thông tin tiệm trên trang ticket (§22.4) vẫn giữ.
 
 ## 23. Sao lưu / khôi phục dữ liệu (chuyển máy / trình duyệt)
 

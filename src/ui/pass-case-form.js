@@ -11,7 +11,6 @@
   const ID_PREFIX = 'pass_';
   const TAG_INPUT_ID = 'pass_tagAdd';
   const TAG_LIST_ID = 'pass_tagHistory';
-  const ASSIGN_ID = 'pass_assign';
 
   function createPassCaseForm({ root, context, session, passCaseService, imageZone, tagHistory, shopGrab }) {
     const config = context.passCase;
@@ -89,22 +88,8 @@
       return nodes;
     }
 
-    /** Team có biến thể assign: ô tick Assign cạnh Team nhận (supervisor giao case). */
-    function teamField(team) {
-      const picker = segmented({ options: config.teams, value: team.id, ariaLabel: labels.team, onSelect: passCaseService.setTeam });
-      return labeledField(labels.team, team.assign ? withAssign(picker) : picker);
-    }
-
-    function withAssign(picker) {
-      const toggle = el('label', 'chip pass-assign');
-      const box = el('input');
-      Object.assign(box, { id: ASSIGN_ID, type: 'checkbox', checked: session.passCase().assign });
-      box.addEventListener('change', () => passCaseService.setAssign(box.checked));
-      toggle.append(box, el('span', '', labels.assign));
-      const row = el('div', 'pass-team');
-      row.append(picker, toggle);
-      return row;
-    }
+    const teamField = (team) => labeledField(labels.team,
+      segmented({ options: config.teams, value: team.id, ariaLabel: labels.team, onSelect: passCaseService.setTeam }));
 
     function urgentToggle() {
       const toggle = el('label', 'pass-urgent');
@@ -114,9 +99,6 @@
       toggle.append(box, el('b', '', labels.urgent));
       return toggle;
     }
-
-    /** Nhãn ô Tag: team (vd Assign) có labels riêng thì thay nhãn chung. */
-    const teamLabels = (team) => ({ ...labels, ...team.labels });
 
     /** 1 người: ô tick (bỏ tick = hôm nay nghỉ); người thêm tay có thêm nút × để xóa khỏi danh sách. */
     function tagChip(tag) {
@@ -134,14 +116,14 @@
      * Gợi ý: tên đã thêm tay trước đây ở team này, trừ người đang có trong danh sách tag; gõ thiếu @ vẫn ra.
      */
     function tagAdder(team, listed) {
-      const input = textInput({ id: TAG_INPUT_ID, value: '', onInput: () => {}, placeholder: teamLabels(team).tagPh });
+      const input = textInput({ id: TAG_INPUT_ID, value: '', onInput: () => {}, placeholder: labels.tagPh });
       const add = (text) => { if (passCaseService.addTag(text)) document.getElementById(TAG_INPUT_ID).focus(); };
       input.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' && !event.defaultPrevented) { event.preventDefault(); add(input.value); }   // defaultPrevented = vừa chọn gợi ý
       });
       const wrap = el('div', 'pass-tag-add');
       wrap.append(input, button('ghost', labels.tagAdd, { onClick: () => add(input.value) }));
-      const history = tagHistory.forTeam(team.tagId);
+      const history = tagHistory.forTeam(team.id);
       attachSuggestions({
         wrap, listId: TAG_LIST_ID, onPick: add, onForget: history.forget, toQuery: toTagName,
         items: () => history.list().filter(name => !listed.includes(name))
@@ -153,7 +135,7 @@
       const list = el('div', 'pass-tags');
       const tags = passCaseTags({ passCase: session.passCase(), config, now: new Date() });
       list.append(...tags.map(tagChip));
-      return labeledField(teamLabels(team).tags, list, tagAdder(team, tags.map(tag => tag.name)));
+      return labeledField(labels.tags, list, tagAdder(team, tags.map(tag => tag.name)));
     }
 
     function tipsNode(team) {

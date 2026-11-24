@@ -289,26 +289,15 @@
     check('Chuyển case: Ctrl+V không đứng trong ô nào cũng điền (không cần quyền clipboard); cạnh nút có gợi ý Ctrl+V',
       $('#pass_shop').value === 'BODY NAILS' && $('#pass_zip').value === '75001' && $('#pass_shopStatus').textContent.startsWith('Đã điền: Tên tiệm'),
       [$('#pass_shop').value, $('#pass_shopStatus').textContent]);
-    check('Chuyển case: ô tick Assign chỉ có ở team có biến thể assign (Tech)', !$('#pass_assign'));
-    clickText('#form', 'Tech');
-    await settle();
-    $('#pass_assign').click();
+    clickText('#form', 'CS');
     await settle();
     const ticketData = new DataTransfer();
-    ticketData.setData('text/plain', JSON.stringify({ app: 'ticket-writer-shop', ticket: 'https://portal/v2/helpdesk/ticket/9#', shop: 'ASSIGN NAILS', mid: '4966' }));
+    ticketData.setData('text/plain', JSON.stringify({ app: 'ticket-writer-shop', ticket: 'https://portal/v2/helpdesk/ticket/9#', shop: 'TICKET NAILS', mid: '4966', issue: 'PAX - SUCCESS' }));
     document.body.dispatchEvent(new ClipboardEvent('paste', { clipboardData: ticketData, bubbles: true, cancelable: true }));
-    type($('#pass_issue'), 'Phase 1');
-    type($('#pass_phone'), '2149096287');
-    type($('#pass_tagAdd'), 'ryan-ts');
-    $('.pass-tag-add button').click();
     await settle();
-    check('Chuyển case Tech Assign: form Link Ticket / Tên tiệm / MID / CBN / Issue (không Tên người liên hệ, không GẤP); tin `Tên tiệm / MID (link)`, Issue, CBN, `Thank you @tech`',
-      !!$('#pass_ticket') && !!$('#pass_phone') && !$('#pass_contact') && !$('.pass-urgent') && !$('#copyBody').disabled &&
-      $('#outBody').textContent === 'ASSIGN NAILS / 4966 (https://portal/v2/helpdesk/ticket/9#)\nPhase 1\n(214) 909-6287\nThank you @ryan-ts', $('#outBody').textContent);
-    $('#pass_assign').click();
-    await settle();
-    check('Chuyển case Tech: bỏ tick Assign => mẫu Tech như cũ, không tag tech của Assign',
-      !!$('#pass_phone') && !!$('.pass-urgent') && !$('#outBody').textContent.includes('@ryan-ts') && $('#outBody').textContent.includes('Thanks team !'), $('#outBody').textContent);
+    check('Chuyển case CS: Ctrl+V chữ bookmark lấy trên trang ticket => điền Link Ticket, Tên tiệm, MID, Issue; không còn ô tick Assign',
+      $('#pass_ticket').value === 'https://portal/v2/helpdesk/ticket/9#' && $('#pass_issue').value === 'PAX - SUCCESS' && !$('#pass_assign') &&
+      $('#outBody').textContent.startsWith('https://portal/v2/helpdesk/ticket/9#\nTICKET NAILS 75001\nMID: 4966'), $('#outBody').textContent);
     $('#resetBtn').click();
     await settle();
     clickText('#picker', 'Hỗ trợ merchant');

@@ -241,11 +241,10 @@ setPassCase({   // const { setPassCase } = registry;
 | `rows` | Trường xếp chung 1 hàng trên form (chỉ đổi cách xếp), khi team có từ 2 trường của hàng |
 | `teams` | Team nhận theo thứ tự trên form, team đầu là mặc định. `id` lưu trong state: không đổi id đang có |
 | `teams[].fields` / `required` | Thứ tự ô trên form / ô bắt buộc (trống thì khóa Copy) |
-| `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò), `{shopZip}` = Tên tiệm ZIP, `{caller}` = Phone - Tên - Vai trò, `{ticketHeader}` = Tên tiệm / MID (Link Ticket), `{urgent}` = chữ GẤP của team khi tick. Dòng mà mọi `{…}` đều trống thì bỏ; `''` = dòng trống (không để 2 dòng trống liền nhau) |
+| `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò), `{shopZip}` = Tên tiệm ZIP, `{caller}` = Phone - Tên - Vai trò, `{urgent}` = chữ GẤP của team khi tick. Dòng mà mọi `{…}` đều trống thì bỏ; `''` = dòng trống (không để 2 dòng trống liền nhau) |
 | `teams[].urgent` / `tips` | Chữ in ở `{urgent}` khi tick GẤP (có thì form có ô tick GẤP) / khung lưu ý trên form |
 | `thanks` / `teams[].thanks` | Câu cảm ơn cuối tin (`Many thanks team!`) / thay riêng cho team (`Thanks team !`) |
 | `teams[].tags` | Người cần tag, dòng ngay dưới `thanks`: `[{ names: ['@a', '@b'] }]` = luôn tag; thêm `from`, `to` (`'HH:MM'` giờ VN) = chỉ tag trong ca `[from, to)`, `from` > `to` là ca qua đêm. Đổi người / đổi ca = sửa ở đây. Người nghỉ / support thêm trong ngày thì người dùng tự tick / thêm trên form (lưu trên máy), không sửa config |
-| `teams[].assign` | Biến thể khi tick **Assign** (supervisor giao case, hiện có ở Tech). Có thì cạnh Team nhận có ô tick Assign. Ghi đè `fields`, `required`, `lines`, `thanks`, `urgent`, `tags`, `tips` của team; `labels` thay nhãn ô Tag (`tags`, `tagPh`); `inlineTags: true` = tag nối ngay sau câu cảm ơn (`Thank you @tech`). `tagId`: nhóm tag + gợi ý tên riêng, lưu trong state: không đổi |
 | `tagUtcOffsetMinutes` | Múi giờ của ca: `7 * 60` = giờ VN (không có giờ mùa hè) |
 
 Loại `transfer` trong `config/tickets/transfer.js` có `passCase: true` nên hiện form này thay cho form ticket.

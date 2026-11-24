@@ -97,7 +97,6 @@
 .pass-tag { cursor: pointer; font-weight: 500; }
 .pass-tag:not(:has(input:checked)) { opacity: .55; text-decoration: line-through; }   /* bỏ tick = hôm nay nghỉ, không tag */
 .pass-tag-add { display: flex; gap: 8px; }
-.pass-team { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }   /* Team nhận + ô tick Assign (Tech) */
 .pass-shop { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }   /* Dán thông tin tiệm + ? + kết quả */
 .pass-tag-add .combo { flex: 1; }
 .pass-multiline { resize: none; overflow: hidden; min-height: 60px; }

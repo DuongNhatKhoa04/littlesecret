@@ -60,14 +60,12 @@
       timer = setTimeout(render, context.app.debounceMs);
     }
 
-    /** pick: chữ cần copy, hoặc [chữ, HTML]: có HTML thì copy kèm (link nhúng), HTML rỗng thì chỉ copy chữ. */
     function wireCopy(selector, pick) {
       const node = $(selector);
       node.addEventListener('click', async () => {
         render();   // render lại ngay để không copy phải bản cũ
         if (node.disabled) return;
-        const [text, html] = [].concat(pick());
-        const ok = await (html ? clipboard.writeRich(text, html) : clipboard.writeText(text));
+        const ok = await clipboard.writeText(pick());
         flash(node, ok ? 'Đã copy ✓' : 'Copy lỗi, hãy chọn và copy tay', ok ? 'done' : '');
       });
     }
@@ -85,7 +83,7 @@
     }
 
     wireCopy('#copyTitle', () => last.title);
-    wireCopy('#copyBody', () => [last.body, last.bodyHtml]);   // có bản HTML (link nhúng) thì copy kèm
+    wireCopy('#copyBody', () => last.body);
     wireCopy('#copySms', () => last.sms.message);
     wireCopy('#copyPromo', () => last.sms.body);
     wireCopy('#copyFill', () => ticketFill.payload(last.title, last.body));

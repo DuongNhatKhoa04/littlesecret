@@ -10,12 +10,12 @@
   const { buildSmsDetails, buildSmsMessage, buildMessageText, missingSmsFields } = TW.domain.smsMessage;
   const { buildShippingMessage, missingShippingFields } = TW.domain.shippingMessage;
   const { buildReviewMessage, missingReviewFields } = TW.domain.reviewMessage;
-  const { buildPassCaseMessage, buildPassCaseHtml, missingPassCaseFields } = TW.domain.passCaseMessage;
+  const { buildPassCaseMessage, missingPassCaseFields } = TW.domain.passCaseMessage;
   const { passCaseImageSlots } = TW.domain.passCase;
   const SMS_IMAGE_KEY = TW.domain.sms.IMAGE_KEY;
 
   const EMPTY = Object.freeze({
-    title: '', body: '', bodyHtml: '', missingAction: false, missingImages: 0, canCopyTitle: false, canCopyBody: false, actionLabel: '', conclusion: '',
+    title: '', body: '', missingAction: false, missingImages: 0, canCopyTitle: false, canCopyBody: false, actionLabel: '', conclusion: '',
     missingFields: [], showTitle: true, sms: null
   });
 
@@ -58,10 +58,8 @@
     function computePassCase() {
       const passCase = session.passCase();
       const config = context.passCase;
-      const input = { passCase, config, now: new Date() };
-      const body = buildPassCaseMessage(input);
-      // bodyHtml: copy kèm bản có link nhúng (vd MID của tin Assign) để dán vào Telegram vẫn giữ link
-      return { ...messageResult(body, body ? missingPassCaseFields({ passCase, config }) : []), bodyHtml: body ? buildPassCaseHtml(input) : '' };
+      const body = buildPassCaseMessage({ passCase, config, now: new Date() });
+      return messageResult(body, body ? missingPassCaseFields({ passCase, config }) : []);
     }
 
     /** Loại ticket có mục / ảnh; Chuyển case không có loại, chỗ gắn ảnh lấy theo trường (currentSlots). */
