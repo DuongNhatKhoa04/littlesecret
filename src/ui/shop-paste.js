@@ -9,11 +9,12 @@
     help: 'Cài bookmark Lấy thông tin tiệm',
     filled: 'Đã điền: ',
     none: 'Clipboard chưa có thông tin tiệm: mở trang Lead, bấm bookmark Lấy thông tin tiệm trước.',
-    blocked: 'Chrome chặn đọc clipboard: bấm vào ô Tên tiệm rồi Ctrl+V.'
+    blocked: 'Chrome chặn đọc clipboard: bấm Ctrl+V ở trang này.',
+    hint: 'hoặc Ctrl+V ở trang này (không cần cho phép)'
   };
 
   /** idPrefix: tiền tố id ô nhập của form Chuyển case, để đặt lại chữ trong ô sau khi điền (form không dựng lại). */
-  function createShopPaste({ root, context, session, passCaseService, shopGrab, idPrefix }) {
+  function createShopPaste({ context, session, passCaseService, shopGrab, idPrefix }) {
     const fields = context.passCase.fields;
     const showStatus = (text) => { const node = document.getElementById(STATUS_ID); if (node) node.textContent = text; };
 
@@ -29,8 +30,9 @@
       else showStatus(TEXT[result.status]);
     }
 
-    // Chrome chặn đọc clipboard => Ctrl+V vào ô bất kỳ của form: chữ của bookmark thì điền như bấm nút, không dán thô vào ô
-    root.addEventListener('paste', (event) => {
+    // Ticket Writer chạy file:// nên Chrome có thể hỏi quyền đọc clipboard mỗi lần bấm nút; Ctrl+V không bao giờ hỏi.
+    // Ctrl+V ở bất kỳ đâu trên trang Chuyển case: chữ của bookmark thì điền như bấm nút, không dán thô vào ô đang đứng.
+    document.addEventListener('paste', (event) => {
       if (!session.isPassCase() || !event.clipboardData) return;
       const data = shopGrab.parse(event.clipboardData.getData('text/plain'));
       if (!data) return;
@@ -40,7 +42,7 @@
 
     function node() {
       const wrap = el('div', 'pass-shop');
-      const status = el('span', 'status');
+      const status = el('span', 'status', TEXT.hint);
       status.id = STATUS_ID;
       wrap.append(
         button('ghost', TEXT.button, { onClick: pasteFromClipboard }),

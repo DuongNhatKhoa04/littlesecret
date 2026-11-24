@@ -281,6 +281,14 @@
     check('Chuyển case: có nút Dán thông tin tiệm; Ctrl+V chữ của bookmark => điền Link Lead, Tên tiệm, MID, ZIP',
       !!$$('.pass-shop button').find(node => node.textContent === 'Dán thông tin tiệm') && $('#pass_shop').value === 'SMOKE NAILS' && $('#pass_zip').value === '75001' &&
       $('#pass_contact').value === '' && $('#outBody').textContent.startsWith('https://portal/lead/1\nSMOKE NAILS'), $('#outBody').textContent);
+    const bodyData = new DataTransfer();
+    bodyData.setData('text/plain', JSON.stringify({ app: 'ticket-writer-shop', shop: 'BODY NAILS' }));
+    document.activeElement.blur();
+    document.body.dispatchEvent(new ClipboardEvent('paste', { clipboardData: bodyData, bubbles: true, cancelable: true }));
+    await settle();
+    check('Chuyển case: Ctrl+V không đứng trong ô nào cũng điền (không cần quyền clipboard); cạnh nút có gợi ý Ctrl+V',
+      $('#pass_shop').value === 'BODY NAILS' && $('#pass_zip').value === '75001' && $('#pass_shopStatus').textContent.startsWith('Đã điền: Tên tiệm'),
+      [$('#pass_shop').value, $('#pass_shopStatus').textContent]);
     $('#resetBtn').click();
     await settle();
     clickText('#picker', 'Hỗ trợ merchant');

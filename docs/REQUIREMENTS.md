@@ -709,10 +709,10 @@ Thanks team !                       Thanks team !
 - Không thấy cả DBA, MID, ZIP → báo `không thấy DBA, MID, Business ZIP. Mở đúng trang Lead rồi bấm lại.`, không đụng clipboard. Thấy một phần → vẫn copy, báo đã copy gì và `Không thấy: …`.
 - Copy JSON có đánh dấu `ticket-writer-shop` (không phải chữ để đọc); Clipboard API bị chặn → dùng cách copy dự phòng; vẫn không được → hiện ô chứa chữ để tự Ctrl+C.
 - Ở Chuyển case (mọi team) có nút **Dán thông tin tiệm** + nút `?` (mở hộp hướng dẫn bookmark), ngay dưới Team nhận:
-  - Đọc clipboard (lần đầu Chrome hỏi quyền). Có dữ liệu của bookmark → điền **Link Lead**, **Tên tiệm**, **MID**, **ZIP Code**: trường lấy được thì ghi đè, trường không lấy được giữ nguyên chữ cũ. Báo cạnh nút `Đã điền: <các trường>`.
+  - Đọc clipboard (Chrome hỏi quyền; Ticket Writer chạy `file://` nên Chrome có thể hỏi lại mỗi lần). Cạnh nút luôn ghi `hoặc Ctrl+V ở trang này (không cần cho phép)`. Có dữ liệu của bookmark → điền **Link Lead**, **Tên tiệm**, **MID**, **ZIP Code**: trường lấy được thì ghi đè, trường không lấy được giữ nguyên chữ cũ. Báo cạnh nút `Đã điền: <các trường>`.
   - Trường điền vào là dữ liệu chung của form (§22.1): team đang chọn không có trường đó (vd CS không có Link Lead) thì không hiện, đổi team mới thấy.
-  - Clipboard không phải dữ liệu của bookmark → báo `Clipboard chưa có thông tin tiệm: …`, không đổi form. Chrome chặn đọc clipboard → báo `Chrome chặn đọc clipboard: bấm vào ô Tên tiệm rồi Ctrl+V.`
-  - Ctrl+V chữ của bookmark vào ô bất kỳ của form Chuyển case → điền như bấm nút, không dán chữ thô vào ô. Chữ khác dán như thường.
+  - Clipboard không phải dữ liệu của bookmark → báo `Clipboard chưa có thông tin tiệm: …`, không đổi form. Chrome chặn đọc clipboard → báo `Chrome chặn đọc clipboard: bấm Ctrl+V ở trang này.`
+  - **Ctrl+V** chữ của bookmark ở bất kỳ đâu trên trang khi đang mở Chuyển case (trong ô nhập hay không) → điền như bấm nút, không dán chữ thô vào ô; không cần quyền clipboard nên Chrome không bao giờ hỏi. Chữ khác dán như thường.
 - Dữ liệu từ clipboard: chỉ nhận chuỗi, đã trim, tối đa 300 ký tự mỗi trường.
 - Trang Lead đổi giao diện (đổi `name` ô) → bookmark báo không thấy; sửa `shopGrab` trong `config/app.js` rồi mọi người kéo lại bookmark.
 

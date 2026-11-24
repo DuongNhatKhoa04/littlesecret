@@ -14,7 +14,7 @@
 
   function createPassCaseForm({ root, context, session, passCaseService, imageZone, tagHistory, shopGrab }) {
     const config = context.passCase;
-    const shopPaste = createShopPaste({ root, context, session, passCaseService, shopGrab, idPrefix: ID_PREFIX });
+    const shopPaste = createShopPaste({ context, session, passCaseService, shopGrab, idPrefix: ID_PREFIX });
     const { labels } = config;
     const value = (id) => session.passCase().values[id];
     const onInput = (id) => (text) => passCaseService.setValue(id, text);

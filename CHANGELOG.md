@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-24
 
+- `v2026-11-24.25` · Chuyển case: Ctrl+V chữ của bookmark Lấy thông tin tiệm ở bất kỳ đâu trên trang (không cần bấm vào ô) là điền, không bị Chrome hỏi quyền clipboard; cạnh nút Dán thông tin tiệm ghi gợi ý `hoặc Ctrl+V ở trang này`. §22.4
 - `v2026-11-24.24` · Chuyển case: bookmark mới **Lấy thông tin tiệm** (hộp Cài bookmark) chạy trên trang Lead, copy Link Lead, DBA, MID, Business ZIP; nút **Dán thông tin tiệm** trên form điền Link Lead, Tên tiệm, MID, ZIP Code (ghi đè, trường không lấy được giữ nguyên); Chrome chặn đọc clipboard thì Ctrl+V vào ô bất kỳ của form. Selector ở `shopGrab` (`config/app.js`). §22.4
 - `v2026-11-24.23` · Tài liệu: bản nháp báo cáo dự án `docs/PROJECT-REPORT.md` (tình hình, đề xuất, lợi ích, chi phí, rủi ro). Không đổi hành vi.
 - `v2026-11-24.22` · Sao lưu chỉ gồm gợi ý Tóm tắt (Viết ticket), gợi ý tên người support thêm (Chuyển case, theo team) và template; bỏ ticket đang nhập, Loại, tên nhân viên, giao diện. §23
