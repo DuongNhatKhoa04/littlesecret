@@ -4,11 +4,14 @@
 
   function createEmptyPassCase(config) {
     const values = Object.fromEntries(Object.keys(config.fields).map(id => [id, '']));
-    return { team: config.teams[0].id, urgent: false, values, tags: emptyTags(config) };
+    return { team: config.teams[0].id, urgent: false, assign: false, values, tags: emptyTags(config) };
   }
 
-  /** Tag chỉnh tay theo team: off = người ca này hôm nay nghỉ (bỏ tick), extra = người thêm vào (support thêm). */
-  const emptyTags = (config) => Object.fromEntries(config.teams.map(team => [team.id, { off: [], extra: [] }]));
+  /** Mỗi team 1 nhóm tag; team có biến thể assign thì thêm 1 nhóm riêng (tech supervisor chọn, không lẫn người support thêm). */
+  const allTagIds = (config) => config.teams.flatMap(team => team.assign ? [team.id, team.assign.tagId] : [team.id]);
+
+  /** Tag chỉnh tay theo nhóm tag: off = người ca này hôm nay nghỉ (bỏ tick), extra = người thêm vào (support thêm). */
+  const emptyTags = (config) => Object.fromEntries(allTagIds(config).map(id => [id, { off: [], extra: [] }]));
   const stringList = (raw) => Array.isArray(raw) ? raw.filter(item => typeof item === 'string') : [];
 
   function sanitizeTags(raw, config) {
@@ -24,13 +27,22 @@
     if (!raw || typeof raw !== 'object') return passCase;
     if (config.teams.some(team => team.id === raw.team)) passCase.team = raw.team;
     passCase.urgent = raw.urgent === true;
+    passCase.assign = raw.assign === true;
     passCase.tags = sanitizeTags(raw.tags, config);
     const saved = raw.values && typeof raw.values === 'object' ? raw.values : {};
     Object.keys(passCase.values).forEach(id => { if (typeof saved[id] === 'string') passCase.values[id] = saved[id]; });
     return passCase;
   }
 
-  const findTeam = (passCase, config) => config.teams.find(team => team.id === passCase.team) || config.teams[0];
+  /**
+   * Team đang chọn, đã áp biến thể assign khi tick Assign (trường, dòng tin, tag thay theo team.assign).
+   * tagId: nhóm tag đang dùng (passCase.tags, gợi ý tên). Team giữ id gốc để ô Team nhận vẫn chọn đúng.
+   */
+  function findTeam(passCase, config) {
+    const team = config.teams.find(item => item.id === passCase.team) || config.teams[0];
+    if (passCase.assign && team.assign) return { ...team, ...team.assign, id: team.id, tagId: team.assign.tagId };
+    return { ...team, tagId: team.id };
+  }
 
   // Ảnh lưu chung kho với ảnh ticket nên cần tiền tố riêng để không trùng key mục ticket. Key lưu trong IndexedDB => không đổi.
   const IMAGE_KEY_PREFIX = 'pass:';
@@ -53,5 +65,5 @@
     return !name || name.startsWith(TAG_PREFIX) ? name : TAG_PREFIX + name;
   }
 
-  TW.domain.passCase = { createEmptyPassCase, sanitizePassCase, findTeam, imageKey, passCaseImageSlots, allPassCaseImageKeys, toTagName };
+  TW.domain.passCase = { createEmptyPassCase, sanitizePassCase, findTeam, allTagIds, imageKey, passCaseImageSlots, allPassCaseImageKeys, toTagName };
 })(window.TW);

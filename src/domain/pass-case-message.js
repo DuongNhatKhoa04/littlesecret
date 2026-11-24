@@ -11,10 +11,17 @@
   const TAG_GAP = ' ';
   const WORD_GAP = ' ';
   const DASH_GAP = ' - ';
+  const SLASH_GAP = ' / ';
 
   const joinFilled = (parts, gap = PART_GAP) => parts.filter(part => part).join(gap);
 
-  /** Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {leadInfo}, {cbn}, {shopZip}, {caller} và {urgent} (chữ GẤP của team khi tick). */
+  /** Dòng đầu tin Assign: `Tên tiệm / MID (link ticket)`, giống chữ copy từ dòng tiêu đề trang ticket. */
+  function ticketHeader({ shop, mid, ticket }) {
+    const head = joinFilled([shop, mid], SLASH_GAP);
+    return head && ticket ? `${head} (${ticket})` : head || ticket;
+  }
+
+  /** Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {leadInfo}, {cbn}, {shopZip}, {caller}, {ticketHeader} và {urgent} (chữ GẤP của team khi tick). */
   function teamValues(passCase, team) {
     const values = Object.fromEntries(team.fields.map(id => [id, passCase.values[id].trim()]));
     const person = values.contact && values.role ? `${values.contact} (${values.role})` : values.contact || values.role;
@@ -24,6 +31,7 @@
       cbn: joinFilled([values.phone, person]),
       shopZip: joinFilled([values.shop, values.zip], WORD_GAP),
       caller: joinFilled([values.phone, values.contact, values.role], DASH_GAP),
+      ticketHeader: ticketHeader(values),
       urgent: team.urgent && passCase.urgent ? team.urgent : ''
     };
   }
@@ -57,17 +65,19 @@
    */
   function passCaseTags({ passCase, config, now }) {
     const team = findTeam(passCase, config);
-    const { off, extra } = passCase.tags[team.id];
+    const { off, extra } = passCase.tags[team.tagId];
     const minutes = localMinutes(now, config);
     const shift = (team.tags || []).filter(group => inShift(group, minutes)).flatMap(group => group.names);
     const added = extra.filter(name => !shift.includes(name));
     return [...shift, ...added].map(name => ({ name, on: !off.includes(name), extra: added.includes(name) }));
   }
 
-  /** Many thanks team!, dòng dưới là người được tag (nếu có). */
+  /** Many thanks team!, dòng dưới là người được tag (nếu có). inlineTags: tag nối ngay sau câu cảm ơn (vd `thank you @tech`). */
   function closingLines(team, input) {
     const names = passCaseTags(input).filter(tag => tag.on).map(tag => tag.name);
-    return [team.thanks || input.config.thanks, ...(names.length ? [names.join(TAG_GAP)] : [])];
+    const thanks = team.thanks || input.config.thanks;
+    if (team.inlineTags) return [[thanks, ...names].join(TAG_GAP)];
+    return [thanks, ...(names.length ? [names.join(TAG_GAP)] : [])];
   }
 
   /**

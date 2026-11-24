@@ -1,4 +1,4 @@
-// src/ui/shop-paste.js — Nút "Dán thông tin tiệm" ở Chuyển case: điền Link Lead / Tên tiệm / MID / ZIP do bookmark "Lấy thông tin tiệm" copy.
+// src/ui/shop-paste.js — Nút "Dán thông tin tiệm" ở Chuyển case: điền Link Ticket / Link Lead / Tên tiệm / MID / ZIP do bookmark "Lấy thông tin tiệm" copy.
 (function (TW) {
   'use strict';
 
@@ -8,7 +8,7 @@
     button: 'Dán thông tin tiệm',
     help: 'Cài bookmark Lấy thông tin tiệm',
     filled: 'Đã điền: ',
-    none: 'Clipboard chưa có thông tin tiệm: mở trang Lead, bấm bookmark Lấy thông tin tiệm trước.',
+    none: 'Clipboard chưa có thông tin tiệm: mở trang ticket / Lead, bấm bookmark Lấy thông tin tiệm trước.',
     blocked: 'Chrome chặn đọc clipboard: bấm Ctrl+V ở trang này.',
     hint: 'hoặc Ctrl+V ở trang này (không cần cho phép)'
   };

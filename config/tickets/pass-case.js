@@ -6,7 +6,7 @@
 
   setPassCase({
     labels: {
-      team: 'Team nhận', urgent: 'GẤP',
+      team: 'Team nhận', urgent: 'GẤP', assign: 'Assign',
       tags: 'Tag (bỏ tick người hôm nay nghỉ)', tagAdd: 'Thêm', tagPh: '@tên người support thêm', tagRemove: 'Bỏ'
     },
 
@@ -33,7 +33,8 @@
     // fields: thứ tự trên form · required: thiếu thì khóa Copy · tips: lưu ý hiện trên form.
     // urgent: có ô tick GẤP; tick thì chữ này vào chỗ {urgent} trong lines (không tick => bỏ dòng).
     // tags: người cần tag ở dòng cuối; có from/to (giờ VN, HH:MM) thì chỉ tag trong ca đó, from > to = ca qua đêm. Ngoài mọi ca => không tag.
-    // lines: từng dòng tin nhắn. {leadInfo} = Tên tiệm – ZIP – MID, {cbn} = Phone – Tên (Vai trò), {shopZip} = Tên tiệm ZIP, {caller} = Phone - Tên - Vai trò.
+    // lines: từng dòng tin nhắn. {leadInfo} = Tên tiệm – ZIP – MID, {cbn} = Phone – Tên (Vai trò), {shopZip} = Tên tiệm ZIP, {caller} = Phone - Tên - Vai trò,
+    //   {ticketHeader} = Tên tiệm / MID (Link Ticket).
     //   Dòng có {…} mà mọi chỗ đều trống thì bỏ dòng. '' = dòng trống (2 dòng trống liền nhau / ở đầu tin chỉ giữ 1 / bỏ).
     // thanks: thay câu cảm ơn chung (thanks bên dưới) cho riêng team này.
     teams: [
@@ -83,7 +84,18 @@
         tags: [
           { from: '20:00', to: '04:00', names: ['@vinny_tech', '@brian_technical'] },
           { from: '04:00', to: '20:00', names: ['@dustin_tech'] }
-        ]
+        ],
+        // Tick Assign: supervisor giao case cho 1 tech. Thay fields / required / lines / thanks của team; tech do supervisor gõ ở ô Thêm tag.
+        // tagId: nhóm tag + gợi ý tên riêng (lưu trong state) => không đổi. inlineTags: tag nối ngay sau câu cảm ơn.
+        assign: {
+          tagId: 'techAssign',
+          fields: ['ticket', 'shop', 'mid', 'issue'],
+          required: ['ticket', 'shop', 'mid', 'issue'],
+          lines: ['{ticketHeader}', '{issue}'],
+          thanks: 'thank you', inlineTags: true,
+          urgent: '', tags: [], tips: null,
+          labels: { tags: 'Tech nhận case', tagPh: '@tên tech' }   // thay nhãn ô Tag của team (labels ở trên)
+        }
       }
     ],
 

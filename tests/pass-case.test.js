@@ -181,6 +181,39 @@
     assertEqual([store.get().passCase, store.get().ticket.summary], [D.passCase.createEmptyPassCase(config), 'giữ']);
   });
 
+  test('pass case: Tech tick Assign => `Tên tiệm / MID (link ticket)`, Issue, `thank you @tech` (chỉ tech tự thêm, không tag theo ca, không CBN)', () => {
+    const ticket = 'https://portal/v2/helpdesk/ticket/351948?bucket=1&rank=20#';
+    const values = { ...VALUES, ticket, shop: 'TEST NAILS BAR', mid: '123456789012', issue: 'Phase 1' };
+    const tags = { techAssign: { off: [], extra: ['@ryan-ts'] } };
+    assertEqual(buildAt(vn(21), 'tech', values, { assign: true, tags }),
+      `TEST NAILS BAR / 123456789012 (${ticket})\nPhase 1\nthank you @ryan-ts`);
+    assertEqual(build('tech', { shop: 'A' }, { assign: true }), 'A\nthank you');
+    assertEqual(build('tech', { ...values, shop: '', mid: '' }, { assign: true }), `${ticket}\nPhase 1\nthank you`);
+    assertEqual(missing('tech', { shop: 'A' }, { assign: true }), ['Link Ticket', 'MID', 'Issue']);
+    // Bỏ tick: mẫu Tech như cũ; team khác không có Assign thì tick không có tác dụng
+    assertEqual(build('tech', VALUES, { assign: false }).startsWith('https://crm/lead/9\nARIA NAIL BAR\nCBN:'), true);
+    assertEqual(build('sales', VALUES, { assign: true }), build('sales'));
+    const assignTeam = D.passCase.findTeam(passCase('tech', VALUES, { assign: true }), config);
+    assertEqual([assignTeam.id, assignTeam.tagId, assignTeam.urgent, D.passCaseMessage.passCaseTags({ passCase: passCase('tech', VALUES, { assign: true }), config, now: vn(21) })],
+      ['tech', 'techAssign', '', []]);
+  });
+
+  test('pass case: Assign có nhóm tag + gợi ý riêng (không lẫn người support thêm của Tech); state cũ chưa có assign => không tick', () => {
+    const { store, session, service, tagHistory } = setup({ nav: { group: 'ticket', ticketType: 'transfer' }, passCase: { team: 'tech', values: {} } });
+    assertEqual([session.passCase().assign, session.passCase().tags.techAssign], [false, { off: [], extra: [] }]);
+    service.addTag('support');
+    service.setAssign(true);
+    service.addTag('ryan-ts');
+    const tags = store.get().passCase.tags;
+    assertEqual([tags.tech.extra, tags.techAssign.extra, tagHistory.forTeam('tech').list(), tagHistory.forTeam('techAssign').list()],
+      [['@support'], ['@ryan-ts'], ['@support'], ['@ryan-ts']]);
+    service.setTeam('cs');
+    service.setTeam('tech');
+    assertEqual(store.get().passCase.assign, true);
+    service.reset();
+    assertEqual([store.get().passCase.assign, store.get().passCase.tags.techAssign.extra], [false, []]);
+  });
+
   test('thông tin tiệm: chỉ giữ chuỗi đã trim (Link Lead, Tên tiệm, MID, ZIP), cắt chuỗi quá dài; dữ liệu hỏng => null', () => {
     const { sanitizeShopInfo } = D.shopInfo;
     assertEqual(sanitizeShopInfo({ app: 'x', lead: ' https://portal/lead/1 ', shop: ' TEST NAILS ', mid: '123', zip: 75001, phone: '1' }),
