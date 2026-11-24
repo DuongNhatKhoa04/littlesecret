@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-24
 
+- `v2026-11-24.15` · Chuyển case: gợi ý tên tag lưu riêng từng team (Sales / MKT / CS / Tech); danh sách chung của bản .14 chép sang mọi team. §12 §22
 - `v2026-11-24.14` · Chuyển case: Ticket mới bỏ người support thêm tay, giữ người chính theo ca; tên đã thêm tay lưu trên máy (`ticketWriter.passTags.v1`), gõ ô Thêm tag hiện gợi ý như ô Tóm tắt (↓/↑, Enter, Esc, × xóa gợi ý). §22
 - `v2026-11-24.13` · Chuyển case: ô GẤP chưa tick có nền đỏ chìm (thay màu xanh SMS), tick thì đỏ đậm như cũ. §22
 - `v2026-11-24.12` · Chuyển case: ô GẤP có nền xanh khung SMS Promotion khi chưa tick (tick vẫn đỏ). §22

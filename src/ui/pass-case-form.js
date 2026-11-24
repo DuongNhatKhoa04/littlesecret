@@ -122,9 +122,9 @@
 
     /**
      * Thêm xong form dựng lại => focus lại ô thêm để nhập tiếp người khác.
-     * Gợi ý: tên đã thêm tay trước đây, trừ người đang có trong danh sách tag; gõ thiếu @ vẫn ra.
+     * Gợi ý: tên đã thêm tay trước đây ở team này, trừ người đang có trong danh sách tag; gõ thiếu @ vẫn ra.
      */
-    function tagAdder(listed) {
+    function tagAdder(team, listed) {
       const input = textInput({ id: TAG_INPUT_ID, value: '', onInput: () => {}, placeholder: labels.tagPh });
       const add = (text) => { if (passCaseService.addTag(text)) document.getElementById(TAG_INPUT_ID).focus(); };
       input.addEventListener('keydown', (event) => {
@@ -132,18 +132,19 @@
       });
       const wrap = el('div', 'pass-tag-add');
       wrap.append(input, button('ghost', labels.tagAdd, { onClick: () => add(input.value) }));
+      const history = tagHistory.forTeam(team.id);
       attachSuggestions({
-        wrap, listId: TAG_LIST_ID, onPick: add, onForget: tagHistory.forget, toQuery: toTagName,
-        items: () => tagHistory.list().filter(name => !listed.includes(name))
+        wrap, listId: TAG_LIST_ID, onPick: add, onForget: history.forget, toQuery: toTagName,
+        items: () => history.list().filter(name => !listed.includes(name))
       });
       return wrap;
     }
 
-    function tagsField() {
+    function tagsField(team) {
       const list = el('div', 'pass-tags');
       const tags = passCaseTags({ passCase: session.passCase(), config, now: new Date() });
       list.append(...tags.map(tagChip));
-      return labeledField(labels.tags, list, tagAdder(tags.map(tag => tag.name)));
+      return labeledField(labels.tags, list, tagAdder(team, tags.map(tag => tag.name)));
     }
 
     function tipsNode(team) {
@@ -156,7 +157,7 @@
       const team = findTeam(session.passCase(), config);
       root.textContent = '';
       root.append(teamField(team));
-      root.append(...fieldNodes(team), tagsField());
+      root.append(...fieldNodes(team), tagsField(team));
       if (team.tips) root.append(tipsNode(team));
     }
 

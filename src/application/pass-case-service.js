@@ -9,8 +9,8 @@
   const keepShiftTags = (tags) => Object.fromEntries(Object.entries(tags).map(([id, team]) => [id, { off: team.off, extra: [] }]));
 
   /**
-   * @param {{ context: any, store: any, images: { clearKeys: (keys: string[]) => Promise<void> }, tagHistory: { remember: (text: string) => void } }} deps
-   *   tagHistory: tên đã thêm tay, để gợi ý lần sau
+   * @param {{ context: any, store: any, images: { clearKeys: (keys: string[]) => Promise<void> }, tagHistory: { forTeam: (team: string) => { remember: (text: string) => void } } }} deps
+   *   tagHistory: tên đã thêm tay theo team, để gợi ý lần sau
    */
   function createPassCaseService({ context, store, images, tagHistory }) {
     const config = context.passCase;
@@ -39,7 +39,7 @@
       addTag(text) {
         const name = toTagName(text);
         if (!name) return false;
-        tagHistory.remember(name);
+        tagHistory.forTeam(store.get().passCase.team).remember(name);
         updateTags(tags => { tags.extra = [...without(tags.extra, name), name]; tags.off = without(tags.off, name); }, { rebuild: true });
         return true;
       },

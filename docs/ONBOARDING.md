@@ -78,7 +78,7 @@ Toàn bộ là **hàm thuần**: không DOM, không storage, không `Date.now()`
 | `ticket-service.js` | Mọi thao tác sửa ticket đi qua đây. |
 | `output-service.js` | Title, Nội dung, cảnh báo, danh sách ảnh cho khu Kết quả. |
 | `image-service.js` | Ảnh trong bộ nhớ + lưu IndexedDB qua port `ImageStore`. |
-| Còn lại | `template-`, `offline-`, `category-`, `summary-history-`, `sms-`, `shipping-`, `review-`, `staff-`, `theme-`, `notice-`, `view-`, `navigation-`, `phone-service`. Mỗi file 1 việc, đọc lướt. |
+| Còn lại | `template-`, `offline-`, `category-`, `summary-history-`, `tag-history-`, `sms-`, `shipping-`, `review-`, `staff-`, `theme-`, `notice-`, `view-`, `navigation-`, `phone-service`. Mỗi file 1 việc, đọc lướt. |
 
 Mở [docs/diagrams/uml-class.html](diagrams/uml-class.html): service chỉ biết port, test thay bằng storage giả. Đọc `tests/application.test.js` để thấy cách đó.
 

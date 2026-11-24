@@ -92,11 +92,11 @@
     assertEqual(['  an  vo ', '@x', '  '].map(D.passCase.toTagName), ['@an_vo', '@x', '']);
   });
 
-  test('pass case: tag thêm / bỏ tick lưu theo team; Ticket mới bỏ người thêm tay, giữ ô tick người chính; tên thêm tay vào gợi ý', () => {
+  test('pass case: tag thêm / bỏ tick lưu theo team; Ticket mới bỏ người thêm tay, giữ ô tick người chính; tên thêm tay vào gợi ý của team đó', () => {
     const { storage, repository, store, service, tagHistory } = setup({ nav: { group: 'ticket', ticketType: 'transfer' } });
     service.setTeam('cs');
     assertEqual([service.addTag(' minh '), service.addTag('  '), service.addTag('@an')], [true, false, true]);
-    assertEqual([tagHistory.list(), storage.data[context.app.tagKey]], [['@an', '@minh'], ['@an', '@minh']]);
+    assertEqual([tagHistory.forTeam('cs').list(), tagHistory.forTeam('mkt').list(), storage.data[context.app.tagKey]], [['@an', '@minh'], [], { cs: ['@an', '@minh'] }]);
     service.setTagOn('@ThuTranCS', false);
     service.setValue('shop', 'ARIA');
     service.reset();
@@ -107,7 +107,18 @@
     service.addTag('@minh');
     service.removeTag('@minh');
     service.setTagOn('@ThuTranCS', true);
-    assertEqual([store.get().passCase.tags.cs, tagHistory.list()], [{ off: [], extra: [] }, ['@minh', '@an']]);
+    assertEqual([store.get().passCase.tags.cs, tagHistory.forTeam('cs').list()], [{ off: [], extra: [] }, ['@minh', '@an']]);
+  });
+
+  test('pass case: gợi ý tag bản .14 (1 danh sách chung) => mỗi team nhận 1 bản; ghi 1 team không mất team khác; dữ liệu hỏng => rỗng', () => {
+    const fake = (saved) => { const data = { [context.app.tagKey]: saved }; return { data, read: (key) => data[key], write: (key, value) => { data[key] = JSON.parse(JSON.stringify(value)); return true; } }; };
+    const storage = fake(['@a', '@b']);
+    const history = A.tagHistoryService.createTagHistoryService({ context, storage });
+    history.forTeam('tech').forget('@a');
+    history.forTeam('tech').remember('c');
+    const reloaded = A.tagHistoryService.createTagHistoryService({ context, storage });
+    assertEqual(['sales', 'mkt', 'cs', 'tech'].map(id => reloaded.forTeam(id).list()), [['@a', '@b'], ['@a', '@b'], ['@a', '@b'], ['@c', '@b']]);
+    assertEqual(A.tagHistoryService.createTagHistoryService({ context, storage: fake('x') }).forTeam('cs').list(), []);
   });
 
   test('pass case: CBN / LEAD ghép phần nào có thì in phần đó', () => {
@@ -135,7 +146,7 @@
     const session = A.session.createSession({ context, store });
     const images = A.imageService.createImageService({ files: { readAsDataUrl: async () => 'data:image/png;base64,' }, onChecklistImage: () => {} });
     const output = A.outputService.createOutputService({ context, session, images });
-    const tagHistory = A.summaryHistoryService.createSummaryHistoryService({ context, storage, key: context.app.tagKey, normalize: D.passCase.toTagName });
+    const tagHistory = A.tagHistoryService.createTagHistoryService({ context, storage });
     const service = A.passCaseService.createPassCaseService({ context, store, images, tagHistory });
     return { storage, repository, store, session, images, output, tagHistory, service };
   }

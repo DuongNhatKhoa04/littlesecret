@@ -29,7 +29,7 @@
   const viewService = A.viewService.createViewService({ store });
   const images = A.imageService.createImageService({ files, imageStore, notices, onChecklistImage: ticketService.markDoneByImage });
   const outputService = A.outputService.createOutputService({ context, session, images, files });
-  const tagHistory = A.summaryHistoryService.createSummaryHistoryService({ context, storage, key: context.app.tagKey, normalize: TW.domain.passCase.toTagName });
+  const tagHistory = A.tagHistoryService.createTagHistoryService({ context, storage });
   const passCaseService = A.passCaseService.createPassCaseService({ context, store, images, tagHistory });
   const categories = A.categoryService.createCategoryService({ context, storage });
   const templateService = A.templateService.createTemplateService({ context, store, session, storage, files, categories });
