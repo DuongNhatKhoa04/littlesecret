@@ -21,5 +21,19 @@
 
   const findTeam = (passCase, config) => config.teams.find(team => team.id === passCase.team) || config.teams[0];
 
-  TW.domain.passCase = { createEmptyPassCase, sanitizePassCase, findTeam };
+  // Ảnh lưu chung kho với ảnh ticket nên cần tiền tố riêng để không trùng key mục ticket. Key lưu trong IndexedDB => không đổi.
+  const IMAGE_KEY_PREFIX = 'pass:';
+  const imageKey = (fieldId) => IMAGE_KEY_PREFIX + fieldId;
+
+  /** Chỗ gắn ảnh của team đang chọn: các trường có images, theo thứ tự trên form. */
+  function passCaseImageSlots(passCase, config) {
+    return findTeam(passCase, config).fields
+      .filter(id => config.fields[id].images)
+      .map(id => ({ key: imageKey(id), label: config.fields[id].label }));
+  }
+
+  /** Key ảnh của mọi trường có images (mọi team), để Ticket mới xóa hết ảnh Chuyển case. */
+  const allPassCaseImageKeys = (config) => Object.keys(config.fields).filter(id => config.fields[id].images).map(imageKey);
+
+  TW.domain.passCase = { createEmptyPassCase, sanitizePassCase, findTeam, imageKey, passCaseImageSlots, allPassCaseImageKeys };
 })(window.TW);

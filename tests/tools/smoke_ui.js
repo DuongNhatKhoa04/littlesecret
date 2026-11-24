@@ -219,6 +219,14 @@
       !$('#copyBody').disabled &&
       $('#outBody').textContent === 'LEAD: ARIA NAIL BAR – 75001\nCBN: (555) 123-4567 – Owner\nMany thanks team!\n@Stella_SalesAdmin @Kyo_SaleAdmin',
       $('#outBody').textContent);
+    clickText('#form', 'MKT');
+    await settle();
+    check('Chuyển case MKT: Issue có ô dán ảnh + Thêm ảnh + Chụp màn hình, MKT bắt buộc cả Tên người liên hệ',
+      !!$('[data-img-key="pass:issue"] .pzone') && !!$('[data-img-key="pass:issue"] .shot') && $('#warn').textContent.includes('Tên người liên hệ'),
+      $('#warn').textContent);
+    const rowIds = [...document.querySelectorAll('.pass-row')].map(row => [...row.querySelectorAll('[id^="pass_"]')].map(node => node.id).join('+'));
+    check('Chuyển case MKT: Tên tiệm + ZIP chung 1 hàng, CBN + Tên + Vai trò chung 1 hàng',
+      rowIds.join(' | ') === 'pass_shop+pass_zip | pass_phone+pass_contact' && $$('.pass-row')[1].querySelector('.seg') !== null, rowIds.join(' | '));
     clickText('#form', 'Tech');
     await settle();
     check('Chuyển case Tech: có ô GẤP + lưu ý, giữ Phone đã nhập', !!$('.pass-urgent') && !!$('.pass-tips') && $('#pass_phone').value === '(555) 123-4567');

@@ -9,6 +9,7 @@
 
     // Mọi trường của form. Đổi team vẫn giữ chữ đã nhập (trường cùng id = cùng ý nghĩa). id lưu trong state => không đổi id đang có.
     // kind: text (mặc định) | phone (tự format) | choice (options) | multiline.
+    // images: true => có ô dán ảnh / chụp màn hình dưới trường, ảnh lưu như ảnh ticket (key ảnh theo id trường => không đổi id).
     fields: {
       ticket: { label: 'Ticket', ph: 'Số ticket' },
       lead: { label: 'Link Lead', ph: 'https://…' },
@@ -18,19 +19,24 @@
       packageName: { label: 'Package', ph: 'Nếu có' },
       phone: { label: 'CBN', kind: 'phone', ph: 'Số gọi lại' },
       contact: { label: 'Tên người liên hệ', ph: 'Nếu có, vd Mr. Vương' },
-      role: { label: 'Vai trò tại tiệm', kind: 'choice', options: ['Owner', 'Manager', 'Staff'] },
+      role: { label: 'Vai trò tại tiệm', kind: 'choice', options: ['Owner', 'Manager', 'Staff', 'Partner'] },
       facetime: { label: 'Cần FaceTime?', kind: 'choice', options: ['Có', 'Không'] },
       system: { label: 'System', ph: 'Hệ thống tiệm đang dùng' },
-      issue: { label: 'Issue', kind: 'multiline', ph: 'Vấn đề cần hỗ trợ' },
+      issue: { label: 'Issue', kind: 'multiline', ph: 'Vấn đề cần hỗ trợ', images: true },
       done: { label: 'FRT đã làm', kind: 'multiline', ph: 'Các bước đã thực hiện' },
       callback: { label: 'Callback Time', ph: 'Giờ đã hẹn gọi lại tiệm' },
       note: { label: 'Note', kind: 'multiline', ph: 'Tùy chọn' }
     },
 
+    // Trường chung 1 hàng trên form (chỉ đổi cách xếp, không đổi tin nhắn). Team có từ 2 trường của hàng thì mới xếp chung.
+    rows: [['shop', 'zip'], ['phone', 'contact', 'role']],
+
     // Team đầu là mặc định. id lưu trong state => không đổi id đang có.
     // fields: thứ tự trên form · required: thiếu thì khóa Copy · urgent: có ô tick GẤP · tips: lưu ý hiện trên form.
     // tags: người cần tag ở dòng cuối; có from/to (giờ VN, HH:MM) thì chỉ tag trong ca đó, from > to = ca qua đêm. Ngoài mọi ca => không tag.
-    // lines: từng dòng tin nhắn. {leadInfo} = Tên tiệm – ZIP – MID, {cbn} = Phone – Tên (Vai trò); dòng có {…} mà mọi chỗ đều trống thì bỏ dòng.
+    // lines: từng dòng tin nhắn. {leadInfo} = Tên tiệm – ZIP – MID, {cbn} = Phone – Tên (Vai trò), {shopZip} = Tên tiệm ZIP, {caller} = Phone - Tên - Vai trò.
+    //   Dòng có {…} mà mọi chỗ đều trống thì bỏ dòng. '' = dòng trống (2 dòng trống liền nhau / ở đầu tin chỉ giữ 1 / bỏ).
+    // thanks: thay câu cảm ơn chung (thanks bên dưới) cho riêng team này.
     teams: [
       {
         id: 'sales', label: 'Sales',
@@ -40,13 +46,13 @@
         tags: [{ names: ['@Stella_SalesAdmin', '@Kyo_SaleAdmin'] }]
       },
       {
-        id: 'mkt', label: 'MKT',
-        fields: ['shop', 'zip', 'mid', 'packageName', 'phone', 'contact', 'role', 'note'],
-        required: ['shop', 'zip', 'phone'],
-        lines: ['LEAD: {leadInfo}', 'PACKAGE: {packageName}', 'CBN: {cbn}', 'NOTE: {note}'],
+        id: 'mkt', label: 'MKT', thanks: 'Thanks team !',
+        fields: ['lead', 'shop', 'zip', 'mid', 'phone', 'contact', 'role', 'issue'],
+        required: ['lead', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
+        lines: ['{lead}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
         tags: [
-          { from: '20:00', to: '08:30', names: ['@Chris_MKTSupport_Leader', '@Trivu_MarketingSupport', '@lucas_mktsupport'] },
-          { from: '08:30', to: '12:00', names: ['@Tina_Am_Leader', '@Sarah_Pham_AM', '@josie_am'] }
+          { from: '20:00', to: '06:00', names: ['@Chris_MKTSupport_Leader', '@Trivu_MarketingSupport', '@lucas_mktsupport'] },
+          { from: '06:00', to: '20:00', names: ['@Sarah_Pham_AM', '@josie_am'] }
         ]
       },
       {

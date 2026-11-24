@@ -25,11 +25,11 @@
   const smsService = A.smsService.createSmsService({ context, store });
   const shippingService = A.shippingService.createShippingService({ store });
   const reviewService = A.reviewService.createReviewService({ context, store });
-  const passCaseService = A.passCaseService.createPassCaseService({ context, store });
   const navigationService = A.navigationService.createNavigationService({ context, store });
   const viewService = A.viewService.createViewService({ store });
   const images = A.imageService.createImageService({ files, imageStore, notices, onChecklistImage: ticketService.markDoneByImage });
   const outputService = A.outputService.createOutputService({ context, session, images, files });
+  const passCaseService = A.passCaseService.createPassCaseService({ context, store, images });
   const categories = A.categoryService.createCategoryService({ context, storage });
   const templateService = A.templateService.createTemplateService({ context, store, session, storage, files, categories });
   const staffService = A.staffService.createStaffService({ context, storage });
@@ -52,7 +52,7 @@
   });
   const shippingForm = U.shippingForm.createShippingForm({ root: $('#form'), context, session, shippingService });
   const reviewForm = U.reviewForm.createReviewForm({ root: $('#form'), context, session, reviewService, staffService });
-  const passCaseForm = U.passCaseForm.createPassCaseForm({ root: $('#form'), context, session, passCaseService });
+  const passCaseForm = U.passCaseForm.createPassCaseForm({ root: $('#form'), context, session, passCaseService, imageZone });
   const activeForm = () => {   // 4 form dùng chung khu Nhập
     if (session.isReview()) return reviewForm;
     if (session.isPassCase()) return passCaseForm;

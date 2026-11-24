@@ -2,9 +2,10 @@
 (function (TW) {
   'use strict';
 
-  const { createEmptyPassCase } = TW.domain.passCase;
+  const { createEmptyPassCase, allPassCaseImageKeys } = TW.domain.passCase;
 
-  function createPassCaseService({ context, store }) {
+  /** @param {{ context: any, store: any, images: { clearKeys: (keys: string[]) => Promise<void> } }} deps */
+  function createPassCaseService({ context, store, images }) {
     const config = context.passCase;
 
     return {
@@ -24,6 +25,7 @@
         store.update(state => { state.passCase.urgentNote = note; }, {});
       },
       reset() {
+        images.clearKeys(allPassCaseImageKeys(config));
         store.update(state => { state.passCase = createEmptyPassCase(config); }, { rebuild: true });
       }
     };

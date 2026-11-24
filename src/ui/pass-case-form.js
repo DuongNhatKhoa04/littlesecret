@@ -3,11 +3,11 @@
   'use strict';
 
   const { el, segmented, autoGrow, labeledField, textInput, maskPhone } = TW.ui.dom;
-  const { findTeam } = TW.domain.passCase;
+  const { findTeam, imageKey } = TW.domain.passCase;
   const REQUIRED_BADGE = 'Bắt buộc';
   const ID_PREFIX = 'pass_';
 
-  function createPassCaseForm({ root, context, session, passCaseService }) {
+  function createPassCaseForm({ root, context, session, passCaseService, imageZone }) {
     const config = context.passCase;
     const { labels } = config;
     const value = (id) => session.passCase().values[id];
@@ -50,7 +50,43 @@
       });
     }
 
-    const fieldNode = (team, id) => withBadge(labeledField(config.fields[id].label, control(id, config.fields[id])), team.required.includes(id));
+    /** Trường có images: ô dán ảnh + Thêm ảnh + Chụp màn hình như mục ticket; Ctrl+V ảnh khi đang gõ trong ô cũng vào đây. */
+    function withImages(node, id) {
+      const key = imageKey(id);
+      const [addImage, fileInput] = imageZone.addButton(key);
+      const shot = imageZone.shotButton(key);
+      shot.style.marginLeft = '8px';
+      node.dataset.imgKey = key;
+      node.append(imageZone.zone(key), addImage, shot, fileInput);
+      imageZone.acceptDrop(node, key);
+      return node;
+    }
+
+    function fieldNode(team, id) {
+      const field = config.fields[id];
+      const node = withBadge(labeledField(field.label, control(id, field)), team.required.includes(id));
+      return field.images ? withImages(node, id) : node;
+    }
+
+    function rowNode(team, ids) {
+      const row = el('div', 'pass-row');
+      row.append(...ids.map(id => fieldNode(team, id)));
+      return row;
+    }
+
+    /** Trường cùng 1 hàng trong config.rows (vd Tên tiệm + ZIP) dựng chung 1 hàng, nếu team có từ 2 trường của hàng đó. */
+    function fieldNodes(team) {
+      const placed = new Set();
+      const nodes = [];
+      team.fields.forEach(id => {
+        if (placed.has(id)) return;
+        const row = (config.rows || []).find(ids => ids.includes(id));
+        const ids = row ? row.filter(rowId => team.fields.includes(rowId)) : [id];
+        ids.forEach(rowId => placed.add(rowId));
+        nodes.push(ids.length > 1 ? rowNode(team, ids) : fieldNode(team, id));
+      });
+      return nodes;
+    }
 
     const teamField = (team) => labeledField(labels.team,
       segmented({ options: config.teams, value: team.id, ariaLabel: labels.team, onSelect: passCaseService.setTeam }));
@@ -84,7 +120,7 @@
       root.textContent = '';
       root.append(teamField(team));
       if (team.urgent) root.append(urgentField());
-      root.append(...team.fields.map(id => fieldNode(team, id)));
+      root.append(...fieldNodes(team));
       if (team.tips) root.append(tipsNode(team));
     }
 

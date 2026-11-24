@@ -9,17 +9,32 @@
   const PART_GAP = ' – ';
   const MINUTES_PER_DAY = 24 * 60;
   const TAG_GAP = ' ';
+  const WORD_GAP = ' ';
+  const DASH_GAP = ' - ';
 
-  const joinFilled = (parts) => parts.filter(part => part).join(PART_GAP);
+  const joinFilled = (parts, gap = PART_GAP) => parts.filter(part => part).join(gap);
 
-  /** Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm 2 trường ghép {leadInfo}, {cbn}. */
+  /** Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {leadInfo}, {cbn}, {shopZip}, {caller}. */
   function teamValues(passCase, team) {
     const values = Object.fromEntries(team.fields.map(id => [id, passCase.values[id].trim()]));
     const person = values.contact && values.role ? `${values.contact} (${values.role})` : values.contact || values.role;
-    return { ...values, leadInfo: joinFilled([values.shop, values.zip, values.mid]), cbn: joinFilled([values.phone, person]) };
+    return {
+      ...values,
+      leadInfo: joinFilled([values.shop, values.zip, values.mid]),
+      cbn: joinFilled([values.phone, person]),
+      shopZip: joinFilled([values.shop, values.zip], WORD_GAP),
+      caller: joinFilled([values.phone, values.contact, values.role], DASH_GAP)
+    };
   }
 
-  const hasValue = (line, values) => [...line.matchAll(PLACEHOLDER)].some(([, name]) => values[name]);
+  /** Dòng không có {…} (chữ cố định, dòng trống) luôn giữ. */
+  function hasValue(line, values) {
+    const names = [...line.matchAll(PLACEHOLDER)].map(([, name]) => name);
+    return !names.length || names.some(name => values[name]);
+  }
+
+  /** Dòng trống ở đầu tin hoặc ngay sau dòng trống khác thì bỏ: dòng {…} bị bỏ không để lại 2 dòng trống. */
+  const isKeptGap = (line, index, lines) => line !== '' || (index > 0 && lines[index - 1] !== '');
 
   function urgentLines(passCase, team, config) {
     if (!team.urgent || !passCase.urgent) return [];
@@ -44,7 +59,7 @@
   function closingLines(team, config, now) {
     const minutes = localMinutes(now, config);
     const names = (team.tags || []).filter(group => inShift(group, minutes)).flatMap(group => group.names);
-    return [config.thanks, ...(names.length ? [names.join(TAG_GAP)] : [])];
+    return [team.thanks || config.thanks, ...(names.length ? [names.join(TAG_GAP)] : [])];
   }
 
   /**
@@ -56,7 +71,7 @@
     const team = findTeam(passCase, config);
     const values = teamValues(passCase, team);
     if (team.fields.every(id => !values[id])) return '';
-    const lines = team.lines.filter(line => hasValue(line, values)).map(line => fillTemplate(line, values));
+    const lines = team.lines.filter(line => hasValue(line, values)).filter(isKeptGap).map(line => fillTemplate(line, values));
     return [...urgentLines(passCase, team, config), ...lines, ...closingLines(team, config, now)].join('\n');
   }
 

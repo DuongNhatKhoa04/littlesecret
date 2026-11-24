@@ -11,6 +11,7 @@
   const { buildShippingMessage, missingShippingFields } = TW.domain.shippingMessage;
   const { buildReviewMessage, missingReviewFields } = TW.domain.reviewMessage;
   const { buildPassCaseMessage, missingPassCaseFields } = TW.domain.passCaseMessage;
+  const { passCaseImageSlots } = TW.domain.passCase;
   const SMS_IMAGE_KEY = TW.domain.sms.IMAGE_KEY;
 
   const EMPTY = Object.freeze({
@@ -61,7 +62,7 @@
       return messageResult(body, body ? missingPassCaseFields({ passCase, config }) : []);
     }
 
-    /** Loại ticket có mục / ảnh; Chuyển case chỉ có tin nhắn nên không có chỗ gắn ảnh. */
+    /** Loại ticket có mục / ảnh; Chuyển case không có loại, chỗ gắn ảnh lấy theo trường (currentSlots). */
     const ticketType = () => (session.isPassCase() ? null : session.activeType());
 
     function compute() {
@@ -88,8 +89,9 @@
       };
     }
 
-    /** Chỗ gắn ảnh đang hiện: theo loại đang mở, khối SMS đang bật thì thêm Type Customer ở cuối. */
+    /** Chỗ gắn ảnh đang hiện: theo loại đang mở (Chuyển case: trường có ảnh của team), khối SMS đang bật thì thêm Type Customer ở cuối. */
     function currentSlots() {
+      if (session.isPassCase()) return passCaseImageSlots(session.passCase(), context.passCase);
       const type = ticketType();
       const slots = type ? imageSlots(type) : [];
       return session.smsActive() ? [...slots, { key: SMS_IMAGE_KEY, label: context.sms.labels.customerTypes }] : slots;
@@ -103,9 +105,11 @@
 
     /** Mục nhận ảnh khi dán mà không đứng trong mục nào: mục focus gần nhất nếu còn hiện, không thì mục đầu. */
     function pasteTarget(lastKey) {
-      if (currentSlots().some(slot => slot.key === lastKey)) return lastKey;
+      const slots = currentSlots();
+      if (slots.some(slot => slot.key === lastKey)) return lastKey;
       const type = ticketType();
-      return type ? defaultImageKey(type) : null;
+      if (type) return defaultImageKey(type);
+      return slots.length ? slots[0].key : null;
     }
 
     /** Gói mọi ảnh đang hiện thành 1 file ZIP (tên theo title) rồi tải xuống. false = không tạo được. */

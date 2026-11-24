@@ -111,6 +111,12 @@
         ready.then(() => imageStore.clear());
         notify(null);
       },
+      /** Xóa ảnh của vài mục, giữ ảnh mục khác (vd Ticket mới ở Chuyển case không đụng ảnh ticket). */
+      async clearKeys(keys) {
+        await ready;   // xóa trước khi nạp xong thì ảnh đã lưu lại hiện về
+        keys.filter(key => images[key]).forEach(key => { delete images[key]; persist(key); });
+        notify(null);
+      },
       /** listener(key): key = mục vừa đổi, null = nhiều mục */
       subscribe(listener) { listeners.add(listener); return () => listeners.delete(listener); }
     };

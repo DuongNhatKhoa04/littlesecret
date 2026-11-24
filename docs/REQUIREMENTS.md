@@ -623,7 +623,7 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 
 ## 22. Chuyển case
 
-`Viết ticket` → `Chuyển case` (key `transfer`). FRT soạn tin pass case cho team khác, copy dán vào group của team đó. Không phải ticket: không có Title, không lưu template, không có ảnh. Câu chữ, trường, trường bắt buộc, lưu ý của từng team nằm trong `config/tickets/pass-case.js`, sửa không cần đụng `src/`.
+`Viết ticket` → `Chuyển case` (key `transfer`). FRT soạn tin pass case cho team khác, copy dán vào group của team đó. Không phải ticket: không có Title, không lưu template; ảnh chỉ gắn ở trường Issue (MKT, Tech). Câu chữ, trường, trường bắt buộc, lưu ý của từng team nằm trong `config/tickets/pass-case.js`, sửa không cần đụng `src/`.
 
 ### 22.1 Form
 
@@ -633,11 +633,13 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 | Team | Trường |
 |---|---|
 | Sales | Tên tiệm ★ · ZIP Code ★ · MID · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Note |
-| MKT | Tên tiệm ★ · ZIP Code ★ · MID · Package · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Note |
+| MKT | Link Lead ★ · Tên tiệm ★ · ZIP Code ★ · MID ★ · CBN ★ · Tên người liên hệ ★ · Vai trò tại tiệm · Issue ★ |
 | CS | Ticket ★ · Tên tiệm ★ · ZIP Code ★ · MID ★ · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Note |
 | Tech | Link Lead ★ · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Cần FaceTime? ★ · System ★ · Issue ★ · FRT đã làm ★ · Callback Time ★ |
 
-- **CBN**: ô Phone, tự format như §4. **Vai trò tại tiệm**: `Owner` / `Manager` / `Staff`, bấm lại lựa chọn đang chọn là bỏ chọn. **Cần FaceTime?**: `Có` / `Không`. **Issue**, **FRT đã làm**, **Note**: ô nhiều dòng.
+- Xếp chung 1 hàng (mọi team có các trường này): **Tên tiệm + ZIP Code**; **CBN + Tên người liên hệ + Vai trò tại tiệm** (màn hình hẹp thì Vai trò xuống hàng). Khai báo ở `rows` trong config.
+- **CBN**: ô Phone, tự format như §4. **Vai trò tại tiệm**: `Owner` / `Manager` / `Staff` / `Partner`, bấm lại lựa chọn đang chọn là bỏ chọn. **Cần FaceTime?**: `Có` / `Không`. **Issue**, **FRT đã làm**, **Note**: ô nhiều dòng.
+- **Issue** (MKT, Tech) có ô dán ảnh + `+ Thêm ảnh (Ctrl+V)` + nút chụp màn hình, giống mục ticket (§10): Ctrl+V ảnh khi đang gõ trong Issue cũng vào ảnh Issue. Đổi qua lại MKT / Tech giữ ảnh (cùng trường Issue).
 - **Tech** có ô tick **GẤP**; tick thì hiện ô **Tình trạng thực tế** (không bắt buộc).
 - **CS** và **Tech** có khung lưu ý (kiểm tra ticket, Proof, Dispute, quá tải cuộc gọi / phạm vi FRT, Reconnect Terminal, case khẩn cấp) theo thông báo pass case.
 
@@ -647,18 +649,33 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 GẤP: <Tình trạng thực tế>          (chỉ Tech, khi tick GẤP; không ghi tình trạng thì chỉ `GẤP`)
 TICKET: <Ticket>                   (CS)
 LINK LEAD: <Link Lead>             (Tech)
-LEAD: <Tên tiệm> – <ZIP> – <MID>   (Sales, MKT, CS)
-PACKAGE: <Package>                 (MKT)
+LEAD: <Tên tiệm> – <ZIP> – <MID>   (Sales, CS)
 CBN: <Phone> – <Tên> (<Vai trò>)
 FACETIME: / SYSTEM: / ISSUE: / FRT ĐÃ LÀM: / CALLBACK TIME:   (Tech)
-NOTE: <Note>                       (Sales, MKT, CS)
-Many thanks team!                  (mọi team)
-<tag lead / sublead>               (Sales luôn tag; MKT tag theo ca; CS, Tech chưa có)
+NOTE: <Note>                       (Sales, CS)
+Many thanks team!
+<tag lead / sublead>               (Sales luôn tag; CS, Tech chưa có)
 ```
+
+MKT (Sales, CS, Tech dùng khung trên) theo mẫu riêng của group MKT:
+
+```
+<Link Lead>
+<Tên tiệm> <ZIP>
+MID: <MID>
+CBN: <Phone> - <Tên> - <Vai trò>
+
+<Issue>
+
+Thanks team !
+<tag theo ca>
+```
+
+- MKT: dòng trống giữ nguyên; dòng bị bỏ (vd không có Issue) thì không để lại 2 dòng trống liền nhau.
 
 - **Tag** (cách nhau 1 space):
   - Sales: `@Stella_SalesAdmin @Kyo_SaleAdmin`.
-  - MKT, theo giờ VN lúc tạo tin: 8:00 PM – 8:30 AM → `@Chris_MKTSupport_Leader @Trivu_MarketingSupport @lucas_mktsupport`; 8:30 AM – 12:00 PM → `@Tina_Am_Leader @Sarah_Pham_AM @josie_am`. Ngoài 2 ca này (12:00 PM – 8:00 PM) không tag, chỉ còn `Many thanks team!`.
+  - MKT, theo giờ VN lúc tạo tin: 8:00 PM – 6:00 AM (C1-3) → `@Chris_MKTSupport_Leader @Trivu_MarketingSupport @lucas_mktsupport`; 6:00 AM – 8:00 PM (MKT/AM ca 2) → `@Sarah_Pham_AM @josie_am`.
   - Dán vào app chat chỉ ra chữ `@tên`; có app phải gõ `@` chọn lại người thì mới thành tag thật.
 
 - Giá trị đã trim. Phần nào trống thì bỏ phần đó (vd không có MID → `LEAD: <Tên tiệm> – <ZIP>`); cả dòng trống thì bỏ dòng. Ô nhiều dòng giữ xuống dòng.
@@ -666,8 +683,9 @@ Many thanks team!                  (mọi team)
 
 ### 22.3 Khu Kết quả & Copy
 
-- Giống §17: ẩn Title, có Nội dung + `Copy nội dung` (`Alt+2`), không có khối Ảnh, Ctrl+V ảnh không làm gì.
+- Giống §17: ẩn Title, có Nội dung + `Copy nội dung` (`Alt+2`).
+- **Khối Ảnh**: chỉ ảnh Issue của Chuyển case (nhãn `Issue`, `Issue – ảnh N`), copy từng ảnh / tải ZIP / PDF như ticket. Ảnh lưu như ảnh ticket (IndexedDB): F5 không mất. Ctrl+V ảnh ngoài ô nhập → vào Issue; team không có Issue (Sales, CS) → không làm gì. Tin nhắn không ghi gì về ảnh.
 - **Copy nội dung** khóa khi tin nhắn rỗng hoặc còn trường bắt buộc trống; cảnh báo `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.`
 - `+ Lưu template` bị khóa.
-- `Ticket mới`: hỏi xác nhận → xóa form Chuyển case (về team Sales), không đụng ticket và các form SMS.
+- `Ticket mới`: hỏi xác nhận → xóa form Chuyển case (về team Sales) và ảnh Issue, không đụng ticket, ảnh ticket và các form SMS. `Ticket mới` ở Viết ticket xóa hết ảnh, kể cả ảnh Chuyển case (cùng 1 cuộc gọi).
 - Form lưu riêng (`passCase` trong `storageKey`): F5 không mất, chuyển qua lại với Hỗ trợ merchant không mất dữ liệu bên nào. State bản trước chưa có → form trống.

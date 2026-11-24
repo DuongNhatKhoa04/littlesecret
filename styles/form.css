@@ -2,7 +2,7 @@
 .field { margin-bottom: 14px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }   /* Phone + Tên merchant */
 .field > label, .sec h3 { display: block; font-size: 14px; font-weight: 650; margin: 0 0 6px; }
-.req { margin-left: 8px; font-size: 12px; font-weight: 600; color: var(--warn-ink); background: var(--warn-bg); padding: 1px 8px; border-radius: 99px; }
+.req { white-space: nowrap; margin-left: 8px; font-size: 12px; font-weight: 600; color: var(--warn-ink); background: var(--warn-bg); padding: 1px 8px; border-radius: 99px; }
 .text {
   width: 100%; padding: 8px 10px; background: var(--panel);
   border: 1px solid var(--line); border-radius: var(--radius);
@@ -88,5 +88,10 @@
 /* Chuyển case */
 .pass-urgent { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; margin-bottom: 8px; border: 1px solid var(--line); border-radius: var(--radius); cursor: pointer; }
 .pass-urgent:has(input:checked) { color: var(--err-ink); background: var(--err-bg); border-color: var(--err-ink); }
+/* Tên tiệm + ZIP, CBN + Tên + Vai trò chung 1 hàng; Vai trò giữ đủ rộng cho các nút, hẹp quá thì xuống hàng. */
+.pass-row { display: flex; flex-wrap: wrap; align-items: flex-end; column-gap: 12px; }   /* nhãn dài xuống dòng thì ô nhập vẫn thẳng hàng */
+.pass-row > .field { flex: 1 1 0; min-width: min-content; }   /* cột rộng ít nhất bằng nhãn */
+.pass-row > .field > label { white-space: nowrap; }
+.pass-row > .field:has(.seg) { flex: 0 0 auto; }
 .pass-multiline { resize: none; overflow: hidden; min-height: 60px; }
 .pass-tips { margin: 0 0 14px; padding: 10px 12px 10px 28px; color: var(--muted); font-size: 13px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }

@@ -21,18 +21,27 @@
   const missing = (...args) => D.passCaseMessage.missingPassCaseFields({ passCase: passCase(...args), config });
   const SALES_END = '\nMany thanks team!\n@Stella_SalesAdmin @Kyo_SaleAdmin';
   const MKT_NIGHT = '@Chris_MKTSupport_Leader @Trivu_MarketingSupport @lucas_mktsupport';
-  const MKT_MORNING = '@Tina_Am_Leader @Sarah_Pham_AM @josie_am';
+  const MKT_DAY = '@Sarah_Pham_AM @josie_am';
 
-  test('pass case: Sales / MKT / CS chỉ in trường của team, đã trim, Note trống thì bỏ dòng; cuối tin Many thanks team! + tag', () => {
+  test('pass case: Sales / CS chỉ in trường của team, đã trim, Note trống thì bỏ dòng; cuối tin Many thanks team! + tag', () => {
     assertEqual(build('sales'), 'LEAD: ARIA NAIL BAR – 75001 – 8800123\nCBN: (555) 123-4567 – Mr. Vương (Owner)' + SALES_END);
-    assertEqual(build('mkt'), 'LEAD: ARIA NAIL BAR – 75001 – 8800123\nPACKAGE: Gold\nCBN: (555) 123-4567 – Mr. Vương (Owner)\nMany thanks team!\n' + MKT_MORNING);
     assertEqual(build('cs'), 'TICKET: 12345\nLEAD: ARIA NAIL BAR – 75001 – 8800123\nCBN: (555) 123-4567 – Mr. Vương (Owner)\nMany thanks team!');
   });
 
-  test('pass case: MKT tag theo ca giờ VN (ca đêm qua 0h, đổi ca đúng 8:30); ngoài ca chỉ còn Many thanks team!', () => {
+  test('pass case: MKT theo mẫu group MKT: link lead, Tên tiệm ZIP, MID, CBN Phone - Tên - Vai trò, dòng trống, Issue, Thanks team !', () => {
+    assertEqual(build('mkt'), [
+      'https://crm/lead/9', 'ARIA NAIL BAR 75001', 'MID: 8800123', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
+      'Terminal mất kết nối', '', 'Thanks team !', MKT_DAY
+    ].join('\n'));
+    assertEqual(build('mkt', { shop: 'A', phone: '1', role: 'Staff' }), ['A', 'CBN: 1 - Staff', '', 'Thanks team !', MKT_DAY].join('\n'));
+    assertEqual(build('mkt', { issue: 'x' }), ['x', '', 'Thanks team !', MKT_DAY].join('\n'));
+    assertEqual(missing('mkt', { shop: 'A', role: '' }), ['Link Lead', 'ZIP Code', 'MID', 'CBN', 'Tên người liên hệ', 'Issue']);
+  });
+
+  test('pass case: MKT tag theo ca giờ VN: 8:00 PM – 6:00 AM ca đêm (qua 0h), 6:00 AM – 8:00 PM ca 2', () => {
     const tagLine = (now) => buildAt(now, 'mkt').split('\n').pop();
-    assertEqual([vn(20), vn(23, 59), vn(0), vn(8, 29), vn(8, 30), vn(11, 59), vn(12), vn(19, 59)].map(tagLine),
-      [MKT_NIGHT, MKT_NIGHT, MKT_NIGHT, MKT_NIGHT, MKT_MORNING, MKT_MORNING, 'Many thanks team!', 'Many thanks team!']);
+    assertEqual([vn(20), vn(23, 59), vn(0), vn(5, 59), vn(6), vn(12), vn(19, 59)].map(tagLine),
+      [MKT_NIGHT, MKT_NIGHT, MKT_NIGHT, MKT_NIGHT, MKT_DAY, MKT_DAY, MKT_DAY]);
   });
 
   test('pass case: Tech đủ trường, ý nhiều dòng giữ xuống dòng', () => {
@@ -73,9 +82,9 @@
     const repository = A.sessionRepository.createSessionRepository({ storage, context });
     const store = A.store.createStore(repository.load());
     const session = A.session.createSession({ context, store });
-    const images = A.imageService.createImageService({ files: {}, onChecklistImage: () => {} });
+    const images = A.imageService.createImageService({ files: { readAsDataUrl: async () => 'data:image/png;base64,' }, onChecklistImage: () => {} });
     const output = A.outputService.createOutputService({ context, session, images });
-    return { storage, repository, store, session, output, service: A.passCaseService.createPassCaseService({ context, store }) };
+    return { storage, repository, store, session, images, output, service: A.passCaseService.createPassCaseService({ context, store, images }) };
   }
 
   test('pass case: state bản trước (chưa có passCase) => form mặc định, ticket giữ nguyên', () => {
@@ -107,5 +116,18 @@
     assertEqual([output.imageList(), output.pasteTarget('s1')], [[], null]);
     service.reset();
     assertEqual([store.get().passCase, store.get().ticket.summary], [D.passCase.createEmptyPassCase(config), 'giữ']);
+  });
+
+  test('pass case: Issue có ảnh (MKT / Tech): Ctrl+V vào Issue, khối Ảnh chỉ ảnh Chuyển case; Ticket mới chỉ xóa ảnh Chuyển case', async () => {
+    const { images, output, service } = setup({ nav: { group: 'ticket', ticketType: 'transfer' } });
+    const png = () => new Blob([''], { type: 'image/png' });
+    await images.add('s1', [png()]);
+    await images.add('pass:issue', [png(), png()]);
+    assertEqual([output.pasteTarget('s1'), output.imageList().length], [null, 0]);
+    service.setTeam('mkt');
+    assertEqual([output.pasteTarget('s1'), output.imageList().map(entry => entry.label)], ['pass:issue', ['Issue – ảnh 1', 'Issue – ảnh 2']]);
+    service.reset();
+    await images.clearKeys([]);   // chờ reset xóa xong
+    assertEqual([images.list('pass:issue').length, images.list('s1').length], [0, 1]);
   });
 })(window.TW);
