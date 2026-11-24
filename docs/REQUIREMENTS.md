@@ -543,19 +543,19 @@ Lưu ticket ra file trên máy, khi ticket system vào lại được thì mở 
 
 ### 19.1 Lưu offline
 
-- Nút `Lưu offline` ở header. Khóa khi không có loại ticket (nhóm SMS, nhánh setup chưa có checklist). Ticket trống (chưa có title lẫn nội dung) → báo, không mở hộp.
-- Hộp hỏi: **Business zipcode** và **Ticket type** (ô text, nhân viên tự điền), đều bắt buộc. Có ảnh thì có thêm ô tick `Tải kèm PDF ảnh` (mặc định không tick).
+- Nút `Lưu offline` ở header. Khóa khi không có loại ticket (nhóm SMS, nhánh setup chưa có checklist) và ở **Chuyển case** (tin nhắn group, không phải ticket). Ticket trống (chưa có title lẫn nội dung) → báo, không mở hộp.
+- Hộp hỏi: **Business zipcode**, **Ticket type** (ô text, nhân viên tự điền) và **Tier** (chọn `0.5` / `1` / `1.5` / `2` / `2.5` / `3`, `offlineTiers` trong `config/app.js`), đều bắt buộc. Có ảnh thì có thêm ô tick `Tải kèm PDF ảnh` (mặc định không tick).
 - Bấm `Lưu` → tải **đúng 1 file** (Chrome tự chặn file thứ 2 trở đi trong cùng 1 lần bấm). Mọi file dùng chung **tên gốc** `OFF-YYYYMMDD-HHmmss - <TITLE>` (chỉ ASCII như §10, mã OFF-… theo giờ máy lúc lưu):
   - Không có ảnh → `<tên gốc>.json`.
   - Có ảnh → `<tên gốc>.zip`, bên trong: `<tên gốc>.json`, các ảnh (đặt tên như `Tải tất cả (ZIP)`), và `<tên gốc>.pdf` nếu có tick (giống `Tải PDF`).
-- File `.json` gồm: mã, giờ lưu, loại ticket, zipcode, ticket type, title, nội dung, tên file ZIP / PDF, toàn bộ ticket đang nhập (Loại, Tóm tắt, Phone, các mục, Kết luận, tick/N/A checklist).
+- File `.json` gồm: mã, giờ lưu, loại ticket, zipcode, ticket type, tier, title, nội dung, tên file ZIP / PDF, toàn bộ ticket đang nhập (Loại, Tóm tắt, Phone, các mục, Kết luận, tick/N/A checklist).
 - Tạo PDF lỗi → ZIP không có PDF, báo. Tạo ZIP lỗi → chỉ tải `.json` (giữ được phần chữ), báo để tự bấm `Tải tất cả (ZIP)` / `Tải PDF`.
 - Lưu xong form giữ nguyên; muốn làm ticket khác thì bấm `Ticket mới`.
 
 ### 19.2 Mở file offline
 
 - Nút `Mở file offline` → nếu đang có nội dung hoặc ảnh thì hỏi xác nhận → chọn file `.zip` (đọc file `.json` bên trong, không cần giải nén) hoặc file `.json`.
-- File đúng → chuyển về đúng loại ticket / nhánh setup trong file, thay toàn bộ ticket đang nhập, bỏ ảnh đang dán; báo mã, Business zipcode, Ticket type, file ZIP chứa ảnh (+ PDF).
+- File đúng → chuyển về đúng loại ticket / nhánh setup trong file, thay toàn bộ ticket đang nhập, bỏ ảnh đang dán; báo mã, Business zipcode, Ticket type, Tier (file lưu trước khi có Tier → `(chưa có)`), file ZIP chứa ảnh (+ PDF).
 - File không phải ticket offline / loại ticket trong file không còn → báo, không đổi gì.
 - Ảnh không tự nạp lại: giải nén ZIP rồi dán / kéo thả vào từng mục (tên ảnh trong ZIP ghi mục nào).
 

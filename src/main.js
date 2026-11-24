@@ -64,7 +64,7 @@
   const output = U.outputView.createOutputView({ context, outputService, clipboard, ticketFill, imagePanel });
   const header = U.header.createHeader({ context, session, viewService, ticketService, smsService, shippingService, reviewService, passCaseService, images, onShowOutput: output.render });
   const templateDialog = U.templateDialog.createTemplateDialog({ templateService, files });
-  const offlineDialog = U.offlineDialog.createOfflineDialog({ offlineService });
+  const offlineDialog = U.offlineDialog.createOfflineDialog({ offlineService, tiers: context.app.offlineTiers });
   U.fillDialog.createFillDialog({ ticketFill });
   const paste = U.pasteHandler.installPasteHandler({ outputService, imageZone });
   const phoneService = A.phoneService.createPhoneService({

@@ -14,23 +14,25 @@
   function createOfflineService({ context, store, session, files, images, outputService }) {
     const { catalog, typeOf } = context;
     const typeExists = (key) => !!typeOf(key);
+    /** Nhóm SMS, nhánh setup chưa có checklist: không có ticket. Chuyển case là tin nhắn group, không phải ticket. */
+    const canSave = () => !!session.activeTypeKey() && !session.isPassCase();
 
     /**
      * Mỗi lần bấm chỉ tải ĐÚNG 1 file: Chrome chặn trang tự tải file thứ 2 trở đi.
      * Không ảnh => <tên>.json. Có ảnh => <tên>.zip chứa <tên>.json + ảnh (+ <tên>.pdf nếu chọn).
-     * null = chưa chọn loại / ticket trống / thiếu zipcode hoặc ticket type.
-     * @param {{ zipcode: string, ticketType: string, withPdf: boolean }} input
+     * null = không lưu được (canSave) / ticket trống / thiếu zipcode, ticket type hoặc tier.
+     * @param {{ zipcode: string, ticketType: string, tier: string, withPdf: boolean }} input
      * @returns {Promise<{ fileName: string, imagesSaved: boolean } | null>}   imagesSaved false = ảnh / PDF không vào được file
      */
-    async function save({ zipcode, ticketType, withPdf }) {
+    async function save({ zipcode, ticketType, tier, withPdf }) {
       const type = session.activeTypeKey();
       const { title, body } = outputService.compute();
-      if (!type || !(title || body) || !zipcode.trim() || !ticketType.trim()) return null;
+      if (!canSave() || !(title || body) || !zipcode.trim() || !ticketType.trim() || !tier.trim()) return null;
       const now = new Date();
       const id = O.createOfflineId(now);
       const baseName = O.offlineBaseName(id, title);
       const json = (images) => JSON.stringify(O.createOfflineFile({
-        id, savedAt: now.getTime(), type, zipcode: zipcode.trim(), ticketType: ticketType.trim(), title, body, ticket: session.ticket(), images
+        id, savedAt: now.getTime(), type, zipcode: zipcode.trim(), ticketType: ticketType.trim(), tier: tier.trim(), title, body, ticket: session.ticket(), images
       }), null, 2);
       const downloadJsonOnly = (imagesSaved) => {
         files.download(`${baseName}.json`, json({ zip: '', pdf: '' }));
@@ -63,8 +65,7 @@
     }
 
     return {
-      /** Nhóm SMS, nhánh setup chưa có checklist: không có ticket để lưu. */
-      canSave: () => !!session.activeTypeKey(),
+      canSave,
       hasContent() { const { title, body } = outputService.compute(); return !!(title || body); },
       hasImages: () => outputService.imageList().length > 0,
       save,

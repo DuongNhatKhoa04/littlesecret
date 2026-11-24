@@ -18,21 +18,21 @@
   const offlineBaseName = (id, title) => toFileName(title ? `${id} - ${title}` : id);
 
   /**
-   * @param {{ id: string, savedAt: number, type: string, zipcode: string, ticketType: string, title: string, body: string,
+   * @param {{ id: string, savedAt: number, type: string, zipcode: string, ticketType: string, tier: string, title: string, body: string,
    *   ticket: object, images: { zip: string, pdf: string } }} input   zip = file ZIP chứa file này, pdf = file PDF trong ZIP đó; '' = không có
    */
-  function createOfflineFile({ id, savedAt, type, zipcode, ticketType, title, body, ticket, images }) {
-    return { format: FORMAT, version: FORMAT_VERSION, id, savedAt, type, zipcode, ticketType, title, body, images, ticket };
+  function createOfflineFile({ id, savedAt, type, zipcode, ticketType, tier, title, body, ticket, images }) {
+    return { format: FORMAT, version: FORMAT_VERSION, id, savedAt, type, zipcode, ticketType, tier, title, body, images, ticket };
   }
 
-  /** Dữ liệu từ file người dùng chọn: không đúng dạng / loại không còn => null; trường chữ hỏng => rỗng. */
+  /** Dữ liệu từ file người dùng chọn: không đúng dạng / loại không còn => null; trường chữ hỏng => rỗng (file trước khi có Tier => tier rỗng). */
   function parseOfflineFile(data, typeExists) {
     if (!data || typeof data !== 'object' || data.format !== FORMAT || !asString(data.id) || !typeExists(data.type) ||
       !data.ticket || typeof data.ticket !== 'object') return null;
     const images = data.images && typeof data.images === 'object' ? data.images : {};
     return {
       id: data.id, type: data.type, ticket: data.ticket,
-      zipcode: asString(data.zipcode), ticketType: asString(data.ticketType),
+      zipcode: asString(data.zipcode), ticketType: asString(data.ticketType), tier: asString(data.tier),
       images: { zip: asString(images.zip), pdf: asString(images.pdf) }
     };
   }

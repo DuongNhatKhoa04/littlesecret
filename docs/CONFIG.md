@@ -258,6 +258,7 @@ Loại `transfer` trong `config/tickets/transfer.js` có `passCase: true` nên h
 | `version` | `vYYYY-MM-DD.N`, tăng mỗi lần sửa |
 | `autoCapitalize` | Tự viết hoa chữ đầu mỗi dòng |
 | `debounceMs` | Độ trễ cập nhật Kết quả |
+| `offlineTiers` | Lựa chọn ô Tier trong hộp Lưu offline (§19) |
 | `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `phoneKey`, `summaryKey`, `tagKey` | Key localStorage. **Không đổi** |
 | `phoneUpload.pollMs` | Nhận ảnh iOS: bao lâu hỏi phone-upload 1 lần khi hàng chờ trống (REQUIREMENTS §21) |
 | `imageDbName` | Tên database IndexedDB chứa ảnh. **Không đổi** |

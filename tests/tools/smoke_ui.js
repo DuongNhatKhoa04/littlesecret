@@ -219,6 +219,7 @@
       !$('#copyBody').disabled &&
       $('#outBody').textContent === 'LEAD: ARIA NAIL BAR – 75001\nCBN: (555) 123-4567 – Owner\nMany thanks team!\n@Stella_SalesAdmin @Kyo_SaleAdmin',
       $('#outBody').textContent);
+    check('Chuyển case: nút Lưu offline bị khóa', $('#offSave').disabled);
     clickText('#form', 'MKT');
     await settle();
     check('Chuyển case MKT: Issue có ô dán ảnh + Thêm ảnh + Chụp màn hình, MKT bắt buộc cả Tên người liên hệ',
@@ -410,9 +411,11 @@
     URL.createObjectURL = (blob) => { lastBlob = blob; return realObjectUrl.call(URL, blob); };
     HTMLAnchorElement.prototype.click = function () { offNames.push(this.download); offBlobs[this.download] = lastBlob; };
     $('#offSave').click();
-    check('Lưu offline: hỏi zipcode + ticket type, có ảnh thì hiện ô PDF', $('#offSaveDlg').open && !$('#offPdfRow').hidden);
+    check('Lưu offline: hỏi zipcode + ticket type + tier (0.5 – 3), có ảnh thì hiện ô PDF', $('#offSaveDlg').open && !$('#offPdfRow').hidden &&
+      $$('#offTier option').map(o => o.value).join(' ') === ' 0.5 1 1.5 2 2.5 3' && $('#offTier').required, $$('#offTier option').map(o => o.value));
     type($('#offZip'), '02134');
     type($('#offType'), 'Setup');
+    $('#offTier').value = '1.5';
     $('#offPdf').checked = true;
     $('#offSaveOk').click();
     await until(() => !$('#offSaveDlg').open, 10000);
@@ -424,7 +427,7 @@
     const zipText = offZip ? new TextDecoder().decode(new Uint8Array(await offZip.arrayBuffer())) : '';
     check('Lưu offline: chỉ tải đúng 1 file ZIP tên OFF-…, bên trong có JSON + PDF cùng tên',
       offNames.length === 1 && /^OFF-\d{8}-\d{6} - INTERNET - MAT KET NOI$/.test(offBase) &&
-      zipText.startsWith('PK') && zipText.includes(offBase + '.json') && zipText.includes(offBase + '.pdf') && zipText.includes('"zipcode": "02134"'), offNames);
+      zipText.startsWith('PK') && zipText.includes(offBase + '.json') && zipText.includes(offBase + '.pdf') && zipText.includes('"zipcode": "02134"') && zipText.includes('"tier": "1.5"'), offNames);
     $('#resetBtn').click();
     await settle();
     check('Ticket mới trước khi mở file offline', !$('#outBody').textContent.includes('Check MID'), $('#outBody').textContent.slice(0, 40));
@@ -433,9 +436,9 @@
     $('#offImport').files = offFile.files;
     $('#offImport').dispatchEvent(new Event('change', { bubbles: true }));
     await until(() => $('#outBody').textContent === offBody, 5000);
-    check('Mở file offline (.zip): về đúng nhánh PAX, nội dung giống lúc lưu, báo zipcode + ticket type + file ảnh',
+    check('Mở file offline (.zip): về đúng nhánh PAX, nội dung giống lúc lưu, báo zipcode + ticket type + tier + file ảnh',
       $('#outBody').textContent === offBody && pressed().includes('PAX') &&
-      String(alerts[alerts.length - 1]).includes('Business zipcode: 02134\nTicket type: Setup\nẢnh + PDF: trong file ' + offBase + '.zip'),
+      String(alerts[alerts.length - 1]).includes('Business zipcode: 02134\nTicket type: Setup\nTier: 1.5\nẢnh + PDF: trong file ' + offBase + '.zip'),
       [pressed(), alerts[alerts.length - 1]]);
 
     // Nhánh chưa có checklist

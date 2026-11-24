@@ -34,7 +34,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 /* Lưu offline: form hỏi Business zipcode + Ticket type */
 .off-form { display: flex; flex-direction: column; min-height: 0; }
 .off-fields { padding: 12px 16px 4px; }
-.off-fields input.text { width: 100%; }
+.off-fields input.text, .off-fields select.text { width: 100%; }
 
 /* Nhận ảnh iOS: mã QR cho iPad quét */
 .phone-body { overflow: auto; padding: 8px 16px 12px; text-align: center; }

@@ -23,7 +23,7 @@
     </div>
     <button type="button" class="ghost" id="tplOpen" title="Tìm và dùng template (Alt+T)">Template</button>
     <button type="button" class="ghost" id="tplSave" title="Lưu ticket hiện tại làm template, tên = title">+ Lưu template</button>
-    <button type="button" class="ghost" id="offSave" title="Ticket system không vào được: tải ticket này ra 1 file (kèm Business zipcode + Ticket type), có ảnh thì gói chung vào ZIP">Lưu offline</button>
+    <button type="button" class="ghost" id="offSave" title="Ticket system không vào được: tải ticket này ra 1 file (kèm Business zipcode + Ticket type + Tier), có ảnh thì gói chung vào ZIP">Lưu offline</button>
     <button type="button" class="ghost" id="offOpen" title="Chọn file .zip / .json đã tải bằng Lưu offline để nạp lại vào form, rồi Copy để điền">Mở file offline</button>
     <input type="file" id="offImport" accept=".zip,.json,application/zip,application/json" hidden>
     <button type="button" class="ghost wide-only" id="swapBtn" title="Đổi vị trí Nhập / Kết quả (chỉ ở chế độ Chia đôi)">⇄ Đổi bên</button>
@@ -117,6 +117,7 @@
     <div class="off-fields">
       <div class="field"><label for="offZip">Business zipcode</label><input class="text" id="offZip" type="text" inputmode="numeric" autocomplete="off" required></div>
       <div class="field"><label for="offType">Ticket type</label><input class="text" id="offType" type="text" autocomplete="off" required></div>
+      <div class="field"><label for="offTier">Tier</label><select class="text" id="offTier" required><option value="">Chọn tier</option></select></div>
       <label class="field" id="offPdfRow"><input type="checkbox" id="offPdf"> Tải kèm PDF ảnh</label>
       <p class="status">Tải 1 file, tên bắt đầu bằng mã OFF-…: không có ảnh là file .json; có ảnh là file .zip chứa .json + ảnh (+ .pdf nếu chọn) cùng tên. Mở lại bằng "Mở file offline".</p>
     </div>
