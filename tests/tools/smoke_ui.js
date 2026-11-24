@@ -246,8 +246,22 @@
     $('#resetBtn').click();
     await settle();
     check('Chuyển case: Ticket mới chỉ xóa form Chuyển case, về team đầu', $('#outBody').textContent === '' && $('#pass_shop').value === '');
-    check('Chuyển case: Ticket mới giữ tag tay', JSON.stringify(JSON.parse(localStorage.getItem('ticketWriter.v1') || '{}').passCase?.tags?.tech || {}).includes('@support_moi'),
-      localStorage.getItem('ticketWriter.v1'));
+    clickText('#form', 'Tech');
+    await settle();
+    const chipNames = () => $$('.pass-tag span').map(node => node.textContent);
+    check('Chuyển case: Ticket mới bỏ người support thêm tay, giữ người chính và ô tick',
+      !chipNames().includes('@support_moi') && chipNames().length > 0 && !$$('.pass-tag input')[0].checked, chipNames());
+    $('#pass_tagAdd').focus();
+    type($('#pass_tagAdd'), 'supp');
+    const tagSuggestions = $$('#pass_tagHistory .combo-opt span').map(node => node.textContent);
+    key($('#pass_tagAdd'), { key: 'ArrowDown' });
+    key($('#pass_tagAdd'), { key: 'Enter' });
+    await settle();
+    check('Chuyển case: gõ ô Thêm tag (thiếu @) ra gợi ý tên đã thêm, ↓ + Enter thêm lại',
+      tagSuggestions.join('|') === '@support_moi' && chipNames().filter(name => name === '@support_moi').length === 1, [tagSuggestions, chipNames()]);
+    $('.pass-tag button').click();
+    $$('.pass-tag input')[0].click();
+    await settle();
     clickText('#picker', 'Hỗ trợ merchant');
     await settle();
     check('về Hỗ trợ merchant: ticket, ô Loại + Loại đã chọn vẫn giữ, con trỏ ở ô Loại',

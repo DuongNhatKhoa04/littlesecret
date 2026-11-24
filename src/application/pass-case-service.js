@@ -5,8 +5,14 @@
   const { createEmptyPassCase, allPassCaseImageKeys, toTagName } = TW.domain.passCase;
   const without = (list, name) => list.filter(item => item !== name);
 
-  /** @param {{ context: any, store: any, images: { clearKeys: (keys: string[]) => Promise<void> } }} deps */
-  function createPassCaseService({ context, store, images }) {
+  /** Ticket mới: bỏ người support thêm tay, giữ người chính theo ca và ô tick của họ. */
+  const keepShiftTags = (tags) => Object.fromEntries(Object.entries(tags).map(([id, team]) => [id, { off: team.off, extra: [] }]));
+
+  /**
+   * @param {{ context: any, store: any, images: { clearKeys: (keys: string[]) => Promise<void> }, tagHistory: { remember: (text: string) => void } }} deps
+   *   tagHistory: tên đã thêm tay, để gợi ý lần sau
+   */
+  function createPassCaseService({ context, store, images, tagHistory }) {
     const config = context.passCase;
     /** Tag chỉnh tay của team đang chọn. */
     const updateTags = (mutate, change) => store.update(state => mutate(state.passCase.tags[state.passCase.team]), change);
@@ -33,16 +39,16 @@
       addTag(text) {
         const name = toTagName(text);
         if (!name) return false;
+        tagHistory.remember(name);
         updateTags(tags => { tags.extra = [...without(tags.extra, name), name]; tags.off = without(tags.off, name); }, { rebuild: true });
         return true;
       },
       removeTag(name) {
         updateTags(tags => { tags.extra = without(tags.extra, name); tags.off = without(tags.off, name); }, { rebuild: true });
       },
-      /** Danh sách tag là người đi làm, không phải nội dung case => Ticket mới giữ lại. */
       reset() {
         images.clearKeys(allPassCaseImageKeys(config));
-        store.update(state => { state.passCase = { ...createEmptyPassCase(config), tags: state.passCase.tags }; }, { rebuild: true });
+        store.update(state => { state.passCase = { ...createEmptyPassCase(config), tags: keepShiftTags(state.passCase.tags) }; }, { rebuild: true });
       }
     };
   }

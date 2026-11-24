@@ -92,20 +92,22 @@
     assertEqual(['  an  vo ', '@x', '  '].map(D.passCase.toTagName), ['@an_vo', '@x', '']);
   });
 
-  test('pass case: tag thêm / bỏ tick lưu lại theo team, Ticket mới vẫn giữ', () => {
-    const { storage, repository, store, service } = setup({ nav: { group: 'ticket', ticketType: 'transfer' } });
+  test('pass case: tag thêm / bỏ tick lưu theo team; Ticket mới bỏ người thêm tay, giữ ô tick người chính; tên thêm tay vào gợi ý', () => {
+    const { storage, repository, store, service, tagHistory } = setup({ nav: { group: 'ticket', ticketType: 'transfer' } });
     service.setTeam('cs');
-    assertEqual([service.addTag(' minh '), service.addTag('  ')], [true, false]);
+    assertEqual([service.addTag(' minh '), service.addTag('  '), service.addTag('@an')], [true, false, true]);
+    assertEqual([tagHistory.list(), storage.data[context.app.tagKey]], [['@an', '@minh'], ['@an', '@minh']]);
     service.setTagOn('@ThuTranCS', false);
     service.setValue('shop', 'ARIA');
     service.reset();
     repository.save(store.get());
     const reloaded = setup(storage.data[context.app.storageKey]).session.passCase();
-    assertEqual([reloaded.values.shop, reloaded.tags.cs, reloaded.tags.mkt], ['', { off: ['@ThuTranCS'], extra: ['@minh'] }, { off: [], extra: [] }]);
+    assertEqual([reloaded.values.shop, reloaded.tags.cs, reloaded.tags.mkt], ['', { off: ['@ThuTranCS'], extra: [] }, { off: [], extra: [] }]);
     service.setTeam('cs');
+    service.addTag('@minh');
     service.removeTag('@minh');
     service.setTagOn('@ThuTranCS', true);
-    assertEqual(store.get().passCase.tags.cs, { off: [], extra: [] });
+    assertEqual([store.get().passCase.tags.cs, tagHistory.list()], [{ off: [], extra: [] }, ['@minh', '@an']]);
   });
 
   test('pass case: CBN / LEAD ghép phần nào có thì in phần đó', () => {
@@ -133,7 +135,9 @@
     const session = A.session.createSession({ context, store });
     const images = A.imageService.createImageService({ files: { readAsDataUrl: async () => 'data:image/png;base64,' }, onChecklistImage: () => {} });
     const output = A.outputService.createOutputService({ context, session, images });
-    return { storage, repository, store, session, images, output, service: A.passCaseService.createPassCaseService({ context, store, images }) };
+    const tagHistory = A.summaryHistoryService.createSummaryHistoryService({ context, storage, key: context.app.tagKey, normalize: D.passCase.toTagName });
+    const service = A.passCaseService.createPassCaseService({ context, store, images, tagHistory });
+    return { storage, repository, store, session, images, output, tagHistory, service };
   }
 
   test('pass case: state bản trước (chưa có passCase) => form mặc định, ticket giữ nguyên', () => {

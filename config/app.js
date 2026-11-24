@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-24.13',      // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-24.14',      // hiện cạnh tên app để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
 
@@ -16,6 +16,7 @@
     staffKey: 'ticketWriter.staff.v1',         // tên nhân viên (form SMS Xin review), lưu riêng để Ticket mới không xóa
     themeKey: 'ticketWriter.theme.v1',         // giao diện sáng / tối / tự động, lưu riêng để Ticket mới không đổi
     summaryKey: 'ticketWriter.summaries.v1',   // Tóm tắt đã dùng, gợi ý khi gõ ô Tóm tắt
+    tagKey: 'ticketWriter.passTags.v1',        // tên tag đã thêm tay ở Chuyển case, gợi ý khi gõ ô Thêm tag
     phoneKey: 'ticketWriter.phone.v1',         // link phone-upload + đang bật nhận ảnh iOS hay không
     imageDbName: 'ticketWriter.images.v1',     // tên database IndexedDB chứa ảnh đang dán (KHÔNG ĐỔI)
 

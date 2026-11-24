@@ -3,13 +3,15 @@
   'use strict';
 
   const { el, button, segmented, autoGrow, labeledField, textInput, maskPhone } = TW.ui.dom;
-  const { findTeam, imageKey } = TW.domain.passCase;
+  const { findTeam, imageKey, toTagName } = TW.domain.passCase;
   const { passCaseTags } = TW.domain.passCaseMessage;
+  const { attachSuggestions } = TW.ui.combo;
   const REQUIRED_BADGE = 'Bắt buộc';
   const ID_PREFIX = 'pass_';
   const TAG_INPUT_ID = 'pass_tagAdd';
+  const TAG_LIST_ID = 'pass_tagHistory';
 
-  function createPassCaseForm({ root, context, session, passCaseService, imageZone }) {
+  function createPassCaseForm({ root, context, session, passCaseService, imageZone, tagHistory }) {
     const config = context.passCase;
     const { labels } = config;
     const value = (id) => session.passCase().values[id];
@@ -118,20 +120,30 @@
       return chip;
     }
 
-    /** Thêm xong form dựng lại => focus lại ô thêm để nhập tiếp người khác. */
-    function tagAdder() {
+    /**
+     * Thêm xong form dựng lại => focus lại ô thêm để nhập tiếp người khác.
+     * Gợi ý: tên đã thêm tay trước đây, trừ người đang có trong danh sách tag; gõ thiếu @ vẫn ra.
+     */
+    function tagAdder(listed) {
       const input = textInput({ id: TAG_INPUT_ID, value: '', onInput: () => {}, placeholder: labels.tagPh });
-      const add = () => { if (passCaseService.addTag(input.value)) document.getElementById(TAG_INPUT_ID).focus(); };
-      input.addEventListener('keydown', (event) => { if (event.key === 'Enter') { event.preventDefault(); add(); } });
+      const add = (text) => { if (passCaseService.addTag(text)) document.getElementById(TAG_INPUT_ID).focus(); };
+      input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' && !event.defaultPrevented) { event.preventDefault(); add(input.value); }   // defaultPrevented = vừa chọn gợi ý
+      });
       const wrap = el('div', 'pass-tag-add');
-      wrap.append(input, button('ghost', labels.tagAdd, { onClick: add }));
+      wrap.append(input, button('ghost', labels.tagAdd, { onClick: () => add(input.value) }));
+      attachSuggestions({
+        wrap, listId: TAG_LIST_ID, onPick: add, onForget: tagHistory.forget, toQuery: toTagName,
+        items: () => tagHistory.list().filter(name => !listed.includes(name))
+      });
       return wrap;
     }
 
     function tagsField() {
       const list = el('div', 'pass-tags');
-      list.append(...passCaseTags({ passCase: session.passCase(), config, now: new Date() }).map(tagChip));
-      return labeledField(labels.tags, list, tagAdder());
+      const tags = passCaseTags({ passCase: session.passCase(), config, now: new Date() });
+      list.append(...tags.map(tagChip));
+      return labeledField(labels.tags, list, tagAdder(tags.map(tag => tag.name)));
     }
 
     function tipsNode(team) {

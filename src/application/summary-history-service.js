@@ -1,20 +1,21 @@
-// src/application/summary-history-service.js — Tóm tắt đã dùng (lưu trên máy) để gợi ý khi gõ ô Tóm tắt.
+// src/application/summary-history-service.js — Chữ đã dùng (lưu trên máy) để gợi ý khi gõ: Tóm tắt (mặc định), tên tag Chuyển case.
 (function (TW) {
   'use strict';
 
   const MAX_ENTRIES = 300;   // ponytail: list phẳng, mới nhất đầu; đủ cho gợi ý, không cần index
 
-  /** @param {{ context: object, storage: KeyValueStore }} deps */
-  function createSummaryHistoryService({ context, storage }) {
-    const key = context.app.summaryKey;
+  const toUpper = (text) => text.trim().toUpperCase();   // Tóm tắt lưu IN HOA như trên title
+
+  /** @param {{ context: object, storage: KeyValueStore, key?: string, normalize?: (text: string) => string }} deps   normalize: chữ trước khi lưu, '' = bỏ */
+  function createSummaryHistoryService({ context, storage, key = context.app.summaryKey, normalize = toUpper }) {
     const saved = storage.read(key);
     let entries = Array.isArray(saved) ? saved.filter(x => typeof x === 'string' && x.trim()) : [];
 
     return {
       list: () => entries.slice(),
-      /** Lưu IN HOA như trên title, đưa lên đầu, bỏ bản trùng. */
+      /** Lưu sau khi normalize, đưa lên đầu, bỏ bản trùng. */
       remember(value) {
-        const text = String(value || '').trim().toUpperCase();
+        const text = normalize(String(value || ''));
         if (!text) return;
         entries = [text, ...entries.filter(x => x !== text)].slice(0, MAX_ENTRIES);
         storage.write(key, entries);

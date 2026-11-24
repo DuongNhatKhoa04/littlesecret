@@ -259,6 +259,7 @@ Việc cần làm tiếp:
 | `ticketWriter.templates.v1` | Danh sách template |
 | `ticketWriter.categories.v1` | Loại tự thêm |
 | `ticketWriter.summaries.v1` | Tóm tắt đã dùng, lưu IN HOA như title (tối đa 300, mới nhất đầu, không trùng). Lưu khi rời ô Tóm tắt; gõ ô Tóm tắt thì hiện danh sách gợi ý **bắt đầu bằng** chữ đang gõ (không phân biệt dấu / hoa thường; vd gõ `ket` ra `KẾT NỐI WIFI` nhưng không ra `MẤT KẾT NỐI`), xếp theo bảng chữ cái (lưu vẫn theo mới nhất đầu để giới hạn 300 bỏ mục cũ nhất): ↓/↑ chọn, Enter điền vào ô, Esc đóng, `×` xóa gợi ý đó. Chưa chọn gợi ý thì Enter vẫn sang ô kế tiếp. `Ticket mới` không xóa |
+| `ticketWriter.passTags.v1` | Tên tag đã thêm tay ở Chuyển case (§22), lưu dạng `@tên` (tối đa 300, mới nhất đầu, không trùng), lưu lúc bấm Thêm. Gõ ô Thêm tag thì gợi ý như ô Tóm tắt (gõ thiếu `@` vẫn ra; người đang có trong danh sách tag thì không gợi ý); chọn gợi ý = thêm luôn. `Ticket mới` không xóa |
 
 - Lưu sau mỗi thay đổi. Dữ liệu hỏng/không hợp lệ → bỏ qua phần đó, dùng mặc định.
 - Đọc được format cũ (`data[type]` lưu riêng từng loại).
@@ -680,7 +681,8 @@ Thanks team !                       Thanks team !
   - CS, theo giờ VN: 8:00 PM – 5:00 AM (ca 1-3) → `@xuanthor_cs @joyce_cs`; 5:00 AM – 8:00 PM (ca 2) → `@ThuTranCS`.
   - Tech, theo giờ VN: 8:00 PM – 4:00 AM (ca 1-3) → `@vinny_tech @brian_technical`; 4:00 AM – 8:00 PM (ca 2) → `@dustin_tech`.
   - **Chỉnh tay trên form** (ô Tag, dưới các trường): hiện người của ca đang trực, mỗi người 1 ô tick; bỏ tick = hôm nay nghỉ, không tag. Ô Thêm (Enter hoặc nút Thêm) thêm người support thêm cho team: tự bỏ khoảng trắng thừa, khoảng trắng giữa thành `_`, thiếu `@` thì thêm; người thêm tay được tag ở **mọi ca**, đứng sau người của ca, có nút × để bỏ. Trùng người của ca thì không lặp.
-  - Tag chỉnh tay lưu theo từng team (`passCase.tags`: `off` = bỏ tick, `extra` = thêm tay), F5 và **Ticket mới vẫn giữ**; chỉ đổi khi người dùng tự tick / thêm / bỏ.
+  - Tag chỉnh tay lưu theo từng team (`passCase.tags`: `off` = bỏ tick, `extra` = thêm tay), F5 vẫn giữ. **Ticket mới** bỏ người thêm tay (mọi team), giữ người chính theo ca và ô tick của họ.
+  - Tên đã thêm tay lưu riêng (`ticketWriter.passTags.v1`, §12) để gõ ô Thêm tag ra gợi ý như ô Tóm tắt: ↓/↑ chọn, Enter thêm, Esc đóng, `×` xóa gợi ý.
   - Dán vào app chat chỉ ra chữ `@tên`; có app phải gõ `@` chọn lại người thì mới thành tag thật.
 
 - Giá trị đã trim. Phần nào trống thì bỏ phần đó (vd không có MID → `LEAD: <Tên tiệm> – <ZIP>`); cả dòng trống thì bỏ dòng. Ô nhiều dòng giữ xuống dòng.
