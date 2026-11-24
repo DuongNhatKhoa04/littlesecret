@@ -7,7 +7,7 @@
     return { team: config.teams[0].id, urgent: false, values, tags: emptyTags(config) };
   }
 
-  /** Tag chỉnh tay theo team: off = người ca này nghỉ (bỏ tick), extra = người thêm vào (support thêm). */
+  /** Tag chỉnh tay theo team: off = người ca này hôm nay nghỉ (bỏ tick), extra = người thêm vào (support thêm). */
   const emptyTags = (config) => Object.fromEntries(config.teams.map(team => [team.id, { off: [], extra: [] }]));
   const stringList = (raw) => Array.isArray(raw) ? raw.filter(item => typeof item === 'string') : [];
 

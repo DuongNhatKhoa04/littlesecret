@@ -22,7 +22,7 @@
   const MKT_NIGHT = '@Chris_MKTSupport_Leader @Trivu_MarketingSupport @lucas_mktsupport';
   const MKT_DAY = '@Sarah_Pham_AM @josie_am';
   const TECH_NIGHT = '@vinny_tech @brian_technical';
-  const TECH_DAY = '@dustin_tech @NancyNguyen_Tech';
+  const TECH_DAY = '@dustin_tech';
   const CS_NIGHT = '@xuanthor_cs @joyce_cs';
   const CS_DAY = '@ThuTranCS';
 

@@ -4,6 +4,8 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-24
 
+- `v2026-11-24.9` · Chuyển case Tech ca 2: chỉ tag `@dustin_tech`, bỏ `@NancyNguyen_Tech`; bỏ `optional` trong config tag. §22
+- `v2026-11-24.8` · Chuyển case Tech ca 2: `@dustin_tech` cố định, `@NancyNguyen_Tech` optional (mặc định không tick, tick khi đi làm); config tag có thêm `optional`. §22
 - `v2026-11-24.7` · Chuyển case: ô Tag trên form: bỏ tick người hôm nay nghỉ, thêm người support thêm (tự thêm `@`, tag mọi ca, có × để bỏ); lưu theo team, F5 và Ticket mới vẫn giữ. §22
 - `v2026-11-24.6` · Chuyển case CS: theo mẫu group CS (Link Ticket, `Tên tiệm ZIP`, `MID:`, `CBN: Phone - Tên - Vai trò`, Issue có ảnh, `Thanks team !`); bỏ Note, bắt buộc mọi trường trừ Vai trò; tag ca 1-3 8:00 PM – 5:00 AM (`@xuanthor_cs @joyce_cs`), ca 2 5:00 AM – 8:00 PM (`@ThuTranCS`). §22
 - `v2026-11-24.5` · Chuyển case Tech: theo mẫu group Tech (Link Lead, `🔥🔥🔥 URGENT!!` khi tick GẤP, Tên tiệm, `CBN: Phone - Tên - Vai trò`, Issue, `Thanks team !`); bỏ Cần FaceTime? / System / FRT đã làm / Callback Time và ô Tình trạng thực tế; bắt buộc mọi trường trừ Vai trò; tag ca 1-3 8:00 PM – 4:00 AM, ca 2 4:00 AM – 8:00 PM. Bỏ hẳn trường Package (không team nào dùng). §22

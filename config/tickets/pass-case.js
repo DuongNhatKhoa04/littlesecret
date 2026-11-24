@@ -82,7 +82,7 @@
         ],
         tags: [
           { from: '20:00', to: '04:00', names: ['@vinny_tech', '@brian_technical'] },
-          { from: '04:00', to: '20:00', names: ['@dustin_tech', '@NancyNguyen_Tech'] }
+          { from: '04:00', to: '20:00', names: ['@dustin_tech'] }
         ]
       }
     ],
