@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-25.8',      // hiện cuối menu Khác để biết đang mở đúng bản mới
+    version: 'v2026-11-25.9',      // hiện cuối menu Khác để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
     offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu ticket ra file (chọn 1, bắt buộc)
@@ -77,8 +77,8 @@
     // Màu giao diện, chọn ở menu Khác (dùng chung với Sáng / Tối ở trên). Mục đầu là mặc định = màu trong styles/tokens.css.
     // Mục khác: data-palette="<id>" trên <html>, màu ở styles/palette-<id>.css (nhớ thêm <link> vào index.html). id lưu trên máy => không đổi id.
     palettes: [
-      { id: 'castorice', label: 'Tím' },
-      { id: 'pink',      label: 'Hồng' }
+      { id: 'castorice', label: 'Tím',  swatch: '#c9b3ff' },   // swatch: màu tô ô tròn để chọn
+      { id: 'pink',      label: 'Hồng', swatch: '#fea2ba' }
     ],
 
     // Thứ tự = thứ tự tab ở header. Nhóm ticket / SMS không có tab riêng: mỗi loại của nhóm là 1 tab; nhóm Setup là 1 tab.

@@ -44,7 +44,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 - Dữ liệu lưu trong `localStorage` của trình duyệt trên máy người dùng. Không gửi đi đâu.
 - Ảnh lưu trong **IndexedDB** của trình duyệt (§12): tải lại trang / mở lại Chrome vẫn còn. `Ticket mới` và `Mở file đã lưu` xóa ảnh. IndexedDB bị chặn/đầy → ảnh chỉ giữ trong bộ nhớ như trước, không báo lỗi.
 - Giao diện sáng / tối: nút ở header xoay vòng `Tự động` (theo hệ điều hành, mặc định) → `Sáng` → `Tối` (chỉ chữ, không icon). Lựa chọn lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`.
-- **Màu giao diện**: menu `Khác` → `Màu giao diện`: `Tím` (mặc định, bảng Castorice) · `Hồng` (bảng hồng phấn + cyan của bản `v2026-11-12.4`, khu Kết quả: Sáng = mận hồng tro, Tối = mận đậm). Độc lập với Sáng / Tối: màu nào cũng có bản Sáng và Tối. Lựa chọn đang dùng tô nền; lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`. Thêm màu: config `palettes` + 1 file `styles/palette-<id>.css` (CONFIG.md).
+- **Màu giao diện**: menu `Khác` → `Màu giao diện`: `Tím` (mặc định, bảng Castorice) · `Hồng` (bảng hồng phấn + cyan của bản `v2026-11-12.4`, khu Kết quả: Sáng = mận hồng tro, Tối = mận đậm). Độc lập với Sáng / Tối: màu nào cũng có bản Sáng và Tối. Chọn bằng ô tròn tô màu (rê chuột thấy tên màu), dòng trên ghi `Đã chọn: <tên màu>`, ô đang chọn có vòng viền đậm; bấm ô tròn thì menu `Khác` vẫn mở để so màu (mục khác của menu bấm xong thì menu đóng). lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`. Thêm màu: config `palettes` + 1 file `styles/palette-<id>.css` (CONFIG.md).
 - Hỗ trợ gõ tiếng Việt bằng IME (Unikey…): không xử lý phím Enter/Backspace, không viết hoa khi đang gõ dấu.
 - Hiện `version` ở cuối menu `Khác` (`Phiên bản v…`) để biết đang mở đúng bản mới.
 

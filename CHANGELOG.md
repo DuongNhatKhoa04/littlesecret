@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-25
 
+- `v2026-11-25.9` · Màu giao diện (menu Khác): chọn bằng ô tròn tô màu, dòng `Đã chọn: <tên màu>`, ô đang chọn có vòng viền; bấm ô tròn menu vẫn mở. §2
 - `v2026-11-25.8` · Màu Hồng (Sáng): khu Kết quả dịu hơn (mận hồng tro #6a4664 thay mận đậm). Nút giao diện bỏ icon, chỉ ghi `Tự động` / `Sáng` / `Tối`. §2
 - `v2026-11-25.7` · **Màu giao diện** (menu Khác): chọn `Tím` (mặc định) hoặc `Hồng` (bảng hồng + cyan của bản 2026-11-12, khu Kết quả khối mận), dùng được cả Sáng / Tối, lưu trên máy. Màu Tím không đổi. §2 §12
 - `v2026-11-25.6` · Phím tắt **Alt+N** = Ticket mới (vẫn hỏi xác nhận, Enter là đồng ý); xóa xong con trỏ vào ô nhập đầu tiên. §3

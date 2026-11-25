@@ -53,7 +53,8 @@
     });
     $('#swapBtn').addEventListener('click', viewService.toggleSwap);
     // Mục trong menu Khác tự chạy việc của nó (listener riêng); menu chỉ cần đóng lại sau khi bấm.
-    $('#moreMenu').addEventListener('click', (event) => { if (event.target.closest('button')) $('#moreMenu').hidePopover(); });
+    // Trừ ô chọn màu: menu mở tiếp để xem và so các màu.
+    $('#moreMenu').addEventListener('click', (event) => { if (event.target.closest('button:not(.swatch)')) $('#moreMenu').hidePopover(); });
     $('#resetBtn').addEventListener('click', reset);
     const SHORTCUTS = { m: () => viewService.cycleMode(narrow.matches), n: resetFromKeyboard };
     document.addEventListener('keydown', (event) => {

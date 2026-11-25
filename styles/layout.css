@@ -57,9 +57,12 @@ svg .fill { fill: currentColor; fill-opacity: .25; }
 .menu-item:disabled { opacity: .45; cursor: not-allowed; }
 .menu-group { margin: 6px 0 0; padding: 6px 10px 2px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
 .menu hr { margin: 6px 4px; border: 0; border-top: 1px solid var(--line); }
-.palette-seg { display: flex; gap: 4px; padding: 2px 0; }   /* Màu giao diện: các lựa chọn nằm ngang */
-.palette-option { flex: 1; text-align: center; }
-.palette-option[aria-pressed="true"] { background: var(--selected-bg); color: var(--selected-ink); font-weight: 600; }
+/* Màu giao diện: dòng "Đã chọn: …" + ô tròn tô màu; ô đang chọn có vòng viền đậm */
+.palette-current { margin: 0; padding: 4px 10px 2px; font-size: 13px; }
+.palette-seg { display: flex; gap: 10px; padding: 6px 10px 8px; }
+.swatch { width: 30px; height: 30px; padding: 0; border: 1px solid var(--field); border-radius: 50%; cursor: pointer; }
+.swatch:hover { transform: scale(1.08); }
+.swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--ink); }
 .menu-meta { margin: 0; padding: 6px 10px 2px; color: var(--muted); font-size: 12px; }
 
 /* Thanh cảnh báo (config/notifications.js) */
