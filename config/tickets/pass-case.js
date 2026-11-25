@@ -42,7 +42,7 @@
         fields: ['shop', 'zip', 'mid', 'phone', 'contact', 'role', 'note'],
         required: ['shop', 'zip', 'phone'],
         lines: ['{urgent}', 'LEAD: {leadInfo}', 'CBN: {cbn}', 'NOTE: {note}'],
-        tags: [{ names: ['@Stella_SalesAdmin', '@Kyo_SaleAdmin'] }]
+        tags: [{ names: ['@daisy_sale_leader', '@Kyo_SaleAdmin', '@Stella_SalesAdmin'] }]
       },
       {
         id: 'mkt', label: 'MKT', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',

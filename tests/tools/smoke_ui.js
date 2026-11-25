@@ -225,7 +225,7 @@
     await settle();
     check('Chuyển case Sales: đủ => mở Copy, Phone tự format, cuối tin Many thanks team! + tag Sales',
       !$('#copyBody').disabled &&
-      $('#outBody').textContent === 'LEAD: ARIA NAIL BAR – 75001\nCBN: (555) 123-4567 – Owner\nMany thanks team!\n@Stella_SalesAdmin @Kyo_SaleAdmin',
+      $('#outBody').textContent === 'LEAD: ARIA NAIL BAR – 75001\nCBN: (555) 123-4567 – Owner\nMany thanks team!\n@daisy_sale_leader @Kyo_SaleAdmin @Stella_SalesAdmin',
       $('#outBody').textContent);
     check('Chuyển case: nút Lưu offline và Mở file offline bị khóa', $('#offSave').disabled && $('#offOpen').disabled);
     clickText('#form', 'MKT');

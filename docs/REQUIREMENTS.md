@@ -678,7 +678,7 @@ Thanks team !                       Thanks team !
 - MKT, CS, Tech: dòng trống giữ nguyên; dòng bị bỏ (vd không có Issue) thì không để lại 2 dòng trống liền nhau.
 
 - **Tag** (cách nhau 1 space):
-  - Sales: `@Stella_SalesAdmin @Kyo_SaleAdmin`.
+  - Sales, mọi giờ: `@daisy_sale_leader @Kyo_SaleAdmin @Stella_SalesAdmin`.
   - MKT, theo giờ VN lúc tạo tin: 8:00 PM – 6:00 AM (C1-3) → `@Chris_MKTSupport_Leader @Trivu_MarketingSupport @lucas_mktsupport`; 6:00 AM – 8:00 PM (MKT/AM ca 2) → `@Sarah_Pham_AM @josie_am`.
   - CS, theo giờ VN: 8:00 PM – 5:00 AM (ca 1-3) → `@xuanthor_cs @joyce_cs`; 5:00 AM – 8:00 PM (ca 2) → `@ThuTranCS`.
   - Tech, theo giờ VN: 8:00 PM – 4:00 AM (ca 1-3) → `@vinny_tech @brian_technical`; 4:00 AM – 8:00 PM (ca 2) → `@dustin_tech`.

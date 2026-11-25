@@ -2,6 +2,10 @@
 
 Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu ngày tương ứng: version · đổi gì (người dùng thấy gì) · mục REQUIREMENTS liên quan. Bản cũ hơn 2026-11-12 chưa ghi version, tóm tắt theo commit.
 
+## 2026-11-25
+
+- `v2026-11-25.1` · Chuyển case Sales: tag thêm `@daisy_sale_leader` → `@daisy_sale_leader @Kyo_SaleAdmin @Stella_SalesAdmin`, mọi giờ (không theo ca). §22.2
+
 ## 2026-11-24
 
 - `v2026-11-24.31` · Chuyển case: bỏ tính năng Tech **Assign** (giao case tay nhanh hơn): bỏ ô tick, mẫu tin, ô Tech nhận case, copy kèm HTML. Bookmark Lấy thông tin tiệm trên trang ticket vẫn giữ (Link Ticket, Tên tiệm, MID, nội dung → Issue). §22.5

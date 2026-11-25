@@ -18,7 +18,7 @@
   const buildAt = (now, ...args) => D.passCaseMessage.buildPassCaseMessage({ passCase: passCase(...args), config, now });
   const build = (...args) => buildAt(vn(10), ...args);
   const missing = (...args) => D.passCaseMessage.missingPassCaseFields({ passCase: passCase(...args), config });
-  const SALES_END = '\nMany thanks team!\n@Stella_SalesAdmin @Kyo_SaleAdmin';
+  const SALES_END = '\nMany thanks team!\n@daisy_sale_leader @Kyo_SaleAdmin @Stella_SalesAdmin';
   const MKT_NIGHT = '@Chris_MKTSupport_Leader @Trivu_MarketingSupport @lucas_mktsupport';
   const MKT_DAY = '@Sarah_Pham_AM @josie_am';
   const TECH_NIGHT = '@vinny_tech @brian_technical';
