@@ -24,6 +24,6 @@
   });
 
   test('giao diện: mở lại trang => giữ lựa chọn đã lưu', () => {
-    assertEqual(A.themeService.createThemeService({ context, storage: fakeStorage({ [key]: 'dark' }) }).current(), { id: 'dark', label: '☾ Tối' });
+    assertEqual(A.themeService.createThemeService({ context, storage: fakeStorage({ [key]: 'dark' }) }).current(), { id: 'dark', label: 'Tối' });
   });
 })(window.TW);

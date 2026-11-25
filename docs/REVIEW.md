@@ -28,7 +28,7 @@ Thay đổi chạm vào các vùng này → người phụ trách đọc diff tr
 - [ ] Mở `index.html`, DevTools Console không có lỗi đỏ.
 - [ ] Đi qua các loại ticket đang hiện, nhập thử loại vừa sửa: Title / Nội dung đúng, nút Copy khóa / mở đúng.
 - [ ] Mở bằng trình duyệt **đang có dữ liệu bản cũ**: ticket đang nhập, template, ảnh vẫn còn.
-- [ ] Đổi giao diện (`☀ Sáng` / `☾ Tối`) nhìn qua chỗ vừa sửa.
+- [ ] Đổi giao diện (`Sáng` / `Tối`) nhìn qua chỗ vừa sửa.
 - [ ] Sửa phone-upload: chạy `.bat` thật, iPad quét QR, gửi 2–3 ảnh, `Đổi mã ngay` rồi thử gửi bằng trang cũ (phải báo hết hạn).
 
 **Giấy tờ**

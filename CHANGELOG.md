@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-25
 
+- `v2026-11-25.8` · Màu Hồng (Sáng): khu Kết quả dịu hơn (mận hồng tro #6a4664 thay mận đậm). Nút giao diện bỏ icon, chỉ ghi `Tự động` / `Sáng` / `Tối`. §2
 - `v2026-11-25.7` · **Màu giao diện** (menu Khác): chọn `Tím` (mặc định) hoặc `Hồng` (bảng hồng + cyan của bản 2026-11-12, khu Kết quả khối mận), dùng được cả Sáng / Tối, lưu trên máy. Màu Tím không đổi. §2 §12
 - `v2026-11-25.6` · Phím tắt **Alt+N** = Ticket mới (vẫn hỏi xác nhận, Enter là đồng ý); xóa xong con trỏ vào ô nhập đầu tiên. §3
 - `v2026-11-25.5` · Sửa lỗi của bản .4: mục **Việc cần làm tiếp** hiện cả khi Kết luận là Resolved (CSS mới của mục đè lên trạng thái ẩn); màn hình hẹp vẫn hiện nút icon Chia đôi. Giờ chỉ hiện khi chọn Pending. §6

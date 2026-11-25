@@ -67,12 +67,12 @@
     check('bình thường: không có thanh cảnh báo', $('#notices').hidden, $('#notices').textContent);
     const bg = () => getComputedStyle(document.body).backgroundColor;
     const themeOf = () => [document.documentElement.dataset.theme || 'auto', $('#themeBtn').textContent];
-    check('giao diện mặc định: Tự động', themeOf().join('|') === 'auto|◐ Tự động', themeOf());
+    check('giao diện mặc định: Tự động', themeOf().join('|') === 'auto|Tự động', themeOf());
     $('#themeBtn').click();
     const lightBg = bg();
-    check('bấm giao diện => Sáng', themeOf().join('|') === 'light|☀ Sáng', themeOf());
+    check('bấm giao diện => Sáng', themeOf().join('|') === 'light|Sáng', themeOf());
     $('#themeBtn').click();
-    check('bấm giao diện => Tối, đổi màu nền', themeOf().join('|') === 'dark|☾ Tối' && bg() !== lightBg, [themeOf(), lightBg, bg()]);
+    check('bấm giao diện => Tối, đổi màu nền', themeOf().join('|') === 'dark|Tối' && bg() !== lightBg, [themeOf(), lightBg, bg()]);
     $('#themeBtn').click();
     check('bấm giao diện => về Tự động', themeOf()[0] === 'auto', themeOf());
     const paletteOf = () => [document.documentElement.dataset.palette || 'default', $$('#paletteSeg [aria-pressed="true"]').map(node => node.textContent).join()];

@@ -1,7 +1,7 @@
 /* styles/palette-pink.css — Màu giao diện "Hồng" (data-palette="pink" trên <html>, chọn ở menu Khác). Ghi đè biến màu của tokens.css.
    Palette bản v2026-11-12.4: #ffe7f3 hồng phấn · #ffcdde hồng nhạt · #fea2ba hồng đậm · #7efaff cyan sáng · #1adee6 cyan.
    Cyan quá sáng để làm chữ trên nền sáng => chữ / link dùng --accent-text (cyan đậm), cyan gốc chỉ làm nền nút.
-   Khu Kết quả: khối mận đậm (--slab*), nút Copy để điền cyan. Chữ đã kiểm tra tương phản >= 4.5:1 (WCAG AA), khung focus >= 3:1.
+   Khu Kết quả: Sáng = khối mận hồng tro (dịu, không tối gắt trên nền hồng nhạt), Tối = khối mận đậm; nút Copy để điền cyan. Chữ đã kiểm tra tương phản >= 4.5:1 (WCAG AA), khung focus >= 3:1.
    Sáng / Tối giống tokens.css: khối Tối theo hệ điều hành và khối data-theme="dark" phải giữ giống nhau, và đặt đủ mọi biến khối Sáng đặt. */
 :root[data-palette="pink"] {
   --bg: #fff3f9; --panel: #ffffff; --ink: #2b2433; --muted: #6b5566;
@@ -13,7 +13,7 @@
   --err-bg: #fdd8d8; --err-ink: #a3141c;
   --urgent-bg: #fdf1f1; --urgent-line: #efb9be;
   --sms-bg: #ffe7f3; --sms-line: #fea2ba;
-  --slab: #3d1f38; --slab-dock: #33192f; --slab-line: #5e3456; --slab-ink: #fff3f9; --slab-text: #ffe7f3; --slab-muted: #fea2ba;
+  --slab: #6a4664; --slab-dock: #5e3d58; --slab-line: #85607e; --slab-ink: #fff3f9; --slab-text: #ffe7f3; --slab-muted: #ffd0de;   /* mận hồng tro: dịu với nền sáng */
   --slab-fill: #1adee6; --slab-fill-hover: #7efaff; --slab-fill-ink: #062a2c;
   --slab-done-bg: #6fe0b4; --slab-done-ink: #0b2a1f; --slab-tick: #6fe0b4;
   --slab-sms-bg: rgba(254, 162, 186, .12); --slab-sms-line: #fea2ba;

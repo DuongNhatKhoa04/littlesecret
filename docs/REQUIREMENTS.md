@@ -43,14 +43,14 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 - HTML + CSS + JS thuần, không thư viện ngoài, không cần server, mở bằng trình duyệt (Chrome/Edge).
 - Dữ liệu lưu trong `localStorage` của trình duyệt trên máy người dùng. Không gửi đi đâu.
 - Ảnh lưu trong **IndexedDB** của trình duyệt (§12): tải lại trang / mở lại Chrome vẫn còn. `Ticket mới` và `Mở file đã lưu` xóa ảnh. IndexedDB bị chặn/đầy → ảnh chỉ giữ trong bộ nhớ như trước, không báo lỗi.
-- Giao diện sáng / tối: nút ở header xoay vòng `◐ Tự động` (theo hệ điều hành, mặc định) → `☀ Sáng` → `☾ Tối`. Lựa chọn lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`.
-- **Màu giao diện**: menu `Khác` → `Màu giao diện`: `Tím` (mặc định, bảng Castorice) · `Hồng` (bảng hồng phấn + cyan của bản `v2026-11-12.4`, khu Kết quả khối mận đậm). Độc lập với Sáng / Tối: màu nào cũng có bản Sáng và Tối. Lựa chọn đang dùng tô nền; lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`. Thêm màu: config `palettes` + 1 file `styles/palette-<id>.css` (CONFIG.md).
+- Giao diện sáng / tối: nút ở header xoay vòng `Tự động` (theo hệ điều hành, mặc định) → `Sáng` → `Tối` (chỉ chữ, không icon). Lựa chọn lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`.
+- **Màu giao diện**: menu `Khác` → `Màu giao diện`: `Tím` (mặc định, bảng Castorice) · `Hồng` (bảng hồng phấn + cyan của bản `v2026-11-12.4`, khu Kết quả: Sáng = mận hồng tro, Tối = mận đậm). Độc lập với Sáng / Tối: màu nào cũng có bản Sáng và Tối. Lựa chọn đang dùng tô nền; lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`. Thêm màu: config `palettes` + 1 file `styles/palette-<id>.css` (CONFIG.md).
 - Hỗ trợ gõ tiếng Việt bằng IME (Unikey…): không xử lý phím Enter/Backspace, không viết hoa khi đang gõ dấu.
 - Hiện `version` ở cuối menu `Khác` (`Phiên bản v…`) để biết đang mở đúng bản mới.
 
 ## 3. Bố cục giao diện
 
-**Header** (1 hàng, màn hình hẹp thì xuống hàng): tên app, dưới là `Developed by Ryan` · **tab chọn loại** (§14.2) · chế độ xem (3 nút icon `Chia đôi` / `Nhập` / `Kết quả`, chữ hiện khi rê chuột) · `Template` · `Khác` · `Nhận ảnh iOS` (§21) · nút giao diện (`◐ Tự động` / `☀ Sáng` / `☾ Tối`) · `Ticket mới` (nút chính).
+**Header** (1 hàng, màn hình hẹp thì xuống hàng): tên app, dưới là `Developed by Ryan` · **tab chọn loại** (§14.2) · chế độ xem (3 nút icon `Chia đôi` / `Nhập` / `Kết quả`, chữ hiện khi rê chuột) · `Template` · `Khác` · `Nhận ảnh iOS` (§21) · nút giao diện (`Tự động` / `Sáng` / `Tối`) · `Ticket mới` (nút chính).
 
 **Menu `Khác`** (bấm ra ngoài / Esc là đóng, bấm 1 mục là chạy rồi đóng): `Lưu ticket làm template` (§11) · *Khi ticket system không vào được*: `Lưu ticket ra file`, `Mở file đã lưu` (§19) · *Khi đổi máy hoặc trình duyệt*: `Sao lưu gợi ý và template`, `Khôi phục từ file sao lưu` (§23) · `Đổi bên Nhập và Kết quả` · `Phiên bản v…`.
 
