@@ -327,6 +327,9 @@
     check('Gửi Telegram: hộp xem trước có group CS, chưa có token => hiện ô token, khóa Gửi',
       $('#tgDlg').open && $('#tgTitle').textContent === 'Gửi vào group CS' && !$('#tgTokenRow').hidden && $('#tgSend').disabled, [$('#tgTitle').textContent, $('#tgProblem').textContent]);
     $('#tgClose').click();
+    key($('#pass_issue'), { key: 'g', altKey: true });   // đang gõ trong ô vẫn mở được
+    check('Alt+G = Gửi Telegram: mở hộp xem trước, không gửi thẳng', $('#tgDlg').open && $('#tgTitle').textContent === 'Gửi vào group CS');
+    $('#tgClose').click();
     $('#resetBtn').click();
     await settle();
     clickText('#picker', 'Hỗ trợ merchant');

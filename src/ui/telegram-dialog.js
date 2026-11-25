@@ -1,4 +1,4 @@
-// src/ui/telegram-dialog.js — Nút "Gửi Telegram" (Chuyển case) + hộp xem trước: group, tin, số ảnh; dán token / tên lần đầu; xác nhận mới gửi.
+// src/ui/telegram-dialog.js — Nút "Gửi Telegram" (Chuyển case, Alt+G) + hộp xem trước: group, tin, số ảnh; dán token / tên lần đầu; xác nhận mới gửi.
 (function (TW) {
   'use strict';
 
@@ -13,6 +13,7 @@
     forget: 'Xóa token bot trên máy này? Muốn gửi tiếp phải dán lại token.'
   };
   const CLOSE_AFTER_MS = 900;
+  const SHORTCUT_KEY = 'g';
 
   /** @param {{ session: object, telegramService: object, staffService: object }} deps */
   function createTelegramDialog({ session, telegramService, staffService }) {
@@ -67,6 +68,14 @@
     send.addEventListener('click', submit);
     $('#tgClose').addEventListener('click', () => dialog.close());
     button.addEventListener('click', open);
+    // Alt+G mở hộp xem trước như bấm nút, không gửi thẳng: tin ra Internet nên vẫn xác nhận (Enter ở nút Gửi).
+    // Không xét nút đang khóa: nút cập nhật trễ khi đang gõ, còn hộp tự tính lại và báo lý do chưa gửi được.
+    document.addEventListener('keydown', (event) => {
+      if (!event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.key.toLowerCase() !== SHORTCUT_KEY) return;
+      if (!session.isPassCase() || dialog.open) return;
+      event.preventDefault();
+      open();
+    });
 
     /** Gọi mỗi lần khu Kết quả vẽ lại: nút chỉ có ở Chuyển case, khóa khi tin chưa copy được. */
     function renderButton(result) {

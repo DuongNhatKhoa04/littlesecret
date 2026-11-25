@@ -752,6 +752,7 @@ Dữ liệu lưu trong trình duyệt (§12) không tự theo sang máy khác, t
 
 Cả team dùng chung 1 bot. Nút **Gửi Telegram** cạnh `Copy nội dung` ở khu Kết quả, chỉ có ở Chuyển case; khóa khi `Copy nội dung` khóa (§22.3). Nút Copy vẫn giữ (bot lỗi / máy chưa có token thì làm tay).
 
+- Phím tắt `Alt+G` (chữ trên nút có ghi phím, chạy cả khi đang gõ trong ô, ở mọi chế độ xem) = bấm nút: mở hộp xem trước, không gửi thẳng. Đã có token và tên thì con trỏ ở `Gửi` nên `Alt+G` → `Enter` là gửi. Tin chưa đủ trường bắt buộc thì hộp vẫn mở và báo lý do (như dưới). Ngoài Chuyển case không làm gì.
 - Bấm → hộp **Gửi vào group <Team>**: ô token (chỉ khi máy chưa có), ô **Tên của bạn**, **Tin sẽ gửi** (xem trước), số ảnh Issue. Chưa gửi gì tới khi bấm `Gửi`.
 - Lý do chưa gửi được (hiện trên cùng, khóa `Gửi`), theo thứ tự: tin chưa đủ trường bắt buộc · team chưa có `chatId` · máy chưa có token · chưa nhập tên.
 - **Token**: dán 1 lần, lưu trên máy (`ticketWriter.telegram.v1`, §12), không vào file Sao lưu. Sai dạng (`<số>:<chuỗi>`, vd dư chữ `bot`, có khoảng trắng) → báo, không lưu. Đúng dạng → lưu ngay, xóa khỏi ô, ẩn ô. `Xóa token trên máy này` (hỏi xác nhận) → ô token hiện lại.
