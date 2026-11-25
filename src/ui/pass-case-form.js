@@ -2,7 +2,8 @@
 (function (TW) {
   'use strict';
 
-  const { el, button, segmented, toggleSegmented, autoGrow, labeledField, textInput, maskPhone } = TW.ui.dom;
+  const { el, button, segmented, toggleSegmented, autoGrow, labeledField, textInput, applyCase, maskPhone } = TW.ui.dom;
+  const { capitalizeLines, capitalizeWords } = TW.domain.text;
   const { findTeam, imageKey, toTagName } = TW.domain.passCase;
   const { passCaseTags } = TW.domain.passCaseMessage;
   const { attachSuggestions } = TW.ui.combo;
@@ -11,6 +12,7 @@
   const ID_PREFIX = 'pass_';
   const TAG_INPUT_ID = 'pass_tagAdd';
   const TAG_LIST_ID = 'pass_tagHistory';
+  const CASE_TRANSFORMS = { words: capitalizeWords, lines: capitalizeLines };   // field.capitalize
 
   function createPassCaseForm({ root, context, session, passCaseService, imageZone, tagHistory, shopGrab }) {
     const config = context.passCase;
@@ -18,6 +20,8 @@
     const { labels } = config;
     const value = (id) => session.passCase().values[id];
     const onInput = (id) => (text) => passCaseService.setValue(id, text);
+    /** Hàm viết hoa của trường (field.capitalize), tắt chung theo autoCapitalize như ô ticket. */
+    const caseOf = (field) => (context.app.autoCapitalize ? CASE_TRANSFORMS[field.capitalize] : undefined);
 
     function withBadge(fieldNode, required) {
       if (required) fieldNode.querySelector('label').append(el('span', 'req', REQUIRED_BADGE));
@@ -27,7 +31,11 @@
     function multilineInput(id, field) {
       const textarea = el('textarea', 'text pass-multiline');
       Object.assign(textarea, { id: ID_PREFIX + id, rows: 2, value: value(id), placeholder: field.ph || '', spellcheck: false });
-      textarea.addEventListener('input', () => { passCaseService.setValue(id, textarea.value); autoGrow(textarea); });
+      const transform = caseOf(field);
+      const commit = (format) => { passCaseService.setValue(id, format && transform ? applyCase(textarea, transform) : textarea.value); autoGrow(textarea); };
+      textarea.addEventListener('input', (event) => commit(!event.isComposing));
+      // Gõ dấu tiếng Việt xong mới viết hoa
+      textarea.addEventListener('compositionend', () => setTimeout(() => commit(true), 0));
       requestAnimationFrame(() => autoGrow(textarea));
       return textarea;
     }
@@ -39,9 +47,10 @@
       if (field.kind === 'multiline') return multilineInput(id, field);
       if (field.kind === 'choice') return choiceInput(id, field);
       const phone = field.kind === 'phone';
+      const transform = caseOf(field);
       return textInput({
         id: ID_PREFIX + id, value: value(id), onInput: onInput(id), placeholder: field.ph,
-        inputMode: phone ? 'tel' : field.inputMode, format: phone ? maskPhone : undefined
+        inputMode: phone ? 'tel' : field.inputMode, format: phone ? maskPhone : transform && ((input) => applyCase(input, transform))
       });
     }
 

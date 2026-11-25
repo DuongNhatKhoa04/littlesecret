@@ -2,25 +2,14 @@
 (function (TW) {
   'use strict';
 
-  const { el, button, autoGrow, isComposing } = TW.ui.dom;
+  const { el, button, autoGrow, isComposing, applyCase } = TW.ui.dom;
   const { capitalizeLines } = TW.domain.text;
 
   function createIdeaList({ context, session, ticketService }) {
     const ideasOf = (key) => session.ticket().blocks[key];
 
-    /** Viết hoa đầu dòng ngay khi gõ, giữ nguyên vị trí con trỏ. */
-    function applyAutoCapitalize(textarea) {
-      if (!context.app.autoCapitalize) return;
-      const value = textarea.value;
-      const next = capitalizeLines(value);
-      if (next === value || next.length !== value.length) return;
-      const { selectionStart, selectionEnd } = textarea;
-      textarea.value = next;
-      textarea.setSelectionRange(selectionStart, selectionEnd);
-    }
-
     function commit(textarea, key, index) {
-      applyAutoCapitalize(textarea);
+      if (context.app.autoCapitalize) applyCase(textarea, capitalizeLines);   // viết hoa đầu dòng ngay khi gõ
       ticketService.setIdea(key, index, textarea.value);
       autoGrow(textarea);
     }

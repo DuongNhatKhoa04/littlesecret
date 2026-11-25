@@ -261,6 +261,12 @@
     clickText('#form', 'Tech');
     await settle();
     check('Chuyển case Tech: có ô GẤP dưới Issue + lưu ý, giữ Phone đã nhập', !!$('#pass_issue + .pass-urgent') && !!$('.pass-tips') && $('#pass_phone').value === '(555) 123-4567');
+    type($('#pass_contact'), 'nguyễn văn an');
+    type($('#pass_issue'), 'terminal lỗi\nmất mạng');
+    check('Chuyển case: Tên người liên hệ viết hoa chữ đầu mỗi từ, Issue viết hoa đầu dòng',
+      $('#pass_contact').value === 'Nguyễn Văn An' && $('#pass_issue').value === 'Terminal lỗi\nMất mạng', [$('#pass_contact').value, $('#pass_issue').value]);
+    type($('#pass_contact'), '');
+    type($('#pass_issue'), '');
     $('.pass-urgent input').click();
     await settle();
     check('Chuyển case Tech: tick GẤP => 🔥🔥🔥 URGENT!! trước Tên tiệm, thiếu trường vẫn khóa Copy',

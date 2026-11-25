@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-26
 
+- `v2026-11-26.3` · Chuyển case: **Tên người liên hệ** tự viết hoa chữ đầu mỗi từ (`nguyễn văn an` → `Nguyễn Văn An`), **Issue** tự viết hoa đầu dòng như ô ticket. §22.1
 - `v2026-11-26.2` · Chuyển case: phím tắt **Alt+G** = Gửi Telegram (mở hộp xem trước; đã có token + tên thì Enter là gửi). Nút ghi `Gửi Telegram (Alt+G)`. §24
 - `v2026-11-26.1` · Chuyển case: team mặc định là **Tech** (bấm `Ticket mới` hoặc mở lần đầu thì form về Tech, trước đây về Sales). Thứ tự team trên form không đổi. §22.1
 

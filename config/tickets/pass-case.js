@@ -12,6 +12,7 @@
 
     // Mọi trường của form. Đổi team vẫn giữ chữ đã nhập (trường cùng id = cùng ý nghĩa). id lưu trong state => không đổi id đang có.
     // kind: text (mặc định) | phone (tự format) | choice (options) | multiline.
+    // capitalize: tự viết hoa khi gõ: words = chữ đầu mỗi từ (tên người) · lines = chữ đầu mỗi dòng (như ô ticket).
     // images: true => có ô dán ảnh / chụp màn hình dưới trường, ảnh lưu như ảnh ticket (key ảnh theo id trường => không đổi id).
     fields: {
       ticket: { label: 'Link Ticket', ph: 'https://…' },
@@ -20,9 +21,9 @@
       zip: { label: 'ZIP Code', inputMode: 'numeric' },
       mid: { label: 'MID' },
       phone: { label: 'CBN', kind: 'phone', ph: 'Số gọi lại' },
-      contact: { label: 'Tên người liên hệ', ph: 'Nếu có, vd Mr. Vương' },
+      contact: { label: 'Tên người liên hệ', ph: 'Nếu có, vd Mr. Vương', capitalize: 'words' },
       role: { label: 'Vai trò tại tiệm', kind: 'choice', options: ['Owner', 'Manager', 'Staff', 'Partner'] },
-      issue: { label: 'Issue', kind: 'multiline', ph: 'Vấn đề cần hỗ trợ', images: true },
+      issue: { label: 'Issue', kind: 'multiline', ph: 'Vấn đề cần hỗ trợ', images: true, capitalize: 'lines' },
       note: { label: 'Note', kind: 'multiline', ph: 'Tùy chọn' }
     },
 

@@ -158,14 +158,29 @@
     return wrap;
   }
 
-  /** Ô text 1 dòng; gõ là gọi onInput. format (vd maskPhone) sửa lại chữ trong ô và trả giá trị để lưu. */
+  /**
+   * Ô text 1 dòng; gõ là gọi onInput. format (vd maskPhone) sửa lại chữ trong ô và trả giá trị để lưu.
+   * Đang gõ dấu tiếng Việt (IME) thì chưa format, gõ xong mới format: sửa chữ giữa chừng làm hỏng dấu.
+   */
   function textInput({ id, value, onInput, inputMode, placeholder, format }) {
     const input = el('input', 'text');
     Object.assign(input, { id, type: 'text', value, autocomplete: 'off' });
     if (inputMode) input.inputMode = inputMode;
     if (placeholder) input.placeholder = placeholder;
-    input.addEventListener('input', () => onInput(format ? format(input) : input.value));
+    input.addEventListener('input', (event) => onInput(format && !event.isComposing ? format(input) : input.value));
+    if (format) input.addEventListener('compositionend', () => setTimeout(() => onInput(format(input)), 0));
     return input;
+  }
+
+  /** Viết hoa ngay khi gõ (transform không đổi độ dài chữ), giữ nguyên vị trí con trỏ. Trả giá trị để lưu. */
+  function applyCase(input, transform) {
+    const value = input.value;
+    const next = transform(value);
+    if (next === value || next.length !== value.length) return value;
+    const { selectionStart, selectionEnd } = input;
+    input.value = next;
+    input.setSelectionRange(selectionStart, selectionEnd);
+    return next;
   }
 
   /** Ô Phone: mỗi lần gõ / dán thì format lại (chỉ nhận số), giữ con trỏ sau đúng số vừa gõ để sửa giữa chừng không bị nhảy về cuối. */
@@ -180,5 +195,5 @@
   }
 
   TW.ui.dom = { $, $$, el, button, link, fileInput, autoGrow, flash, choiceGroup, segmented, toggleSegmented, acceptImageDrop, isComposing, focusNext,
-    labeledField, textInput, maskPhone };
+    labeledField, textInput, applyCase, maskPhone };
 })(window.TW);

@@ -14,6 +14,12 @@
       assertEqual(D.text.capitalizeLine(s), s, s));
   });
 
+  test('tên người: viết hoa chữ đầu mỗi từ (sau khoảng trắng), giữ phần còn lại, không đổi độ dài', () => {
+    assertEqual(D.text.capitalizeWords('nguyễn văn  an'), 'Nguyễn Văn  An');
+    assertEqual(D.text.capitalizeWords('mr. đức McDonald '), 'Mr. Đức McDonald ');
+    assertEqual([D.text.capitalizeWords(''), D.text.capitalizeWords('ß')], ['', 'ß']);
+  });
+
   test('gạch đầu dòng: dòng sau thụt 2 khoảng trắng, bỏ dòng trống', () => {
     assertEqual(D.text.bulletize('  a \n\n b  '), '- a\n  b');
   });

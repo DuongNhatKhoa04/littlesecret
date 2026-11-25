@@ -237,7 +237,7 @@ setPassCase({   // const { setPassCase } = registry;
 
 | Trường | Ý nghĩa |
 |---|---|
-| `fields` | Mọi ô của form. Key = id lưu trong state: không đổi id đang có. `kind`: `text` (mặc định) · `phone` (tự format) · `choice` (`options`, bấm lại để bỏ chọn) · `multiline`. `ph` = chữ mờ, `inputMode` cho bàn phím mobile. `images: true` = có ô dán ảnh / chụp màn hình (key ảnh `pass:<id>`) |
+| `fields` | Mọi ô của form. Key = id lưu trong state: không đổi id đang có. `kind`: `text` (mặc định) · `phone` (tự format) · `choice` (`options`, bấm lại để bỏ chọn) · `multiline`. `ph` = chữ mờ, `inputMode` cho bàn phím mobile. `images: true` = có ô dán ảnh / chụp màn hình (key ảnh `pass:<id>`). `capitalize`: tự viết hoa khi gõ, `words` = chữ đầu mỗi từ (tên người), `lines` = chữ đầu mỗi dòng (như ô ticket) |
 | `rows` | Trường xếp chung 1 hàng trên form (chỉ đổi cách xếp), khi team có từ 2 trường của hàng |
 | `defaultTeam` | id team mở sẵn khi form trống (lần đầu, sau `Ticket mới`). Không có / sai id thì team đầu |
 | `teams` | Team nhận theo thứ tự trên form. `id` lưu trong state: không đổi id đang có |

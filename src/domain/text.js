@@ -18,6 +18,12 @@
 
   const capitalizeLines = (text) => text.split('\n').map(capitalizeLine).join('\n');
 
+  /** Tên người: viết hoa chữ cái đầu mỗi từ (đầu chuỗi / sau khoảng trắng), không đổi phần còn lại (giữ McDonald). */
+  const capitalizeWords = (text) => text.replace(/(^|\s)(\p{Ll})/gu, (all, lead, letter) => {
+    const upper = letter.toUpperCase();
+    return lead + (upper.length === 1 ? upper : letter);   // "ß" → "SS" làm đổi độ dài, lệch con trỏ
+  });
+
   /** Bỏ ý trống, trim từng ý. */
   const cleanItems = (items) => items.map(item => item.trim()).filter(Boolean);
 
@@ -68,5 +74,5 @@
     return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
   }
 
-  TW.domain.text = { isBlank, asString, pad2, formatPhoneInput, capitalizeLine, capitalizeLines, cleanItems, bulletize, removeDiacritics, normalizeForSearch, searchSuggestions, cleanCategory };
+  TW.domain.text = { isBlank, asString, pad2, formatPhoneInput, capitalizeLine, capitalizeLines, capitalizeWords, cleanItems, bulletize, removeDiacritics, normalizeForSearch, searchSuggestions, cleanCategory };
 })(window.TW);
