@@ -87,6 +87,9 @@
       }
     ],
 
+    // Nút cạnh hàng Phone ở form ticket: sang Chuyển case team này, mang theo trường ticket (key ticket -> id trường ở trên).
+    fromTicket: { team: 'cs', label: 'Chuyển case CS →', fields: { phone: 'phone', merchant: 'contact', role: 'role' } },
+
     thanks: 'Many thanks team!',   // dòng cuối mọi tin; dòng tag (nếu có) nằm ngay dưới
     tagUtcOffsetMinutes: 7 * 60    // giờ VN = UTC+7, không có giờ mùa hè
   });

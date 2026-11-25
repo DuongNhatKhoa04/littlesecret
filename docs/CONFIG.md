@@ -246,6 +246,7 @@ setPassCase({   // const { setPassCase } = registry;
 | `thanks` / `teams[].thanks` | Câu cảm ơn cuối tin (`Many thanks team!`) / thay riêng cho team (`Thanks team !`) |
 | `teams[].tags` | Người cần tag, dòng ngay dưới `thanks`: `[{ names: ['@a', '@b'] }]` = luôn tag; thêm `from`, `to` (`'HH:MM'` giờ VN) = chỉ tag trong ca `[from, to)`, `from` > `to` là ca qua đêm. Đổi người / đổi ca = sửa ở đây. Người nghỉ / support thêm trong ngày thì người dùng tự tick / thêm trên form (lưu trên máy), không sửa config |
 | `tagUtcOffsetMinutes` | Múi giờ của ca: `7 * 60` = giờ VN (không có giờ mùa hè) |
+| `fromTicket` | Nút dưới hàng Phone ở form ticket: `label` = chữ trên nút, `team` = team mở sẵn, `fields` = trường mang theo (key ticket → id trường Chuyển case, vd `merchant: 'contact'`) |
 
 Loại `transfer` trong `config/tickets/transfer.js` có `passCase: true` nên hiện form này thay cho form ticket.
 

@@ -46,6 +46,18 @@
   /** Key ảnh của mọi trường có images (mọi team), để Ticket mới xóa hết ảnh Chuyển case. */
   const allPassCaseImageKeys = (config) => Object.keys(config.fields).filter(id => config.fields[id].images).map(imageKey);
 
+  /**
+   * Lấy trường từ ticket sang Chuyển case. Ô ticket trống thì giữ chữ đang có ở Chuyển case.
+   * @param {Record<string, string>} values   giá trị Chuyển case hiện tại
+   * @param {Record<string, string>} ticket
+   * @param {Record<string, string>} fields   key ticket -> id trường Chuyển case
+   */
+  function copyTicketFields(values, ticket, fields) {
+    const copied = Object.entries(fields).filter(([from]) => typeof ticket[from] === 'string' && ticket[from].trim())
+      .map(([from, to]) => [to, ticket[from].trim()]);
+    return { ...values, ...Object.fromEntries(copied) };
+  }
+
   /** Tên tag gõ tay: bỏ khoảng trắng thừa, khoảng trắng giữa => _, thiếu @ thì thêm. Trống => ''. */
   const TAG_PREFIX = '@';
   function toTagName(text) {
@@ -53,5 +65,5 @@
     return !name || name.startsWith(TAG_PREFIX) ? name : TAG_PREFIX + name;
   }
 
-  TW.domain.passCase = { createEmptyPassCase, sanitizePassCase, findTeam, imageKey, passCaseImageSlots, allPassCaseImageKeys, toTagName };
+  TW.domain.passCase = { createEmptyPassCase, sanitizePassCase, findTeam, imageKey, passCaseImageSlots, allPassCaseImageKeys, copyTicketFields, toTagName };
 })(window.TW);

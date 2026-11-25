@@ -7,7 +7,7 @@
 
   const IDEA_HINT = 'Enter: ý mới · Shift+Enter: xuống dòng · Tab: field kế tiếp · Ctrl+V: dán ảnh';
 
-  function createTicketForm({ root, context, session, ticketService, categoryCombo, ideaList, imageZone, checklistView, smsForm, summaryCombo }) {
+  function createTicketForm({ root, context, session, ticketService, passCaseService, categoryCombo, ideaList, imageZone, checklistView, smsForm, summaryCombo }) {
     const { app, catalog } = context;
 
     /** options: inputMode, format (xem dom.textInput). Enter = sang ô kế tiếp. */
@@ -34,6 +34,13 @@
       const row = el('div', 'field-row contact-row');
       row.append(textField('phone', { inputMode: 'tel', format: maskPhone }), textField('merchant'), roleField());
       return row;
+    }
+
+    /** Case phải pass team khác (CS cần tạo ticket trước): sang Chuyển case, Phone / Tên / Vai trò đi theo. skipTab: Tab vẫn đi thẳng xuống ý. */
+    function passCaseJump() {
+      const box = el('div', 'pass-jump');
+      box.append(button('add', context.passCase.fromTicket.label, { skipTab: true, onClick: passCaseService.startFromTicket }));
+      return box;
     }
 
     const langField = () => labeledField(app.labels.lang, choiceGroup({
@@ -119,7 +126,7 @@
       const type = session.activeType();
       if (!type) { root.append(emptyState()); return; }
       if (!type.noCategory) root.append(categoryCombo.build());
-      root.append(summaryField(), contactRow());
+      root.append(summaryField(), contactRow(), passCaseJump());
       if (type.showLang) root.append(langField());
       if (type.checklist) root.append(checklistView.build(type));   // checklist đứng trước, Note nằm sau
       type.sections.forEach(section => root.append(sectionBox(section)));

@@ -47,7 +47,7 @@
   const checklistView = U.checklistView.createChecklistView({ session, ticketService, images, imageZone });
   const smsForm = U.smsForm.createSmsForm({ context, session, smsService, imageZone });
   const form = U.ticketForm.createTicketForm({
-    root: $('#form'), context, session, ticketService, imageZone, checklistView, smsForm,
+    root: $('#form'), context, session, ticketService, passCaseService, imageZone, checklistView, smsForm,
     summaryCombo: U.summaryCombo.createSummaryCombo({ summaryHistory, ticketService }),
     categoryCombo: U.categoryCombo.createCategoryCombo({ context, session, ticketService, categories }),
     ideaList: U.ideaList.createIdeaList({ context, session, ticketService })

@@ -644,6 +644,7 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 - **CBN**: ô Phone, tự format như §4. **Vai trò tại tiệm**: `Owner` / `Manager` / `Staff` / `Partner`, bấm lại lựa chọn đang chọn là bỏ chọn. **Issue**, **Note**: ô nhiều dòng.
 - **Issue** (MKT, CS, Tech) có ô dán ảnh + `+ Thêm ảnh (Ctrl+V)` + nút chụp màn hình, giống mục ticket (§10): Ctrl+V ảnh khi đang gõ trong Issue cũng vào ảnh Issue. Đổi qua lại MKT / CS / Tech giữ ảnh (cùng trường Issue).
 - Mọi team có ô tick **GẤP**, nằm ngay dưới ô Issue (Sales: dưới Note) để viết xong mô tả là tick luôn. Đổi team vẫn giữ tick.
+- **Từ ticket sang CS**: form ticket (Hỗ trợ merchant) có nút `Chuyển case CS →` ngay dưới hàng Phone (không vào Tab, Enter ở Tên merchant vẫn sang ý đầu). Bấm → mở Chuyển case team **CS**, điền **CBN** ← Phone, **Tên người liên hệ** ← Tên merchant, **Vai trò** ← Vai trò; ô ticket trống thì giữ chữ đang có ở Chuyển case. Ticket không đổi. Vì CS cần Link Ticket: viết ticket → Điền ticket tạo ticket → bấm nút → lấy Link Ticket / Issue (và ZIP từ trang Lead) bằng bookmark §22.4. Khai báo ở `fromTicket` trong config.
 - **CS** và **Tech** có khung lưu ý (kiểm tra ticket, Proof, Dispute, quá tải cuộc gọi / phạm vi FRT, Reconnect Terminal, case khẩn cấp) theo thông báo pass case.
 
 ### 22.2 Tin nhắn (output)

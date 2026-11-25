@@ -2,7 +2,8 @@
 (function (TW) {
   'use strict';
 
-  const { createEmptyPassCase, allPassCaseImageKeys, toTagName } = TW.domain.passCase;
+  const { createEmptyPassCase, allPassCaseImageKeys, copyTicketFields, toTagName } = TW.domain.passCase;
+  const { GROUPS } = TW.domain.navigation;
   const { sanitizeShopInfo } = TW.domain.shopInfo;
   const without = (list, name) => list.filter(item => item !== name);
 
@@ -32,6 +33,17 @@
         const ids = Object.keys(info).filter(id => id in config.fields);
         if (ids.length) store.update(state => { ids.forEach(id => { state.passCase.values[id] = info[id]; }); }, {});
         return ids;
+      },
+      /** Nút ở form ticket: mở Chuyển case team fromTicket, mang theo Phone / Tên / Vai trò đã nhập để không gõ lại. */
+      startFromTicket() {
+        const { team, fields } = config.fromTicket;
+        const passCaseType = context.tickets.find(type => type.passCase);
+        store.update(state => {
+          state.passCase.values = copyTicketFields(state.passCase.values, state.ticket, fields);
+          state.passCase.team = team;
+          state.nav.group = GROUPS.ticket;
+          state.nav.ticketType = passCaseType.key;
+        }, { rebuild: true });
       },
       /** Đổi team: các ô hiện trên form đổi theo => dựng lại form. */
       setTeam(team) {

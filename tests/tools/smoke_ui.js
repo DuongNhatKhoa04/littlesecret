@@ -306,6 +306,16 @@
     check('về Hỗ trợ merchant: ticket, ô Loại + Loại đã chọn vẫn giữ, con trỏ ở ô Loại',
       focused() === 'f_category' && $('#outTitle').textContent === 'INTERNET - MẤT KẾT NỐI' && $('#outBody').textContent.includes('Terminal lỗi'),
       [focused(), $('#outTitle').textContent]);
+    const ticketPhone = $('#f_phone').value;
+    $('.pass-jump button').click();
+    await settle();
+    check('nút Chuyển case CS ở ticket: sang Chuyển case team CS, mang Phone + Tên merchant',
+      !!$('#pass_ticket') && $('#pass_phone').value === ticketPhone && $('#pass_contact').value === 'Mr. Vương' && ticketPhone !== '' &&
+      $('#outBody').textContent.includes('CBN: ' + ticketPhone + ' - Mr. Vương'), [$('#pass_phone') && $('#pass_phone').value, ticketPhone]);
+    $('#resetBtn').click();
+    await settle();
+    clickText('#picker', 'Hỗ trợ merchant');
+    await settle();
 
     // Setup: nút đang tạm ẩn (config/app.js) nhưng vẫn nằm trong DOM nên kịch bản bấm được
     check('nhóm Setup / Training không hiện', $$('#picker button').find(x => x.textContent === 'Setup / Training').offsetParent === null);

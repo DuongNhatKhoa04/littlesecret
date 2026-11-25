@@ -209,6 +209,17 @@
     assertEqual([service.fillShopInfo(null), store.get().passCase.values.shop], [[], 'TEST NAILS']);
   });
 
+  test('pass case: nút Chuyển case CS ở ticket => sang Chuyển case team CS, mang Phone / Tên / Vai trò; ô ticket trống giữ chữ cũ, ticket giữ nguyên', () => {
+    const ticket = { summary: 'giữ', phone: '(555) 123-4567', merchant: ' Mr. Vương ', role: '' };
+    const { store, session, service } = setup({ nav: { group: 'setup', ticketType: 'incident' }, ticket });
+    service.setValue('role', 'Owner');
+    service.setValue('zip', '75001');
+    service.startFromTicket();
+    const { team, values } = session.passCase();
+    assertEqual([session.isPassCase(), team, values.phone, values.contact, values.role, values.zip, store.get().ticket.summary],
+      [true, 'cs', '(555) 123-4567', 'Mr. Vương', 'Owner', '75001', 'giữ']);
+  });
+
   test('pass case: Issue có ảnh (MKT / Tech): Ctrl+V vào Issue, khối Ảnh chỉ ảnh Chuyển case; Ticket mới chỉ xóa ảnh Chuyển case', async () => {
     const { images, output, service } = setup({ nav: { group: 'ticket', ticketType: 'transfer' } });
     const png = () => new Blob([''], { type: 'image/png' });
