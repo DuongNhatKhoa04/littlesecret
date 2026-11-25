@@ -29,7 +29,10 @@
     // Trường chung 1 hàng trên form (chỉ đổi cách xếp, không đổi tin nhắn). Team có từ 2 trường của hàng thì mới xếp chung.
     rows: [['shop', 'zip'], ['phone', 'contact', 'role']],
 
-    // Team đầu là mặc định. id lưu trong state => không đổi id đang có.
+    // Team mở sẵn khi chưa có dữ liệu và sau Ticket mới.
+    defaultTeam: 'tech',
+
+    // Thứ tự team trên form. id lưu trong state => không đổi id đang có.
     // chatId: ID group Telegram của team (nút Gửi Telegram). TẠM THỜI cả 4 team = group "test" để thử; có ID group thật thì thay.
     // fields: thứ tự trên form · required: thiếu thì khóa Copy · tips: lưu ý hiện trên form.
     // urgent: có ô tick GẤP; tick thì chữ này vào chỗ {urgent} trong lines (không tick => bỏ dòng).

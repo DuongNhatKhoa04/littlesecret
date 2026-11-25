@@ -134,7 +134,7 @@
 
   test('pass case: sanitize bỏ team / trường lạ, dữ liệu hỏng', () => {
     const clean = D.passCase.sanitizePassCase({ team: 'xx', urgent: 'yes', values: { shop: 'A', zip: 5, hack: 'x' } }, config);
-    assertEqual([clean.team, clean.urgent, clean.values.shop, clean.values.zip, 'hack' in clean.values], ['sales', false, 'A', '', false]);
+    assertEqual([clean.team, clean.urgent, clean.values.shop, clean.values.zip, 'hack' in clean.values], ['tech', false, 'A', '', false]);
     assertEqual(D.passCase.sanitizePassCase(null, config), D.passCase.createEmptyPassCase(config));
   });
 
@@ -176,7 +176,8 @@
 
   test('pass case: Kết quả ẩn title, khóa copy tới khi đủ trường, không có ảnh; reset chỉ xóa form Chuyển case', () => {
     const { store, output, service } = setup({ nav: { group: 'ticket', ticketType: 'transfer' }, ticket: { summary: 'giữ', blocks: { s1: ['x'] } } });
-    assertEqual(output.compute().body, '');
+    assertEqual([output.compute().body, store.get().passCase.team], ['', 'tech']);
+    service.setTeam('sales');
     service.setValue('shop', 'ARIA');
     const partial = output.compute();
     assertEqual([partial.showTitle, partial.title, partial.canCopyBody, partial.missingFields], [false, '', false, ['CBN', 'ZIP Code']]);
@@ -185,7 +186,7 @@
     assertEqual([output.compute().body, output.compute().canCopyBody], ['LEAD: ARIA – 75001\nCBN: (555) 123-4567' + SALES_END, true]);
     assertEqual([output.imageList(), output.pasteTarget('s1')], [[], null]);
     service.reset();
-    assertEqual([store.get().passCase, store.get().ticket.summary], [D.passCase.createEmptyPassCase(config), 'giữ']);
+    assertEqual([store.get().passCase, store.get().passCase.team, store.get().ticket.summary], [D.passCase.createEmptyPassCase(config), 'tech', 'giữ']);
   });
 
   test('thông tin tiệm: chỉ giữ chuỗi đã trim (Link Ticket / Lead, Tên tiệm, MID, ZIP, nội dung), cắt chuỗi quá dài (nội dung 3000); dữ liệu hỏng => null', () => {
@@ -225,6 +226,7 @@
     const png = () => new Blob([''], { type: 'image/png' });
     await images.add('s1', [png()]);
     await images.add('pass:issue', [png(), png()]);
+    service.setTeam('sales');
     assertEqual([output.pasteTarget('s1'), output.imageList().length], [null, 0]);
     service.setTeam('mkt');
     assertEqual([output.pasteTarget('s1'), output.imageList().map(entry => entry.label)], ['pass:issue', ['Issue – ảnh 1', 'Issue – ảnh 2']]);

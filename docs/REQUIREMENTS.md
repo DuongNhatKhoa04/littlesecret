@@ -638,7 +638,7 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 
 ### 22.1 Form
 
-- **Team nhận**: `Sales` (mặc định) · `MKT` · `CS` · `Tech`. Đổi team giữ chữ đã nhập (trường cùng tên dùng chung giữa các team).
+- **Team nhận**: `Sales` · `MKT` · `CS` · `Tech` (mặc định, từ `v2026-11-26.1`; trước đó là Sales). Đổi team giữ chữ đã nhập (trường cùng tên dùng chung giữa các team).
 - Trường theo team, đúng thứ tự trên form (★ = bắt buộc). Hàng CBN + Tên + Vai trò luôn đầu tiên để theo flow cuộc gọi: hỏi số, tên, vai trò rồi mới tra lead. Thứ tự này cũng là thứ tự trong cảnh báo Còn thiếu; tin nhắn vẫn theo §22.2:
 
 | Team | Trường |
@@ -705,7 +705,7 @@ Thanks team !                       Thanks team !
 - **Khối Ảnh**: chỉ ảnh Issue của Chuyển case (nhãn `Issue`, `Issue – ảnh N`), copy từng ảnh / tải ZIP / PDF như ticket. Ảnh lưu như ảnh ticket (IndexedDB): F5 không mất. Ctrl+V ảnh ngoài ô nhập → vào Issue; team không có Issue (Sales) → không làm gì. Tin nhắn không ghi gì về ảnh.
 - **Copy nội dung** khóa khi tin nhắn rỗng hoặc còn trường bắt buộc trống; cảnh báo `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.`
 - `Lưu ticket làm template` bị khóa.
-- `Ticket mới`: hỏi xác nhận → xóa form Chuyển case (về team Sales) và ảnh Issue, không đụng ticket, ảnh ticket và các form SMS. `Ticket mới` ở Viết ticket xóa hết ảnh, kể cả ảnh Chuyển case (cùng 1 cuộc gọi).
+- `Ticket mới`: hỏi xác nhận → xóa form Chuyển case (về team Tech) và ảnh Issue, không đụng ticket, ảnh ticket và các form SMS. `Ticket mới` ở Viết ticket xóa hết ảnh, kể cả ảnh Chuyển case (cùng 1 cuộc gọi).
 - Form lưu riêng (`passCase` trong `storageKey`): F5 không mất, chuyển qua lại với Hỗ trợ merchant không mất dữ liệu bên nào. State bản trước chưa có → form trống.
 
 ### 22.4 Lấy thông tin tiệm từ trang ticket / Lead

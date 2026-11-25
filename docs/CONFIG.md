@@ -239,7 +239,8 @@ setPassCase({   // const { setPassCase } = registry;
 |---|---|
 | `fields` | Mọi ô của form. Key = id lưu trong state: không đổi id đang có. `kind`: `text` (mặc định) · `phone` (tự format) · `choice` (`options`, bấm lại để bỏ chọn) · `multiline`. `ph` = chữ mờ, `inputMode` cho bàn phím mobile. `images: true` = có ô dán ảnh / chụp màn hình (key ảnh `pass:<id>`) |
 | `rows` | Trường xếp chung 1 hàng trên form (chỉ đổi cách xếp), khi team có từ 2 trường của hàng |
-| `teams` | Team nhận theo thứ tự trên form, team đầu là mặc định. `id` lưu trong state: không đổi id đang có |
+| `defaultTeam` | id team mở sẵn khi form trống (lần đầu, sau `Ticket mới`). Không có / sai id thì team đầu |
+| `teams` | Team nhận theo thứ tự trên form. `id` lưu trong state: không đổi id đang có |
 | `teams[].fields` / `required` | Thứ tự ô trên form / ô bắt buộc (trống thì khóa Copy) |
 | `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò), `{shopZip}` = Tên tiệm ZIP, `{caller}` = Phone - Tên - Vai trò, `{urgent}` = chữ GẤP của team khi tick. Dòng mà mọi `{…}` đều trống thì bỏ; `''` = dòng trống (không để 2 dòng trống liền nhau) |
 | `teams[].urgent` / `tips` | Chữ in ở `{urgent}` khi tick GẤP (có thì form có ô tick GẤP) / khung lưu ý trên form |

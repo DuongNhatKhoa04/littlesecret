@@ -233,6 +233,9 @@
     await settle();
     check('Chuyển case: form riêng, ẩn Title, khóa Lưu template, chưa nhập => rỗng', !$('#f_summary') && $('#titleBlock').hidden && $('#tplSave').disabled && $('#outBody').textContent === '',
       $('#outBody').textContent);
+    check('Chuyển case: mặc định team Tech', !!$('#pass_lead') && !$('#pass_zip'), [!!$('#pass_lead'), !!$('#pass_zip')]);
+    clickText('#form', 'Sales');
+    await settle();
     type($('#pass_shop'), 'ARIA NAIL BAR');
     await settle();
     check('Chuyển case Sales: thiếu trường bắt buộc => khóa Copy, báo thiếu', $('#copyBody').disabled && $('#warn').textContent.includes('CBN, ZIP Code'),

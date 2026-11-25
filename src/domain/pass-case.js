@@ -2,9 +2,12 @@
 (function (TW) {
   'use strict';
 
+  /** Team mở sẵn: defaultTeam của config, không có / sai id thì team đầu. */
+  const defaultTeam = (config) => config.teams.find(team => team.id === config.defaultTeam) || config.teams[0];
+
   function createEmptyPassCase(config) {
     const values = Object.fromEntries(Object.keys(config.fields).map(id => [id, '']));
-    return { team: config.teams[0].id, urgent: false, values, tags: emptyTags(config) };
+    return { team: defaultTeam(config).id, urgent: false, values, tags: emptyTags(config) };
   }
 
   /** Tag chỉnh tay theo team: off = người ca này hôm nay nghỉ (bỏ tick), extra = người thêm vào (support thêm). */
@@ -30,7 +33,7 @@
     return passCase;
   }
 
-  const findTeam = (passCase, config) => config.teams.find(team => team.id === passCase.team) || config.teams[0];
+  const findTeam = (passCase, config) => config.teams.find(team => team.id === passCase.team) || defaultTeam(config);
 
   // Ảnh lưu chung kho với ảnh ticket nên cần tiền tố riêng để không trùng key mục ticket. Key lưu trong IndexedDB => không đổi.
   const IMAGE_KEY_PREFIX = 'pass:';

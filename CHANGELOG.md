@@ -2,6 +2,10 @@
 
 Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu ngày tương ứng: version · đổi gì (người dùng thấy gì) · mục REQUIREMENTS liên quan. Bản cũ hơn 2026-11-12 chưa ghi version, tóm tắt theo commit.
 
+## 2026-11-26
+
+- `v2026-11-26.1` · Chuyển case: team mặc định là **Tech** (bấm `Ticket mới` hoặc mở lần đầu thì form về Tech, trước đây về Sales). Thứ tự team trên form không đổi. §22.1
+
 ## 2026-11-25
 
 - `v2026-11-25.10` · Chuyển case: nút **Gửi Telegram** (bot dùng chung `@frt_transfer_bot`): xem trước rồi gửi tin + ảnh Issue vào group của team, cuối tin `FRT: <tên>`. Token mỗi máy tự dán, không nằm trong file. Tạm thời cả 4 team gửi vào group test. Gọi `api.telegram.org` là đường duy nhất ra Internet. §24, SECURITY §6
