@@ -24,7 +24,8 @@
     return '';
   }
 
-  function createOutputView({ context, outputService, clipboard, ticketFill, imagePanel }) {
+  /** onRender(kết quả): phần khác của khu Kết quả cần vẽ theo (vd nút Gửi Telegram). */
+  function createOutputView({ context, outputService, clipboard, ticketFill, imagePanel, onRender = () => {} }) {
     let timer = null;
     let last = outputService.compute();
 
@@ -52,6 +53,7 @@
       $('#copyFill').disabled = !last.canCopyTitle || !last.canCopyBody;
       renderSms(last.sms);
       imagePanel.render();
+      onRender(last);
     }
 
     function schedule() {

@@ -41,6 +41,13 @@
  */
 
 /**
+ * Gửi tin vào group chat qua bot (Telegram). Lỗi không throw: trả { ok: false, error: { status?, description?, retryAfter? } }, không có status = lỗi mạng.
+ * @typedef {Object} MessageBot
+ * @property {(input: { token: string, chatId: string, text: string }) => Promise<{ ok: boolean, messageId?: number, error?: object }>} sendText
+ * @property {(input: { token: string, chatId: string, photos: Blob[], messageId: number }) => Promise<{ ok: boolean, error?: object }>} sendPhotos   ảnh trả lời ngay dưới tin messageId
+ */
+
+/**
  * @typedef {Object} FileAdapter
  * @property {(file: File) => Promise<string | null>} readAsDataUrl   null = không đọc được
  * @property {(file: File) => Promise<any>} readJson                  undefined = không phải JSON hợp lệ; file .zip thì đọc file .json bên trong

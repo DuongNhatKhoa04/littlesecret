@@ -30,6 +30,7 @@
     rows: [['shop', 'zip'], ['phone', 'contact', 'role']],
 
     // Team đầu là mặc định. id lưu trong state => không đổi id đang có.
+    // chatId: ID group Telegram của team (nút Gửi Telegram). TẠM THỜI cả 4 team = group "test" để thử; có ID group thật thì thay.
     // fields: thứ tự trên form · required: thiếu thì khóa Copy · tips: lưu ý hiện trên form.
     // urgent: có ô tick GẤP; tick thì chữ này vào chỗ {urgent} trong lines (không tick => bỏ dòng).
     // tags: người cần tag ở dòng cuối; có from/to (giờ VN, HH:MM) thì chỉ tag trong ca đó, from > to = ca qua đêm. Ngoài mọi ca => không tag.
@@ -38,14 +39,14 @@
     // thanks: thay câu cảm ơn chung (thanks bên dưới) cho riêng team này.
     teams: [
       {
-        id: 'sales', label: 'Sales', urgent: '🔥🔥🔥 URGENT!!',
+        id: 'sales', label: 'Sales', chatId: '-1005955163372', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'shop', 'zip', 'mid', 'note'],
         required: ['shop', 'zip', 'phone'],
         lines: ['{urgent}', 'LEAD: {leadInfo}', 'CBN: {cbn}', 'NOTE: {note}'],
         tags: [{ names: ['@daisy_sale_leader', '@Kyo_SaleAdmin', '@Stella_SalesAdmin'] }]
       },
       {
-        id: 'mkt', label: 'MKT', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
+        id: 'mkt', label: 'MKT', chatId: '-1005955163372', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'lead', 'shop', 'zip', 'mid', 'issue'],
         required: ['lead', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
         lines: ['{lead}', '{urgent}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
@@ -55,7 +56,7 @@
         ]
       },
       {
-        id: 'cs', label: 'CS', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
+        id: 'cs', label: 'CS', chatId: '-1005955163372', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'ticket', 'shop', 'zip', 'mid', 'issue'],
         required: ['ticket', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
         lines: ['{ticket}', '{urgent}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
@@ -71,7 +72,7 @@
         ]
       },
       {
-        id: 'tech', label: 'Tech', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
+        id: 'tech', label: 'Tech', chatId: '-1005955163372', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'lead', 'shop', 'issue'],
         required: ['lead', 'shop', 'phone', 'contact', 'issue'],
         lines: ['{lead}', '{urgent}', '{shop}', 'CBN: {caller}', '', '{issue}', ''],

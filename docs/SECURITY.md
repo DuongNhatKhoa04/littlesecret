@@ -29,8 +29,9 @@ Lưu ý:
 | Bookmark *Lấy thông tin tiệm* | Chạy trên trang ticket / Lead (portal), chỉ đọc dòng tiêu đề ticket (Tên tiệm / MID), nội dung ticket hoặc 3 ô DBA / MID / Business ZIP + địa chỉ trang, copy vào clipboard (JSON có đánh dấu `ticket-writer-shop`); Ticket Writer đọc lại khi bấm `Dán thông tin tiệm` | Không gửi đi đâu ngoài clipboard. Chữ trong clipboard là dữ liệu không tin cậy: chỉ nhận chuỗi, trim, tối đa 300 ký tự, nội dung 3000 (`sanitizeShopInfo`). Selector ở `config/app.js` (`shopGrab`). |
 | Chụp màn hình | `getDisplayMedia`, giữ luồng chia sẻ để lần sau chụp ngay | Chrome luôn hiện thanh "Đang chia sẻ màn hình"; bấm Dừng chia sẻ khi không cần. |
 | phone-upload | iPad → máy tính qua LAN, Ticket Writer lấy qua `127.0.0.1` | Xem §3. |
+| Bot Telegram (Gửi Telegram) | Chuyển case: tin + ảnh Issue → `https://api.telegram.org` → group của team | Đường DUY NHẤT ra Internet. Xem §6. |
 
-App **không** tải gì từ CDN / Internet, không có thư viện ngoài.
+App **không** tải gì từ CDN / Internet, không có thư viện ngoài. Ngoại lệ duy nhất gửi dữ liệu ra Internet: nút `Gửi Telegram` (§6).
 
 ## 3. phone-upload (nhận ảnh iPad / iPhone)
 
@@ -65,7 +66,8 @@ Chương trình PowerShell mở **port 8765 trên mọi card mạng** của máy
 
 - **Không `innerHTML`** với dữ liệu người dùng / config / dữ liệu từ phone-upload. Dùng `textContent`, `createElement` (helper ở `src/ui/dom.js`).
 - **Không thêm thư viện, không tải script / font / ảnh từ mạng.**
-- **Không `fetch` / XHR** ngoài `src/infrastructure/phone-inbox.js` (chỉ gọi `http://127.0.0.1`).
+- **Không `fetch` / XHR** ngoài `src/infrastructure/phone-inbox.js` (chỉ gọi `http://127.0.0.1`) và `src/infrastructure/telegram-bot.js` (chỉ gọi `telegram.apiBase` = `https://api.telegram.org`, chỉ `sendMessage` / `sendPhoto` / `sendMediaGroup`, §6). Thêm host / method khác = vùng duyệt bắt buộc (REVIEW.md).
+- **Không** ghi token bot vào code, config, test, log, thông báo lỗi, file tải xuống, file Sao lưu (`backupKeys` không có `telegramTokenKey`).
 - Dữ liệu đọc từ storage / file / mạng là **dữ liệu không tin cậy**: luôn qua hàm `sanitize…` / kiểm dạng trước khi dùng (vd `sanitizeTicket`, `parseOfflineFile`, `parsePhoneLink`). Dữ liệu hỏng → bỏ qua phần đó, không throw.
 - Không `eval` / `new Function`. Bookmarklet là ngoại lệ có chủ đích: chuyển hàm `fillTicketPage` thành chữ để chạy trên trang ticket; hàm đó chỉ dùng tham số, không nhận code từ ngoài.
 - phone-upload: mọi đường dẫn phải cần mã; đường dẫn mã máy tính phải kiểm loopback; không ghi ảnh ra đĩa; giới hạn kích thước trước khi đọc body.
@@ -73,4 +75,36 @@ Chương trình PowerShell mở **port 8765 trên mọi card mạng** của máy
 
 ## 5. Báo sự cố
 
-Nghi lộ dữ liệu (gửi nhầm file, lộ link / mã QR, máy bị truy cập lạ): đổi mã phone-upload như §3, xóa file trong Downloads liên quan, báo trưởng nhóm / IT theo quy định công ty.
+Nghi lộ dữ liệu (gửi nhầm file, lộ link / mã QR, lộ token bot, máy bị truy cập lạ): đổi mã phone-upload như §3, `/revoke` token bot như §6, xóa file trong Downloads liên quan, báo trưởng nhóm / IT theo quy định công ty.
+
+## 6. Bot Telegram (nút Gửi Telegram ở Chuyển case)
+
+Cả team dùng chung 1 bot (`@frt_transfer_bot`). Bấm `Gửi Telegram` → xem trước → `Gửi`: bot gửi tin (chữ thường) rồi ảnh Issue vào group của team đang chọn.
+
+### Bảo vệ đang có
+
+| Biện pháp | Chống lại |
+|---|---|
+| Bot là **thành viên thường** (không admin), `/setjoingroups` **Disable**, `/setprivacy` **Enable** | Token lộ: người có token chỉ gửi được tin vào group bot đang ở; không xóa tin / cấm người, không thêm bot vào group khác, không đọc tin trong group |
+| Token **không nằm trong code / config / repo / file release / file Sao lưu**; mỗi máy dán 1 lần, lưu ở localStorage `ticketWriter.telegram.v1`; ô token là ô mật khẩu, dán đúng dạng là lưu và xóa khỏi ô | Lộ token khi gửi file cho đồng nghiệp, đẩy lên GitHub, chụp màn hình |
+| Chỉ gửi vào `chatId` khai báo trong `config/tickets/pass-case.js`; không có ô nhập ID group | Gửi nhầm / gửi ra group lạ |
+| Chỉ gọi `sendMessage` / `sendPhoto` / `sendMediaGroup`; chữ thường (không `parse_mode`) | Bot làm việc khác ngoài gửi tin; nội dung nhập vào biến thành link / định dạng lạ |
+| Xem trước (group, tin, số ảnh) rồi mới gửi; đang gửi thì khóa nút, service bỏ qua lần bấm thứ 2 | Gửi nhầm team, gửi 2 lần |
+| Cuối tin ghi `FRT: <tên>` (tên nhân viên lưu trên máy) | Không biết ai chuyển case (tin luôn hiện tên bot) |
+| Request không cookie, không referrer, không cache | Request mang thêm dữ liệu ngoài nội dung tin |
+
+### Rủi ro đã biết, đang chấp nhận
+
+- **Token lưu trên máy** đọc được bởi trang HTML khác mở bằng `file://` cùng profile Chrome (§1). Mã hóa không giúp gì (khóa nằm trong code). Đổi lại: dán 1 lần. Lộ token → làm theo "Khi lộ token" dưới.
+- **Tên người chuyển do người dùng tự khai**: tool không kiểm chứng ai đang dùng máy.
+- **Dữ liệu merchant đi qua Telegram API** (vốn cũng lên Telegram khi dán tay). Cần IT đồng ý cho máy công ty gọi `api.telegram.org`.
+
+### Khi lộ token / có người nghỉ
+
+1. @BotFather → `/revoke` → chọn bot → lấy token mới. Token cũ chết ngay.
+2. Phát token mới **riêng** cho từng người (nhắn riêng / đưa trực tiếp), không gửi vào group, không email chung.
+3. Mỗi người: `Gửi Telegram` → `Xóa token trên máy này` → dán token mới.
+
+### Thêm bot vào group mới
+
+`/setjoingroups` → Enable → thêm bot vào group (thành viên thường, **không cấp admin**: cấp admin làm group thường đổi thành supergroup, đổi ID) → lấy ID group (gửi `/start@frt_transfer_bot` trong group, mở `https://api.telegram.org/bot<token>/getUpdates`, lấy `chat.id` mới nhất) → `/setjoingroups` → Disable → ghi ID vào `chatId` của team. Xong thì `/revoke` vì token đã nằm trong lịch sử trình duyệt.

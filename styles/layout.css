@@ -29,7 +29,8 @@ svg .fill { fill: currentColor; fill-opacity: .25; }
 .ghost:hover { border-color: var(--accent); }
 .ghost:disabled { opacity: .45; cursor: not-allowed; }
 .primary { min-height: 38px; padding: 0 16px; background: var(--accent); color: var(--accent-ink); border: 0; border-radius: var(--radius); font-weight: 600; cursor: pointer; }
-.primary:hover { filter: brightness(1.08); }
+.primary:hover:not(:disabled) { filter: brightness(1.08); }
+.primary:disabled { opacity: .45; cursor: not-allowed; }   /* vd nút Gửi Telegram khi còn thiếu token / tên */
 .link { padding: 4px 0; background: transparent; border: 0; color: var(--accent-text); font-weight: 600; cursor: pointer; }
 .link:hover { text-decoration: underline; }
 

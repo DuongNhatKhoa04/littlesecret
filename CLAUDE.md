@@ -36,7 +36,7 @@ Tool web 1 trang giúp support viết ticket (Title + Nội dung để copy) và
 - Gửi đồng nghiệp: nén **cả folder dự án** (giữ nguyên cấu trúc; sơ đồ dưới gọi là `ticket-writer/`, repo hiện tên `littlesecret/`), bên kia giải nén rồi double-click `index.html`. Không muốn gửi source: `python tests/tools/build_release.py` → gửi 1 file `release/ticket-writer.html` (không commit `release/`). Trước khi gửi: [docs/REVIEW.md](docs/REVIEW.md).
 - Vì chạy trên `file://`:
   - Dùng `<script src="...">` thường. **Không** dùng ES module (`type="module"`, `import`/`export`): trình duyệt chặn trên `file://`.
-  - **Không** `fetch()`/XHR file trong folder. Cấu hình viết thành file `.js`. (Ngoại lệ duy nhất: `phone-inbox` gọi `http://127.0.0.1` tới phone-upload, không phải đọc file.)
+  - **Không** `fetch()`/XHR file trong folder. Cấu hình viết thành file `.js`. (Ngoại lệ: `phone-inbox` gọi `http://127.0.0.1` tới phone-upload; `telegram-bot` gọi `https://api.telegram.org` để gửi Chuyển case, xem docs/SECURITY.md §6. Không thêm host khác.)
   - Mọi đường dẫn là **tương đối** (`src/...`, không có `/` đầu, không có `C:\`).
 - Thêm file `.js` mới → thêm `<script>` vào `index.html` đúng vị trí theo layer (xem bên dưới). Quên dòng này thì file không chạy. File config / domain / application mới → thêm cả vào `tests/index.html`.
 
@@ -62,14 +62,14 @@ ticket-writer/
 │  ├─ core/                    namespace.js (TW) · registry.js (config đăng ký vào) · ports.js (typedef port)
 │  ├─ domain/                  QUY TẮC NGHIỆP VỤ: hàm thuần, không DOM, không storage
 │  │                           text · title · ticket · checklist · body · validation · navigation · image-slots · image-archive · template · offline-ticket · backup ·
-│  │                           sms · sms-message · shipping · shipping-message · review · review-message · pass-case · pass-case-message · shop-info · phone-link · qr-code
+│  │                           sms · sms-message · shipping · shipping-message · review · review-message · pass-case · pass-case-message · shop-info · telegram-message · phone-link · qr-code
 │  ├─ application/             USE CASE: store + service, điều phối domain và port
 │  │                           context · store · session · session-repository · ticket/navigation/view/image/
-│  │                           output/category/template/offline/backup/sms/shipping/review/pass-case/staff/summary-history/tag-history/notice/theme/palette/phone-service
-│  ├─ infrastructure/          ADAPTER: storage (localStorage) · image-store (ảnh trên IndexedDB) · storage-quota (dung lượng) · phone-inbox (lấy ảnh từ phone-upload) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · shop-grab (bookmarklet lấy thông tin tiệm) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
+│  │                           output/category/template/offline/backup/sms/shipping/review/pass-case/staff/summary-history/tag-history/notice/theme/palette/telegram/phone-service
+│  ├─ infrastructure/          ADAPTER: storage (localStorage) · image-store (ảnh trên IndexedDB) · storage-quota (dung lượng) · phone-inbox (lấy ảnh từ phone-upload) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · shop-grab (bookmarklet lấy thông tin tiệm) · telegram-bot (gửi tin vào group, đường duy nhất ra Internet) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
 │  ├─ ui/                      GIAO DIỆN: dom (helper, ô nhập + nhãn) · combo (danh sách gợi ý dùng chung) · notice-bar (thanh cảnh báo) · theme-toggle (nút sáng/tối) · palette-picker (chọn màu giao diện) · phone-button (nút Nhận ảnh iOS) · phone-dialog (mã QR cho iPad) · picker · ticket-form · category-combo · summary-combo · idea-list ·
 │  │                           checklist-view · image-zone · output-view · image-panel · image-viewer ·
-│  │                           template-dialog · offline-dialog · backup-buttons · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form · shop-paste (nút Dán thông tin tiệm) · pass-case-form
+│  │                           template-dialog · offline-dialog · backup-buttons · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form · shop-paste (nút Dán thông tin tiệm) · telegram-dialog (nút Gửi Telegram) · pass-case-form
 │  └─ main.js                  COMPOSITION ROOT: tạo adapter, inject vào service, gắn UI
 ├─ tests/                      xem tests/README.md
 │  ├─ index.html               double-click để chạy test
@@ -138,7 +138,7 @@ File config:
 - **S — Single Responsibility**: 1 file = 1 trách nhiệm. Ví dụ ghép title, ghép nội dung, kiểm tra điều kiện copy là 3 file domain riêng; ô chọn Loại, checklist, khối ảnh là 3 view riêng.
 - **O — Open/Closed**: thêm loại ticket hoặc checklist = **thêm 1 file config**, không sửa `src/`. Hiện có 2 kiểu mục (nhập ý / Kết luận). Khi cần kiểu thứ 3: tách thành bảng renderer + composer theo `kind`, không nối thêm `if/else`.
 - **L — Liskov**: mọi loại ticket và checklist theo cùng 1 schema (docs/CONFIG.md); code xử lý loại nào cũng không cần biết đang là loại gì. Adapter thay thế được nhau (vd storage thật ↔ storage giả trong test).
-- **I — Interface Segregation**: port nhỏ, chỉ đúng hàm cần: `KeyValueStore { read(key), write(key, value) }`, `TextClipboard { writeText }`, `ImageClipboard { writeImage, readImages }`, `ImageStore { loadAll, save, clear }`, `StorageQuota { estimate }`, `PhoneInbox { next, info, rotate }`, `ScreenCapture { capture }`, `TicketFill { payload, bookmarkletUrl }`, `ShopGrab { bookmarkletUrl, parse, read }`, `FileAdapter { readAsDataUrl, readJson, download, downloadZip, createPdf, downloadPdf }`. Typedef đặt ở `src/core/ports.js`.
+- **I — Interface Segregation**: port nhỏ, chỉ đúng hàm cần: `KeyValueStore { read(key), write(key, value) }`, `TextClipboard { writeText }`, `ImageClipboard { writeImage, readImages }`, `ImageStore { loadAll, save, clear }`, `StorageQuota { estimate }`, `PhoneInbox { next, info, rotate }`, `ScreenCapture { capture }`, `TicketFill { payload, bookmarkletUrl }`, `ShopGrab { bookmarkletUrl, parse, read }`, `MessageBot { sendText, sendPhotos }`, `FileAdapter { readAsDataUrl, readJson, download, downloadZip, createPdf, downloadPdf }`. Typedef đặt ở `src/core/ports.js`.
 - **D — Dependency Inversion**: service nhận port qua tham số factory, không tự tạo. Chỉ `main.js` biết adapter cụ thể nào được dùng.
 
 ## Clean code
@@ -160,7 +160,7 @@ File config:
 - **Không đổi key loại** đang có: `incident` `request` `transfer` `setup` `setupPax` `newDb` `setupValor` `setupTraining`. State và template lưu theo key. Gộp loại → khai báo key cũ trong `formerKeys` của loại nhận (vd `request` → `incident`); key cũ không được dùng lại.
 - **`id` mục checklist duy nhất trong toàn dự án**: tick/N/A lưu chung theo id. Không đổi id đang có; bỏ bước thì xóa mục.
 - **Key mục ticket dùng chung giữa các loại**: cùng key = cùng ý nghĩa (chi tiết ở docs/CONFIG.md).
-- Không đổi `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `paletteKey`, `phoneKey`, `imageDbName`. Thêm dữ liệu lưu mới → thêm trường, vẫn đọc được bản cũ.
+- Không đổi `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `paletteKey`, `telegramTokenKey`, `phoneKey`, `imageDbName`. Thêm dữ liệu lưu mới → thêm trường, vẫn đọc được bản cũ.
 - Mỗi lần sửa bất kỳ file nào: tăng `version` trong `config/app.js`, dạng `vYYYY-MM-DD.N`.
 
 ## Nội dung checklist
@@ -177,6 +177,7 @@ Những file / vùng dưới đây chỉ sửa khi người dùng yêu cầu rõ
 | `tests/golden-expected.js` | Sinh tự động từ bản gốc, là chuẩn so output. Bản gốc không có trong repo nên không sinh lại được. |
 | Câu chữ trong `config/setup/**`, `config/sms/*`, `config/tickets/*` | Nội dung nghiệp vụ người dùng viết (xem Nội dung checklist). |
 | `ticketFill`, `shopGrab` trong `config/app.js` | Selector của trang ticket system bên ngoài; đổi thì mọi người phải kéo lại bookmark. |
+| `telegram` trong `config/app.js`, `chatId` trong `config/tickets/pass-case.js`, `telegram-bot.js` | Gửi dữ liệu ra Internet; sai `chatId` = gửi nhầm group. Không bao giờ ghi token bot vào file nào. Xem docs/SECURITY.md §6. |
 | Các key lưu trữ, `id` mục checklist, key loại | Xem Không được phá. |
 | `phone-upload/phone-upload.ps1` | Mở port mạng trên máy công ty; đổi phải đọc [docs/SECURITY.md](docs/SECURITY.md) và có người duyệt ([docs/REVIEW.md](docs/REVIEW.md)). |
 | Số mục § trong `docs/REQUIREMENTS.md` | Code, test, tài liệu tham chiếu theo số. Thêm mục mới thì đánh số tiếp theo. |

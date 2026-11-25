@@ -12,6 +12,7 @@
   const screenCapture = I.screenCapture.createScreenCapture();
   const ticketFill = I.ticketFill.createTicketFill(registry.app().ticketFill);
   const shopGrab = I.shopGrab.createShopGrab(registry.app().shopGrab);
+  const telegramBot = I.telegramBot.createTelegramBot(registry.app().telegram);
   const imageStore = I.imageStore.createImageStore(registry.app().imageDbName);
   const quota = I.storageQuota.createStorageQuota();
   const phoneInbox = I.phoneInbox.createPhoneInbox();
@@ -39,6 +40,7 @@
   const paletteService = A.paletteService.createPaletteService({ context, storage });
   const summaryHistory = A.summaryHistoryService.createSummaryHistoryService({ context, storage });
   const offlineService = A.offlineService.createOfflineService({ context, store, session, files, images, outputService });
+  const telegramService = A.telegramService.createTelegramService({ context, session, storage, staffService, images, outputService, bot: telegramBot });
 
   // UI
   U.noticeBar.createNoticeBar({ root: $('#notices'), notices });
@@ -64,7 +66,8 @@
   };
   const picker = U.picker.createPicker({ root: $('#picker'), context, session, navigationService });
   const imagePanel = U.imagePanel.createImagePanel({ outputService, images, clipboard, openViewer: viewer.open });
-  const output = U.outputView.createOutputView({ context, outputService, clipboard, ticketFill, imagePanel });
+  const telegramDialog = U.telegramDialog.createTelegramDialog({ session, telegramService, staffService });
+  const output = U.outputView.createOutputView({ context, outputService, clipboard, ticketFill, imagePanel, onRender: telegramDialog.renderButton });
   const header = U.header.createHeader({ context, session, viewService, ticketService, smsService, shippingService, reviewService, passCaseService, images, onShowOutput: output.render });
   const templateDialog = U.templateDialog.createTemplateDialog({ templateService, files });
   U.backupButtons.createBackupButtons({ backupService: A.backupService.createBackupService({ context, storage, files }) });

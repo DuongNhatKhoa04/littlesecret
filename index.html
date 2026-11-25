@@ -68,6 +68,7 @@
         <div class="outhead">
           <h2>Nội dung</h2><span class="status" id="stBody"></span>
           <button type="button" class="copy" id="copyBody">Copy nội dung (Alt+2)</button>
+          <button type="button" class="copy" id="sendTg" hidden title="Bot gửi tin (kèm ảnh Issue) vào group của team đang chọn; xem trước rồi mới gửi">Gửi Telegram</button>
         </div>
         <pre class="out" id="outBody" data-empty="Nội dung ticket sẽ hiện ở đây"></pre>
 
@@ -165,6 +166,32 @@
   </div>
 </dialog>
 
+<dialog id="tgDlg" aria-label="Gửi Telegram">
+  <div class="dhead">
+    <b id="tgTitle">Gửi vào group</b><span class="spacer"></span>
+    <button type="button" class="ghost" id="tgClose">Đóng</button>
+  </div>
+  <div class="tg-body">
+    <p class="warn" id="tgProblem" hidden></p>
+    <label class="field" id="tgTokenRow">
+      <span>Token bot (dán 1 lần, lưu trên máy này; hỏi trưởng nhóm, không gửi token vào group)</span>
+      <input type="password" class="text" id="tgToken" autocomplete="off" spellcheck="false" placeholder="123456789:AA…">
+    </label>
+    <label class="field">
+      <span>Tên của bạn (cuối tin ghi FRT: tên)</span>
+      <input type="text" class="text" id="tgName" autocomplete="off" placeholder="vd Jade">
+    </label>
+    <p class="tg-label">Tin sẽ gửi</p>
+    <pre class="tg-preview" id="tgPreview"></pre>
+    <p class="status" id="tgPhotos"></p>
+  </div>
+  <div class="dfoot">
+    <button type="button" class="ghost" id="tgForget">Xóa token trên máy này</button>
+    <span class="spacer"></span><span class="status" id="tgStatus" role="status"></span>
+    <button type="button" class="primary" id="tgSend">Gửi</button>
+  </div>
+</dialog>
+
 <dialog id="fillDlg" aria-label="Điền ticket">
   <div class="dhead">
     <b>Bookmark: Điền ticket · Lấy thông tin tiệm</b><span class="spacer"></span>
@@ -242,6 +269,7 @@
 <script src="src/domain/pass-case.js"></script>
 <script src="src/domain/pass-case-message.js"></script>
 <script src="src/domain/shop-info.js"></script>
+<script src="src/domain/telegram-message.js"></script>
 <script src="src/domain/review.js"></script>
 <script src="src/domain/review-message.js"></script>
 <script src="src/domain/phone-link.js"></script>
@@ -269,6 +297,7 @@
 <script src="src/application/notice-service.js"></script>
 <script src="src/application/theme-service.js"></script>
 <script src="src/application/palette-service.js"></script>
+<script src="src/application/telegram-service.js"></script>
 <script src="src/application/phone-service.js"></script>
 <script src="src/application/summary-history-service.js"></script>
 <script src="src/application/tag-history-service.js"></script>
@@ -281,6 +310,7 @@
 <script src="src/infrastructure/screen-capture.js"></script>
 <script src="src/infrastructure/ticket-fill.js"></script>
 <script src="src/infrastructure/shop-grab.js"></script>
+<script src="src/infrastructure/telegram-bot.js"></script>
 <script src="src/infrastructure/zip.js"></script>
 <script src="src/infrastructure/pdf-image.js"></script>
 <script src="src/infrastructure/pdf.js"></script>
@@ -293,6 +323,7 @@
 <script src="src/ui/notice-bar.js"></script>
 <script src="src/ui/theme-toggle.js"></script>
 <script src="src/ui/palette-picker.js"></script>
+<script src="src/ui/telegram-dialog.js"></script>
 <script src="src/ui/category-combo.js"></script>
 <script src="src/ui/summary-combo.js"></script>
 <script src="src/ui/idea-list.js"></script>

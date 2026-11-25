@@ -12,6 +12,7 @@ Thay đổi chạm vào các vùng này → người phụ trách đọc diff tr
 | Dữ liệu đã lưu | `config/app.js` (các key), `session-repository.js`, `sanitize…`, `image-store.js` | Sai là người dùng mất ticket đang nhập / template / ảnh | Không đổi key; dữ liệu bản cũ vẫn đọc được (test "đọc state bản cũ") |
 | Câu chữ checklist, SMS | `config/setup/**`, `config/sms/*` | Nội dung nghiệp vụ, gửi cho merchant | Đúng chữ người phụ trách đưa, không tự sửa chính tả |
 | Bookmark Điền ticket | `config/app.js` → `ticketFill`, `src/infrastructure/ticket-fill.js` | Chạy trên trang ticket system bên ngoài | Thử trên trang ticket thật; nhắc mọi người kéo lại bookmark |
+| Bot Telegram | `config/app.js` → `telegram`, `chatId` trong `config/tickets/pass-case.js`, `telegram-bot.js`, `telegram-service.js` | Gửi dữ liệu merchant ra Internet bằng token chung | Đối chiếu [SECURITY.md](SECURITY.md) §6: vẫn chỉ 1 host, chỉ method gửi tin; token không vào code / log / file Sao lưu; `chatId` đúng group; gửi thử ở group test trước |
 | phone-upload | `phone-upload/*`, `phone-inbox.js`, `phone-service.js` | Mở port mạng trên máy công ty | Đối chiếu [SECURITY.md](SECURITY.md) §3; mã vẫn bắt buộc ở mọi đường dẫn; loopback vẫn được kiểm |
 | Bảo mật chung | Mọi chỗ thêm `innerHTML`, `fetch`, thư viện, đọc file / storage | Xem [SECURITY.md](SECURITY.md) §4 | Không vi phạm quy tắc §4 |
 | Thay đổi lớn do AI làm | Nhiều file trong 1 lần | Dễ lẫn sửa ngoài yêu cầu, ghi đè sửa của người khác | Xem §3 dưới |

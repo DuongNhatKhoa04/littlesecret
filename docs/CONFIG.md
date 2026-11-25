@@ -243,6 +243,7 @@ setPassCase({   // const { setPassCase } = registry;
 | `teams[].fields` / `required` | Thứ tự ô trên form / ô bắt buộc (trống thì khóa Copy) |
 | `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò), `{shopZip}` = Tên tiệm ZIP, `{caller}` = Phone - Tên - Vai trò, `{urgent}` = chữ GẤP của team khi tick. Dòng mà mọi `{…}` đều trống thì bỏ; `''` = dòng trống (không để 2 dòng trống liền nhau) |
 | `teams[].urgent` / `tips` | Chữ in ở `{urgent}` khi tick GẤP (có thì form có ô tick GẤP) / khung lưu ý trên form |
+| `teams[].chatId` | ID group Telegram của team (nút Gửi Telegram, REQUIREMENTS §24), dạng `'-100…'`. Lấy ID: SECURITY.md §6 "Thêm bot vào group mới". Không có thì nút báo team chưa có group |
 | `thanks` / `teams[].thanks` | Câu cảm ơn cuối tin (`Many thanks team!`) / thay riêng cho team (`Thanks team !`) |
 | `teams[].tags` | Người cần tag, dòng ngay dưới `thanks`: `[{ names: ['@a', '@b'] }]` = luôn tag; thêm `from`, `to` (`'HH:MM'` giờ VN) = chỉ tag trong ca `[from, to)`, `from` > `to` là ca qua đêm. Đổi người / đổi ca = sửa ở đây. Người nghỉ / support thêm trong ngày thì người dùng tự tick / thêm trên form (lưu trên máy), không sửa config |
 | `tagUtcOffsetMinutes` | Múi giờ của ca: `7 * 60` = giờ VN (không có giờ mùa hè) |
@@ -261,12 +262,13 @@ Loại `transfer` trong `config/tickets/transfer.js` có `passCase: true` nên h
 | `debounceMs` | Độ trễ cập nhật Kết quả |
 | `offlineTiers` | Lựa chọn ô Tier trong hộp Lưu ticket ra file (§19) |
 | `backupKeys` | Tên các trường key localStorage đưa vào file Sao lưu (§23). Thêm key lưu mới mà cần mang sang máy khác thì thêm tên vào đây |
-| `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `paletteKey`, `phoneKey`, `summaryKey`, `tagKey` | Key localStorage. **Không đổi** |
+| `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `paletteKey`, `telegramTokenKey`, `phoneKey`, `summaryKey`, `tagKey` | Key localStorage. **Không đổi** |
 | `phoneUpload.pollMs` | Nhận ảnh iOS: bao lâu hỏi phone-upload 1 lần khi hàng chờ trống (REQUIREMENTS §21) |
 | `imageDbName` | Tên database IndexedDB chứa ảnh. **Không đổi** |
 | `themes` | Nút giao diện ở header: `{ id, label }`, bấm sang mục kế tiếp, mục đầu là mặc định. `auto` = theo hệ điều hành. `id` lưu trên máy: không đổi id đang có. Màu từng giao diện ở `styles/tokens.css` |
 | `palettes` | Màu giao diện (menu Khác → Màu giao diện): `{ id, label, swatch }` (`swatch` = màu tô ô tròn để chọn), mục đầu là mặc định = màu trong `styles/tokens.css`. Mục khác gắn `data-palette="<id>"` lên `<html>`; màu ở `styles/palette-<id>.css` (thêm `<link>` vào `index.html` sau `tokens.css`), ghi đè **mọi** biến màu của `tokens.css` cho cả Sáng lẫn Tối (copy `palette-pink.css` làm mẫu). `id` lưu trên máy: không đổi id đang có |
 | `ticketFill` | Bookmark `Điền ticket`: selector ô `subject` / `description` / `comment` (ô Comment ở khung Checklist), `commentText` (`done`), nút bấm sau khi điền = phần tử `uploadLabel` có chữ `uploadText`. Đổi thì người dùng phải kéo lại bookmark |
+| `telegram` | Nút Gửi Telegram (REQUIREMENTS §24): `apiBase` = địa chỉ DUY NHẤT app gọi ra Internet (không đổi sang host khác), `senderLine` = dòng người chuyển cuối tin (`{name}`), `texts` = câu báo / lỗi. Token KHÔNG để ở đây (mỗi máy tự dán; SECURITY.md §6) |
 | `shopGrab` | Bookmark `Lấy thông tin tiệm` (Chuyển case, REQUIREMENTS §22.4). Trang ticket: `ticketHeader` = dòng `for <Tên tiệm> / <MID>`, tách bằng `ticketPattern` (nhóm 1 = Tên tiệm, nhóm 2 = MID); `description` = thẻ nội dung ticket (vào ô Issue). Trang Lead: selector ô DBA `shop`, ô MID `mid`; `zip` = mọi ô chọn có giá trị, giữ giá trị khớp `zipPattern`. Đổi thì người dùng phải kéo lại bookmark |
 | `categories` | Loại có sẵn (`ABC`, `CLOVER`, `PAX`, `INTERNET`) |
 | `marks` | Ký hiệu checklist trong nội dung: `[x]`, `[ ]`, `[N/A]` |

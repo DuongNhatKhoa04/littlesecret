@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-25.9',      // hiện cuối menu Khác để biết đang mở đúng bản mới
+    version: 'v2026-11-25.10',      // hiện cuối menu Khác để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
     offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu ticket ra file (chọn 1, bắt buộc)
@@ -17,6 +17,7 @@
     staffKey: 'ticketWriter.staff.v1',         // tên nhân viên (form SMS Xin review), lưu riêng để Ticket mới không xóa
     themeKey: 'ticketWriter.theme.v1',         // giao diện sáng / tối / tự động, lưu riêng để Ticket mới không đổi
     paletteKey: 'ticketWriter.palette.v1',     // màu giao diện (Tím / Hồng…), lưu riêng như themeKey
+    telegramTokenKey: 'ticketWriter.telegram.v1',   // token bot Telegram, mỗi máy tự dán. KHÔNG đưa vào backupKeys (file Sao lưu không được mang token)
     summaryKey: 'ticketWriter.summaries.v1',   // Tóm tắt đã dùng, gợi ý khi gõ ô Tóm tắt
     tagKey: 'ticketWriter.passTags.v1',        // tên tag đã thêm tay ở Chuyển case theo team, gợi ý khi gõ ô Thêm tag
     // Key đưa vào file Sao lưu (tên trường ở trên): gợi ý Tóm tắt, gợi ý tên người support thêm (Chuyển case), template.
@@ -73,6 +74,24 @@
       { id: 'light', label: 'Sáng' },
       { id: 'dark',  label: 'Tối' }
     ],
+
+    // Gửi Chuyển case vào group bằng bot Telegram (cả team dùng chung 1 bot). ID group của từng team: chatId trong config/tickets/pass-case.js.
+    // apiBase: địa chỉ DUY NHẤT app được gọi ra Internet (docs/SECURITY.md §6). senderLine: dòng người chuyển cuối tin, {name} = tên nhân viên.
+    telegram: {
+      apiBase: 'https://api.telegram.org',
+      senderLine: 'FRT: {name}',
+      texts: {
+        notReady: 'Tin chưa đủ trường bắt buộc: điền đủ như khi Copy nội dung.',
+        noGroup: 'Team này chưa có group Telegram trong config (chatId).',
+        noToken: 'Máy này chưa có token bot: dán token (hỏi trưởng nhóm) vào ô bên dưới.',
+        noName: 'Nhập tên của bạn để cuối tin ghi người chuyển case.',
+        network: 'Không gọi được Telegram (mạng / proxy chặn). Tin CHƯA gửi: dùng Copy nội dung.',
+        badToken: 'Token sai hoặc đã đổi (revoke): bấm Đổi token, dán token mới.',
+        noChat: 'Bot không gửi được vào group này (bot chưa ở trong group, bị xóa, hoặc ID group sai). Báo trưởng nhóm.',
+        tooMany: 'Telegram báo gửi quá nhanh: chờ {seconds} giây rồi gửi lại.',
+        other: 'Telegram báo lỗi: {detail}'
+      }
+    },
 
     // Màu giao diện, chọn ở menu Khác (dùng chung với Sáng / Tối ở trên). Mục đầu là mặc định = màu trong styles/tokens.css.
     // Mục khác: data-palette="<id>" trên <html>, màu ở styles/palette-<id>.css (nhớ thêm <link> vào index.html). id lưu trên máy => không đổi id.

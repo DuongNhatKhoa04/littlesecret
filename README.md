@@ -23,7 +23,7 @@ Gửi cả source: nén **cả folder** (giữ nguyên cấu trúc) → bên kia
 
 Đổi giữa 2 cách không mất dữ liệu đã lưu (Chrome cho mọi trang `file://` chung 1 kho lưu trữ). Trước khi gửi bản mới: làm theo [docs/REVIEW.md](docs/REVIEW.md).
 
-Không có gì bí mật nằm trong folder: mã bí mật của phone-upload lưu ở `%LOCALAPPDATA%\TicketWriter\` của từng máy.
+Không có gì bí mật nằm trong folder: mã bí mật của phone-upload lưu ở `%LOCALAPPDATA%\TicketWriter\` của từng máy; token bot Telegram (nút Gửi Telegram) mỗi người tự dán trên máy mình, không bao giờ nằm trong folder.
 
 ## Tài liệu
 

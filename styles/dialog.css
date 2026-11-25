@@ -36,6 +36,14 @@ dialog::backdrop { background: rgba(0, 0, 0, .4); }
 .off-fields { padding: 12px 16px 4px; }
 .off-fields input.text, .off-fields select.text { width: 100%; }
 
+/* Gửi Telegram: xem trước tin, dán token / tên lần đầu */
+.tg-body { overflow: auto; padding: 12px 16px 4px; }
+.tg-body .field { display: block; }
+.tg-body .field > span { display: block; font-size: 13px; font-weight: 500; margin: 0 0 6px; }
+.tg-body .field input.text { width: 100%; }
+.tg-label { margin: 10px 0 4px; font-size: 13px; color: var(--muted); }
+.tg-preview { margin: 0; padding: 10px 12px; max-height: 40dvh; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; background: var(--out-bg); border: 1px solid var(--line); border-radius: var(--radius); font: 14px/1.55 var(--font); }
+
 /* Nhận ảnh iOS: mã QR cho iPad quét */
 .phone-body { overflow: auto; padding: 8px 16px 12px; text-align: center; }
 .phone-body > p:first-child { text-align: left; }

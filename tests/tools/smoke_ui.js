@@ -317,6 +317,13 @@
     check('Chuyển case CS: Ctrl+V chữ bookmark lấy trên trang ticket => điền Link Ticket, Tên tiệm, MID, Issue; không còn ô tick Assign',
       $('#pass_ticket').value === 'https://portal/v2/helpdesk/ticket/9#' && $('#pass_issue').value === 'PAX - SUCCESS' && !$('#pass_assign') &&
       $('#outBody').textContent.startsWith('https://portal/v2/helpdesk/ticket/9#\nTICKET NAILS 75001\nMID: 4966'), $('#outBody').textContent);
+    // Gửi Telegram: chỉ mở hộp xem trước, không gửi thật (smoke không gọi mạng)
+    check('Chuyển case: có nút Gửi Telegram, khóa khi tin chưa đủ trường bắt buộc', !$('#sendTg').hidden && $('#sendTg').disabled === $('#copyBody').disabled);
+    $('#sendTg').disabled = false;
+    $('#sendTg').click();
+    check('Gửi Telegram: hộp xem trước có group CS, chưa có token => hiện ô token, khóa Gửi',
+      $('#tgDlg').open && $('#tgTitle').textContent === 'Gửi vào group CS' && !$('#tgTokenRow').hidden && $('#tgSend').disabled, [$('#tgTitle').textContent, $('#tgProblem').textContent]);
+    $('#tgClose').click();
     $('#resetBtn').click();
     await settle();
     clickText('#picker', 'Hỗ trợ merchant');

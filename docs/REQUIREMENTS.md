@@ -26,6 +26,7 @@ Tài liệu này mô tả **hành vi hiện có** của tool, tới từng câu 
 | 21 | Nhận ảnh iPad / iPhone (phone-upload) | Hiện hành; rủi ro ở SECURITY.md §3 |
 | 22 | Chuyển case (pass case cho Sales / MKT / CS / Tech), lấy thông tin tiệm từ trang ticket / Lead (§22.4); Tech Assign (§22.5) đã bỏ | Hiện hành |
 | 23 | Sao lưu / khôi phục dữ liệu | Hiện hành |
+| 24 | Gửi Chuyển case qua bot Telegram | Hiện hành; bảo mật ở SECURITY.md §6 |
 
 ---
 
@@ -261,6 +262,7 @@ Việc cần làm tiếp:
 | `ticketWriter.v1` | Loại đang chọn, chế độ xem, đổi bên, ticket đang nhập (Loại, Tóm tắt, Phone, ngôn ngữ, variant, kết luận, các mục, tick/N/A checklist), form SMS Promotion (trường `sms`, gồm ô tick `enabled`, ngôn ngữ tin nhắn `lang` và option tự thêm `customOptions`; ảnh lưu ở IndexedDB), form SMS Shipping (trường `shipping`), form SMS Xin review (trường `review`: bang `usState`, ngôn ngữ `lang`) |
 | `ticketWriter.images.v1` | **IndexedDB** (không phải localStorage), object store `images`: mỗi bản ghi = danh sách ảnh `{ blob, copied }` của 1 mục, key = key mục. Ảnh gốc, không nén. Nạp lại khi mở trang, giữ cả trạng thái `✓ Đã copy` |
 | `ticketWriter.theme.v1` | Giao diện đã chọn: `auto` / `light` / `dark`. Lưu riêng để `Ticket mới` không đổi; giá trị lạ → `auto` |
+| `ticketWriter.telegram.v1` | Token bot Telegram (§24), mỗi máy tự dán. KHÔNG vào file Sao lưu (§23) |
 | `ticketWriter.palette.v1` | Màu giao diện đã chọn: `castorice` (Tím) / `pink` (Hồng). Lưu riêng như trên; giá trị lạ / chưa chọn → màu đầu (Tím) |
 | `ticketWriter.phone.v1` | Nhận ảnh iOS (§21): `{ link, enabled }` — link phone-upload đã dán và lần trước có đang bật không |
 | `ticketWriter.staff.v1` | Tên nhân viên (form SMS Xin review). Lưu riêng để `Ticket mới` không xóa |
@@ -745,3 +747,15 @@ Dữ liệu lưu trong trình duyệt (§12) không tự theo sang máy khác, t
   - Không phải file sao lưu (vd file ticket offline, file template) → báo, không đổi gì.
   - Bộ nhớ trình duyệt đầy / bị chặn → báo có dữ liệu không ghi được, phần đã ghi vẫn giữ.
 - File sao lưu không chứa ticket đang nhập; template có thể có câu chữ nội bộ: xem SECURITY.md §1.
+
+## 24. Gửi Chuyển case qua bot Telegram
+
+Cả team dùng chung 1 bot. Nút **Gửi Telegram** cạnh `Copy nội dung` ở khu Kết quả, chỉ có ở Chuyển case; khóa khi `Copy nội dung` khóa (§22.3). Nút Copy vẫn giữ (bot lỗi / máy chưa có token thì làm tay).
+
+- Bấm → hộp **Gửi vào group <Team>**: ô token (chỉ khi máy chưa có), ô **Tên của bạn**, **Tin sẽ gửi** (xem trước), số ảnh Issue. Chưa gửi gì tới khi bấm `Gửi`.
+- Lý do chưa gửi được (hiện trên cùng, khóa `Gửi`), theo thứ tự: tin chưa đủ trường bắt buộc · team chưa có `chatId` · máy chưa có token · chưa nhập tên.
+- **Token**: dán 1 lần, lưu trên máy (`ticketWriter.telegram.v1`, §12), không vào file Sao lưu. Sai dạng (`<số>:<chuỗi>`, vd dư chữ `bot`, có khoảng trắng) → báo, không lưu. Đúng dạng → lưu ngay, xóa khỏi ô, ẩn ô. `Xóa token trên máy này` (hỏi xác nhận) → ô token hiện lại.
+- **Tên của bạn** = tên nhân viên (cùng ô SMS Xin review §18), lưu trên máy. Tin gửi = tin Chuyển case + dòng cuối `FRT: <tên>` (`telegram.senderLine`).
+- **Gửi**: khóa nút, `Đang gửi…`; bot gửi tin chữ thường (không định dạng) vào `chatId` của team, rồi ảnh Issue (1 ảnh: ảnh đơn, 2–10: album, hơn 10: nhiều album) trả lời ngay dưới tin đó. Xong → `Đã gửi ✓`, hộp tự đóng, nút `Gửi Telegram` báo `Đã gửi ✓`. Bấm nhiều lần khi đang gửi chỉ gửi 1 lần. Không tự xóa form (vẫn dùng `Ticket mới`).
+- Lỗi → hộp vẫn mở, báo câu dễ hiểu (`telegram.texts`): mạng / proxy chặn · token sai hoặc đã đổi (401) · bot không gửi được vào group (chưa ở trong group, bị xóa, ID sai) · gửi quá nhanh (429, chờ N giây) · lỗi khác kèm mô tả của Telegram. Chữ đã vào group mà ảnh lỗi → báo `Tin chữ ĐÃ vào group, ảnh chưa gửi được (đừng gửi lại cả tin)`.
+- `chatId` từng team ở `config/tickets/pass-case.js`. **Tạm thời cả 4 team gửi vào group "test"** để thử; có ID group thật thì thay.
