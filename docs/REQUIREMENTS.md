@@ -61,7 +61,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 - Màn hình hẹp (< 800px): không có Chia đôi, tự chuyển thành `Nhập`; ẩn nút Chia đôi và Đổi bên.
 - `Alt+M`: xoay vòng chế độ.
 
-**Ticket mới**: hỏi xác nhận → xóa toàn bộ nội dung ticket và ảnh. Giữ loại ticket, chế độ xem, template, danh sách Loại.
+**Ticket mới** (nút hoặc `Alt+N`, ở mọi màn hình kể cả khi đang gõ trong ô): hỏi xác nhận (Enter = đồng ý, Esc = hủy) → xóa toàn bộ nội dung ticket và ảnh. Giữ loại ticket, chế độ xem, template, danh sách Loại. Dùng `Alt+N` thì xóa xong con trỏ vào ô nhập đầu tiên của form.
 
 ## 4. Trường chung (mọi loại ticket)
 

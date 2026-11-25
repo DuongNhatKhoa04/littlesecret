@@ -318,8 +318,10 @@
     check('nút Chuyển case CS ở ticket: sang Chuyển case team CS, mang Phone + Tên merchant',
       !!$('#pass_ticket') && $('#pass_phone').value === ticketPhone && $('#pass_contact').value === 'Mr. Vương' && ticketPhone !== '' &&
       $('#outBody').textContent.includes('CBN: ' + ticketPhone + ' - Mr. Vương'), [$('#pass_phone') && $('#pass_phone').value, ticketPhone]);
-    $('#resetBtn').click();
+    key($('#pass_phone'), { key: 'n', altKey: true });   // Ticket mới bằng phím, đang đứng trong ô nhập
     await settle();
+    check('Alt+N = Ticket mới (đang gõ trong ô vẫn chạy): xóa form Chuyển case, con trỏ vào ô nhập đầu tiên',
+      $('#pass_phone').value === '' && $('#outBody').textContent === '' && /^pass_/.test(focused()), [$('#pass_phone').value, focused()]);
     clickText('#picker', 'Hỗ trợ merchant');
     await settle();
 

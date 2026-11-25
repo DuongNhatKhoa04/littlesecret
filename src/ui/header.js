@@ -1,9 +1,10 @@
-// src/ui/header.js — Header: version (trong menu Khác), chế độ xem (Alt+M), đổi bên, Ticket mới (ở SMS Shipping / Xin review / Chuyển case: chỉ xóa form đang mở).
+// src/ui/header.js — Header: version (trong menu Khác), chế độ xem (Alt+M), đổi bên, Ticket mới (Alt+N; ở SMS Shipping / Xin review / Chuyển case: chỉ xóa form đang mở).
 (function (TW) {
   'use strict';
 
   const { $, $$ } = TW.ui.dom;
   const NARROW_QUERY = '(max-width: 799px)';
+  const FIRST_FIELD = 'input:not([type="checkbox"]):not([type="file"]):not([hidden]), textarea';
 
   function createHeader({ context, session, viewService, ticketService, smsService, shippingService, reviewService, passCaseService, images, onShowOutput }) {
     const narrow = window.matchMedia(NARROW_QUERY);
@@ -18,23 +19,31 @@
       if (mode !== 'input') onShowOutput();
     }
 
+    /** Hỏi xác nhận rồi xóa form đang mở. Trả về false nếu người dùng hủy. */
     function reset() {
-      if (session.isShipping()) {
-        if (confirm('Xóa toàn bộ nội dung SMS Shipping?')) shippingService.reset();
-        return;
-      }
-      if (session.isReview()) {
-        if (confirm('Xóa toàn bộ nội dung SMS Xin review?')) reviewService.reset();
-        return;
-      }
-      if (session.isPassCase()) {
-        if (confirm('Xóa toàn bộ nội dung Chuyển case?')) passCaseService.reset();
-        return;
-      }
-      if (!confirm('Xóa toàn bộ nội dung ticket?')) return;
-      images.clear();
-      smsService.reset();
-      ticketService.reset();
+      if (session.isShipping()) return confirmed('Xóa toàn bộ nội dung SMS Shipping?', shippingService.reset);
+      if (session.isReview()) return confirmed('Xóa toàn bộ nội dung SMS Xin review?', reviewService.reset);
+      if (session.isPassCase()) return confirmed('Xóa toàn bộ nội dung Chuyển case?', passCaseService.reset);
+      return confirmed('Xóa toàn bộ nội dung ticket?', () => {
+        images.clear();
+        smsService.reset();
+        ticketService.reset();
+      });
+    }
+
+    function confirmed(question, clear) {
+      if (!confirm(question)) return false;
+      clear();
+      return true;
+    }
+
+    /** Alt+N: Ticket mới không cần chuột; xóa xong (form dựng lại) thì con trỏ vào ô nhập đầu tiên để gõ ngay. */
+    function resetFromKeyboard() {
+      if (!reset()) return;
+      requestAnimationFrame(() => {
+        const first = $('#form').querySelector(FIRST_FIELD);
+        if (first) first.focus();
+      });
     }
 
     $('#ver').textContent = context.app.version;
@@ -46,11 +55,12 @@
     // Mục trong menu Khác tự chạy việc của nó (listener riêng); menu chỉ cần đóng lại sau khi bấm.
     $('#moreMenu').addEventListener('click', (event) => { if (event.target.closest('button')) $('#moreMenu').hidePopover(); });
     $('#resetBtn').addEventListener('click', reset);
+    const SHORTCUTS = { m: () => viewService.cycleMode(narrow.matches), n: resetFromKeyboard };
     document.addEventListener('keydown', (event) => {
-      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === 'm') {
-        event.preventDefault();
-        viewService.cycleMode(narrow.matches);
-      }
+      const run = event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey && SHORTCUTS[event.key.toLowerCase()];
+      if (!run) return;
+      event.preventDefault();
+      run();
     });
     narrow.addEventListener('change', render);
 
