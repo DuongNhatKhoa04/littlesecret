@@ -37,7 +37,7 @@
     ].join('\n'));
     const tagLine = (now) => buildAt(now, 'cs').split('\n').pop();
     assertEqual([vn(20), vn(4, 59), vn(5), vn(19, 59)].map(tagLine), [CS_NIGHT, CS_NIGHT, CS_DAY, CS_DAY]);
-    assertEqual(missing('cs', { shop: 'A', role: '' }), ['Link Ticket', 'ZIP Code', 'MID', 'CBN', 'Tên người liên hệ', 'Issue']);
+    assertEqual(missing('cs', { shop: 'A', role: '' }), ['CBN', 'Tên người liên hệ', 'Link Ticket', 'ZIP Code', 'MID', 'Issue']);
   });
 
   test('pass case: MKT theo mẫu group MKT: link lead, Tên tiệm ZIP, MID, CBN Phone - Tên - Vai trò, dòng trống, Issue, Thanks team !', () => {
@@ -47,7 +47,7 @@
     ].join('\n'));
     assertEqual(build('mkt', { shop: 'A', phone: '1', role: 'Staff' }), ['A', 'CBN: 1 - Staff', '', 'Thanks team !', MKT_DAY].join('\n'));
     assertEqual(build('mkt', { issue: 'x' }), ['x', '', 'Thanks team !', MKT_DAY].join('\n'));
-    assertEqual(missing('mkt', { shop: 'A', role: '' }), ['Link Lead', 'ZIP Code', 'MID', 'CBN', 'Tên người liên hệ', 'Issue']);
+    assertEqual(missing('mkt', { shop: 'A', role: '' }), ['CBN', 'Tên người liên hệ', 'Link Lead', 'ZIP Code', 'MID', 'Issue']);
   });
 
   test('pass case: MKT tag theo ca giờ VN: 8:00 PM – 6:00 AM ca đêm (qua 0h), 6:00 AM – 8:00 PM ca 2', () => {
@@ -61,7 +61,7 @@
       'https://crm/lead/9', 'ARIA NAIL BAR', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
       'Terminal mất kết nối', '', 'Thanks team !', TECH_DAY
     ].join('\n'));
-    assertEqual(missing('tech', { lead: 'x', role: '' }), ['Tên tiệm', 'CBN', 'Tên người liên hệ', 'Issue']);
+    assertEqual(missing('tech', { lead: 'x', role: '' }), ['CBN', 'Tên người liên hệ', 'Tên tiệm', 'Issue']);
   });
 
   test('pass case: GẤP mọi team: tick => 🔥🔥🔥 URGENT!! đầu tin (Sales) / ngay dưới link lead, link ticket', () => {
@@ -128,7 +128,7 @@
 
   test('pass case: chưa nhập trường nào của team => rỗng; trường bắt buộc còn thiếu theo thứ tự form', () => {
     assertEqual([build('sales', {}), build('sales', { issue: 'ABC' })], ['', '']);
-    assertEqual(missing('sales', { shop: 'A' }), ['ZIP Code', 'CBN']);
+    assertEqual(missing('sales', { shop: 'A' }), ['CBN', 'ZIP Code']);
     assertEqual(['sales', 'mkt', 'cs', 'tech'].map(team => missing(team)), [[], [], [], []]);
   });
 
@@ -179,7 +179,7 @@
     assertEqual(output.compute().body, '');
     service.setValue('shop', 'ARIA');
     const partial = output.compute();
-    assertEqual([partial.showTitle, partial.title, partial.canCopyBody, partial.missingFields], [false, '', false, ['ZIP Code', 'CBN']]);
+    assertEqual([partial.showTitle, partial.title, partial.canCopyBody, partial.missingFields], [false, '', false, ['CBN', 'ZIP Code']]);
     service.setValue('zip', '75001');
     service.setValue('phone', '(555) 123-4567');
     assertEqual([output.compute().body, output.compute().canCopyBody], ['LEAD: ARIA – 75001\nCBN: (555) 123-4567' + SALES_END, true]);

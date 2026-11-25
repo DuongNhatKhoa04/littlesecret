@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-25
 
+- `v2026-11-25.2` · Chuyển case: hàng CBN + Tên người liên hệ + Vai trò lên đầu form mọi team (hỏi số, tên, vai trò rồi mới tới Lead / tiệm / Issue, Note). Tin nhắn không đổi, cảnh báo `Còn thiếu` theo thứ tự mới. §22.1
 - `v2026-11-25.1` · Chuyển case Sales: tag thêm `@daisy_sale_leader` → `@daisy_sale_leader @Kyo_SaleAdmin @Stella_SalesAdmin`, mọi giờ (không theo ca). §22.2
 
 ## 2026-11-24

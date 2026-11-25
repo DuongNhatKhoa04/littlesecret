@@ -631,14 +631,14 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 ### 22.1 Form
 
 - **Team nhận**: `Sales` (mặc định) · `MKT` · `CS` · `Tech`. Đổi team giữ chữ đã nhập (trường cùng tên dùng chung giữa các team).
-- Trường theo team (★ = bắt buộc):
+- Trường theo team, đúng thứ tự trên form (★ = bắt buộc). Hàng CBN + Tên + Vai trò luôn đầu tiên để theo flow cuộc gọi: hỏi số, tên, vai trò rồi mới tra lead. Thứ tự này cũng là thứ tự trong cảnh báo Còn thiếu; tin nhắn vẫn theo §22.2:
 
 | Team | Trường |
 |---|---|
-| Sales | Tên tiệm ★ · ZIP Code ★ · MID · CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Note |
-| MKT | Link Lead ★ · Tên tiệm ★ · ZIP Code ★ · MID ★ · CBN ★ · Tên người liên hệ ★ · Vai trò tại tiệm · Issue ★ |
-| CS | Link Ticket ★ · Tên tiệm ★ · ZIP Code ★ · MID ★ · CBN ★ · Tên người liên hệ ★ · Vai trò tại tiệm · Issue ★ |
-| Tech | Link Lead ★ · Tên tiệm ★ · CBN ★ · Tên người liên hệ ★ · Vai trò tại tiệm · Issue ★ |
+| Sales | CBN ★ · Tên người liên hệ · Vai trò tại tiệm · Tên tiệm ★ · ZIP Code ★ · MID · Note |
+| MKT | CBN ★ · Tên người liên hệ ★ · Vai trò tại tiệm · Link Lead ★ · Tên tiệm ★ · ZIP Code ★ · MID ★ · Issue ★ |
+| CS | CBN ★ · Tên người liên hệ ★ · Vai trò tại tiệm · Link Ticket ★ · Tên tiệm ★ · ZIP Code ★ · MID ★ · Issue ★ |
+| Tech | CBN ★ · Tên người liên hệ ★ · Vai trò tại tiệm · Link Lead ★ · Tên tiệm ★ · Issue ★ |
 
 - Xếp chung 1 hàng (mọi team có các trường này): **Tên tiệm + ZIP Code**; **CBN + Tên người liên hệ + Vai trò tại tiệm** (màn hình hẹp thì Vai trò xuống hàng). Khai báo ở `rows` trong config.
 - **CBN**: ô Phone, tự format như §4. **Vai trò tại tiệm**: `Owner` / `Manager` / `Staff` / `Partner`, bấm lại lựa chọn đang chọn là bỏ chọn. **Issue**, **Note**: ô nhiều dòng.

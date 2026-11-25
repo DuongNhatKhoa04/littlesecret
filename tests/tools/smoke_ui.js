@@ -217,7 +217,7 @@
       $('#outBody').textContent);
     type($('#pass_shop'), 'ARIA NAIL BAR');
     await settle();
-    check('Chuyển case Sales: thiếu trường bắt buộc => khóa Copy, báo thiếu', $('#copyBody').disabled && $('#warn').textContent.includes('ZIP Code, CBN'),
+    check('Chuyển case Sales: thiếu trường bắt buộc => khóa Copy, báo thiếu', $('#copyBody').disabled && $('#warn').textContent.includes('CBN, ZIP Code'),
       $('#warn').textContent);
     type($('#pass_zip'), '75001');
     type($('#pass_phone'), '5551234567');
@@ -234,8 +234,9 @@
       !!$('[data-img-key="pass:issue"] .pzone') && !!$('[data-img-key="pass:issue"] .shot') && $('#warn').textContent.includes('Tên người liên hệ'),
       $('#warn').textContent);
     const rowIds = $$('.pass-row').map(row => [...row.querySelectorAll('[id^="pass_"]')].map(node => node.id).join('+'));
-    check('Chuyển case MKT: GẤP ngay dưới Issue; Tên tiệm + ZIP chung 1 hàng, CBN + Tên + Vai trò chung 1 hàng',
-      !!$('#pass_issue + .pass-urgent') && rowIds.join(' | ') === 'pass_shop+pass_zip | pass_phone+pass_contact' && $$('.pass-row')[1].querySelector('.seg') !== null, rowIds.join(' | '));
+    check('Chuyển case MKT: GẤP ngay dưới Issue; CBN + Tên + Vai trò là hàng đầu, Tên tiệm + ZIP chung 1 hàng',
+      !!$('#pass_issue + .pass-urgent') && rowIds.join(' | ') === 'pass_phone+pass_contact | pass_shop+pass_zip' && $$('.pass-row')[0].querySelector('.seg') !== null &&
+      $('#pass_phone').compareDocumentPosition($('#pass_lead')) === Node.DOCUMENT_POSITION_FOLLOWING, rowIds.join(' | '));
     clickText('#form', 'Tech');
     await settle();
     check('Chuyển case Tech: có ô GẤP dưới Issue + lưu ý, giữ Phone đã nhập', !!$('#pass_issue + .pass-urgent') && !!$('.pass-tips') && $('#pass_phone').value === '(555) 123-4567');

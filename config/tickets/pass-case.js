@@ -39,14 +39,14 @@
     teams: [
       {
         id: 'sales', label: 'Sales', urgent: '🔥🔥🔥 URGENT!!',
-        fields: ['shop', 'zip', 'mid', 'phone', 'contact', 'role', 'note'],
+        fields: ['phone', 'contact', 'role', 'shop', 'zip', 'mid', 'note'],
         required: ['shop', 'zip', 'phone'],
         lines: ['{urgent}', 'LEAD: {leadInfo}', 'CBN: {cbn}', 'NOTE: {note}'],
         tags: [{ names: ['@daisy_sale_leader', '@Kyo_SaleAdmin', '@Stella_SalesAdmin'] }]
       },
       {
         id: 'mkt', label: 'MKT', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
-        fields: ['lead', 'shop', 'zip', 'mid', 'phone', 'contact', 'role', 'issue'],
+        fields: ['phone', 'contact', 'role', 'lead', 'shop', 'zip', 'mid', 'issue'],
         required: ['lead', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
         lines: ['{lead}', '{urgent}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
         tags: [
@@ -56,7 +56,7 @@
       },
       {
         id: 'cs', label: 'CS', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
-        fields: ['ticket', 'shop', 'zip', 'mid', 'phone', 'contact', 'role', 'issue'],
+        fields: ['phone', 'contact', 'role', 'ticket', 'shop', 'zip', 'mid', 'issue'],
         required: ['ticket', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
         lines: ['{ticket}', '{urgent}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
         tags: [
@@ -72,7 +72,7 @@
       },
       {
         id: 'tech', label: 'Tech', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
-        fields: ['lead', 'shop', 'phone', 'contact', 'role', 'issue'],
+        fields: ['phone', 'contact', 'role', 'lead', 'shop', 'issue'],
         required: ['lead', 'shop', 'phone', 'contact', 'issue'],
         lines: ['{lead}', '{urgent}', '{shop}', 'CBN: {caller}', '', '{issue}', ''],
         tips: [
