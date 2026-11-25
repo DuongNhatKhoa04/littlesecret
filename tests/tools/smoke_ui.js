@@ -50,7 +50,13 @@
 
   try {
     // Viết ticket mặc định: Hỗ trợ merchant
-    check('mặc định ở Viết ticket / Hỗ trợ merchant', pressed().join('|') === 'Viết ticket|Hỗ trợ merchant', pressed());
+    check('mặc định ở tab Hỗ trợ merchant (1 hàng tab, không còn nút nhóm Viết ticket / SMS)', pressed().join('|') === 'Hỗ trợ merchant' && !$$('#picker button').some(x => x.textContent === 'Viết ticket' || x.textContent === 'SMS'), pressed());
+    $('#moreBtn').click();
+    const menuOpened = $('#moreMenu').matches(':popover-open');
+    $('#moreMenu').hidePopover();
+    check('menu Khác: mở được, có Lưu ticket ra file / Sao lưu / Đổi bên + version; credit dưới tên app',
+      menuOpened && ['offSave', 'offOpen', 'backupSave', 'backupOpen', 'tplSave', 'swapBtn', 'ver'].every(id => $('#moreMenu').contains($('#' + id))) &&
+      $('#ver').textContent.startsWith('v20') && $('.brand .credit').textContent === 'Developed by Ryan', [menuOpened, $('#ver').textContent]);
     await wait(50);
     check('mở trang: con trỏ ở ô Loại', focused() === 'f_category', focused());
     check('ô dán ảnh không nhận Tab', $$('.pzone').length > 0 && $$('.pzone').every(z => z.tabIndex === -1));
@@ -497,7 +503,7 @@
     check('nhánh rỗng: không copy', $('#copyBody').disabled && $('#copyTitle').disabled);
 
     // Template
-    clickText('#picker', 'Viết ticket');
+    clickText('#picker', 'Hỗ trợ merchant');
     await settle();
     $('#tplSave').click();
     const savedTemplates = JSON.parse(localStorage.getItem('ticketWriter.templates.v1') || '[]');
@@ -602,9 +608,9 @@
     // SMS Shipping
     $('#sms_enabled').click();
     type($('#sms_shop'), 'GIỮ LẠI');
-    clickText('#picker', 'SMS');
+    clickText('#picker', 'SMS Shipping');
     await settle();
-    check('Shipping: nhóm SMS chỉ còn Shipping, ẩn Title, khóa Lưu template', pressed().join('|') === 'SMS|Shipping' && $('#titleBlock').hidden && $('#tplSave').disabled &&
+    check('Shipping: tab SMS Shipping, ẩn Title, khóa Lưu template', pressed().join('|') === 'SMS Shipping' && $('#titleBlock').hidden && $('#tplSave').disabled &&
       $('#smsBlock').hidden && !$$('#picker button').some(x => x.textContent === 'Promotion'), pressed());
     type($('#ship_merchant'), 'Ms Terri');
     await settle();
@@ -623,7 +629,7 @@
     // SMS Xin review
     clickText('#picker', 'Xin review');
     await settle();
-    check('Xin review: ẩn Title, khóa Lưu template, chưa nhập thì chưa báo', pressed().join('|') === 'SMS|Xin review' && $('#titleBlock').hidden && $('#tplSave').disabled &&
+    check('Xin review: ẩn Title, khóa Lưu template, chưa nhập thì chưa báo', pressed().join('|') === 'Xin review' && $('#titleBlock').hidden && $('#tplSave').disabled &&
       $('#copyBody').disabled && $('#warn').hidden, pressed());
     const suggested = () => $$('#review_states option').map(x => x.value).join('|');
     check('Xin review: chưa gõ => gợi ý đủ 51 bang', $$('#review_states option').length === 51);
@@ -653,7 +659,7 @@
     await settle();
     check('Xin review: Ticket mới xóa form, giữ tên nhân viên', $('#outBody').textContent === '' && $('#review_state').value === '' && $('#review_branch').textContent === '' &&
       $('#review_staff').value === 'Ryan', [$('#outBody').textContent, $('#review_staff').value]);
-    clickText('#picker', 'Viết ticket');
+    clickText('#picker', 'Hỗ trợ merchant');
     await settle();
     check('về Viết ticket: hiện lại Title, mở Lưu template', !$('#titleBlock').hidden && !$('#tplSave').disabled);
     check('Shipping: form SMS Promotion vẫn giữ', $('#sms_shop').value === 'GIỮ LẠI' && !$('.sms-fields').hidden && !$('#smsBlock').hidden, $('#sms_shop').value);

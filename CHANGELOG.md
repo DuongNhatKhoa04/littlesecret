@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-25
 
+- `v2026-11-25.4` · Giao diện mới: header 1 hàng (tên app, dưới là Developed by Ryan; tab Hỗ trợ merchant / Chuyển case / SMS Shipping / Xin review thay 2 tầng Nhóm → loại; 3 nút icon chế độ xem; menu **Khác** gom Lưu template, Lưu / mở file offline, Sao lưu / Khôi phục, Đổi bên, version). Đổi tên: `Lưu ticket làm template`, `Lưu ticket ra file`, `Mở file đã lưu`, `Sao lưu gợi ý và template`, `Khôi phục từ file sao lưu`. Khu Nhập thành 1 tờ phiếu (tên mục ở cột trái, mục đầu `Cuộc gọi`), khu Kết quả là khối tím đậm, `Copy để điền` ghim ở đáy. Font Be Vietnam Pro (có sẵn trong `styles/fonts/`, bản 1 file nhúng sẵn). §2 §3 §14.2 §19 §22.1 §23
 - `v2026-11-25.3` · Hỗ trợ merchant: nút **Chuyển case CS →** dưới hàng Phone, bấm là sang Chuyển case team CS, mang theo Phone / Tên merchant / Vai trò (ô trống giữ chữ cũ), khỏi gõ lại. §22.1
 - `v2026-11-25.2` · Chuyển case: hàng CBN + Tên người liên hệ + Vai trò lên đầu form mọi team (hỏi số, tên, vai trò rồi mới tới Lead / tiệm / Issue, Note). Tin nhắn không đổi, cảnh báo `Còn thiếu` theo thứ tự mới. §22.1
 - `v2026-11-25.1` · Chuyển case Sales: tag thêm `@daisy_sale_leader` → `@daisy_sale_leader @Kyo_SaleAdmin @Stella_SalesAdmin`, mọi giờ (không theo ca). §22.2

@@ -1,22 +1,37 @@
-/* styles/form.css — Khu Nhập: trường, mục, ô Loại, danh sách ý, thẻ chọn, form SMS. */
+/* styles/form.css — Khu Nhập: tờ phiếu, trường, mục, ô Loại, danh sách ý, thẻ chọn, form SMS. */
+/* Cả form là 1 tờ phiếu liền: mục ngăn bằng đường kẻ, tên mục ở cột trái (không chặt thành nhiều thẻ giống nhau). */
+#form { padding: 4px 24px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+#form > .field:first-child, #form > :first-child { margin-top: 18px; }
 .field { margin-bottom: 14px; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }   /* Phone + Tên merchant */
-.field > label, .sec h3 { display: block; font-size: 14px; font-weight: 650; margin: 0 0 6px; }
+.field > label { display: block; font-size: 13px; font-weight: 500; margin: 0 0 6px; }
 .req { white-space: nowrap; margin-left: 8px; font-size: 12px; font-weight: 600; color: var(--warn-ink); background: var(--warn-bg); padding: 1px 8px; border-radius: 99px; }
 .text {
-  width: 100%; padding: 8px 10px; background: var(--panel);
-  border: 1px solid var(--line); border-radius: var(--radius);
+  width: 100%; padding: 9px 12px; background: var(--panel);
+  border: 1px solid var(--field); border-radius: var(--radius);
 }
-.sec { margin: 0 0 18px; padding: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+.sec {
+  display: grid; grid-template-columns: 130px minmax(0, 1fr); column-gap: 24px; align-items: start;
+  margin: 0; padding: 20px 0; border-bottom: 1px solid var(--line);
+}
+.sec:last-child { border-bottom: 0; }
+.sec > * { grid-column: 2; }
+.sec > h3 { grid-column: 1; grid-row: 1 / span 40; margin: 0; font-size: 15px; font-weight: 600; }   /* span đủ dài để cột phải xếp tự do */
+.rail-hint { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; font-weight: 400; }
+@container (max-width: 600px) {
+  .sec { display: block; }
+  .sec > h3 { margin-bottom: 10px; }
+}
+.sec-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px; margin-top: 8px; }
 .sec.dropping { outline: 2px dashed var(--accent); outline-offset: 2px; }
 .empty-state h3 { color: var(--muted); }
 
 /* Ô Loại */
 .combo { position: relative; }
-.combo-box { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 40px; padding: 5px 8px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); cursor: text; }
+.combo-box { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 42px; padding: 5px 8px; background: var(--panel); border: 1px solid var(--field); border-radius: var(--radius); cursor: text; }
 .combo-box:focus-within { outline: 2px solid var(--focus); outline-offset: 1px; }
 .combo-input { flex: 1; min-width: 120px; border: 0; outline: none; background: transparent; padding: 4px 2px; }
-.chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 10px; border-radius: 99px; background: var(--accent-soft); font-weight: 600; font-size: 14px; }
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px 2px 10px; border-radius: 6px; background: var(--selected-bg); color: var(--selected-ink); font-weight: 600; font-size: 13px; }
 .chip button { width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; line-height: 1; }
 .chip button:hover { color: var(--ink); background: var(--line); }
 .combo-list { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 20; max-height: 240px; overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 6px 20px rgba(0, 0, 0, .25); }
@@ -32,7 +47,7 @@
 .dash { width: 14px; padding-top: 8px; color: var(--muted); text-align: center; flex: none; }
 .block textarea {
   flex: 1; resize: none; overflow: hidden; min-height: 38px; padding: 8px 10px;
-  background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--panel); border: 1px solid var(--field); border-radius: var(--radius);
 }
 .tools { display: flex; gap: 2px; flex: none; }
 .tools button {
@@ -41,8 +56,8 @@
 }
 .tools button:hover:not(:disabled) { background: var(--accent-soft); color: var(--ink); }
 .tools button:disabled { opacity: .3; cursor: default; }
-.add { background: transparent; border: 1px dashed var(--line); color: var(--accent-text); padding: 6px 12px; border-radius: var(--radius); cursor: pointer; }
-.add:hover { border-color: var(--accent); }
+.add { background: transparent; border: 0; color: var(--accent-text); font-weight: 600; padding: 6px 4px; border-radius: var(--radius); cursor: pointer; }
+.add:hover { text-decoration: underline; }
 .shot { display: inline-flex; gap: 2px; }
 .shot-switch { padding: 6px 8px; }
 .hint { color: var(--muted); font-size: 13px; margin-top: 6px; }
@@ -70,7 +85,7 @@
 .thumb.drop-target img { outline: 2px solid var(--focus); outline-offset: 2px; }
 
 /* SMS Promotion */
-.sms-box { background: var(--sms-bg); border-color: var(--sms-line); }
+.sms-box { display: block; margin: 0 -24px; padding: 20px 24px; background: var(--sms-bg); }   /* tràn hết bề ngang tờ phiếu */
 .sms-toggle { display: flex; align-items: center; gap: 8px; cursor: pointer; }
 .sms-fields { margin-top: 12px; }
 .sms-message { resize: none; overflow: hidden; min-height: 60px; }
@@ -101,4 +116,4 @@
 .pass-tag-add .combo { flex: 1; }
 .pass-multiline { resize: none; overflow: hidden; min-height: 60px; }
 .pass-tips { margin: 0 0 14px; padding: 10px 12px 10px 28px; color: var(--muted); font-size: 13px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
-.pass-jump { margin: -4px 0 12px; }   /* nút Chuyển case CS ngay dưới hàng Phone */
+.pass-jump { margin: -2px 0 0; }   /* nút pass case cho CS ngay dưới hàng Phone */

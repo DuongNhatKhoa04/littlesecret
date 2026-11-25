@@ -40,7 +40,7 @@
     function render() {
       clearTimeout(timer);
       last = outputService.compute();
-      $('#titleBlock').hidden = !last.showTitle;
+      $('#titleBlock').hidden = $('#fillDock').hidden = !last.showTitle;   // không có title (Chuyển case, SMS) thì không điền ticket được
       $('#outTitle').textContent = last.title;
       $('#outBody').textContent = last.body;
       $('#stTitle').textContent = $('#stBody').textContent = $('#stSms').textContent = '';

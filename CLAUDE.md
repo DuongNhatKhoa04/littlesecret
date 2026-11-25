@@ -46,6 +46,7 @@ Tool web 1 trang giúp support viết ticket (Title + Nội dung để copy) và
 ticket-writer/
 ├─ index.html                  File chính. Khung HTML + danh sách <script> theo thứ tự layer
 ├─ styles/                     CSS, mỗi file 1 vùng giao diện
+│  ├─ fonts.css · fonts/       font Be Vietnam Pro (woff2 + OFL.txt), nằm trong folder vì chạy file:// không có mạng
 │  ├─ tokens.css               màu, bo góc, font (light + dark; data-theme trên <html> = người dùng chọn Sáng/Tối)
 │  ├─ layout.css · form.css · checklist.css · output.css · dialog.css
 ├─ config/                     DỮ LIỆU: chỉ khai báo, không có logic

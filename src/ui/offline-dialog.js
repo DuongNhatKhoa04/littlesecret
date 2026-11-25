@@ -1,4 +1,4 @@
-// src/ui/offline-dialog.js — Nút "Lưu offline" (hỏi Business zipcode + Ticket type + Tier, tải 1 file JSON / ZIP) và "Mở file offline" (chọn file đó, nạp lại vào form).
+// src/ui/offline-dialog.js — Mục "Lưu ticket ra file" (hỏi Business zipcode + Ticket type + Tier, tải 1 file JSON / ZIP) và "Mở file đã lưu" (chọn file đó, nạp lại vào form).
 (function (TW) {
   'use strict';
 
@@ -7,7 +7,7 @@
   const EMPTY_TICKET = 'Ticket đang trống, chưa có gì để lưu offline.';
   const IMAGE_ERROR = 'Đã tải file ticket, nhưng ảnh / PDF không gói vào được. Bấm "Tải tất cả (ZIP)" / "Tải PDF" ở khối Ảnh để tự lưu ảnh.';
   const OPEN_CONFIRM = 'Ticket trong file sẽ thay ticket đang nhập (kể cả ảnh đang dán). Tiếp tục?';
-  const INVALID_FILE = 'File không phải ticket offline của Ticket Writer (chọn file .zip / .json đã tải bằng "Lưu offline"), hoặc loại ticket trong file không còn.';
+  const INVALID_FILE = 'File không phải ticket offline của Ticket Writer (chọn file .zip / .json đã tải bằng "Lưu ticket ra file"), hoặc loại ticket trong file không còn.';
 
   /** @param {{ offlineService: object, tiers: string[] }} deps   tiers: lựa chọn ô Tier (config) */
   function createOfflineDialog({ offlineService, tiers }) {

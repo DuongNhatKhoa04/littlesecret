@@ -15,7 +15,7 @@
       sessionSaveFailed: {
         level: 'error',
         when: 'Ghi ticket đang nhập / form SMS vào localStorage bị lỗi (đầy hoặc bị chặn)',
-        message: 'Không lưu được nội dung đang nhập vào trình duyệt (bộ nhớ đầy hoặc bị chặn). Tải lại trang sẽ mất phần đang nhập — dùng Lưu offline để giữ lại.'
+        message: 'Không lưu được nội dung đang nhập vào trình duyệt (bộ nhớ đầy hoặc bị chặn). Tải lại trang sẽ mất phần đang nhập — dùng Khác → Lưu ticket ra file để giữ lại.'
       },
       imageSaveFailed: {
         level: 'error',

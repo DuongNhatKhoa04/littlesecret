@@ -12,7 +12,7 @@ Chạy hoàn toàn trên máy: không server, không Internet, không cài gì. 
 ## Dùng
 
 1. Double-click **`index.html`** (Chrome hoặc Edge bản mới).
-2. Cạnh tên app hiện `version` (vd `v2026-11-12.14`) để biết đang mở đúng bản.
+2. Cuối menu `Khác` hiện `version` (vd `v2026-11-12.14`) để biết đang mở đúng bản.
 3. Nhận ảnh từ iPad / iPhone: **đang tạm ẩn** (nhóm dùng Send Anywhere). Bật lại: đặt `phoneUpload.hidden: false` trong `config/app.js`, rồi xem [phone-upload/README.md](phone-upload/README.md).
 
 ## Gửi cho đồng nghiệp

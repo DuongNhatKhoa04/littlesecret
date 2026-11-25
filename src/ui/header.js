@@ -1,4 +1,4 @@
-// src/ui/header.js — Header: version, chế độ xem (Alt+M), đổi bên, Ticket mới (ở SMS Shipping / Xin review / Chuyển case: chỉ xóa form đang mở).
+// src/ui/header.js — Header: version (trong menu Khác), chế độ xem (Alt+M), đổi bên, Ticket mới (ở SMS Shipping / Xin review / Chuyển case: chỉ xóa form đang mở).
 (function (TW) {
   'use strict';
 
@@ -43,6 +43,8 @@
       if (target) viewService.setMode(target.dataset.mode);
     });
     $('#swapBtn').addEventListener('click', viewService.toggleSwap);
+    // Mục trong menu Khác tự chạy việc của nó (listener riêng); menu chỉ cần đóng lại sau khi bấm.
+    $('#moreMenu').addEventListener('click', (event) => { if (event.target.closest('button')) $('#moreMenu').hidePopover(); });
     $('#resetBtn').addEventListener('click', reset);
     document.addEventListener('keydown', (event) => {
       if (event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === 'm') {

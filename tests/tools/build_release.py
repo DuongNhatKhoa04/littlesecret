@@ -8,6 +8,7 @@ Không có docs/, tests/, tên file, cấu trúc thư mục, comment. Code vẫn
 thì không giấu được), chỉ khó đọc / khó sửa hơn.
 Dữ liệu đã lưu (ticket đang nhập, template, tag…) không mất khi đổi sang bản này: Chrome cho mọi trang file:// chung 1 kho lưu trữ.
 """
+import base64
 import pathlib
 import re
 import sys
@@ -19,6 +20,7 @@ STYLE_TAG = re.compile(r'<link rel="stylesheet" href="([^"]+)">\n?')
 SCRIPT_TAG = re.compile(r'<script src="([^"]+)"></script>\n?')
 HTML_COMMENT = re.compile(r"[ \t]*<!--.*?-->[ \t]*\n?", re.S)
 CSS_COMMENT = re.compile(r"/\*.*?\*/", re.S)
+CSS_URL = re.compile(r'url\("([^":)]+)"\)')   # url("fonts/…") tương đối: bản 1 file không có folder styles/ để trỏ tới
 # Sau các ký tự / từ này, "/" mở đầu regex chứ không phải phép chia
 REGEX_AFTER_CHARS = set("(,=:[!&|?{};+-*%<>~^")
 REGEX_AFTER_WORDS = {"return", "typeof", "case", "in", "of", "delete", "void", "throw", "new", "else", "do"}
@@ -111,6 +113,14 @@ def strip_css(source):
     return "\n".join(line for line in lines if line) + "\n"
 
 
+def inline_urls(css, css_path):
+    """Nhúng file font (url tương đối trong CSS) thành data: URI."""
+    def to_data(match):
+        data = base64.b64encode((css_path.parent / match.group(1)).read_bytes()).decode("ascii")
+        return 'url("data:font/woff2;base64,%s")' % data
+    return CSS_URL.sub(to_data, css)
+
+
 def safe_inline(code):
     """Chữ </script> / <!-- trong code làm hỏng thẻ <script> khi nhúng thẳng vào HTML."""
     return code.replace("</script", "<\\/script").replace("<!--", "<\\!--")
@@ -120,7 +130,7 @@ def build():
     html = (ROOT / "index.html").read_text(encoding="utf-8")
     styles = STYLE_TAG.findall(html)
     scripts = SCRIPT_TAG.findall(html)
-    css = "".join(strip_css((ROOT / href).read_text(encoding="utf-8")) for href in styles)
+    css = "".join(inline_urls(strip_css((ROOT / href).read_text(encoding="utf-8")), ROOT / href) for href in styles)
     js = "".join(strip_js((ROOT / src).read_text(encoding="utf-8")) for src in scripts)
 
     html = HTML_COMMENT.sub("", html)

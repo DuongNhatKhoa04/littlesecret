@@ -42,17 +42,21 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 
 - HTML + CSS + JS thuần, không thư viện ngoài, không cần server, mở bằng trình duyệt (Chrome/Edge).
 - Dữ liệu lưu trong `localStorage` của trình duyệt trên máy người dùng. Không gửi đi đâu.
-- Ảnh lưu trong **IndexedDB** của trình duyệt (§12): tải lại trang / mở lại Chrome vẫn còn. `Ticket mới` và `Mở file offline` xóa ảnh. IndexedDB bị chặn/đầy → ảnh chỉ giữ trong bộ nhớ như trước, không báo lỗi.
+- Ảnh lưu trong **IndexedDB** của trình duyệt (§12): tải lại trang / mở lại Chrome vẫn còn. `Ticket mới` và `Mở file đã lưu` xóa ảnh. IndexedDB bị chặn/đầy → ảnh chỉ giữ trong bộ nhớ như trước, không báo lỗi.
 - Giao diện sáng / tối: nút ở header xoay vòng `◐ Tự động` (theo hệ điều hành, mặc định) → `☀ Sáng` → `☾ Tối`. Lựa chọn lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`.
 - Hỗ trợ gõ tiếng Việt bằng IME (Unikey…): không xử lý phím Enter/Backspace, không viết hoa khi đang gõ dấu.
-- Hiện `version` cạnh tên app để biết đang mở đúng bản mới.
+- Hiện `version` ở cuối menu `Khác` (`Phiên bản v…`) để biết đang mở đúng bản mới.
 
 ## 3. Bố cục giao diện
 
-**Header**: tên app + version · các nút chọn **loại ticket** (bản mới: chọn theo cấp, xem §14.2) · chế độ xem (`Chia đôi` / `Nhập` / `Kết quả`) · `Template` · `+ Lưu template` · `Lưu offline` · `Mở file offline` (§19) · `Sao lưu` · `Khôi phục` (§23) · `⇄ Đổi bên` · `Nhận ảnh iOS` (§21) · nút giao diện (`◐ Tự động` / `☀ Sáng` / `☾ Tối`) · `Ticket mới`.
+**Header** (1 hàng, màn hình hẹp thì xuống hàng): tên app, dưới là `Developed by Ryan` · **tab chọn loại** (§14.2) · chế độ xem (3 nút icon `Chia đôi` / `Nhập` / `Kết quả`, chữ hiện khi rê chuột) · `Template` · `Khác` · `Nhận ảnh iOS` (§21) · nút giao diện (`◐ Tự động` / `☀ Sáng` / `☾ Tối`) · `Ticket mới` (nút chính).
+
+**Menu `Khác`** (bấm ra ngoài / Esc là đóng, bấm 1 mục là chạy rồi đóng): `Lưu ticket làm template` (§11) · *Khi ticket system không vào được*: `Lưu ticket ra file`, `Mở file đã lưu` (§19) · *Khi đổi máy hoặc trình duyệt*: `Sao lưu gợi ý và template`, `Khôi phục từ file sao lưu` (§23) · `Đổi bên Nhập và Kết quả` · `Phiên bản v…`.
+
+**Khu Nhập** là 1 tờ phiếu: các mục ngăn bằng đường kẻ, tên mục ở cột trái (mục đầu `Cuộc gọi`: Loại, Tóm tắt, Phone / Tên / Vai trò); khu Nhập hẹp dưới 600px thì tên mục nằm trên. **Khu Kết quả** là khối tím đậm (cả giao diện sáng lẫn tối): Title, Nội dung, SMS, Ảnh; `Copy để điền` + `Cài bookmark Điền ticket` ghim ở đáy khối (chỉ hiện khi có Title). Font **Be Vietnam Pro** nằm trong `styles/fonts/` (chạy `file://` không cần mạng; bản gộp 1 file nhúng sẵn).
 
 **Chế độ xem**
-- `Chia đôi`: trái Nhập, phải Kết quả. `⇄ Đổi bên` đảo trái/phải (chỉ bật ở Chia đôi).
+- `Chia đôi`: trái Nhập, phải Kết quả. `Khác` → `Đổi bên Nhập và Kết quả` đảo trái/phải (chỉ bật ở Chia đôi).
 - `Nhập` / `Kết quả`: chỉ hiện 1 bên.
 - Màn hình hẹp (< 800px): không có Chia đôi, tự chuyển thành `Nhập`; ẩn nút Chia đôi và Đổi bên.
 - `Alt+M`: xoay vòng chế độ.
@@ -242,7 +246,7 @@ Việc cần làm tiếp:
 
 ## 11. Template
 
-- `+ Lưu template`: lưu ticket hiện tại, **tên = title**. Trùng tên → hỏi ghi đè. Chưa có title → báo cần nhập Loại/Tóm tắt.
+- `Khác` → `Lưu ticket làm template`: lưu ticket hiện tại, **tên = title**. Trùng tên → hỏi ghi đè. Chưa có title → báo cần nhập Loại/Tóm tắt.
 - Template lưu: loại ticket, Loại, Tóm tắt, Kết luận, các mục (đã bỏ ý trống). (Bản gốc lưu thêm `variant`; bản mới bỏ qua trường này, template cũ vẫn dùng được.) **Không lưu** Phone, trạng thái checklist, ảnh.
 - `Template` (`Alt+T`): dialog tìm theo Tóm tắt (phần sau `LOẠI - ` của title, không tìm theo Loại), không phân biệt dấu, khớp mọi từ, sắp theo tên. Enter = dùng kết quả đầu. Mỗi dòng có × xóa (hỏi xác nhận).
 - Dùng template: nếu đang có nội dung → hỏi xác nhận; ghi đè mọi thứ trừ Phone; chuyển sang loại của template.
@@ -284,9 +288,9 @@ Việc cần làm tiếp:
 
 ### 14.2 Chọn loại ticket theo cấp (thay hàng nút phẳng)
 
-**Cấp 1 — Nhóm**: `Viết ticket` | `Setup / Training` | `SMS`.
+**1 hàng tab** (từ `v2026-11-25.4`, thay 2 tầng Nhóm → loại): `Hỗ trợ merchant` | `Chuyển case` | `Setup / Training` | `SMS Shipping` | `Xin review`. Bấm tab là vào luôn nhóm của loại đó (state vẫn lưu nhóm + loại như cũ). Nhóm `Viết ticket` / `SMS` không còn nút riêng; nhóm `Setup / Training` là 1 tab, chọn rồi mới hiện các cấp bên dưới.
 
-`Setup / Training` đang **tạm ẩn** (`hidden: true` trong `config/app.js`): không hiện nút; phiên đã lưu ở nhóm này mở lại về `Viết ticket`, chữ đã nhập vẫn giữ. Dùng template loại setup thì vẫn mở checklist.
+`Setup / Training` đang **tạm ẩn** (`hidden: true` trong `config/app.js`): không hiện tab; phiên đã lưu ở nhóm này mở lại về `Viết ticket`, chữ đã nhập vẫn giữ. Dùng template loại setup thì vẫn mở checklist.
 
 **SMS** → chọn loại tin nhắn: `Shipping` (xem §17) | `Xin review` (xem §18). SMS Promotion nằm trong `Hỗ trợ merchant` (xem §16), không còn tab riêng.
 
@@ -487,7 +491,7 @@ Have a good day!
 - Ẩn khối Title; có khối Nội dung + `Copy nội dung`. Không có khối Ảnh; Ctrl+V ảnh không làm gì.
 - `Alt+2` = Copy nội dung (§9); `Alt+1` không làm gì vì không có Title.
 - **Copy nội dung** khóa khi tin nhắn rỗng hoặc còn thiếu Tên merchant / Tracking Number / Estimated Delivery. Dòng cảnh báo vàng: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.`
-- `+ Lưu template` bị khóa.
+- `Lưu ticket làm template` bị khóa.
 - `Ticket mới`: hỏi xác nhận → xóa form SMS Shipping, không đụng ticket và khối SMS Promotion.
 - Form SMS Shipping và ticket (kể cả khối SMS Promotion) lưu riêng: chuyển qua lại giữa các nhóm không mất dữ liệu bên nào.
 
@@ -530,7 +534,7 @@ Chúc anh/chị một ngày tốt lành!
 - Ẩn khối Title; có khối Nội dung + `Copy nội dung`. Không có khối Ảnh; Ctrl+V ảnh không làm gì.
 - `Alt+2` = Copy nội dung (§9); `Alt+1` không làm gì vì không có Title.
 - **Copy nội dung** khóa khi tin nhắn rỗng. Gõ bang không có trong danh sách thì có dòng cảnh báo vàng: `Còn thiếu: Bang hợp lệ. Điền đủ rồi mới copy được.`
-- `+ Lưu template` bị khóa.
+- `Lưu ticket làm template` bị khóa.
 - `Ticket mới`: hỏi xác nhận → xóa form SMS Xin review (giữ Tên nhân viên), không đụng ticket và các form SMS khác.
 
 ### 18.4 Kế hoạch (chưa làm): nút Copy dòng Excel
@@ -543,9 +547,9 @@ Chúc anh/chị một ngày tốt lành!
 
 Lưu ticket ra file trên máy, khi ticket system vào lại được thì mở file, nạp lại vào form rồi dùng `Copy để điền` + bookmark `Điền ticket` (§9) như bình thường. Không lưu gì trong browser: file nằm ở thư mục Downloads, không mất khi xóa dữ liệu Chrome, mang sang máy khác được.
 
-### 19.1 Lưu offline
+### 19.1 Lưu offline (mục `Lưu ticket ra file`)
 
-- Nút `Lưu offline` ở header. Khóa khi không có loại ticket (nhóm SMS, nhánh setup chưa có checklist) và ở **Chuyển case** (tin nhắn group, không phải ticket). Ticket trống (chưa có title lẫn nội dung) → báo, không mở hộp.
+- `Khác` → `Lưu ticket ra file`. Khóa khi không có loại ticket (nhóm SMS, nhánh setup chưa có checklist) và ở **Chuyển case** (tin nhắn group, không phải ticket). Ticket trống (chưa có title lẫn nội dung) → báo, không mở hộp.
 - Hộp hỏi: **Business zipcode**, **Ticket type** (ô text, nhân viên tự điền) và **Tier** (chọn `0.5` / `1` / `1.5` / `2` / `2.5` / `3`, `offlineTiers` trong `config/app.js`), đều bắt buộc. Có ảnh thì có thêm ô tick `Tải kèm PDF ảnh` (mặc định không tick).
 - Bấm `Lưu` → tải **đúng 1 file** (Chrome tự chặn file thứ 2 trở đi trong cùng 1 lần bấm). Mọi file dùng chung **tên gốc** `OFF-YYYYMMDD-HHmmss - <TITLE>` (chỉ ASCII như §10, mã OFF-… theo giờ máy lúc lưu):
   - Không có ảnh → `<tên gốc>.json`.
@@ -554,9 +558,9 @@ Lưu ticket ra file trên máy, khi ticket system vào lại được thì mở 
 - Tạo PDF lỗi → ZIP không có PDF, báo. Tạo ZIP lỗi → chỉ tải `.json` (giữ được phần chữ), báo để tự bấm `Tải tất cả (ZIP)` / `Tải PDF`.
 - Lưu xong form giữ nguyên; muốn làm ticket khác thì bấm `Ticket mới`.
 
-### 19.2 Mở file offline
+### 19.2 Mở file offline (mục `Mở file đã lưu`)
 
-- Nút `Mở file offline` khóa ở **Chuyển case**. Loại khác → nếu đang có nội dung hoặc ảnh thì hỏi xác nhận → chọn file `.zip` (đọc file `.json` bên trong, không cần giải nén) hoặc file `.json`.
+- `Khác` → `Mở file đã lưu`: khóa ở **Chuyển case**. Loại khác → nếu đang có nội dung hoặc ảnh thì hỏi xác nhận → chọn file `.zip` (đọc file `.json` bên trong, không cần giải nén) hoặc file `.json`.
 - File đúng → chuyển về đúng loại ticket / nhánh setup trong file, thay toàn bộ ticket đang nhập, bỏ ảnh đang dán; báo mã, Business zipcode, Ticket type, Tier (file lưu trước khi có Tier → `(chưa có)`), file ZIP chứa ảnh (+ PDF).
 - File không phải ticket offline / loại ticket trong file không còn → báo, không đổi gì.
 - Ảnh không tự nạp lại: giải nén ZIP rồi dán / kéo thả vào từng mục (tên ảnh trong ZIP ghi mục nào).
@@ -644,7 +648,7 @@ iPad (Safari) ──LAN──► phone-upload (port 8765) ◄── Ticket Write
 - **CBN**: ô Phone, tự format như §4. **Vai trò tại tiệm**: `Owner` / `Manager` / `Staff` / `Partner`, bấm lại lựa chọn đang chọn là bỏ chọn. **Issue**, **Note**: ô nhiều dòng.
 - **Issue** (MKT, CS, Tech) có ô dán ảnh + `+ Thêm ảnh (Ctrl+V)` + nút chụp màn hình, giống mục ticket (§10): Ctrl+V ảnh khi đang gõ trong Issue cũng vào ảnh Issue. Đổi qua lại MKT / CS / Tech giữ ảnh (cùng trường Issue).
 - Mọi team có ô tick **GẤP**, nằm ngay dưới ô Issue (Sales: dưới Note) để viết xong mô tả là tick luôn. Đổi team vẫn giữ tick.
-- **Từ ticket sang CS**: form ticket (Hỗ trợ merchant) có nút `Chuyển case CS →` ngay dưới hàng Phone (không vào Tab, Enter ở Tên merchant vẫn sang ý đầu). Bấm → mở Chuyển case team **CS**, điền **CBN** ← Phone, **Tên người liên hệ** ← Tên merchant, **Vai trò** ← Vai trò; ô ticket trống thì giữ chữ đang có ở Chuyển case. Ticket không đổi. Vì CS cần Link Ticket: viết ticket → Điền ticket tạo ticket → bấm nút → lấy Link Ticket / Issue (và ZIP từ trang Lead) bằng bookmark §22.4. Khai báo ở `fromTicket` trong config.
+- **Từ ticket sang CS**: form ticket (Hỗ trợ merchant) có nút chữ `Pass case cho CS, mang theo Phone, Tên và Vai trò` ngay dưới hàng Phone (không vào Tab, Enter ở Tên merchant vẫn sang ý đầu). Bấm → mở Chuyển case team **CS**, điền **CBN** ← Phone, **Tên người liên hệ** ← Tên merchant, **Vai trò** ← Vai trò; ô ticket trống thì giữ chữ đang có ở Chuyển case. Ticket không đổi. Vì CS cần Link Ticket: viết ticket → Điền ticket tạo ticket → bấm nút → lấy Link Ticket / Issue (và ZIP từ trang Lead) bằng bookmark §22.4. Khai báo ở `fromTicket` trong config.
 - **CS** và **Tech** có khung lưu ý (kiểm tra ticket, Proof, Dispute, quá tải cuộc gọi / phạm vi FRT, Reconnect Terminal, case khẩn cấp) theo thông báo pass case.
 
 ### 22.2 Tin nhắn (output)
@@ -696,7 +700,7 @@ Thanks team !                       Thanks team !
 - Giống §17: ẩn Title, có Nội dung + `Copy nội dung` (`Alt+2`).
 - **Khối Ảnh**: chỉ ảnh Issue của Chuyển case (nhãn `Issue`, `Issue – ảnh N`), copy từng ảnh / tải ZIP / PDF như ticket. Ảnh lưu như ảnh ticket (IndexedDB): F5 không mất. Ctrl+V ảnh ngoài ô nhập → vào Issue; team không có Issue (Sales) → không làm gì. Tin nhắn không ghi gì về ảnh.
 - **Copy nội dung** khóa khi tin nhắn rỗng hoặc còn trường bắt buộc trống; cảnh báo `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.`
-- `+ Lưu template` bị khóa.
+- `Lưu ticket làm template` bị khóa.
 - `Ticket mới`: hỏi xác nhận → xóa form Chuyển case (về team Sales) và ảnh Issue, không đụng ticket, ảnh ticket và các form SMS. `Ticket mới` ở Viết ticket xóa hết ảnh, kể cả ảnh Chuyển case (cùng 1 cuộc gọi).
 - Form lưu riêng (`passCase` trong `storageKey`): F5 không mất, chuyển qua lại với Hỗ trợ merchant không mất dữ liệu bên nào. State bản trước chưa có → form trống.
 
@@ -729,12 +733,12 @@ Có từ `v2026-11-24.26` tới `v2026-11-24.30`, bỏ ở `v2026-11-24.31` vì 
 
 Dữ liệu lưu trong trình duyệt (§12) không tự theo sang máy khác, trình duyệt khác hay profile Chrome khác. Đổi folder / file app (vd sang bản gộp `release/ticket-writer.html`) thì **không** cần: Chrome cho mọi trang `file://` chung 1 kho.
 
-- Nút `Sao lưu` ở header → tải **1 file** `ticket-writer-backup-YYYYMMDD-HHmm.json` (giờ máy). Gồm các key trong `backupKeys` (`config/app.js`), key chưa có dữ liệu thì không ghi:
+- `Khác` → `Sao lưu gợi ý và template` → tải **1 file** `ticket-writer-backup-YYYYMMDD-HHmm.json` (giờ máy). Gồm các key trong `backupKeys` (`config/app.js`), key chưa có dữ liệu thì không ghi:
   - `ticketWriter.summaries.v1`: gợi ý Tóm tắt (Viết ticket, §12).
   - `ticketWriter.passTags.v1`: gợi ý tên người support thêm của Chuyển case, riêng Sales / MKT / CS / Tech (§22).
   - `ticketWriter.templates.v1`: template (§11).
   - **Không** có: ticket / form đang nhập (thông tin merchant), Loại tự thêm, tên nhân viên, giao diện, ảnh đang dán, link Nhận ảnh iOS (mã gắn với từng máy).
-- Nút `Khôi phục` → hỏi xác nhận (dữ liệu trong file **thay** dữ liệu đang có trên máy này) → chọn file sao lưu:
+- `Khác` → `Khôi phục từ file sao lưu` → hỏi xác nhận (dữ liệu trong file **thay** dữ liệu đang có trên máy này) → chọn file sao lưu:
   - Đúng file → ghi đè từng key có trong file; key file không có thì giữ nguyên; key ngoài `backupKeys` trong file thì bỏ. Rồi **tải lại trang** để mọi phần dùng dữ liệu mới. Ticket đang nhập, ảnh đang dán không đổi.
   - Không phải file sao lưu (vd file ticket offline, file template) → báo, không đổi gì.
   - Bộ nhớ trình duyệt đầy / bị chặn → báo có dữ liệu không ghi được, phần đã ghi vẫn giữ.

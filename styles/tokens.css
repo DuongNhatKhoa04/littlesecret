@@ -1,57 +1,60 @@
 /* styles/tokens.css — Màu, bo góc, font (light + dark) và style nền. */
-/* Palette Castorice (Honkai: Star Rail, fandomcolors.com): #c9b3ff melrose (màu chính) · #7cd7ff anakiwa · #1e90ff dodger blue · #0b3b5a tarawera · #f7fbff alice blue.
-   #c9b3ff quá nhạt để làm nền dưới chữ trắng => --accent sáng dùng bản đậm #6a4fd0, chữ/link dùng --accent-text; Tối dùng thẳng #c9b3ff với chữ tím đậm.
-   Xanh anakiwa làm màu phụ: nút đã copy, khung SMS.
-   Màu chữ đã kiểm tra tương phản >= 4.5:1 trên nền tương ứng (WCAG AA), khung focus >= 3:1. */
+/* Palette Castorice (Honkai: Star Rail, fandomcolors.com): #c9b3ff melrose · #7cd7ff anakiwa · #1e90ff dodger blue · #0b3b5a tarawera · #f7fbff alice blue.
+   Sáng: nền alice blue, chữ tím đậm #1d1640, nút chính #5b3fc4 (chữ trắng). Tối: nút chính #c9b3ff với chữ tím đậm.
+   Khu Kết quả là khối tím đậm (--slab*) ở cả 2 giao diện: đây là thứ sẽ được copy đi nên nổi nhất trang. Ở Tối khối sáng hơn nền 1 bậc.
+   Xanh anakiwa = đã copy / đủ điều kiện. Màu chữ đã kiểm tra tương phản >= 4.5:1 trên nền tương ứng (WCAG AA), khung focus >= 3:1. */
 :root {
   color-scheme: light dark;   /* thanh cuộn, ô nhập của trình duyệt theo theme */
-  --bg: #f8f6ff; --panel: #ffffff; --ink: #0b3b5a; --muted: #5a5680;
-  --line: #e4dcff; --accent: #6a4fd0; --accent-ink: #ffffff; --accent-text: #5b3fc4; --accent-soft: #efe9ff; --focus: #8a6cf0;
-  --selected-bg: #e4d9ff; --selected-ink: #2a1660;   /* nút đang chọn: nhạt hơn --accent cho đỡ gắt */
-  --btn-bg: #ece4ff; --btn-ink: #2a1660; --btn-line: #c9b3ff; --btn-hover: #c9b3ff;   /* nút Copy / Tải */
+  --bg: #f7fbff; --panel: #ffffff; --ink: #1d1640; --muted: #5d5880;
+  --line: #e3e1f0; --field: #cfc8ea; --accent: #5b3fc4; --accent-ink: #ffffff; --accent-text: #5b3fc4; --accent-soft: #ebe4ff; --focus: #8a6cf0;
+  --selected-bg: #ebe4ff; --selected-ink: #2a1660;   /* lựa chọn đang chọn: nhạt, không gắt như nút chính */
+  --btn-bg: #ebe4ff; --btn-ink: #2a1660; --btn-line: #c9b3ff; --btn-hover: #c9b3ff;   /* nút Copy / Tải ngoài khu Kết quả (hộp thoại) */
   --done-bg: #dff4ff; --done-ink: #0b3b5a; --done-line: #7cd7ff;                     /* nút đã copy (Copy lại) */
-  --warn-bg: #fff0cc; --warn-ink: #7a4a00; --ok: #0d7f5f; --out-bg: #fcfbff;
+  --warn-bg: #fff3d6; --warn-ink: #7a4a00; --ok: #0b6e52; --out-bg: #fbfaff;
   --err-bg: #fdd8d8; --err-ink: #a3141c;
   --urgent-bg: #fdf1f1; --urgent-line: #efb9be;   /* ô GẤP chưa tick: đỏ chìm, tick thì dùng --err-* */
   --sms-bg: #eef8ff; --sms-line: #7cd7ff;
-  --radius: 8px;
+  --slab: #221a4a; --slab-dock: #1b143d; --slab-line: #3a2f6e; --slab-ink: #f7fbff; --slab-text: #ece6ff; --slab-muted: #c9b3ff;
+  --radius: 8px; --radius-lg: 14px;
+  --font: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
   scrollbar-color: var(--btn-hover) transparent;
 }
 /* Tối: theo hệ điều hành (data-theme chưa gắn = Tự động) hoặc người dùng chọn Tối. 2 khối phải giữ giống nhau. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #120f24; --panel: #1c1736; --ink: #f7fbff; --muted: #c9b3ff;
-    --line: #352c5e; --accent: #c9b3ff; --accent-ink: #1c0f40; --accent-text: #c9b3ff; --accent-soft: #2e2557; --focus: #c9b3ff;
-    --selected-bg: #c9b3ff; --selected-ink: #1c0f40;
+    --bg: #120f24; --panel: #1b1636; --ink: #f7fbff; --muted: #b9b0e3;
+    --line: #2f2858; --field: #453c78; --accent: #c9b3ff; --accent-ink: #1c0f40; --accent-text: #c9b3ff; --accent-soft: #2e2557; --focus: #c9b3ff;
+    --selected-bg: #3a2f73; --selected-ink: #f7fbff;
     --btn-bg: #c9b3ff; --btn-ink: #1c0f40; --btn-line: #c9b3ff; --btn-hover: #ddd0ff;
     --done-bg: #7cd7ff; --done-ink: #062033; --done-line: #7cd7ff;
-    --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #171230;
+    --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #151129;
     --err-bg: #4a1a22; --err-ink: #ffb3bd;
     --urgent-bg: #2b1621; --urgent-line: #6e2f3c;
     --sms-bg: #142a40; --sms-line: #7cd7ff;
+    --slab: #2a2060; --slab-dock: #231a52; --slab-line: #45398a;
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #120f24; --panel: #1c1736; --ink: #f7fbff; --muted: #c9b3ff;
-  --line: #352c5e; --accent: #c9b3ff; --accent-ink: #1c0f40; --accent-text: #c9b3ff; --accent-soft: #2e2557; --focus: #c9b3ff;
-  --selected-bg: #c9b3ff; --selected-ink: #1c0f40;
+  --bg: #120f24; --panel: #1b1636; --ink: #f7fbff; --muted: #b9b0e3;
+  --line: #2f2858; --field: #453c78; --accent: #c9b3ff; --accent-ink: #1c0f40; --accent-text: #c9b3ff; --accent-soft: #2e2557; --focus: #c9b3ff;
+  --selected-bg: #3a2f73; --selected-ink: #f7fbff;
   --btn-bg: #c9b3ff; --btn-ink: #1c0f40; --btn-line: #c9b3ff; --btn-hover: #ddd0ff;
   --done-bg: #7cd7ff; --done-ink: #062033; --done-line: #7cd7ff;
-  --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #171230;
+  --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #151129;
   --err-bg: #4a1a22; --err-ink: #ffb3bd;
   --urgent-bg: #2b1621; --urgent-line: #6e2f3c;
   --sms-bg: #142a40; --sms-line: #7cd7ff;
+  --slab: #2a2060; --slab-dock: #231a52; --slab-line: #45398a;
 }
 :root[data-theme="light"] { color-scheme: light; }
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
-body {
-  background: var(--bg); color: var(--ink);
-  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font); }
 button, input, textarea, select { font: inherit; color: inherit; }
-button:focus-visible, input:focus-visible, textarea:focus-visible, label:focus-within {
+button:focus-visible, input:focus-visible, textarea:focus-visible, label:focus-within, summary:focus-visible {
   outline: 2px solid var(--focus); outline-offset: 1px;
 }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }   /* chữ cho trình đọc màn hình / test, mắt không thấy */
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }

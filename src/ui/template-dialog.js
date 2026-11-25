@@ -1,4 +1,4 @@
-// src/ui/template-dialog.js — Nút "+ Lưu template", hộp "Template" (tìm, dùng, xóa), xuất / nhập JSON. Alt+T mở hộp.
+// src/ui/template-dialog.js — Mục "Lưu ticket làm template" (menu Khác), hộp "Template" (tìm, dùng, xóa), xuất / nhập JSON. Alt+T mở hộp.
 (function (TW) {
   'use strict';
 
@@ -46,7 +46,7 @@
       list.textContent = '';
       $('#tplCount').textContent = `${found.length}/${total} template`;
       if (!found.length) {
-        list.append(el('div', 'empty', total ? 'Không có template khớp.' : 'Chưa có template. Điền ticket rồi bấm "+ Lưu template".'));
+        list.append(el('div', 'empty', total ? 'Không có template khớp.' : 'Chưa có template. Điền ticket rồi bấm Khác → Lưu ticket làm template.'));
         return;
       }
       found.forEach(template => list.append(row(template)));

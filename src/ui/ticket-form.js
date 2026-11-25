@@ -39,7 +39,19 @@
     /** Case phải pass team khác (CS cần tạo ticket trước): sang Chuyển case, Phone / Tên / Vai trò đi theo. skipTab: Tab vẫn đi thẳng xuống ý. */
     function passCaseJump() {
       const box = el('div', 'pass-jump');
-      box.append(button('add', context.passCase.fromTicket.label, { skipTab: true, onClick: passCaseService.startFromTicket }));
+      box.append(button('link', context.passCase.fromTicket.label, { skipTab: true, onClick: passCaseService.startFromTicket }));
+      return box;
+    }
+
+    /** Mục đầu form: tên mục ở cột trái như các mục khác, để cả form đọc như 1 tờ phiếu. */
+    function callSection(type) {
+      const box = el('div', 'sec');
+      const heading = el('h3', '', app.labels.callSection);
+      heading.append(el('span', 'rail-hint', app.labels.callHint));
+      box.append(heading);
+      if (!type.noCategory) box.append(categoryCombo.build());
+      box.append(summaryField(), contactRow(), passCaseJump());
+      if (type.showLang) box.append(langField());
       return box;
     }
 
@@ -63,9 +75,9 @@
       const add = button('add', '+ Thêm ý', { skipTab: true, onClick: () => ticketService.appendIdea(section.key) });
       const [addImage, fileInput] = imageZone.addButton(section.key);
       const shot = imageZone.shotButton(section.key);
-      addImage.style.marginLeft = '8px';
-      shot.style.marginLeft = '8px';
-      box.append(ideaList.build(section), imageZone.zone(section.key), add, addImage, shot, fileInput, el('div', 'hint', IDEA_HINT));
+      const actions = el('div', 'sec-actions');   // 1 hàng nút, không phải mỗi nút 1 ô của cột phải
+      actions.append(add, addImage, shot, fileInput);
+      box.append(ideaList.build(section), imageZone.zone(section.key), actions, el('div', 'hint', IDEA_HINT));
       imageZone.acceptDrop(box, section.key);
     }
 
@@ -125,9 +137,7 @@
       root.textContent = '';
       const type = session.activeType();
       if (!type) { root.append(emptyState()); return; }
-      if (!type.noCategory) root.append(categoryCombo.build());
-      root.append(summaryField(), contactRow(), passCaseJump());
-      if (type.showLang) root.append(langField());
+      root.append(callSection(type));
       if (type.checklist) root.append(checklistView.build(type));   // checklist đứng trước, Note nằm sau
       type.sections.forEach(section => root.append(sectionBox(section)));
       if (type.smsPromotion) root.append(smsForm.build(focus));

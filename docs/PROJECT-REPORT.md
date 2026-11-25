@@ -84,7 +84,7 @@ Số có chữ "ước" là giả định, cần chỉnh theo thực tế.
 | Nhận ảnh iPad mở port 8765 qua HTTP không mã hóa | Cao nếu bật | Đang tắt; chỉ bật khi IT duyệt, chỉ trên Wi-Fi nội bộ |
 | Trang ticket system đổi giao diện → bookmark *Điền ticket* không điền | Thấp | Bookmark không điền gì khi thiếu ô, nên không điền nhầm; vẫn copy tay được |
 | Phụ thuộc 1 người bảo trì | Trung bình | Có sẵn ONBOARDING, REQUIREMENTS, CONFIG, sơ đồ kiến trúc; cử thêm 1 người duyệt |
-| Người dùng mở bản cũ, không biết có bản mới | Thấp | Version hiện cạnh tên app; báo bản mới kèm CHANGELOG |
+| Người dùng mở bản cũ, không biết có bản mới | Thấp | Version hiện cuối menu Khác; báo bản mới kèm CHANGELOG |
 | Thay đổi do AI viết có thể sửa ngoài yêu cầu | Trung bình | Bắt buộc người đọc diff trước khi phát hành (REVIEW.md §3) |
 | Thói quen cũ: một số bạn vẫn viết tay | Thấp | Pilot trước, lấy góp ý để chỉnh form |
 

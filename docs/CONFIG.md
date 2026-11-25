@@ -259,7 +259,7 @@ Loại `transfer` trong `config/tickets/transfer.js` có `passCase: true` nên h
 | `version` | `vYYYY-MM-DD.N`, tăng mỗi lần sửa |
 | `autoCapitalize` | Tự viết hoa chữ đầu mỗi dòng |
 | `debounceMs` | Độ trễ cập nhật Kết quả |
-| `offlineTiers` | Lựa chọn ô Tier trong hộp Lưu offline (§19) |
+| `offlineTiers` | Lựa chọn ô Tier trong hộp Lưu ticket ra file (§19) |
 | `backupKeys` | Tên các trường key localStorage đưa vào file Sao lưu (§23). Thêm key lưu mới mà cần mang sang máy khác thì thêm tên vào đây |
 | `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `phoneKey`, `summaryKey`, `tagKey` | Key localStorage. **Không đổi** |
 | `phoneUpload.pollMs` | Nhận ảnh iOS: bao lâu hỏi phone-upload 1 lần khi hàng chờ trống (REQUIREMENTS §21) |

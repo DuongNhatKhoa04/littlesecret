@@ -10,7 +10,7 @@ Mọi thứ nằm trên **máy đang dùng**, trong profile trình duyệt / tà
 |---|---|---|
 | Ticket đang nhập, form SMS, chế độ xem (`ticketWriter.v1`) | localStorage | `Ticket mới`, xóa dữ liệu trình duyệt |
 | Template, Loại tự thêm, tên nhân viên, giao diện, link phone-upload | localStorage (key ở REQUIREMENTS §12) | Xóa trong app / xóa dữ liệu trình duyệt |
-| Ảnh đang dán | IndexedDB `ticketWriter.images.v1` | `Ticket mới`, `Xóa hết ảnh`, `Mở file offline`, xóa dữ liệu trình duyệt |
+| Ảnh đang dán | IndexedDB `ticketWriter.images.v1` | `Ticket mới`, `Xóa hết ảnh`, `Mở file đã lưu`, xóa dữ liệu trình duyệt |
 | File tải xuống: ZIP / PDF ảnh, ticket offline (`OFF-….json/.zip`), `ticket-templates.json`, sao lưu (`ticket-writer-backup-….json`) | Thư mục Downloads | Người dùng tự xóa |
 | Mã bí mật phone-upload | `%LOCALAPPDATA%\TicketWriter\` | Người dùng tự xóa |
 | Ảnh iPad gửi lên chưa được lấy | Bộ nhớ cửa sổ phone-upload | Tắt cửa sổ |

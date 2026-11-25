@@ -5,10 +5,10 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-25.3',      // hiện cạnh tên app để biết đang mở đúng bản mới
+    version: 'v2026-11-25.4',      // hiện cuối menu Khác để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
-    offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu offline (chọn 1, bắt buộc)
+    offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu ticket ra file (chọn 1, bắt buộc)
 
     // Key localStorage — KHÔNG ĐỔI, đổi là mất dữ liệu đã lưu của người dùng
     storageKey: 'ticketWriter.v1',
@@ -73,15 +73,16 @@
       { id: 'dark',  label: '☾ Tối' }
     ],
 
+    // Thứ tự = thứ tự tab ở header. Nhóm ticket / SMS không có tab riêng: mỗi loại của nhóm là 1 tab; nhóm Setup là 1 tab.
     groups: [
       { id: 'ticket', label: 'Viết ticket' },
       { id: 'setup',  label: 'Setup / Training', hidden: true },   // tạm ẩn: xóa hidden là hiện lại
       { id: 'sms',    label: 'SMS' }
     ],
 
-    // Cấp con của nhóm SMS, thứ tự = thứ tự nút, mục đầu là mặc định. id lưu trong state => không đổi id đang có.
+    // Loại SMS, mỗi loại 1 tab, thứ tự = thứ tự tab, mục đầu là mặc định. id lưu trong state => không đổi id đang có.
     smsKinds: [
-      { id: 'shipping',  label: 'Shipping' },
+      { id: 'shipping',  label: 'SMS Shipping' },
       { id: 'review',    label: 'Xin review' }
     ],
 
@@ -89,6 +90,7 @@
       category: 'Loại', summary: 'Tóm tắt (đưa vào title)', lang: 'Ngôn ngữ merchant',
       phone: 'Phone', merchant: 'Tên merchant', role: 'Vai trò tại tiệm', phoneOut: 'Phone',     // phoneOut = nhãn dòng SĐT trong nội dung ticket
       modelOut: 'Model',                     // nhãn dòng Model trong nội dung ticket setup
+      callSection: 'Cuộc gọi', callHint: 'Loại và Tóm tắt thành title',   // mục đầu form ticket (Loại, Tóm tắt, Phone…)
       device: 'Thiết bị', brand: 'Hãng', model: 'Model', flow: 'Quy trình', checklist: 'Checklist'
     }
   });

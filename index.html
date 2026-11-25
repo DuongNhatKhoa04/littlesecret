@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ticket Writer</title>
+<link rel="stylesheet" href="styles/fonts.css">
 <link rel="stylesheet" href="styles/tokens.css">
 <link rel="stylesheet" href="styles/layout.css">
 <link rel="stylesheet" href="styles/form.css">
@@ -14,30 +15,38 @@
 <body>
 <div class="app">
   <header>
-    <h1>Ticket Writer</h1><span class="ver" id="ver"></span><span class="ver">· Developed by Ryan</span>
+    <div class="brand"><h1>Ticket Writer</h1><span class="credit">Developed by Ryan</span></div>
+    <nav class="picker" id="picker" aria-label="Chọn loại ticket"></nav>
     <div class="spacer"></div>
-    <div class="seg" id="modeSeg" role="group" aria-label="Chế độ hiển thị">
-      <button type="button" data-mode="split" class="wide-only" title="Alt+M để đổi chế độ">Chia đôi</button>
-      <button type="button" data-mode="input">Nhập</button>
-      <button type="button" data-mode="output">Kết quả</button>
+    <div class="header-tools">
+      <div class="seg view-seg" id="modeSeg" role="group" aria-label="Chế độ hiển thị">
+        <button type="button" data-mode="split" class="wide-only" title="Chia đôi (Alt+M để đổi chế độ)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/></svg><span class="sr">Chia đôi</span></button>
+        <button type="button" data-mode="input" title="Chỉ Nhập"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg><span class="sr">Nhập</span></button>
+        <button type="button" data-mode="output" title="Chỉ Kết quả"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" class="fill"/></svg><span class="sr">Kết quả</span></button>
+      </div>
+      <button type="button" class="ghost" id="tplOpen" title="Tìm và dùng template (Alt+T)">Template</button>
+      <button type="button" class="ghost more-btn" id="moreBtn" popovertarget="moreMenu" aria-haspopup="menu">Khác <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <div class="menu" id="moreMenu" popover>
+        <button type="button" class="menu-item" id="tplSave" title="Lưu ticket hiện tại làm template, tên = title">Lưu ticket làm template</button>
+        <p class="menu-group">Khi ticket system không vào được</p>
+        <button type="button" class="menu-item" id="offSave" title="Tải ticket này ra 1 file (kèm Business zipcode + Ticket type + Tier), có ảnh thì gói chung vào ZIP">Lưu ticket ra file</button>
+        <button type="button" class="menu-item" id="offOpen" title="Chọn file .zip / .json đã tải bằng Lưu ticket ra file để nạp lại vào form, rồi Copy để điền">Mở file đã lưu</button>
+        <p class="menu-group">Khi đổi máy hoặc trình duyệt</p>
+        <button type="button" class="menu-item" id="backupSave" title="Tải 1 file chứa gợi ý Tóm tắt (Viết ticket), gợi ý tên người support thêm (Chuyển case: Sales / MKT / CS / Tech) và template">Sao lưu gợi ý và template</button>
+        <button type="button" class="menu-item" id="backupOpen" title="Chọn file sao lưu (ticket-writer-backup-….json) để nạp lại gợi ý Tóm tắt, gợi ý tag và template vào máy này">Khôi phục từ file sao lưu</button>
+        <hr>
+        <button type="button" class="menu-item wide-only" id="swapBtn" title="Chỉ dùng ở chế độ Chia đôi">Đổi bên Nhập và Kết quả</button>
+        <p class="menu-meta">Phiên bản <span id="ver"></span></p>
+      </div>
+      <input type="file" id="offImport" accept=".zip,.json,application/zip,application/json" hidden>
+      <input type="file" id="backupImport" accept=".json,application/json" hidden>
+      <button type="button" class="ghost" id="phoneBtn" hidden></button>
+      <button type="button" class="ghost" id="themeBtn" title="Đổi giao diện: Tự động (theo Windows) → Sáng → Tối"></button>
+      <button type="button" class="primary" id="resetBtn">Ticket mới</button>
     </div>
-    <button type="button" class="ghost" id="tplOpen" title="Tìm và dùng template (Alt+T)">Template</button>
-    <button type="button" class="ghost" id="tplSave" title="Lưu ticket hiện tại làm template, tên = title">+ Lưu template</button>
-    <button type="button" class="ghost" id="offSave" title="Ticket system không vào được: tải ticket này ra 1 file (kèm Business zipcode + Ticket type + Tier), có ảnh thì gói chung vào ZIP">Lưu offline</button>
-    <button type="button" class="ghost" id="offOpen" title="Chọn file .zip / .json đã tải bằng Lưu offline để nạp lại vào form, rồi Copy để điền">Mở file offline</button>
-    <input type="file" id="offImport" accept=".zip,.json,application/zip,application/json" hidden>
-    <button type="button" class="ghost" id="backupSave" title="Chuyển máy / trình duyệt: tải 1 file chứa gợi ý Tóm tắt (Viết ticket), gợi ý tên người support thêm (Chuyển case: Sales / MKT / CS / Tech) và template">Sao lưu</button>
-    <button type="button" class="ghost" id="backupOpen" title="Chọn file Sao lưu (ticket-writer-backup-….json) để nạp lại gợi ý Tóm tắt, gợi ý tag và template vào máy này">Khôi phục</button>
-    <input type="file" id="backupImport" accept=".json,application/json" hidden>
-    <button type="button" class="ghost wide-only" id="swapBtn" title="Đổi vị trí Nhập / Kết quả (chỉ ở chế độ Chia đôi)">⇄ Đổi bên</button>
-    <button type="button" class="ghost" id="phoneBtn" hidden></button>
-    <button type="button" class="ghost" id="themeBtn" title="Đổi giao diện: Tự động (theo Windows) → Sáng → Tối"></button>
-    <button type="button" class="ghost" id="resetBtn">Ticket mới</button>
   </header>
 
   <div class="notices" id="notices" hidden></div>
-
-  <nav class="picker" id="picker" aria-label="Chọn loại ticket"></nav>
 
   <main id="main">
     <section class="pane" id="inPane" aria-label="Nhập nội dung"><div class="inner" id="form"></div></section>
@@ -45,10 +54,6 @@
       <div class="inner">
         <div class="warn" id="warn" hidden></div>
         <div id="titleBlock">
-          <div class="fillbar">
-            <button type="button" class="copy" id="copyFill" title="Copy Title + Nội dung để bookmark &quot;Điền ticket&quot; điền vào Subject / Description">Copy để điền</button>
-            <button type="button" class="ghost" id="fillHelp">Cài bookmark "Điền ticket"</button>
-          </div>
           <div class="outhead">
             <h2>Title</h2><span class="status" id="stTitle"></span>
             <button type="button" class="copy" id="copyTitle">Copy title (Alt+1)</button>
@@ -80,6 +85,12 @@
             <button type="button" class="ghost" id="imgClear" title="Xóa mọi ảnh của ticket này (cả ảnh đã lưu trong trình duyệt). Nội dung ticket giữ nguyên">Xóa hết ảnh</button>
           </div>
           <div id="imgList"></div>
+        </div>
+
+        <!-- Ghim đáy khối Kết quả: hành động chính, luôn trong tầm mắt dù nội dung dài -->
+        <div class="dock" id="fillDock">
+          <button type="button" class="copy fill" id="copyFill" title="Copy Title + Nội dung để bookmark &quot;Điền ticket&quot; điền vào Subject / Description">Copy để điền</button>
+          <button type="button" class="link" id="fillHelp">Cài bookmark Điền ticket</button>
         </div>
       </div>
     </section>
@@ -114,15 +125,15 @@
   </div>
 </dialog>
 
-<dialog id="offSaveDlg" aria-label="Lưu offline">
+<dialog id="offSaveDlg" aria-label="Lưu ticket ra file">
   <form class="off-form" id="offSaveForm">
-    <div class="dhead"><b>Lưu offline (ticket system không vào được)</b></div>
+    <div class="dhead"><b>Lưu ticket ra file (ticket system không vào được)</b></div>
     <div class="off-fields">
       <div class="field"><label for="offZip">Business zipcode</label><input class="text" id="offZip" type="text" inputmode="numeric" autocomplete="off" required></div>
       <div class="field"><label for="offType">Ticket type</label><input class="text" id="offType" type="text" autocomplete="off" required></div>
       <div class="field"><label for="offTier">Tier</label><select class="text" id="offTier" required><option value="">Chọn tier</option></select></div>
       <label class="field" id="offPdfRow"><input type="checkbox" id="offPdf"> Tải kèm PDF ảnh</label>
-      <p class="status">Tải 1 file, tên bắt đầu bằng mã OFF-…: không có ảnh là file .json; có ảnh là file .zip chứa .json + ảnh (+ .pdf nếu chọn) cùng tên. Mở lại bằng "Mở file offline".</p>
+      <p class="status">Tải 1 file, tên bắt đầu bằng mã OFF-…: không có ảnh là file .json; có ảnh là file .zip chứa .json + ảnh (+ .pdf nếu chọn) cùng tên. Mở lại bằng Khác → Mở file đã lưu.</p>
     </div>
     <div class="dfoot">
       <span class="spacer"></span>
