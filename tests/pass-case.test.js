@@ -56,6 +56,32 @@
       [MKT_NIGHT, MKT_NIGHT, MKT_NIGHT, MKT_NIGHT, MKT_DAY, MKT_DAY, MKT_DAY]);
   });
 
+  test('pass case: FT thay chữ CBN đầu dòng; ENG thêm cuối dòng CBN (VIE mặc định không in); chưa nhập Phone / Tên / Vai trò thì vẫn bỏ dòng', () => {
+    const cbnLine = (team, extra, values = VALUES) => build(team, values, extra).split('\n').find(line => /^(CBN|FT):/.test(line)) || null;
+    assertEqual([
+      cbnLine('tech', { callVia: 'ft' }), cbnLine('tech', { language: 'eng' }), cbnLine('sales', { callVia: 'ft', language: 'eng' }),
+      cbnLine('mkt', { callVia: 'ft', language: 'eng' }, { ...VALUES, phone: '', contact: '', role: '' })
+    ], [
+      'FT: (555) 123-4567 - Mr. Vương - Owner', 'CBN: (555) 123-4567 - Mr. Vương - Owner - ENG', 'FT: (555) 123-4567 – Mr. Vương (Owner) – ENG', null
+    ]);
+  });
+
+  test('pass case: CBN / FT, VIE / ENG: mặc định CBN + VIE, giá trị lạ => mặc định; đổi bằng setSwitch / cycleSwitch; Ticket mới về mặc định', () => {
+    const odd = D.passCase.sanitizePassCase({ callVia: 'zalo', language: 'eng' }, config);
+    assertEqual([odd.callVia, odd.language], ['cbn', 'eng']);
+    const { store, service } = setup({ nav: { group: 'ticket', ticketType: 'transfer' } });
+    const picked = () => [store.get().passCase.callVia, store.get().passCase.language];
+    assertEqual(picked(), ['cbn', 'vie']);
+    service.cycleSwitch('callVia');
+    service.setSwitch('language', 'eng');
+    service.setSwitch('language', 'fr');
+    assertEqual(picked(), ['ft', 'eng']);
+    service.cycleSwitch('callVia');
+    assertEqual(picked(), ['cbn', 'eng']);
+    service.reset();
+    assertEqual(picked(), ['cbn', 'vie']);
+  });
+
   test('pass case: Tech theo mẫu group Tech: link lead, Tên tiệm, CBN Phone - Tên - Vai trò, dòng trống, Issue, Thanks team !', () => {
     assertEqual(build('tech'), [
       'https://crm/lead/9', 'ARIA NAIL BAR', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',

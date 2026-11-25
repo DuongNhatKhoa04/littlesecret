@@ -3,7 +3,7 @@
   'use strict';
 
   const { fillTemplate } = TW.domain.sms;
-  const { findTeam } = TW.domain.passCase;
+  const { findTeam, findOption } = TW.domain.passCase;
   const { isBlank } = TW.domain.text;
   const PLACEHOLDER = /\{(\w+)\}/g;
   const PART_GAP = ' – ';
@@ -14,16 +14,23 @@
 
   const joinFilled = (parts, gap = PART_GAP) => parts.filter(part => part).join(gap);
 
-  /** Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {leadInfo}, {cbn}, {shopZip}, {caller} và {urgent} (chữ GẤP của team khi tick). */
-  function teamValues(passCase, team) {
+  /**
+   * Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {leadInfo}, {cbn}, {shopZip}, {caller},
+   * {via} (CBN / FT) và {urgent} (chữ GẤP của team khi tick).
+   * Ngôn ngữ, {via} chỉ có khi đã nhập Phone / Tên / Vai trò: chưa nhập gì thì vẫn bỏ được dòng CBN.
+   */
+  function teamValues(passCase, team, config) {
     const values = Object.fromEntries(team.fields.map(id => [id, passCase.values[id].trim()]));
     const person = values.contact && values.role ? `${values.contact} (${values.role})` : values.contact || values.role;
+    const hasCaller = !!(values.phone || values.contact || values.role);
+    const language = hasCaller ? findOption(passCase, config, 'language').suffix : '';
     return {
       ...values,
       leadInfo: joinFilled([values.shop, values.zip, values.mid]),
-      cbn: joinFilled([values.phone, person]),
+      cbn: joinFilled([values.phone, person, language]),
       shopZip: joinFilled([values.shop, values.zip], WORD_GAP),
-      caller: joinFilled([values.phone, values.contact, values.role], DASH_GAP),
+      caller: joinFilled([values.phone, values.contact, values.role, language], DASH_GAP),
+      via: hasCaller ? findOption(passCase, config, 'callVia').label : '',
       urgent: team.urgent && passCase.urgent ? team.urgent : ''
     };
   }
@@ -77,7 +84,7 @@
    */
   function buildPassCaseMessage({ passCase, config, now }) {
     const team = findTeam(passCase, config);
-    const values = teamValues(passCase, team);
+    const values = teamValues(passCase, team, config);
     if (team.fields.every(id => !values[id])) return '';
     const lines = team.lines.filter(line => hasValue(line, values)).filter(isKeptGap).map(line => fillTemplate(line, values));
     return [...lines, ...closingLines(team, { passCase, config, now })].join('\n');

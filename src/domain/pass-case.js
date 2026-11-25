@@ -5,9 +5,14 @@
   /** Team mở sẵn: defaultTeam của config, không có / sai id thì team đầu. */
   const defaultTeam = (config) => config.teams.find(team => team.id === config.defaultTeam) || config.teams[0];
 
+  /** Nút chọn nhanh (switches): option đầu là mặc định. */
+  const defaultSwitches = (config) => Object.fromEntries(Object.entries(config.switches).map(([id, item]) => [id, item.options[0].id]));
+  const findOption = (passCase, config, switchId) =>
+    config.switches[switchId].options.find(option => option.id === passCase[switchId]) || config.switches[switchId].options[0];
+
   function createEmptyPassCase(config) {
     const values = Object.fromEntries(Object.keys(config.fields).map(id => [id, '']));
-    return { team: defaultTeam(config).id, urgent: false, values, tags: emptyTags(config) };
+    return { team: defaultTeam(config).id, urgent: false, ...defaultSwitches(config), values, tags: emptyTags(config) };
   }
 
   /** Tag chỉnh tay theo team: off = người ca này hôm nay nghỉ (bỏ tick), extra = người thêm vào (support thêm). */
@@ -27,6 +32,7 @@
     if (!raw || typeof raw !== 'object') return passCase;
     if (config.teams.some(team => team.id === raw.team)) passCase.team = raw.team;
     passCase.urgent = raw.urgent === true;
+    Object.keys(config.switches).forEach(id => { passCase[id] = findOption(raw, config, id).id; });
     passCase.tags = sanitizeTags(raw.tags, config);
     const saved = raw.values && typeof raw.values === 'object' ? raw.values : {};
     Object.keys(passCase.values).forEach(id => { if (typeof saved[id] === 'string') passCase.values[id] = saved[id]; });
@@ -68,5 +74,5 @@
     return !name || name.startsWith(TAG_PREFIX) ? name : TAG_PREFIX + name;
   }
 
-  TW.domain.passCase = { createEmptyPassCase, sanitizePassCase, findTeam, imageKey, passCaseImageSlots, allPassCaseImageKeys, copyTicketFields, toTagName };
+  TW.domain.passCase = { createEmptyPassCase, sanitizePassCase, findTeam, findOption, imageKey, passCaseImageSlots, allPassCaseImageKeys, copyTicketFields, toTagName };
 })(window.TW);

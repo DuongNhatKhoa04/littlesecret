@@ -18,6 +18,13 @@
     const config = context.passCase;
     /** Tag chỉnh tay của team đang chọn. */
     const updateTags = (mutate, change) => store.update(state => mutate(state.passCase.tags[state.passCase.team]), change);
+    const optionsOf = (id) => (config.switches[id] ? config.switches[id].options : []);
+
+    /** Nút chọn nhanh (CBN / FT, VIE / ENG). UI tự đổi nút => không dựng lại form, giữ con trỏ. */
+    function setSwitch(id, optionId) {
+      if (!optionsOf(id).some(option => option.id === optionId)) return;
+      store.update(state => { state.passCase[id] = optionId; }, {});
+    }
 
     return {
       setValue(id, value) {
@@ -53,6 +60,13 @@
       /** Ô tick tự giữ trạng thái => không dựng lại form, con trỏ không bị mất. */
       setUrgent(on) {
         store.update(state => { state.passCase.urgent = on; }, {});
+      },
+      setSwitch,
+      /** Phím tắt: sang option kế tiếp. */
+      cycleSwitch(id) {
+        const options = optionsOf(id);
+        const index = options.findIndex(option => option.id === store.get().passCase[id]);
+        if (options.length) setSwitch(id, options[(index + 1) % options.length].id);
       },
       /** Bỏ tick = hôm nay người đó không đi làm. */
       setTagOn(name, on) {

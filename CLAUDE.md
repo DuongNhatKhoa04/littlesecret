@@ -69,7 +69,7 @@ ticket-writer/
 │  ├─ infrastructure/          ADAPTER: storage (localStorage) · image-store (ảnh trên IndexedDB) · storage-quota (dung lượng) · phone-inbox (lấy ảnh từ phone-upload) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · shop-grab (bookmarklet lấy thông tin tiệm) · telegram-bot (gửi tin vào group, đường duy nhất ra Internet) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
 │  ├─ ui/                      GIAO DIỆN: dom (helper, ô nhập + nhãn) · combo (danh sách gợi ý dùng chung) · notice-bar (thanh cảnh báo) · theme-toggle (nút sáng/tối) · palette-picker (chọn màu giao diện) · phone-button (nút Nhận ảnh iOS) · phone-dialog (mã QR cho iPad) · picker · ticket-form · category-combo · summary-combo · idea-list ·
 │  │                           checklist-view · image-zone · output-view · image-panel · image-viewer ·
-│  │                           template-dialog · offline-dialog · backup-buttons · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form · shop-paste (nút Dán thông tin tiệm) · telegram-dialog (nút Gửi Telegram) · pass-case-form
+│  │                           template-dialog · offline-dialog · backup-buttons · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form · shop-paste (nút Dán thông tin tiệm) · telegram-dialog (nút Gửi Telegram) · pass-case-switches (CBN / FT, VIE / ENG) · pass-case-form
 │  └─ main.js                  COMPOSITION ROOT: tạo adapter, inject vào service, gắn UI
 ├─ tests/                      xem tests/README.md
 │  ├─ index.html               double-click để chạy test

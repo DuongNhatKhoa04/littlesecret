@@ -27,6 +27,14 @@
       note: { label: 'Note', kind: 'multiline', ph: 'Tùy chọn' }
     },
 
+    // Nút chọn nhanh ngay dưới hàng CBN (mọi team), option đầu là mặc định, Ticket mới về mặc định. id lưu trong state => không đổi.
+    // shortcut: Alt+<phím> đổi qua option kế tiếp. callVia: label của option in ở chỗ {via} (đầu dòng CBN).
+    // language: suffix khác rỗng thì thêm cuối dòng CBN (VIE mặc định => không in gì).
+    switches: {
+      callVia: { label: 'Gọi lại qua', shortcut: 'c', options: [{ id: 'cbn', label: 'CBN' }, { id: 'ft', label: 'FT' }] },
+      language: { label: 'Ngôn ngữ', shortcut: 'x', options: [{ id: 'vie', label: 'VIE', suffix: '' }, { id: 'eng', label: 'ENG', suffix: 'ENG' }] }
+    },
+
     // Trường chung 1 hàng trên form (chỉ đổi cách xếp, không đổi tin nhắn). Team có từ 2 trường của hàng thì mới xếp chung.
     rows: [['shop', 'zip'], ['phone', 'contact', 'role']],
 
@@ -38,7 +46,8 @@
     // fields: thứ tự trên form · required: thiếu thì khóa Copy · tips: lưu ý hiện trên form.
     // urgent: có ô tick GẤP; tick thì chữ này vào chỗ {urgent} trong lines (không tick => bỏ dòng).
     // tags: người cần tag ở dòng cuối; có from/to (giờ VN, HH:MM) thì chỉ tag trong ca đó, from > to = ca qua đêm. Ngoài mọi ca => không tag.
-    // lines: từng dòng tin nhắn. {leadInfo} = Tên tiệm – ZIP – MID, {cbn} = Phone – Tên (Vai trò), {shopZip} = Tên tiệm ZIP, {caller} = Phone - Tên - Vai trò.
+    // lines: từng dòng tin nhắn. {leadInfo} = Tên tiệm – ZIP – MID, {cbn} = Phone – Tên (Vai trò), {shopZip} = Tên tiệm ZIP, {caller} = Phone - Tên - Vai trò,
+    //   {via} = CBN / FT (switches.callVia); {cbn}, {caller} có thêm ngôn ngữ ở cuối khi chọn ENG.
     //   Dòng có {…} mà mọi chỗ đều trống thì bỏ dòng. '' = dòng trống (2 dòng trống liền nhau / ở đầu tin chỉ giữ 1 / bỏ).
     // thanks: thay câu cảm ơn chung (thanks bên dưới) cho riêng team này.
     teams: [
@@ -46,14 +55,14 @@
         id: 'sales', label: 'Sales', chatId: '-1005955163372', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'shop', 'zip', 'mid', 'note'],
         required: ['shop', 'zip', 'phone'],
-        lines: ['{urgent}', 'LEAD: {leadInfo}', 'CBN: {cbn}', 'NOTE: {note}'],
+        lines: ['{urgent}', 'LEAD: {leadInfo}', '{via}: {cbn}', 'NOTE: {note}'],
         tags: [{ names: ['@daisy_sale_leader', '@Kyo_SaleAdmin', '@Stella_SalesAdmin'] }]
       },
       {
         id: 'mkt', label: 'MKT', chatId: '-1005955163372', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'lead', 'shop', 'zip', 'mid', 'issue'],
         required: ['lead', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
-        lines: ['{lead}', '{urgent}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
+        lines: ['{lead}', '{urgent}', '{shopZip}', 'MID: {mid}', '{via}: {caller}', '', '{issue}', ''],
         tags: [
           { from: '20:00', to: '06:00', names: ['@Chris_MKTSupport_Leader', '@Trivu_MarketingSupport', '@lucas_mktsupport'] },
           { from: '06:00', to: '20:00', names: ['@Sarah_Pham_AM', '@josie_am'] }
@@ -63,7 +72,7 @@
         id: 'cs', label: 'CS', chatId: '-1005955163372', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'ticket', 'shop', 'zip', 'mid', 'issue'],
         required: ['ticket', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
-        lines: ['{ticket}', '{urgent}', '{shopZip}', 'MID: {mid}', 'CBN: {caller}', '', '{issue}', ''],
+        lines: ['{ticket}', '{urgent}', '{shopZip}', 'MID: {mid}', '{via}: {caller}', '', '{issue}', ''],
         tags: [
           { from: '20:00', to: '05:00', names: ['@xuanthor_cs', '@joyce_cs'] },
           { from: '05:00', to: '20:00', names: ['@ThuTranCS'] }
@@ -79,7 +88,7 @@
         id: 'tech', label: 'Tech', chatId: '-1005955163372', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'lead', 'shop', 'issue'],
         required: ['lead', 'shop', 'phone', 'contact', 'issue'],
-        lines: ['{lead}', '{urgent}', '{shop}', 'CBN: {caller}', '', '{issue}', ''],
+        lines: ['{lead}', '{urgent}', '{shop}', '{via}: {caller}', '', '{issue}', ''],
         tips: [
           'FRT chủ động xử lý các case Basic, không mất nhiều thời gian.',
           'Ưu tiên case Reconnect Terminal, đặc biệt khi tiệm đang có khách chờ thanh toán.',

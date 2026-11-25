@@ -267,6 +267,19 @@
       $('#pass_contact').value === 'Nguyễn Văn An' && $('#pass_issue').value === 'Terminal lỗi\nMất mạng', [$('#pass_contact').value, $('#pass_issue').value]);
     type($('#pass_contact'), '');
     type($('#pass_issue'), '');
+    const cbnOut = () => $('#outBody').textContent.split('\n').find(line => /^(CBN|FT):/.test(line));
+    const switchesPressed = () => $$('.pass-switches button[aria-pressed="true"]').map(node => node.textContent).join(' ');
+    check('Chuyển case: dưới hàng CBN có CBN | FT và VIE | ENG, mặc định CBN + VIE', switchesPressed() === 'CBN VIE' && cbnOut() === 'CBN: (555) 123-4567 - Owner', [switchesPressed(), cbnOut()]);
+    $('#pass_phone').focus();
+    key($('#pass_phone'), { key: 'c', altKey: true });
+    key($('#pass_phone'), { key: 'x', altKey: true });
+    await settle();
+    check('Alt+C = FT, Alt+X = ENG (đang gõ trong ô vẫn chạy, con trỏ không mất)',
+      switchesPressed() === 'FT ENG' && cbnOut() === 'FT: (555) 123-4567 - Owner - ENG' && focused() === 'pass_phone', [switchesPressed(), cbnOut(), focused()]);
+    clickText('.pass-switches', 'CBN');
+    clickText('.pass-switches', 'VIE');
+    await settle();
+    check('bấm CBN, VIE => về như cũ', switchesPressed() === 'CBN VIE' && cbnOut() === 'CBN: (555) 123-4567 - Owner', [switchesPressed(), cbnOut()]);
     $('.pass-urgent input').click();
     await settle();
     check('Chuyển case Tech: tick GẤP => 🔥🔥🔥 URGENT!! trước Tên tiệm, thiếu trường vẫn khóa Copy',

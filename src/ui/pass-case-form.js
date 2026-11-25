@@ -8,15 +8,18 @@
   const { passCaseTags } = TW.domain.passCaseMessage;
   const { attachSuggestions } = TW.ui.combo;
   const { createShopPaste } = TW.ui.shopPaste;
+  const { createPassCaseSwitches } = TW.ui.passCaseSwitches;
   const REQUIRED_BADGE = 'Bắt buộc';
   const ID_PREFIX = 'pass_';
   const TAG_INPUT_ID = 'pass_tagAdd';
   const TAG_LIST_ID = 'pass_tagHistory';
+  const SWITCHES_AFTER = 'phone';   // CBN / FT, VIE / ENG nằm ngay dưới hàng có ô này
   const CASE_TRANSFORMS = { words: capitalizeWords, lines: capitalizeLines };   // field.capitalize
 
   function createPassCaseForm({ root, context, session, passCaseService, imageZone, tagHistory, shopGrab }) {
     const config = context.passCase;
     const shopPaste = createShopPaste({ context, session, passCaseService, shopGrab, idPrefix: ID_PREFIX });
+    const switches = createPassCaseSwitches({ context, session, passCaseService });
     const { labels } = config;
     const value = (id) => session.passCase().values[id];
     const onInput = (id) => (text) => passCaseService.setValue(id, text);
@@ -93,6 +96,7 @@
         const ids = row ? row.filter(rowId => team.fields.includes(rowId)) : [id];
         ids.forEach(rowId => placed.add(rowId));
         nodes.push(ids.length > 1 ? rowNode(team, ids) : fieldNode(team, id));
+        if (ids.includes(SWITCHES_AFTER)) nodes.push(switches.node());
       });
       return nodes;
     }

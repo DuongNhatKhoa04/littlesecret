@@ -108,6 +108,7 @@
 .pass-row > .field, .contact-row > .field { flex: 1 1 0; min-width: min-content; }   /* cột rộng ít nhất bằng nhãn */
 .pass-row > .field > label, .contact-row > .field > label { white-space: nowrap; }
 .pass-row > .field:has(.seg), .contact-row > .field:has(.seg) { flex: 0 0 auto; }
+.pass-switches { display: flex; flex-wrap: wrap; gap: 12px; margin: -6px 0 14px; }   /* CBN / FT, VIE / ENG sát dưới hàng CBN */
 .pass-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
 .pass-tag { cursor: pointer; font-weight: 500; }
 .pass-tag:not(:has(input:checked)) { opacity: .55; text-decoration: line-through; }   /* bỏ tick = hôm nay nghỉ, không tag */

@@ -238,11 +238,12 @@ setPassCase({   // const { setPassCase } = registry;
 | Trường | Ý nghĩa |
 |---|---|
 | `fields` | Mọi ô của form. Key = id lưu trong state: không đổi id đang có. `kind`: `text` (mặc định) · `phone` (tự format) · `choice` (`options`, bấm lại để bỏ chọn) · `multiline`. `ph` = chữ mờ, `inputMode` cho bàn phím mobile. `images: true` = có ô dán ảnh / chụp màn hình (key ảnh `pass:<id>`). `capitalize`: tự viết hoa khi gõ, `words` = chữ đầu mỗi từ (tên người), `lines` = chữ đầu mỗi dòng (như ô ticket) |
+| `switches` | Nút chọn nhanh dưới hàng CBN: `callVia` (CBN / FT, `label` của option in ở `{via}`), `language` (VIE / ENG, `suffix` khác rỗng thì thêm cuối `{cbn}` / `{caller}`). Option đầu là mặc định; `shortcut` = phím đi với Alt. `id` option lưu trong state: không đổi |
 | `rows` | Trường xếp chung 1 hàng trên form (chỉ đổi cách xếp), khi team có từ 2 trường của hàng |
 | `defaultTeam` | id team mở sẵn khi form trống (lần đầu, sau `Ticket mới`). Không có / sai id thì team đầu |
 | `teams` | Team nhận theo thứ tự trên form. `id` lưu trong state: không đổi id đang có |
 | `teams[].fields` / `required` | Thứ tự ô trên form / ô bắt buộc (trống thì khóa Copy) |
-| `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò), `{shopZip}` = Tên tiệm ZIP, `{caller}` = Phone - Tên - Vai trò, `{urgent}` = chữ GẤP của team khi tick. Dòng mà mọi `{…}` đều trống thì bỏ; `''` = dòng trống (không để 2 dòng trống liền nhau) |
+| `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò), `{shopZip}` = Tên tiệm ZIP, `{caller}` = Phone - Tên - Vai trò (2 cái này có thêm ` - ENG` / ` – ENG` khi chọn ENG), `{via}` = CBN / FT, `{urgent}` = chữ GẤP của team khi tick. Dòng mà mọi `{…}` đều trống thì bỏ; `''` = dòng trống (không để 2 dòng trống liền nhau) |
 | `teams[].urgent` / `tips` | Chữ in ở `{urgent}` khi tick GẤP (có thì form có ô tick GẤP) / khung lưu ý trên form |
 | `teams[].chatId` | ID group Telegram của team (nút Gửi Telegram, REQUIREMENTS §24), dạng `'-100…'`. Lấy ID: SECURITY.md §6 "Thêm bot vào group mới". Không có thì nút báo team chưa có group |
 | `thanks` / `teams[].thanks` | Câu cảm ơn cuối tin (`Many thanks team!`) / thay riêng cho team (`Thanks team !`) |
