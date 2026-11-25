@@ -123,19 +123,19 @@
     $$('input[name="conclusion"]').find(r => r.value === 'Resolved').click();
     await settle();
     check('Resolved: không có Nguyên nhân / Kết quả, ẩn Việc cần làm tiếp, không in dòng Kết luận, copy được', !$('#copyBody').disabled && $('#warn').hidden &&
-      !$('textarea[data-key="s3"]') && !$('textarea[data-key="s4"]') && $('[data-action-box]').hidden &&
+      !$('textarea[data-key="s3"]') && !$('textarea[data-key="s4"]') && !$('[data-action-box]').checkVisibility() &&
       $('#outBody').textContent.endsWith('Đã support:\n- Restart'), $('#outBody').textContent);
     $$('input[name="conclusion"]').find(r => r.value === 'Pending - Needs to follow up').click();
     await settle();
     check('Pending: hiện Việc cần làm tiếp, chưa điền vẫn copy được, không nhãn Bắt buộc', !$('#copyBody').disabled && $('#warn').hidden &&
-      !$('[data-action-box]').hidden && $('[data-req-badge]').hidden &&
+      $('[data-action-box]').checkVisibility() && !$('[data-req-badge]').checkVisibility() &&
       $('#outBody').textContent.endsWith('Đã support:\n- Restart\n\nKết luận: Pending - Needs to follow up'), $('#outBody').textContent);
     type($('textarea[data-key="s5"]'), 'gọi lại check');
     await settle();
     check('Việc cần làm tiếp in sau Kết luận', $('#outBody').textContent.endsWith('Kết luận: Pending - Needs to follow up\n\nViệc cần làm tiếp:\n- Gọi lại check'), $('#outBody').textContent);
     $$('input[name="conclusion"]').find(r => r.value === 'Resolved').click();
     await settle();
-    check('đổi lại Resolved: ẩn + không in Việc cần làm tiếp, chữ đã nhập vẫn giữ', $('[data-action-box]').hidden &&
+    check('đổi lại Resolved: ẩn + không in Việc cần làm tiếp, chữ đã nhập vẫn giữ', !$('[data-action-box]').checkVisibility() &&
       $('#outBody').textContent.endsWith('Đã support:\n- Restart') && $('textarea[data-key="s5"]').value === 'Gọi lại check', $('#outBody').textContent);
     $$('input[name="conclusion"]').find(r => r.value === 'Pending - Needs to follow up').click();
     await settle();

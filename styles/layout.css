@@ -84,7 +84,7 @@ main[data-mode="input"] .pane, main[data-mode="output"] .pane { padding: 20px 24
 .inner { max-width: 760px; margin: 0 auto; }
 
 @media (max-width: 799px) {
-  .wide-only { display: none; }
+  .wide-only, .header-tools .wide-only { display: none; }   /* .view-seg button đặt display: flex, cần selector mạnh hơn */
   .pane, #inPane, #outPane { padding: 12px; }
   .picker-sep { display: none; }
 }

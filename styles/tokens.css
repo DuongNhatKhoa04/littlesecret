@@ -50,6 +50,8 @@
 }
 :root[data-theme="light"] { color-scheme: light; }
 * { box-sizing: border-box; }
+/* hidden phải thắng mọi display: tự đặt (vd .sec là grid), không thì phần JS đánh dấu ẩn (Việc cần làm tiếp…) vẫn hiện */
+[hidden] { display: none !important; }
 html, body { height: 100%; margin: 0; }
 body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font); }
 button, input, textarea, select { font: inherit; color: inherit; }
