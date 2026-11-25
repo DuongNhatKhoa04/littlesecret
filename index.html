@@ -6,6 +6,7 @@
 <title>Ticket Writer</title>
 <link rel="stylesheet" href="styles/fonts.css">
 <link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/palette-pink.css">
 <link rel="stylesheet" href="styles/layout.css">
 <link rel="stylesheet" href="styles/form.css">
 <link rel="stylesheet" href="styles/checklist.css">
@@ -34,6 +35,8 @@
         <p class="menu-group">Khi đổi máy hoặc trình duyệt</p>
         <button type="button" class="menu-item" id="backupSave" title="Tải 1 file chứa gợi ý Tóm tắt (Viết ticket), gợi ý tên người support thêm (Chuyển case: Sales / MKT / CS / Tech) và template">Sao lưu gợi ý và template</button>
         <button type="button" class="menu-item" id="backupOpen" title="Chọn file sao lưu (ticket-writer-backup-….json) để nạp lại gợi ý Tóm tắt, gợi ý tag và template vào máy này">Khôi phục từ file sao lưu</button>
+        <p class="menu-group">Màu giao diện</p>
+        <div class="palette-seg" id="paletteSeg" role="group" aria-label="Màu giao diện"></div>
         <hr>
         <button type="button" class="menu-item wide-only" id="swapBtn" title="Chỉ dùng ở chế độ Chia đôi">Đổi bên Nhập và Kết quả</button>
         <p class="menu-meta">Phiên bản <span id="ver"></span></p>
@@ -264,6 +267,7 @@
 <script src="src/application/staff-service.js"></script>
 <script src="src/application/notice-service.js"></script>
 <script src="src/application/theme-service.js"></script>
+<script src="src/application/palette-service.js"></script>
 <script src="src/application/phone-service.js"></script>
 <script src="src/application/summary-history-service.js"></script>
 <script src="src/application/tag-history-service.js"></script>
@@ -287,6 +291,7 @@
 <script src="src/ui/combo.js"></script>
 <script src="src/ui/notice-bar.js"></script>
 <script src="src/ui/theme-toggle.js"></script>
+<script src="src/ui/palette-picker.js"></script>
 <script src="src/ui/category-combo.js"></script>
 <script src="src/ui/summary-combo.js"></script>
 <script src="src/ui/idea-list.js"></script>

@@ -75,6 +75,15 @@
     check('bấm giao diện => Tối, đổi màu nền', themeOf().join('|') === 'dark|☾ Tối' && bg() !== lightBg, [themeOf(), lightBg, bg()]);
     $('#themeBtn').click();
     check('bấm giao diện => về Tự động', themeOf()[0] === 'auto', themeOf());
+    const paletteOf = () => [document.documentElement.dataset.palette || 'default', $$('#paletteSeg [aria-pressed="true"]').map(node => node.textContent).join()];
+    const defaultBg = bg();
+    check('màu giao diện mặc định: Tím (không gắn data-palette), menu Khác có Tím / Hồng',
+      paletteOf().join('|') === 'default|Tím' && $$('#paletteSeg button').map(node => node.textContent).join() === 'Tím,Hồng', paletteOf());
+    $('#paletteSeg [data-palette="pink"]').click();
+    check('chọn Hồng => data-palette="pink", đổi màu nền, lưu trên máy', paletteOf().join('|') === 'pink|Hồng' && bg() !== defaultBg &&
+      localStorage.getItem('ticketWriter.palette.v1') === '"pink"', [paletteOf(), bg(), localStorage.getItem('ticketWriter.palette.v1')]);
+    $('#paletteSeg [data-palette="castorice"]').click();
+    check('chọn lại Tím => bỏ data-palette, nền như cũ', paletteOf().join('|') === 'default|Tím' && bg() === defaultBg, [paletteOf(), bg()]);
     type($('#f_summary'), 'mất kết nối');
     $('#f_summary').focus();
     key($('#f_summary'), { key: 'Enter' });

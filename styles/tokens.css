@@ -1,4 +1,4 @@
-/* styles/tokens.css — Màu, bo góc, font (light + dark) và style nền. */
+/* styles/tokens.css — Màu, bo góc, font (light + dark) và style nền. Màu giao diện khác (vd Hồng) ghi đè biến ở styles/palette-*.css. */
 /* Palette Castorice (Honkai: Star Rail, fandomcolors.com): #c9b3ff melrose · #7cd7ff anakiwa · #1e90ff dodger blue · #0b3b5a tarawera · #f7fbff alice blue.
    Sáng: nền alice blue, chữ tím đậm #1d1640, nút chính #5b3fc4 (chữ trắng). Tối: nút chính #c9b3ff với chữ tím đậm.
    Khu Kết quả là khối tím đậm (--slab*) ở cả 2 giao diện: đây là thứ sẽ được copy đi nên nổi nhất trang. Ở Tối khối sáng hơn nền 1 bậc.
@@ -15,6 +15,9 @@
   --urgent-bg: #fdf1f1; --urgent-line: #efb9be;   /* ô GẤP chưa tick: đỏ chìm, tick thì dùng --err-* */
   --sms-bg: #eef8ff; --sms-line: #7cd7ff;
   --slab: #221a4a; --slab-dock: #1b143d; --slab-line: #3a2f6e; --slab-ink: #f7fbff; --slab-text: #ece6ff; --slab-muted: #c9b3ff;
+  --slab-fill: #c9b3ff; --slab-fill-hover: #ddd0ff; --slab-fill-ink: #1c0f40;   /* nút Copy để điền ở đáy khối Kết quả */
+  --slab-done-bg: #7cd7ff; --slab-done-ink: #062033; --slab-tick: #6fe0b4;       /* đã copy / ảnh đã copy trong khối Kết quả */
+  --slab-sms-bg: rgba(124, 215, 255, .1); --slab-sms-line: #7cd7ff;             /* khung tin SMS trong khối Kết quả */
   --radius: 8px; --radius-lg: 14px;
   --font: 'Be Vietnam Pro', 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
   scrollbar-color: var(--btn-hover) transparent;

@@ -1,0 +1,53 @@
+/* styles/palette-pink.css — Màu giao diện "Hồng" (data-palette="pink" trên <html>, chọn ở menu Khác). Ghi đè biến màu của tokens.css.
+   Palette bản v2026-11-12.4: #ffe7f3 hồng phấn · #ffcdde hồng nhạt · #fea2ba hồng đậm · #7efaff cyan sáng · #1adee6 cyan.
+   Cyan quá sáng để làm chữ trên nền sáng => chữ / link dùng --accent-text (cyan đậm), cyan gốc chỉ làm nền nút.
+   Khu Kết quả: khối mận đậm (--slab*), nút Copy để điền cyan. Chữ đã kiểm tra tương phản >= 4.5:1 (WCAG AA), khung focus >= 3:1.
+   Sáng / Tối giống tokens.css: khối Tối theo hệ điều hành và khối data-theme="dark" phải giữ giống nhau, và đặt đủ mọi biến khối Sáng đặt. */
+:root[data-palette="pink"] {
+  --bg: #fff3f9; --panel: #ffffff; --ink: #2b2433; --muted: #6b5566;
+  --line: #ffcdde; --field: #f2adc4; --accent: #1adee6; --accent-ink: #063f42; --accent-text: #00727a; --accent-soft: #d6fdff; --focus: #00838a;
+  --selected-bg: #c4f8fa; --selected-ink: #063f42;
+  --btn-bg: #c4f8fa; --btn-ink: #063f42; --btn-line: #1adee6; --btn-hover: #7efaff;
+  --done-bg: #d4f5e5; --done-ink: #0b5e45; --done-line: #6fd3a6;
+  --warn-bg: #fff0cc; --warn-ink: #7a4a00; --ok: #0d7f5f; --out-bg: #fffafc;
+  --err-bg: #fdd8d8; --err-ink: #a3141c;
+  --urgent-bg: #fdf1f1; --urgent-line: #efb9be;
+  --sms-bg: #ffe7f3; --sms-line: #fea2ba;
+  --slab: #3d1f38; --slab-dock: #33192f; --slab-line: #5e3456; --slab-ink: #fff3f9; --slab-text: #ffe7f3; --slab-muted: #fea2ba;
+  --slab-fill: #1adee6; --slab-fill-hover: #7efaff; --slab-fill-ink: #062a2c;
+  --slab-done-bg: #6fe0b4; --slab-done-ink: #0b2a1f; --slab-tick: #6fe0b4;
+  --slab-sms-bg: rgba(254, 162, 186, .12); --slab-sms-line: #fea2ba;
+  scrollbar-color: var(--sms-line) transparent;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="pink"]:not([data-theme="light"]) {
+    --bg: #1e1820; --panel: #2a2230; --ink: #ffe7f3; --muted: #d4b3c3;
+    --line: #4a3a48; --field: #6a5068; --accent: #1adee6; --accent-ink: #062a2c; --accent-text: #7efaff; --accent-soft: #17434a; --focus: #7efaff;
+    --selected-bg: #17434a; --selected-ink: #ffe7f3;
+    --btn-bg: #1adee6; --btn-ink: #062a2c; --btn-line: #1adee6; --btn-hover: #7efaff;
+    --done-bg: #6fe0b4; --done-ink: #0b2a1f; --done-line: #6fe0b4;
+    --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #241d29;
+    --err-bg: #4a1a22; --err-ink: #ffb3bd;
+    --urgent-bg: #2b1621; --urgent-line: #6e2f3c;
+    --sms-bg: #3a2232; --sms-line: #fea2ba;
+    --slab: #3a2238; --slab-dock: #321d30; --slab-line: #5a3a56; --slab-ink: #fff3f9; --slab-text: #ffe7f3; --slab-muted: #fea2ba;
+    --slab-fill: #1adee6; --slab-fill-hover: #7efaff; --slab-fill-ink: #062a2c;
+    --slab-done-bg: #6fe0b4; --slab-done-ink: #0b2a1f; --slab-tick: #6fe0b4;
+    --slab-sms-bg: rgba(254, 162, 186, .12); --slab-sms-line: #fea2ba;
+  }
+}
+:root[data-palette="pink"][data-theme="dark"] {
+  --bg: #1e1820; --panel: #2a2230; --ink: #ffe7f3; --muted: #d4b3c3;
+  --line: #4a3a48; --field: #6a5068; --accent: #1adee6; --accent-ink: #062a2c; --accent-text: #7efaff; --accent-soft: #17434a; --focus: #7efaff;
+  --selected-bg: #17434a; --selected-ink: #ffe7f3;
+  --btn-bg: #1adee6; --btn-ink: #062a2c; --btn-line: #1adee6; --btn-hover: #7efaff;
+  --done-bg: #6fe0b4; --done-ink: #0b2a1f; --done-line: #6fe0b4;
+  --warn-bg: #3d3010; --warn-ink: #f5d27a; --ok: #6fe0b4; --out-bg: #241d29;
+  --err-bg: #4a1a22; --err-ink: #ffb3bd;
+  --urgent-bg: #2b1621; --urgent-line: #6e2f3c;
+  --sms-bg: #3a2232; --sms-line: #fea2ba;
+  --slab: #3a2238; --slab-dock: #321d30; --slab-line: #5a3a56; --slab-ink: #fff3f9; --slab-text: #ffe7f3; --slab-muted: #fea2ba;
+  --slab-fill: #1adee6; --slab-fill-hover: #7efaff; --slab-fill-ink: #062a2c;
+  --slab-done-bg: #6fe0b4; --slab-done-ink: #0b2a1f; --slab-tick: #6fe0b4;
+  --slab-sms-bg: rgba(254, 162, 186, .12); --slab-sms-line: #fea2ba;
+}

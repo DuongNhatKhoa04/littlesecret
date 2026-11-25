@@ -48,6 +48,7 @@ ticket-writer/
 ├─ styles/                     CSS, mỗi file 1 vùng giao diện
 │  ├─ fonts.css · fonts/       font Be Vietnam Pro (woff2 + OFL.txt), nằm trong folder vì chạy file:// không có mạng
 │  ├─ tokens.css               màu, bo góc, font (light + dark; data-theme trên <html> = người dùng chọn Sáng/Tối)
+│  ├─ palette-pink.css         màu giao diện Hồng (data-palette trên <html>, ghi đè biến của tokens.css)
 │  ├─ layout.css · form.css · checklist.css · output.css · dialog.css
 ├─ config/                     DỮ LIỆU: chỉ khai báo, không có logic
 │  ├─ app.js                   version, Loại có sẵn, Kết luận, ký hiệu, nhãn, storage key
@@ -64,9 +65,9 @@ ticket-writer/
 │  │                           sms · sms-message · shipping · shipping-message · review · review-message · pass-case · pass-case-message · shop-info · phone-link · qr-code
 │  ├─ application/             USE CASE: store + service, điều phối domain và port
 │  │                           context · store · session · session-repository · ticket/navigation/view/image/
-│  │                           output/category/template/offline/backup/sms/shipping/review/pass-case/staff/summary-history/tag-history/notice/theme/phone-service
+│  │                           output/category/template/offline/backup/sms/shipping/review/pass-case/staff/summary-history/tag-history/notice/theme/palette/phone-service
 │  ├─ infrastructure/          ADAPTER: storage (localStorage) · image-store (ảnh trên IndexedDB) · storage-quota (dung lượng) · phone-inbox (lấy ảnh từ phone-upload) · clipboard · screen-capture (chụp màn hình) · ticket-fill (bookmarklet điền ticket) · shop-grab (bookmarklet lấy thông tin tiệm) · zip (ghi file ZIP) · pdf-image · pdf (ghi file PDF) · files
-│  ├─ ui/                      GIAO DIỆN: dom (helper, ô nhập + nhãn) · combo (danh sách gợi ý dùng chung) · notice-bar (thanh cảnh báo) · theme-toggle (nút sáng/tối) · phone-button (nút Nhận ảnh iOS) · phone-dialog (mã QR cho iPad) · picker · ticket-form · category-combo · summary-combo · idea-list ·
+│  ├─ ui/                      GIAO DIỆN: dom (helper, ô nhập + nhãn) · combo (danh sách gợi ý dùng chung) · notice-bar (thanh cảnh báo) · theme-toggle (nút sáng/tối) · palette-picker (chọn màu giao diện) · phone-button (nút Nhận ảnh iOS) · phone-dialog (mã QR cho iPad) · picker · ticket-form · category-combo · summary-combo · idea-list ·
 │  │                           checklist-view · image-zone · output-view · image-panel · image-viewer ·
 │  │                           template-dialog · offline-dialog · backup-buttons · fill-dialog · header · paste-handler · sms-form · shipping-form · review-form · shop-paste (nút Dán thông tin tiệm) · pass-case-form
 │  └─ main.js                  COMPOSITION ROOT: tạo adapter, inject vào service, gắn UI
@@ -159,7 +160,7 @@ File config:
 - **Không đổi key loại** đang có: `incident` `request` `transfer` `setup` `setupPax` `newDb` `setupValor` `setupTraining`. State và template lưu theo key. Gộp loại → khai báo key cũ trong `formerKeys` của loại nhận (vd `request` → `incident`); key cũ không được dùng lại.
 - **`id` mục checklist duy nhất trong toàn dự án**: tick/N/A lưu chung theo id. Không đổi id đang có; bỏ bước thì xóa mục.
 - **Key mục ticket dùng chung giữa các loại**: cùng key = cùng ý nghĩa (chi tiết ở docs/CONFIG.md).
-- Không đổi `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `phoneKey`, `imageDbName`. Thêm dữ liệu lưu mới → thêm trường, vẫn đọc được bản cũ.
+- Không đổi `storageKey`, `templateKey`, `categoryKey`, `staffKey`, `themeKey`, `paletteKey`, `phoneKey`, `imageDbName`. Thêm dữ liệu lưu mới → thêm trường, vẫn đọc được bản cũ.
 - Mỗi lần sửa bất kỳ file nào: tăng `version` trong `config/app.js`, dạng `vYYYY-MM-DD.N`.
 
 ## Nội dung checklist

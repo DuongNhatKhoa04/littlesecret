@@ -44,6 +44,7 @@ Mục tiêu: ticket đồng nhất format, không quên bước, không thiếu 
 - Dữ liệu lưu trong `localStorage` của trình duyệt trên máy người dùng. Không gửi đi đâu.
 - Ảnh lưu trong **IndexedDB** của trình duyệt (§12): tải lại trang / mở lại Chrome vẫn còn. `Ticket mới` và `Mở file đã lưu` xóa ảnh. IndexedDB bị chặn/đầy → ảnh chỉ giữ trong bộ nhớ như trước, không báo lỗi.
 - Giao diện sáng / tối: nút ở header xoay vòng `◐ Tự động` (theo hệ điều hành, mặc định) → `☀ Sáng` → `☾ Tối`. Lựa chọn lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`.
+- **Màu giao diện**: menu `Khác` → `Màu giao diện`: `Tím` (mặc định, bảng Castorice) · `Hồng` (bảng hồng phấn + cyan của bản `v2026-11-12.4`, khu Kết quả khối mận đậm). Độc lập với Sáng / Tối: màu nào cũng có bản Sáng và Tối. Lựa chọn đang dùng tô nền; lưu riêng trên máy (§12), giữ qua F5 và `Ticket mới`. Thêm màu: config `palettes` + 1 file `styles/palette-<id>.css` (CONFIG.md).
 - Hỗ trợ gõ tiếng Việt bằng IME (Unikey…): không xử lý phím Enter/Backspace, không viết hoa khi đang gõ dấu.
 - Hiện `version` ở cuối menu `Khác` (`Phiên bản v…`) để biết đang mở đúng bản mới.
 
@@ -260,6 +261,7 @@ Việc cần làm tiếp:
 | `ticketWriter.v1` | Loại đang chọn, chế độ xem, đổi bên, ticket đang nhập (Loại, Tóm tắt, Phone, ngôn ngữ, variant, kết luận, các mục, tick/N/A checklist), form SMS Promotion (trường `sms`, gồm ô tick `enabled`, ngôn ngữ tin nhắn `lang` và option tự thêm `customOptions`; ảnh lưu ở IndexedDB), form SMS Shipping (trường `shipping`), form SMS Xin review (trường `review`: bang `usState`, ngôn ngữ `lang`) |
 | `ticketWriter.images.v1` | **IndexedDB** (không phải localStorage), object store `images`: mỗi bản ghi = danh sách ảnh `{ blob, copied }` của 1 mục, key = key mục. Ảnh gốc, không nén. Nạp lại khi mở trang, giữ cả trạng thái `✓ Đã copy` |
 | `ticketWriter.theme.v1` | Giao diện đã chọn: `auto` / `light` / `dark`. Lưu riêng để `Ticket mới` không đổi; giá trị lạ → `auto` |
+| `ticketWriter.palette.v1` | Màu giao diện đã chọn: `castorice` (Tím) / `pink` (Hồng). Lưu riêng như trên; giá trị lạ / chưa chọn → màu đầu (Tím) |
 | `ticketWriter.phone.v1` | Nhận ảnh iOS (§21): `{ link, enabled }` — link phone-upload đã dán và lần trước có đang bật không |
 | `ticketWriter.staff.v1` | Tên nhân viên (form SMS Xin review). Lưu riêng để `Ticket mới` không xóa |
 | `ticketWriter.templates.v1` | Danh sách template |

@@ -26,6 +26,7 @@ Double-click `tests/index.html`. Dòng đầu hiện `PASS x/x` (xanh) hoặc `F
 | `config.test.js` | Config hợp lệ: key loại cũ còn đủ, meta khớp catalog, id mục duy nhất. |
 | `application.test.js` | Đọc state bản cũ, lưu state, thao tác sửa ticket (storage giả). Ảnh: nạp lại từ IndexedDB (giả), lưu theo mục, đổi thứ tự, Ticket mới trong lúc đang nạp. |
 | `notice.test.js` | Cảnh báo lưu trữ: bật / tắt / ẩn bằng ×, ngưỡng sắp đầy, ảnh không lưu được. |
+| `palette.test.js` | Màu giao diện: mặc định Tím, chọn Hồng lưu trên máy, giá trị lạ bỏ qua. |
 | `theme.test.js` | Nút giao diện: mặc định Tự động, xoay vòng, lưu lựa chọn. |
 | `phone.test.js` | Nhận ảnh iOS: đọc link máy tính, hỏi hàng chờ, giao ảnh, mất kết nối, link iPad / đổi mã. Mã QR: kích thước, ô tìm vị trí, chọn phiên bản theo độ dài. |
 | `summary-history.test.js` | Gợi ý Tóm tắt: dữ liệu hỏng, mới nhất đầu, không trùng, xóa 1 gợi ý. |

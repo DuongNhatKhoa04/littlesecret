@@ -36,12 +36,14 @@
   const templateService = A.templateService.createTemplateService({ context, store, session, storage, files, categories });
   const staffService = A.staffService.createStaffService({ context, storage });
   const themeService = A.themeService.createThemeService({ context, storage });
+  const paletteService = A.paletteService.createPaletteService({ context, storage });
   const summaryHistory = A.summaryHistoryService.createSummaryHistoryService({ context, storage });
   const offlineService = A.offlineService.createOfflineService({ context, store, session, files, images, outputService });
 
   // UI
   U.noticeBar.createNoticeBar({ root: $('#notices'), notices });
   U.themeToggle.createThemeToggle({ themeService });
+  U.palettePicker.createPalettePicker({ paletteService });
   const viewer = U.imageViewer.createImageViewer({ outputService });
   const imageZone = U.imageZone.createImageZone({ images, clipboard, screenCapture, openViewer: viewer.open });
   const checklistView = U.checklistView.createChecklistView({ session, ticketService, images, imageZone });

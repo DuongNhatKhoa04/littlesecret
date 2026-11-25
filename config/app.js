@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-25.6',      // hiện cuối menu Khác để biết đang mở đúng bản mới
+    version: 'v2026-11-25.7',      // hiện cuối menu Khác để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
     offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu ticket ra file (chọn 1, bắt buộc)
@@ -16,6 +16,7 @@
     categoryKey: 'ticketWriter.categories.v1',
     staffKey: 'ticketWriter.staff.v1',         // tên nhân viên (form SMS Xin review), lưu riêng để Ticket mới không xóa
     themeKey: 'ticketWriter.theme.v1',         // giao diện sáng / tối / tự động, lưu riêng để Ticket mới không đổi
+    paletteKey: 'ticketWriter.palette.v1',     // màu giao diện (Tím / Hồng…), lưu riêng như themeKey
     summaryKey: 'ticketWriter.summaries.v1',   // Tóm tắt đã dùng, gợi ý khi gõ ô Tóm tắt
     tagKey: 'ticketWriter.passTags.v1',        // tên tag đã thêm tay ở Chuyển case theo team, gợi ý khi gõ ô Thêm tag
     // Key đưa vào file Sao lưu (tên trường ở trên): gợi ý Tóm tắt, gợi ý tên người support thêm (Chuyển case), template.
@@ -71,6 +72,13 @@
       { id: 'auto',  label: '◐ Tự động' },
       { id: 'light', label: '☀ Sáng' },
       { id: 'dark',  label: '☾ Tối' }
+    ],
+
+    // Màu giao diện, chọn ở menu Khác (dùng chung với Sáng / Tối ở trên). Mục đầu là mặc định = màu trong styles/tokens.css.
+    // Mục khác: data-palette="<id>" trên <html>, màu ở styles/palette-<id>.css (nhớ thêm <link> vào index.html). id lưu trên máy => không đổi id.
+    palettes: [
+      { id: 'castorice', label: 'Tím' },
+      { id: 'pink',      label: 'Hồng' }
     ],
 
     // Thứ tự = thứ tự tab ở header. Nhóm ticket / SMS không có tab riêng: mỗi loại của nhóm là 1 tab; nhóm Setup là 1 tab.

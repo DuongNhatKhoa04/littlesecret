@@ -19,7 +19,7 @@
 .copy + .copy { margin-left: 0; }   /* nhiều nút cạnh nhau (ZIP, PDF): chỉ nút đầu đẩy sang phải */
 #outPane .copy { background: transparent; color: var(--slab-ink); border-color: var(--slab-line); }
 #outPane .copy:hover:not(:disabled) { background: var(--slab-line); }
-#outPane .copy.done { background: #7cd7ff; color: #062033; border-color: #7cd7ff; }
+#outPane .copy.done { background: var(--slab-done-bg); color: var(--slab-done-ink); border-color: var(--slab-done-bg); }
 #outPane .ghost { color: var(--slab-ink); border-color: var(--slab-line); }
 #outPane .ghost:hover { border-color: var(--slab-muted); }
 
@@ -29,7 +29,7 @@
 }
 #outTitle { font-size: 21px; font-weight: 700; line-height: 1.35; letter-spacing: -0.01em; color: var(--slab-ink); }
 .out:empty::before { content: attr(data-empty); color: var(--slab-muted); font-size: 14px; font-weight: 400; }
-.sms-out { padding: 12px 14px; background: rgba(124, 215, 255, .1); border: 1px solid #7cd7ff; border-radius: var(--radius); }
+.sms-out { padding: 12px 14px; background: var(--slab-sms-bg); border: 1px solid var(--slab-sms-line); border-radius: var(--radius); }
 .warn { background: var(--warn-bg); color: var(--warn-ink); padding: 10px 14px; border-radius: var(--radius); margin: 0 0 16px; font-size: 14px; }
 .warn[hidden] { display: none; }
 
@@ -39,7 +39,7 @@
 .icard img { height: 72px; max-width: 140px; object-fit: cover; border: 1px solid var(--line); border-radius: 6px; flex: none; cursor: zoom-in; }
 .icard .meta { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .icard .tick { color: var(--ok); font-weight: 650; }
-#outPane .icard .tick { color: #6fe0b4; }
+#outPane .icard .tick { color: var(--slab-tick); }
 .icard .copy { margin-left: 0; flex: none; }
 
 /* Dải đáy: ghim khi cuộn để Copy để điền luôn trong tầm mắt */
@@ -51,9 +51,9 @@
 .dock[hidden] { display: none; }
 #outPane .dock .fill {
   flex: 1 1 240px; min-height: 52px; margin: 0; font-size: 17px; font-weight: 700;
-  background: #c9b3ff; color: #1c0f40; border: 0; border-radius: 10px; transition: background .16s ease;
+  background: var(--slab-fill); color: var(--slab-fill-ink); border: 0; border-radius: 10px; transition: background .16s ease;
 }
-#outPane .dock .fill:hover:not(:disabled) { background: #ddd0ff; }
-#outPane .dock .fill.done { background: #7cd7ff; color: #062033; }
+#outPane .dock .fill:hover:not(:disabled) { background: var(--slab-fill-hover); }
+#outPane .dock .fill.done { background: var(--slab-done-bg); color: var(--slab-done-ink); }
 #outPane .dock .fill:disabled { opacity: 1; background: transparent; color: var(--slab-muted); border: 1.5px dashed var(--slab-line); }
 .dock .link { color: var(--slab-muted); }
