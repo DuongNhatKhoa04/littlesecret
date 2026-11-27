@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-27
 
+- `v2026-11-27.4` · Bookmark **Lấy thông tin tiệm**: chạy được trên trang **My Merchant** (Tên tiệm + MID từ dòng `<Tên tiệm> / <MID>`, link trang vào ô Link Lead); **không lấy Business ZIP** nữa ở mọi trang (FRT tự hỏi). Trang Lead vẫn lấy DBA + MID. Phải kéo lại bookmark. §22.4
 - `v2026-11-27.3` · Chuyển case: dòng link có nhãn `Link Lead: …` (MKT, Tech) / `Link Ticket: …` (CS). §22.2
 - `v2026-11-27.2` · Chuyển case: tin ghi rõ từng dòng `Tên tiệm: …` / `Zipcode: …` / `MID: …` (Sales thay dòng `LEAD: …`, MKT / CS thay dòng `Tên tiệm ZIP`; Tech chỉ có `Tên tiệm: …`). Tạm ẩn nút **Gửi Telegram** + `Alt+G` (`telegram.hidden`). §22.2 §24
 - `v2026-11-27.1` · Chuyển case: **Gửi Telegram** gửi vào group riêng của từng team (`test sale` / `test mkt` / `test cs` / `test tech`), không còn gửi chung 1 group test. §24

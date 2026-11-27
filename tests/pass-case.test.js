@@ -217,8 +217,8 @@
 
   test('thông tin tiệm: chỉ giữ chuỗi đã trim (Link Ticket / Lead, Tên tiệm, MID, ZIP, nội dung), cắt chuỗi quá dài (nội dung 3000); dữ liệu hỏng => null', () => {
     const { sanitizeShopInfo } = D.shopInfo;
-    assertEqual(sanitizeShopInfo({ app: 'x', lead: ' https://portal/lead/1 ', shop: ' TEST NAILS ', mid: '123', zip: 75001, phone: '1' }),
-      { lead: 'https://portal/lead/1', shop: 'TEST NAILS', mid: '123' });
+    assertEqual(sanitizeShopInfo({ app: 'x', lead: ' https://portal/lead/1 ', shop: ' TEST NAILS ', mid: '123', zip: '75001', phone: '1' }),
+      { lead: 'https://portal/lead/1', shop: 'TEST NAILS', mid: '123' });   // ZIP không nhận nữa (kể cả từ bookmark bản cũ): FRT tự hỏi
     assertEqual([sanitizeShopInfo(null), sanitizeShopInfo('abc'), sanitizeShopInfo({ shop: '  ' })], [null, null, null]);
     assertEqual(sanitizeShopInfo({ shop: 'A'.repeat(500) }).shop.length, 300);
     assertEqual([sanitizeShopInfo({ issue: ' PAX - SUCCESS\nFIRST ' }).issue, sanitizeShopInfo({ issue: 'x'.repeat(5000) }).issue.length], ['PAX - SUCCESS\nFIRST', 3000]);

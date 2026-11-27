@@ -1,4 +1,4 @@
-// src/infrastructure/shop-grab.js — Bookmark "Lấy thông tin tiệm": chạy trên trang ticket (Link Ticket / Tên tiệm / MID / nội dung) hoặc Lead (Link Lead / DBA / MID / ZIP), copy lại; Ticket Writer đọc lại để điền Chuyển case.
+// src/infrastructure/shop-grab.js — Bookmark "Lấy thông tin tiệm": chạy trên trang ticket (Link Ticket / Tên tiệm / MID / nội dung), My Merchant (link trang / Tên tiệm / MID) hoặc Lead (Link Lead / DBA / MID), copy lại; Ticket Writer đọc lại để điền Chuyển case.
 // Ticket Writer không chạm được vào tab khác, nên đưa dữ liệu qua clipboard (chiều ngược với ticket-fill.js).
 (function (TW) {
   'use strict';
@@ -6,26 +6,27 @@
   const MARK = 'ticket-writer-shop';   // đánh dấu clipboard là thông tin tiệm của Ticket Writer, không phải chữ bất kỳ
 
   // Chạy trên trang portal, không phải Ticket Writer: phải tự đủ, chỉ dùng tham số (được chuyển thành chữ trong link bookmark).
-  // Trang ticket (có dòng `Ticket #… for <Tên tiệm> / <MID>`) => Link Ticket; không thì coi là trang Lead => Link Lead + ZIP.
+  // Thứ tự nhận trang: ticket (dòng `Ticket #… for <Tên tiệm> / <MID>`) → My Merchant (dòng `<Tên tiệm> / <MID>` có link .mid-link) → Lead.
+  // Không lấy Business ZIP: FRT tự hỏi merchant.
   async function grabShopPage(config, mark) {
+    const headerMatch = (node, pattern) => node && node.textContent.replace(/\s+/g, ' ').trim().match(new RegExp(pattern));
     function fromTicket() {
-      const header = document.querySelector(config.ticketHeader);
-      const match = header && header.textContent.replace(/\s+/g, ' ').trim().match(new RegExp(config.ticketPattern));
+      const match = headerMatch(document.querySelector(config.ticketHeader), config.ticketPattern);
       if (!match) return null;
       // innerText giữ xuống dòng của nội dung nhiều đoạn (textContent dính liền các đoạn)
       const description = document.querySelector(config.description);
       const issue = description ? description.innerText.replace(/\n{3,}/g, '\n\n').trim() : '';
-      return { data: { ticket: location.href, shop: match[1].trim(), mid: match[2], issue }, labels: { shop: 'Tên tiệm', mid: 'MID', issue: 'Nội dung' } };
+      return { data: { ticket: location.href, shop: match[1].trim(), mid: match[2], issue }, labels: { shop: 'Tên tiệm', mid: 'MID', issue: 'Nội dung' }, link: 'link ticket' };
+    }
+    function fromMerchant() {
+      const midLink = document.querySelector(config.merchantMid);
+      const match = midLink && headerMatch(midLink.closest(config.merchantHeader), config.merchantPattern);
+      if (!match) return null;
+      return { data: { lead: location.href, shop: match[1].trim(), mid: midLink.textContent.trim() }, labels: { shop: 'Tên tiệm', mid: 'MID' }, link: 'link merchant' };
     }
     function fromLead() {
       const valueOf = (selector) => { const node = document.querySelector(selector); return node ? node.value.trim() : ''; };
-      const zipShape = new RegExp(config.zipPattern);
-      const zips = [...new Set([...document.querySelectorAll(config.zip)]
-        .map(node => (node.dataset.value || (node.querySelector('input') || {}).value || '').trim())
-        .filter(value => zipShape.test(value)))];
-      // Nhiều ô chọn cùng dạng ZIP => không biết ô nào là Business ZIP: bỏ trống còn hơn lấy nhầm
-      const data = { lead: location.href, shop: valueOf(config.shop), mid: valueOf(config.mid), zip: zips.length === 1 ? zips[0] : '' };
-      return { data, labels: { shop: 'DBA', mid: 'MID', zip: 'Business ZIP' } };
+      return { data: { lead: location.href, shop: valueOf(config.shop), mid: valueOf(config.mid) }, labels: { shop: 'DBA', mid: 'MID' }, link: 'link lead' };
     }
     async function copy(text) {
       try { await navigator.clipboard.writeText(text); return true; } catch (error) {
@@ -39,13 +40,13 @@
         return copied;
       }
     }
-    const { data, labels } = fromTicket() || fromLead();
+    const { data, labels, link } = fromTicket() || fromMerchant() || fromLead();
     const missing = Object.keys(labels).filter(id => !data[id]).map(id => labels[id]);
-    if (missing.length === Object.keys(labels).length) { alert('Ticket Writer: không thấy Tên tiệm, MID. Mở đúng trang ticket / Lead rồi bấm lại.'); return; }
+    if (missing.length === Object.keys(labels).length) { alert('Ticket Writer: không thấy Tên tiệm, MID. Mở đúng trang ticket / My Merchant / Lead rồi bấm lại.'); return; }
     const text = JSON.stringify({ app: mark, ...data });
     if (!await copy(text)) { prompt('Ticket Writer: không copy được. Bấm Ctrl+C rồi OK:', text); return; }
-    const found = [data.shop, data.mid && 'MID ' + data.mid, data.zip && 'ZIP ' + data.zip].filter(Boolean).join(' · ');
-    alert('Ticket Writer: đã copy ' + found + (data.ticket ? ' + link ticket' : ' + link lead') + (data.issue ? ' + nội dung' : '') + (missing.length ? '\nKhông thấy: ' + missing.join(', ') : '') +
+    const found = [data.shop, data.mid && 'MID ' + data.mid].filter(Boolean).join(' · ');
+    alert('Ticket Writer: đã copy ' + found + ' + ' + link + (data.issue ? ' + nội dung' : '') + (missing.length ? '\nKhông thấy: ' + missing.join(', ') : '') +
       '\nVề Ticket Writer → Chuyển case → bấm Ctrl+V.');
   }
 
@@ -56,7 +57,7 @@
     return data && data.app === MARK ? data : null;
   }
 
-  /** @param {{ ticketHeader: string, ticketPattern: string, description: string, shop: string, mid: string, zip: string, zipPattern: string }} config  @returns {ShopGrab} */
+  /** @param {{ ticketHeader: string, ticketPattern: string, description: string, merchantMid: string, merchantHeader: string, merchantPattern: string, shop: string, mid: string }} config  @returns {ShopGrab} */
   function createShopGrab(config) {
     const code = `void (${grabShopPage})(${JSON.stringify(config)}, ${JSON.stringify(MARK)})`;
     return {

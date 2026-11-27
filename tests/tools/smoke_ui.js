@@ -319,16 +319,16 @@
     shopData.setData('text/plain', JSON.stringify({ app: 'ticket-writer-shop', lead: 'https://portal/lead/1', shop: 'SMOKE NAILS', mid: '123', zip: '75001' }));
     $('#pass_contact').dispatchEvent(new ClipboardEvent('paste', { clipboardData: shopData, bubbles: true, cancelable: true }));
     await settle();
-    check('Chuyển case: có nút Dán thông tin tiệm; Ctrl+V chữ của bookmark => điền Link Lead, Tên tiệm, MID, ZIP',
-      !!$$('.pass-shop button').find(node => node.textContent === 'Dán thông tin tiệm') && $('#pass_shop').value === 'SMOKE NAILS' && $('#pass_zip').value === '75001' &&
-      $('#pass_contact').value === '' && $('#outBody').textContent.startsWith('Link Lead: https://portal/lead/1\nTên tiệm: SMOKE NAILS\nZipcode: 75001\nMID: 123'), $('#outBody').textContent);
+    check('Chuyển case: có nút Dán thông tin tiệm; Ctrl+V chữ của bookmark => điền Link Lead, Tên tiệm, MID; ZIP bỏ qua (FRT tự hỏi)',
+      !!$$('.pass-shop button').find(node => node.textContent === 'Dán thông tin tiệm') && $('#pass_shop').value === 'SMOKE NAILS' && $('#pass_zip').value === '' &&
+      $('#pass_contact').value === '' && $('#outBody').textContent.startsWith('Link Lead: https://portal/lead/1\nTên tiệm: SMOKE NAILS\nMID: 123'), $('#outBody').textContent);
     const bodyData = new DataTransfer();
     bodyData.setData('text/plain', JSON.stringify({ app: 'ticket-writer-shop', shop: 'BODY NAILS' }));
     document.activeElement.blur();
     document.body.dispatchEvent(new ClipboardEvent('paste', { clipboardData: bodyData, bubbles: true, cancelable: true }));
     await settle();
     check('Chuyển case: Ctrl+V không đứng trong ô nào cũng điền (không cần quyền clipboard); cạnh nút có gợi ý Ctrl+V',
-      $('#pass_shop').value === 'BODY NAILS' && $('#pass_zip').value === '75001' && $('#pass_shopStatus').textContent.startsWith('Đã điền: Tên tiệm'),
+      $('#pass_shop').value === 'BODY NAILS' && $('#pass_zip').value === '' && $('#pass_shopStatus').textContent.startsWith('Đã điền: Tên tiệm'),
       [$('#pass_shop').value, $('#pass_shopStatus').textContent]);
     clickText('#form', 'CS');
     await settle();
@@ -338,7 +338,7 @@
     await settle();
     check('Chuyển case CS: Ctrl+V chữ bookmark lấy trên trang ticket => điền Link Ticket, Tên tiệm, MID, Issue; không còn ô tick Assign',
       $('#pass_ticket').value === 'https://portal/v2/helpdesk/ticket/9#' && $('#pass_issue').value === 'PAX - SUCCESS' && !$('#pass_assign') &&
-      $('#outBody').textContent.startsWith('Link Ticket: https://portal/v2/helpdesk/ticket/9#\nTên tiệm: TICKET NAILS\nZipcode: 75001\nMID: 4966'), $('#outBody').textContent);
+      $('#outBody').textContent.startsWith('Link Ticket: https://portal/v2/helpdesk/ticket/9#\nTên tiệm: TICKET NAILS\nMID: 4966'), $('#outBody').textContent);
     // Gửi Telegram: chỉ mở hộp xem trước, không gửi thật (smoke không gọi mạng). Đang tạm ẩn (config telegram.hidden) thì chỉ kiểm tra đã ẩn.
     if (TW.registry.app().telegram.hidden) {
       key($('#pass_issue'), { key: 'g', altKey: true });

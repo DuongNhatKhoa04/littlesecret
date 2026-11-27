@@ -713,26 +713,29 @@ Thanks team !                       Thanks team !
 - `Ticket mới`: hỏi xác nhận → xóa form Chuyển case (về team Tech) và ảnh Issue, không đụng ticket, ảnh ticket và các form SMS. `Ticket mới` ở Viết ticket xóa hết ảnh, kể cả ảnh Chuyển case (cùng 1 cuộc gọi).
 - Form lưu riêng (`passCase` trong `storageKey`): F5 không mất, chuyển qua lại với Hỗ trợ merchant không mất dữ liệu bên nào. State bản trước chưa có → form trống.
 
-### 22.4 Lấy thông tin tiệm từ trang ticket / Lead
+### 22.4 Lấy thông tin tiệm từ trang ticket / My Merchant / Lead
 
 - Bookmark **Lấy thông tin tiệm**: kéo từ hộp `Cài bookmark "Điền ticket"` (cùng hộp với bookmark Điền ticket, §9). Bấm ở Ticket Writer thì không làm gì.
 - Chạy trên tab portal đang đứng. Trang có dòng tiêu đề ticket `Ticket #… for <Tên tiệm> / <MID>` (`shopGrab.ticketHeader`) là **trang ticket**, lấy:
   - **Link Ticket** = địa chỉ trang đang mở (kể cả `?bucket=…&rank=…#`). Đây cũng là link mà app chat in trong ngoặc khi copy dòng tiêu đề, vì MID trên trang là link `href="#"`.
   - **Tên tiệm**, **MID**: tách dòng tiêu đề bằng `shopGrab.ticketPattern`; Tên tiệm có `/` vẫn đúng (MID = phần sau dấu ` / ` cuối).
   - **Nội dung** ticket (`shopGrab.description`, thẻ `.description-text`) → ô **Issue**: giữ xuống dòng, 3 dòng trống trở lên gộp còn 1 dòng trống, tối đa 3000 ký tự. Không có thì báo `Không thấy: Nội dung`, vẫn copy phần còn lại.
-- Không có dòng đó → **trang Lead**, lấy:
+- Không phải trang ticket, có dòng `<Tên tiệm> / <MID>` với MID là link `.mid-link` (`shopGrab.merchantMid`, `merchantHeader`) → **trang My Merchant**, lấy:
+  - **Link Lead** = địa chỉ trang merchant đang mở (không có ô link riêng cho merchant).
+  - **Tên tiệm**, **MID**: tách dòng đó bằng `shopGrab.merchantPattern`; Tên tiệm có `/` vẫn đúng.
+- Không phải 2 loại trên → **trang Lead** (My Leads), lấy:
   - **Link Lead** = địa chỉ trang đang mở.
   - **DBA**, **MID**: ô theo selector `shopGrab.shop`, `shopGrab.mid` (`config/app.js`).
-  - **Business ZIP**: ô chọn không có name cố định → lấy mọi ô `shopGrab.zip` có giá trị, giữ giá trị dạng ZIP (`shopGrab.zipPattern`: 5 số, hoặc 5 số + `-` + 4 số). Có từ 2 giá trị ZIP khác nhau → bỏ trống ZIP (không đoán).
-- Không thấy trường nào → báo `không thấy Tên tiệm, MID. Mở đúng trang ticket / Lead rồi bấm lại.`, không đụng clipboard. Thấy một phần → vẫn copy, báo đã copy gì (`+ link ticket` / `+ link lead`) và `Không thấy: …`.
+- **Không lấy Business ZIP ở trang nào** (từ `v2026-11-27.4`): FRT tự hỏi merchant rồi gõ ô ZIP Code. Clipboard từ bookmark bản cũ có ZIP thì bỏ qua, ô ZIP Code giữ nguyên.
+- Không thấy trường nào → báo `không thấy Tên tiệm, MID. Mở đúng trang ticket / My Merchant / Lead rồi bấm lại.`, không đụng clipboard. Thấy một phần → vẫn copy, báo đã copy gì (`+ link ticket` / `+ link merchant` / `+ link lead`) và `Không thấy: …`.
 - Copy JSON có đánh dấu `ticket-writer-shop` (không phải chữ để đọc); Clipboard API bị chặn → dùng cách copy dự phòng; vẫn không được → hiện ô chứa chữ để tự Ctrl+C.
 - Ở Chuyển case (mọi team) có nút **Dán thông tin tiệm** + nút `?` (mở hộp hướng dẫn bookmark), ngay dưới Team nhận:
-  - Đọc clipboard (Chrome hỏi quyền; Ticket Writer chạy `file://` nên Chrome có thể hỏi lại mỗi lần). Cạnh nút luôn ghi `hoặc Ctrl+V ở trang này (không cần cho phép)`. Có dữ liệu của bookmark → điền các trường lấy được (**Link Ticket** hoặc **Link Lead**, **Tên tiệm**, **MID**, **ZIP Code**, **Issue**): trường lấy được thì ghi đè, trường không lấy được giữ nguyên chữ cũ. Báo cạnh nút `Đã điền: <các trường>`.
+  - Đọc clipboard (Chrome hỏi quyền; Ticket Writer chạy `file://` nên Chrome có thể hỏi lại mỗi lần). Cạnh nút luôn ghi `hoặc Ctrl+V ở trang này (không cần cho phép)`. Có dữ liệu của bookmark → điền các trường lấy được (**Link Ticket** hoặc **Link Lead**, **Tên tiệm**, **MID**, **Issue**): trường lấy được thì ghi đè, trường không lấy được giữ nguyên chữ cũ. Báo cạnh nút `Đã điền: <các trường>`.
   - Trường điền vào là dữ liệu chung của form (§22.1): team đang chọn không có trường đó (vd CS không có Link Lead, Sales không có Link Ticket) thì không hiện, đổi team mới thấy.
   - Clipboard không phải dữ liệu của bookmark → báo `Clipboard chưa có thông tin tiệm: …`, không đổi form. Chrome chặn đọc clipboard → báo `Chrome chặn đọc clipboard: bấm Ctrl+V ở trang này.`
   - **Ctrl+V** chữ của bookmark ở bất kỳ đâu trên trang khi đang mở Chuyển case (trong ô nhập hay không) → điền như bấm nút, không dán chữ thô vào ô; không cần quyền clipboard nên Chrome không bao giờ hỏi. Chữ khác dán như thường.
 - Dữ liệu từ clipboard: chỉ nhận chuỗi, đã trim, tối đa 300 ký tự mỗi trường (Issue 3000).
-- Trang Lead đổi giao diện (đổi `name` ô) → bookmark báo không thấy; sửa `shopGrab` trong `config/app.js` rồi mọi người kéo lại bookmark.
+- Trang Lead / My Merchant đổi giao diện (đổi `name` ô, class) → bookmark báo không thấy; sửa `shopGrab` trong `config/app.js` rồi mọi người kéo lại bookmark.
 
 ### 22.5 Tech: Assign (đã bỏ)
 
