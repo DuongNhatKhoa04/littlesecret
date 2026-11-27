@@ -62,7 +62,7 @@
         id: 'mkt', label: 'MKT', chatId: '-1005636038178', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'lead', 'shop', 'zip', 'mid', 'issue'],
         required: ['lead', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
-        lines: ['{lead}', '{urgent}', 'Tên tiệm: {shop}', 'Zipcode: {zip}', 'MID: {mid}', '{via}: {caller}', '', '{issue}', ''],
+        lines: ['Link Lead: {lead}', '{urgent}', 'Tên tiệm: {shop}', 'Zipcode: {zip}', 'MID: {mid}', '{via}: {caller}', '', '{issue}', ''],
         tags: [
           { from: '20:00', to: '06:00', names: ['@Chris_MKTSupport_Leader', '@Trivu_MarketingSupport', '@lucas_mktsupport'] },
           { from: '06:00', to: '20:00', names: ['@Sarah_Pham_AM', '@josie_am'] }
@@ -72,7 +72,7 @@
         id: 'cs', label: 'CS', chatId: '-1005811925718', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'ticket', 'shop', 'zip', 'mid', 'issue'],
         required: ['ticket', 'shop', 'zip', 'mid', 'phone', 'contact', 'issue'],
-        lines: ['{ticket}', '{urgent}', 'Tên tiệm: {shop}', 'Zipcode: {zip}', 'MID: {mid}', '{via}: {caller}', '', '{issue}', ''],
+        lines: ['Link Ticket: {ticket}', '{urgent}', 'Tên tiệm: {shop}', 'Zipcode: {zip}', 'MID: {mid}', '{via}: {caller}', '', '{issue}', ''],
         tags: [
           { from: '20:00', to: '05:00', names: ['@xuanthor_cs', '@joyce_cs'] },
           { from: '05:00', to: '20:00', names: ['@ThuTranCS'] }
@@ -88,7 +88,7 @@
         id: 'tech', label: 'Tech', chatId: '-1005955163372', thanks: 'Thanks team !', urgent: '🔥🔥🔥 URGENT!!',
         fields: ['phone', 'contact', 'role', 'lead', 'shop', 'issue'],
         required: ['lead', 'shop', 'phone', 'contact', 'issue'],
-        lines: ['{lead}', '{urgent}', 'Tên tiệm: {shop}', '{via}: {caller}', '', '{issue}', ''],
+        lines: ['Link Lead: {lead}', '{urgent}', 'Tên tiệm: {shop}', '{via}: {caller}', '', '{issue}', ''],
         tips: [
           'FRT chủ động xử lý các case Basic, không mất nhiều thời gian.',
           'Ưu tiên case Reconnect Terminal, đặc biệt khi tiệm đang có khách chờ thanh toán.',

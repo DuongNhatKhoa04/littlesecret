@@ -32,7 +32,7 @@
 
   test('pass case: CS theo mẫu group CS: link ticket, Tên tiệm: / Zipcode: / MID: mỗi dòng, CBN, Issue, Thanks team !; tag ca 1-3 8:00 PM – 5:00 AM, ca 2 sau 5:00 AM', () => {
     assertEqual(buildAt(vn(21), 'cs', { ...VALUES, ticket: 'https://crm/ticket/7' }), [
-      'https://crm/ticket/7', 'Tên tiệm: ARIA NAIL BAR', 'Zipcode: 75001', 'MID: 8800123', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
+      'Link Ticket: https://crm/ticket/7', 'Tên tiệm: ARIA NAIL BAR', 'Zipcode: 75001', 'MID: 8800123', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
       'Terminal mất kết nối', '', 'Thanks team !', CS_NIGHT
     ].join('\n'));
     const tagLine = (now) => buildAt(now, 'cs').split('\n').pop();
@@ -42,7 +42,7 @@
 
   test('pass case: MKT theo mẫu group MKT: link lead, Tên tiệm: / Zipcode: / MID: mỗi dòng, CBN Phone - Tên - Vai trò, dòng trống, Issue, Thanks team !', () => {
     assertEqual(build('mkt'), [
-      'https://crm/lead/9', 'Tên tiệm: ARIA NAIL BAR', 'Zipcode: 75001', 'MID: 8800123', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
+      'Link Lead: https://crm/lead/9', 'Tên tiệm: ARIA NAIL BAR', 'Zipcode: 75001', 'MID: 8800123', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
       'Terminal mất kết nối', '', 'Thanks team !', MKT_DAY
     ].join('\n'));
     assertEqual(build('mkt', { shop: 'A', phone: '1', role: 'Staff' }), ['Tên tiệm: A', 'CBN: 1 - Staff', '', 'Thanks team !', MKT_DAY].join('\n'));
@@ -84,7 +84,7 @@
 
   test('pass case: Tech theo mẫu group Tech: link lead, Tên tiệm: …, CBN Phone - Tên - Vai trò, dòng trống, Issue, Thanks team !', () => {
     assertEqual(build('tech'), [
-      'https://crm/lead/9', 'Tên tiệm: ARIA NAIL BAR', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
+      'Link Lead: https://crm/lead/9', 'Tên tiệm: ARIA NAIL BAR', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
       'Terminal mất kết nối', '', 'Thanks team !', TECH_DAY
     ].join('\n'));
     assertEqual(missing('tech', { lead: 'x', role: '' }), ['CBN', 'Tên người liên hệ', 'Tên tiệm', 'Issue']);
@@ -93,9 +93,9 @@
   test('pass case: GẤP mọi team: tick => 🔥🔥🔥 URGENT!! đầu tin (Sales) / ngay dưới link lead, link ticket', () => {
     const urgent = (team) => build(team, { ...VALUES, ticket: 'https://crm/ticket/7' }, { urgent: true }).split('\n').slice(0, 3);
     assertEqual(['tech', 'mkt', 'cs', 'sales'].map(urgent), [
-      ['https://crm/lead/9', '🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR'],
-      ['https://crm/lead/9', '🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR'],
-      ['https://crm/ticket/7', '🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR'],
+      ['Link Lead: https://crm/lead/9', '🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR'],
+      ['Link Lead: https://crm/lead/9', '🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR'],
+      ['Link Ticket: https://crm/ticket/7', '🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR'],
       ['🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR', 'Zipcode: 75001']
     ]);
   });
