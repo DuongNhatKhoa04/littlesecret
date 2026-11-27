@@ -2,6 +2,10 @@
 
 Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu ngày tương ứng: version · đổi gì (người dùng thấy gì) · mục REQUIREMENTS liên quan. Bản cũ hơn 2026-11-12 chưa ghi version, tóm tắt theo commit.
 
+## 2026-11-27
+
+- `v2026-11-27.1` · Chuyển case: **Gửi Telegram** gửi vào group riêng của từng team (`test sale` / `test mkt` / `test cs` / `test tech`), không còn gửi chung 1 group test. §24
+
 ## 2026-11-26
 
 - `v2026-11-26.4` · Chuyển case (mọi team): dưới hàng CBN có nút **CBN / FT** (`Alt+C`) và **VIE / ENG** (`Alt+X`), mặc định CBN + VIE. FT → dòng `FT: …` thay `CBN: …`; ENG → thêm ` - ENG` cuối dòng. Ticket mới về mặc định. §22.1 §22.2
