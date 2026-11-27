@@ -15,8 +15,8 @@
   const CLOSE_AFTER_MS = 900;
   const SHORTCUT_KEY = 'g';
 
-  /** @param {{ session: object, telegramService: object, staffService: object }} deps */
-  function createTelegramDialog({ session, telegramService, staffService }) {
+  /** @param {{ session: object, telegramService: object, staffService: object, hidden: boolean }} deps   hidden: tạm ẩn (config telegram.hidden) */
+  function createTelegramDialog({ session, telegramService, staffService, hidden }) {
     const dialog = $('#tgDlg');
     const button = $('#sendTg');
     const send = $('#tgSend');
@@ -72,14 +72,14 @@
     // Không xét nút đang khóa: nút cập nhật trễ khi đang gõ, còn hộp tự tính lại và báo lý do chưa gửi được.
     document.addEventListener('keydown', (event) => {
       if (!event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.key.toLowerCase() !== SHORTCUT_KEY) return;
-      if (!session.isPassCase() || dialog.open) return;
+      if (hidden || !session.isPassCase() || dialog.open) return;
       event.preventDefault();
       open();
     });
 
     /** Gọi mỗi lần khu Kết quả vẽ lại: nút chỉ có ở Chuyển case, khóa khi tin chưa copy được. */
     function renderButton(result) {
-      button.hidden = !session.isPassCase();
+      button.hidden = hidden || !session.isPassCase();
       button.disabled = !result.canCopyBody;
     }
 

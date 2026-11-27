@@ -27,12 +27,12 @@
   const CS_DAY = '@ThuTranCS';
 
   test('pass case: Sales chỉ in trường của team, đã trim, Note trống thì bỏ dòng; cuối tin Many thanks team! + tag', () => {
-    assertEqual(build('sales'), 'LEAD: ARIA NAIL BAR – 75001 – 8800123\nCBN: (555) 123-4567 – Mr. Vương (Owner)' + SALES_END);
+    assertEqual(build('sales'), 'Tên tiệm: ARIA NAIL BAR\nZipcode: 75001\nMID: 8800123\nCBN: (555) 123-4567 – Mr. Vương (Owner)' + SALES_END);
   });
 
-  test('pass case: CS theo mẫu group CS: link ticket, Tên tiệm ZIP, MID, CBN, Issue, Thanks team !; tag ca 1-3 8:00 PM – 5:00 AM, ca 2 sau 5:00 AM', () => {
+  test('pass case: CS theo mẫu group CS: link ticket, Tên tiệm: / Zipcode: / MID: mỗi dòng, CBN, Issue, Thanks team !; tag ca 1-3 8:00 PM – 5:00 AM, ca 2 sau 5:00 AM', () => {
     assertEqual(buildAt(vn(21), 'cs', { ...VALUES, ticket: 'https://crm/ticket/7' }), [
-      'https://crm/ticket/7', 'ARIA NAIL BAR 75001', 'MID: 8800123', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
+      'https://crm/ticket/7', 'Tên tiệm: ARIA NAIL BAR', 'Zipcode: 75001', 'MID: 8800123', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
       'Terminal mất kết nối', '', 'Thanks team !', CS_NIGHT
     ].join('\n'));
     const tagLine = (now) => buildAt(now, 'cs').split('\n').pop();
@@ -40,12 +40,12 @@
     assertEqual(missing('cs', { shop: 'A', role: '' }), ['CBN', 'Tên người liên hệ', 'Link Ticket', 'ZIP Code', 'MID', 'Issue']);
   });
 
-  test('pass case: MKT theo mẫu group MKT: link lead, Tên tiệm ZIP, MID, CBN Phone - Tên - Vai trò, dòng trống, Issue, Thanks team !', () => {
+  test('pass case: MKT theo mẫu group MKT: link lead, Tên tiệm: / Zipcode: / MID: mỗi dòng, CBN Phone - Tên - Vai trò, dòng trống, Issue, Thanks team !', () => {
     assertEqual(build('mkt'), [
-      'https://crm/lead/9', 'ARIA NAIL BAR 75001', 'MID: 8800123', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
+      'https://crm/lead/9', 'Tên tiệm: ARIA NAIL BAR', 'Zipcode: 75001', 'MID: 8800123', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
       'Terminal mất kết nối', '', 'Thanks team !', MKT_DAY
     ].join('\n'));
-    assertEqual(build('mkt', { shop: 'A', phone: '1', role: 'Staff' }), ['A', 'CBN: 1 - Staff', '', 'Thanks team !', MKT_DAY].join('\n'));
+    assertEqual(build('mkt', { shop: 'A', phone: '1', role: 'Staff' }), ['Tên tiệm: A', 'CBN: 1 - Staff', '', 'Thanks team !', MKT_DAY].join('\n'));
     assertEqual(build('mkt', { issue: 'x' }), ['x', '', 'Thanks team !', MKT_DAY].join('\n'));
     assertEqual(missing('mkt', { shop: 'A', role: '' }), ['CBN', 'Tên người liên hệ', 'Link Lead', 'ZIP Code', 'MID', 'Issue']);
   });
@@ -82,9 +82,9 @@
     assertEqual(picked(), ['cbn', 'vie']);
   });
 
-  test('pass case: Tech theo mẫu group Tech: link lead, Tên tiệm, CBN Phone - Tên - Vai trò, dòng trống, Issue, Thanks team !', () => {
+  test('pass case: Tech theo mẫu group Tech: link lead, Tên tiệm: …, CBN Phone - Tên - Vai trò, dòng trống, Issue, Thanks team !', () => {
     assertEqual(build('tech'), [
-      'https://crm/lead/9', 'ARIA NAIL BAR', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
+      'https://crm/lead/9', 'Tên tiệm: ARIA NAIL BAR', 'CBN: (555) 123-4567 - Mr. Vương - Owner', '',
       'Terminal mất kết nối', '', 'Thanks team !', TECH_DAY
     ].join('\n'));
     assertEqual(missing('tech', { lead: 'x', role: '' }), ['CBN', 'Tên người liên hệ', 'Tên tiệm', 'Issue']);
@@ -93,10 +93,10 @@
   test('pass case: GẤP mọi team: tick => 🔥🔥🔥 URGENT!! đầu tin (Sales) / ngay dưới link lead, link ticket', () => {
     const urgent = (team) => build(team, { ...VALUES, ticket: 'https://crm/ticket/7' }, { urgent: true }).split('\n').slice(0, 3);
     assertEqual(['tech', 'mkt', 'cs', 'sales'].map(urgent), [
-      ['https://crm/lead/9', '🔥🔥🔥 URGENT!!', 'ARIA NAIL BAR'],
-      ['https://crm/lead/9', '🔥🔥🔥 URGENT!!', 'ARIA NAIL BAR 75001'],
-      ['https://crm/ticket/7', '🔥🔥🔥 URGENT!!', 'ARIA NAIL BAR 75001'],
-      ['🔥🔥🔥 URGENT!!', 'LEAD: ARIA NAIL BAR – 75001 – 8800123', 'CBN: (555) 123-4567 – Mr. Vương (Owner)']
+      ['https://crm/lead/9', '🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR'],
+      ['https://crm/lead/9', '🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR'],
+      ['https://crm/ticket/7', '🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR'],
+      ['🔥🔥🔥 URGENT!!', 'Tên tiệm: ARIA NAIL BAR', 'Zipcode: 75001']
     ]);
   });
 
@@ -147,8 +147,8 @@
     assertEqual(A.tagHistoryService.createTagHistoryService({ context, storage: fake('x') }).forTeam('cs').list(), []);
   });
 
-  test('pass case: CBN / LEAD ghép phần nào có thì in phần đó', () => {
-    assertEqual(build('sales', { shop: 'A', mid: '9', role: 'Staff' }), 'LEAD: A – 9\nCBN: Staff' + SALES_END);
+  test('pass case: CBN ghép phần nào có thì in phần đó; Tên tiệm / Zipcode / MID trống thì bỏ dòng đó', () => {
+    assertEqual(build('sales', { shop: 'A', mid: '9', role: 'Staff' }), 'Tên tiệm: A\nMID: 9\nCBN: Staff' + SALES_END);
     assertEqual(build('sales', { phone: '(555) 123-4567', contact: 'Ms Lan' }), 'CBN: (555) 123-4567 – Ms Lan' + SALES_END);
   });
 
@@ -209,7 +209,7 @@
     assertEqual([partial.showTitle, partial.title, partial.canCopyBody, partial.missingFields], [false, '', false, ['CBN', 'ZIP Code']]);
     service.setValue('zip', '75001');
     service.setValue('phone', '(555) 123-4567');
-    assertEqual([output.compute().body, output.compute().canCopyBody], ['LEAD: ARIA – 75001\nCBN: (555) 123-4567' + SALES_END, true]);
+    assertEqual([output.compute().body, output.compute().canCopyBody], ['Tên tiệm: ARIA\nZipcode: 75001\nCBN: (555) 123-4567' + SALES_END, true]);
     assertEqual([output.imageList(), output.pasteTarget('s1')], [[], null]);
     service.reset();
     assertEqual([store.get().passCase, store.get().passCase.team, store.get().ticket.summary], [D.passCase.createEmptyPassCase(config), 'tech', 'giữ']);

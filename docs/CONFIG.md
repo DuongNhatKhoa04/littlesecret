@@ -231,7 +231,7 @@ setPassCase({   // const { setPassCase } = registry;
   labels: { team: 'Team nhận', urgent: 'GẤP' },
   fields: { shop: { label: 'Tên tiệm' }, phone: { label: 'CBN', kind: 'phone' }, role: { label: 'Vai trò tại tiệm', kind: 'choice', options: ['Owner', 'Manager', 'Staff'] } /* … */ },
   rows: [['shop', 'zip'], ['phone', 'contact', 'role']],
-  teams: [{ id: 'sales', label: 'Sales', fields: ['shop', 'zip', 'mid', 'phone'], required: ['shop', 'zip', 'phone'], lines: ['LEAD: {leadInfo}', 'CBN: {cbn}'] } /* … */]
+  teams: [{ id: 'sales', label: 'Sales', fields: ['shop', 'zip', 'mid', 'phone'], required: ['shop', 'zip', 'phone'], lines: ['Tên tiệm: {shop}', 'Zipcode: {zip}', 'MID: {mid}', 'CBN: {cbn}'] } /* … */]
 });
 ```
 
@@ -243,7 +243,7 @@ setPassCase({   // const { setPassCase } = registry;
 | `defaultTeam` | id team mở sẵn khi form trống (lần đầu, sau `Ticket mới`). Không có / sai id thì team đầu |
 | `teams` | Team nhận theo thứ tự trên form. `id` lưu trong state: không đổi id đang có |
 | `teams[].fields` / `required` | Thứ tự ô trên form / ô bắt buộc (trống thì khóa Copy) |
-| `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{leadInfo}` = Tên tiệm – ZIP – MID, `{cbn}` = Phone – Tên (Vai trò), `{shopZip}` = Tên tiệm ZIP, `{caller}` = Phone - Tên - Vai trò (2 cái này có thêm ` - ENG` / ` – ENG` khi chọn ENG), `{via}` = CBN / FT, `{urgent}` = chữ GẤP của team khi tick. Dòng mà mọi `{…}` đều trống thì bỏ; `''` = dòng trống (không để 2 dòng trống liền nhau) |
+| `teams[].lines` | Từng dòng tin nhắn. `{id}` = giá trị ô; `{cbn}` = Phone – Tên (Vai trò), `{caller}` = Phone - Tên - Vai trò (2 cái này có thêm ` - ENG` / ` – ENG` khi chọn ENG), `{via}` = CBN / FT, `{urgent}` = chữ GẤP của team khi tick. Dòng mà mọi `{…}` đều trống thì bỏ; `''` = dòng trống (không để 2 dòng trống liền nhau) |
 | `teams[].urgent` / `tips` | Chữ in ở `{urgent}` khi tick GẤP (có thì form có ô tick GẤP) / khung lưu ý trên form |
 | `teams[].chatId` | ID group Telegram của team (nút Gửi Telegram, REQUIREMENTS §24), dạng `'-100…'`. Lấy ID: SECURITY.md §6 "Thêm bot vào group mới". Không có thì nút báo team chưa có group |
 | `thanks` / `teams[].thanks` | Câu cảm ơn cuối tin (`Many thanks team!`) / thay riêng cho team (`Thanks team !`) |

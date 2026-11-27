@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-27.1',      // hiện cuối menu Khác để biết đang mở đúng bản mới
+    version: 'v2026-11-27.2',      // hiện cuối menu Khác để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
     offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu ticket ra file (chọn 1, bắt buộc)
@@ -78,6 +78,7 @@
     // Gửi Chuyển case vào group bằng bot Telegram (cả team dùng chung 1 bot). ID group của từng team: chatId trong config/tickets/pass-case.js.
     // apiBase: địa chỉ DUY NHẤT app được gọi ra Internet (docs/SECURITY.md §6). senderLine: dòng người chuyển cuối tin, {name} = tên nhân viên.
     telegram: {
+      hidden: true,   // TẠM ẨN nút Gửi Telegram + Alt+G (code giữ nguyên): xóa dòng này là hiện lại
       apiBase: 'https://api.telegram.org',
       senderLine: 'FRT: {name}',
       texts: {

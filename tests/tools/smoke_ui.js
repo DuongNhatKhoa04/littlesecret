@@ -246,7 +246,7 @@
     await settle();
     check('Chuyển case Sales: đủ => mở Copy, Phone tự format, cuối tin Many thanks team! + tag Sales',
       !$('#copyBody').disabled &&
-      $('#outBody').textContent === 'LEAD: ARIA NAIL BAR – 75001\nCBN: (555) 123-4567 – Owner\nMany thanks team!\n@daisy_sale_leader @Kyo_SaleAdmin @Stella_SalesAdmin',
+      $('#outBody').textContent === 'Tên tiệm: ARIA NAIL BAR\nZipcode: 75001\nCBN: (555) 123-4567 – Owner\nMany thanks team!\n@daisy_sale_leader @Kyo_SaleAdmin @Stella_SalesAdmin',
       $('#outBody').textContent);
     check('Chuyển case: nút Lưu offline và Mở file offline bị khóa', $('#offSave').disabled && $('#offOpen').disabled);
     clickText('#form', 'MKT');
@@ -283,7 +283,7 @@
     $('.pass-urgent input').click();
     await settle();
     check('Chuyển case Tech: tick GẤP => 🔥🔥🔥 URGENT!! trước Tên tiệm, thiếu trường vẫn khóa Copy',
-      $('#outBody').textContent.startsWith('🔥🔥🔥 URGENT!!\nARIA NAIL BAR\nCBN: (555) 123-4567 - Owner') && $('#copyBody').disabled && !$('#pass_urgentNote'),
+      $('#outBody').textContent.startsWith('🔥🔥🔥 URGENT!!\nTên tiệm: ARIA NAIL BAR\nCBN: (555) 123-4567 - Owner') && $('#copyBody').disabled && !$('#pass_urgentNote'),
       $('#outBody').textContent);
     type($('#pass_tagAdd'), 'support moi');
     $('.pass-tag-add button').click();
@@ -321,7 +321,7 @@
     await settle();
     check('Chuyển case: có nút Dán thông tin tiệm; Ctrl+V chữ của bookmark => điền Link Lead, Tên tiệm, MID, ZIP',
       !!$$('.pass-shop button').find(node => node.textContent === 'Dán thông tin tiệm') && $('#pass_shop').value === 'SMOKE NAILS' && $('#pass_zip').value === '75001' &&
-      $('#pass_contact').value === '' && $('#outBody').textContent.startsWith('https://portal/lead/1\nSMOKE NAILS'), $('#outBody').textContent);
+      $('#pass_contact').value === '' && $('#outBody').textContent.startsWith('https://portal/lead/1\nTên tiệm: SMOKE NAILS\nZipcode: 75001\nMID: 123'), $('#outBody').textContent);
     const bodyData = new DataTransfer();
     bodyData.setData('text/plain', JSON.stringify({ app: 'ticket-writer-shop', shop: 'BODY NAILS' }));
     document.activeElement.blur();
@@ -338,17 +338,22 @@
     await settle();
     check('Chuyển case CS: Ctrl+V chữ bookmark lấy trên trang ticket => điền Link Ticket, Tên tiệm, MID, Issue; không còn ô tick Assign',
       $('#pass_ticket').value === 'https://portal/v2/helpdesk/ticket/9#' && $('#pass_issue').value === 'PAX - SUCCESS' && !$('#pass_assign') &&
-      $('#outBody').textContent.startsWith('https://portal/v2/helpdesk/ticket/9#\nTICKET NAILS 75001\nMID: 4966'), $('#outBody').textContent);
-    // Gửi Telegram: chỉ mở hộp xem trước, không gửi thật (smoke không gọi mạng)
-    check('Chuyển case: có nút Gửi Telegram, khóa khi tin chưa đủ trường bắt buộc', !$('#sendTg').hidden && $('#sendTg').disabled === $('#copyBody').disabled);
-    $('#sendTg').disabled = false;
-    $('#sendTg').click();
-    check('Gửi Telegram: hộp xem trước có group CS, chưa có token => hiện ô token, khóa Gửi',
-      $('#tgDlg').open && $('#tgTitle').textContent === 'Gửi vào group CS' && !$('#tgTokenRow').hidden && $('#tgSend').disabled, [$('#tgTitle').textContent, $('#tgProblem').textContent]);
-    $('#tgClose').click();
-    key($('#pass_issue'), { key: 'g', altKey: true });   // đang gõ trong ô vẫn mở được
-    check('Alt+G = Gửi Telegram: mở hộp xem trước, không gửi thẳng', $('#tgDlg').open && $('#tgTitle').textContent === 'Gửi vào group CS');
-    $('#tgClose').click();
+      $('#outBody').textContent.startsWith('https://portal/v2/helpdesk/ticket/9#\nTên tiệm: TICKET NAILS\nZipcode: 75001\nMID: 4966'), $('#outBody').textContent);
+    // Gửi Telegram: chỉ mở hộp xem trước, không gửi thật (smoke không gọi mạng). Đang tạm ẩn (config telegram.hidden) thì chỉ kiểm tra đã ẩn.
+    if (TW.registry.app().telegram.hidden) {
+      key($('#pass_issue'), { key: 'g', altKey: true });
+      check('Gửi Telegram đang tạm ẩn: không có nút, Alt+G không mở hộp', $('#sendTg').hidden && !$('#tgDlg').open);
+    } else {
+      check('Chuyển case: có nút Gửi Telegram, khóa khi tin chưa đủ trường bắt buộc', !$('#sendTg').hidden && $('#sendTg').disabled === $('#copyBody').disabled);
+      $('#sendTg').disabled = false;
+      $('#sendTg').click();
+      check('Gửi Telegram: hộp xem trước có group CS, chưa có token => hiện ô token, khóa Gửi',
+        $('#tgDlg').open && $('#tgTitle').textContent === 'Gửi vào group CS' && !$('#tgTokenRow').hidden && $('#tgSend').disabled, [$('#tgTitle').textContent, $('#tgProblem').textContent]);
+      $('#tgClose').click();
+      key($('#pass_issue'), { key: 'g', altKey: true });   // đang gõ trong ô vẫn mở được
+      check('Alt+G = Gửi Telegram: mở hộp xem trước, không gửi thẳng', $('#tgDlg').open && $('#tgTitle').textContent === 'Gửi vào group CS');
+      $('#tgClose').click();
+    }
     $('#resetBtn').click();
     await settle();
     clickText('#picker', 'Hỗ trợ merchant');

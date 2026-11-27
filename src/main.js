@@ -66,7 +66,7 @@
   };
   const picker = U.picker.createPicker({ root: $('#picker'), context, session, navigationService });
   const imagePanel = U.imagePanel.createImagePanel({ outputService, images, clipboard, openViewer: viewer.open });
-  const telegramDialog = U.telegramDialog.createTelegramDialog({ session, telegramService, staffService });
+  const telegramDialog = U.telegramDialog.createTelegramDialog({ session, telegramService, staffService, hidden: !!registry.app().telegram.hidden });
   const output = U.outputView.createOutputView({ context, outputService, clipboard, ticketFill, imagePanel, onRender: telegramDialog.renderButton });
   const header = U.header.createHeader({ context, session, viewService, ticketService, smsService, shippingService, reviewService, passCaseService, images, onShowOutput: output.render });
   const templateDialog = U.templateDialog.createTemplateDialog({ templateService, files });

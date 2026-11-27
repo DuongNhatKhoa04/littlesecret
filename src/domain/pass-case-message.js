@@ -9,13 +9,12 @@
   const PART_GAP = ' – ';
   const MINUTES_PER_DAY = 24 * 60;
   const TAG_GAP = ' ';
-  const WORD_GAP = ' ';
   const DASH_GAP = ' - ';
 
   const joinFilled = (parts, gap = PART_GAP) => parts.filter(part => part).join(gap);
 
   /**
-   * Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {leadInfo}, {cbn}, {shopZip}, {caller},
+   * Giá trị đã trim của các trường team đang dùng (trường team không dùng => trống), kèm các trường ghép {cbn}, {caller},
    * {via} (CBN / FT) và {urgent} (chữ GẤP của team khi tick).
    * Ngôn ngữ, {via} chỉ có khi đã nhập Phone / Tên / Vai trò: chưa nhập gì thì vẫn bỏ được dòng CBN.
    */
@@ -26,9 +25,7 @@
     const language = hasCaller ? findOption(passCase, config, 'language').suffix : '';
     return {
       ...values,
-      leadInfo: joinFilled([values.shop, values.zip, values.mid]),
       cbn: joinFilled([values.phone, person, language]),
-      shopZip: joinFilled([values.shop, values.zip], WORD_GAP),
       caller: joinFilled([values.phone, values.contact, values.role, language], DASH_GAP),
       via: hasCaller ? findOption(passCase, config, 'callVia').label : '',
       urgent: team.urgent && passCase.urgent ? team.urgent : ''

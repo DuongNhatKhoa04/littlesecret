@@ -662,7 +662,9 @@ Sales:
 
 ```
 🔥🔥🔥 URGENT!!                     (chỉ khi tick GẤP)
-LEAD: <Tên tiệm> – <ZIP> – <MID>
+Tên tiệm: <Tên tiệm>
+Zipcode: <ZIP>
+MID: <MID>
 CBN: <Phone> – <Tên> (<Vai trò>)
 NOTE: <Note>
 Many thanks team!
@@ -675,7 +677,8 @@ MKT, CS, Tech theo mẫu riêng của group từng team:
 MKT / CS                            Tech
 <Link Lead> / <Link Ticket>         <Link Lead>
 🔥🔥🔥 URGENT!!                      🔥🔥🔥 URGENT!!        (chỉ khi tick GẤP)
-<Tên tiệm> <ZIP>                    <Tên tiệm>
+Tên tiệm: <Tên tiệm>                Tên tiệm: <Tên tiệm>
+Zipcode: <ZIP>
 MID: <MID>
 CBN: <Phone> - <Tên> - <Vai trò>    CBN: <Phone> - <Tên> - <Vai trò>
 
@@ -698,7 +701,7 @@ Thanks team !                       Thanks team !
   - Dán vào app chat chỉ ra chữ `@tên`; có app phải gõ `@` chọn lại người thì mới thành tag thật.
 
 - **FT**: chữ `CBN:` đầu dòng thành `FT:` (vd `FT: <Phone> - <Tên> - <Vai trò>`). **ENG**: thêm ngôn ngữ cuối dòng CBN / FT, cùng dấu nối của dòng: MKT / CS / Tech `… - <Vai trò> - ENG`, Sales `… – <Tên> (<Vai trò>) – ENG`. VIE (mặc định) không in gì. Chưa nhập Phone / Tên / Vai trò thì dòng vẫn bị bỏ, không in riêng `FT` / `ENG`.
-- Giá trị đã trim. Phần nào trống thì bỏ phần đó (vd không có MID → `LEAD: <Tên tiệm> – <ZIP>`); cả dòng trống thì bỏ dòng. Ô nhiều dòng giữ xuống dòng.
+- Giá trị đã trim. Tên tiệm / Zipcode / MID mỗi thứ 1 dòng có nhãn (`Tên tiệm: …`, `Zipcode: …`, `MID: …`), ô trống thì bỏ dòng đó (vd không có MID → không có dòng `MID:`). Dòng CBN phần nào trống thì bỏ phần đó; cả dòng trống thì bỏ dòng. Ô nhiều dòng giữ xuống dòng.
 - Chỉ in trường của team đang chọn. Chưa nhập trường nào của team → tin nhắn rỗng.
 
 ### 22.3 Khu Kết quả & Copy
@@ -751,6 +754,8 @@ Dữ liệu lưu trong trình duyệt (§12) không tự theo sang máy khác, t
 - File sao lưu không chứa ticket đang nhập; template có thể có câu chữ nội bộ: xem SECURITY.md §1.
 
 ## 24. Gửi Chuyển case qua bot Telegram
+
+**Đang tạm ẩn** (`telegram.hidden: true` trong `config/app.js`): không có nút, `Alt+G` không làm gì; code và token đã lưu trên máy vẫn giữ. Xóa dòng `hidden` là hiện lại.
 
 Cả team dùng chung 1 bot. Nút **Gửi Telegram** cạnh `Copy nội dung` ở khu Kết quả, chỉ có ở Chuyển case; khóa khi `Copy nội dung` khóa (§22.3). Nút Copy vẫn giữ (bot lỗi / máy chưa có token thì làm tay).
 
