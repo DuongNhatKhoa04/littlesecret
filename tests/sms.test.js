@@ -9,7 +9,7 @@
   const config = context.sms;
 
   const EXAMPLE = {
-    shop: ' ARIA NAIL BAR ', shopPhone: ' (555) 123-4567 ', recipients: '3178', price: '0.02',
+    shop: ' ARIA NAIL BAR ', shopPhone: ' (555) 123-4567 ', recipients: '3178',
     message: 'This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18',
     customerTypes: { lastVisit: { on: true, values: { days: '365' } }, visitTimes: { on: true, values: { min: '1', max: '10000' } } }
   };
@@ -26,7 +26,6 @@
     'Message:',
     '"ARIA NAIL BAR (555) 123-4567. This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout"',
     'Price per SMS: $0.02',
-    'Segments per SMS: 1',
     'Estimate Total: $63.56',
     '',
     'Please carefully review the content of the Promotion message, and only when you are sure that there are no further changes should you text "OK" to this phone number. Have a nice day.'
@@ -34,7 +33,7 @@
 
   // Chi tiết in vào Đã support của ticket: Recipients → hết Message, bỏ 2 dòng giá (Price per SMS, Estimate Total)
   // Bỏ các dòng chỉ có trong tin gửi tiệm (giá, segment, tổng), không tính theo số dòng để thêm dòng mới không làm lệch
-  const TICKET_DETAILS = EXPECTED.split('\n\n')[2].split('\n').filter(line => !/^(Price per SMS|Segments per SMS|Estimate Total)/.test(line)).join('\n');
+  const TICKET_DETAILS = EXPECTED.split('\n\n')[2].split('\n').filter(line => !/^(Price per SMS|Estimate Total)/.test(line)).join('\n');
 
   const build = (raw) => D.smsMessage.buildSmsMessage({ sms: D.sms.sanitizeSms(raw, config), config });
   const missing = (raw) => D.smsMessage.missingSmsFields({ sms: D.sms.sanitizeSms(raw, config), config });
@@ -44,11 +43,9 @@
     assertEqual(missing(EXAMPLE), []);
   });
 
-  test('sms: chưa nhập gì => rỗng; giá chỉ nhận 3 mức, mặc định mức đầu', () => {
+  test('sms: chưa nhập gì => rỗng; giá chọn tay của bản cũ (price trong state) bị bỏ qua, giá luôn tự tính', () => {
     assertEqual(build({}), '');
-    assertEqual(config.prices, ['0.02', '0.04', '0.06', '0.08']);
-    assertEqual(D.sms.sanitizeSms({ price: '0.05' }, config).price, '0.02');
-    assertEqual(build({ ...EXAMPLE, price: '0.08' }).includes('Price per SMS: $0.08'), true);
+    assertEqual(['price' in D.sms.sanitizeSms({ price: '0.08' }, config), build({ ...EXAMPLE, price: '0.08' }).includes('Price per SMS: $0.02')], [false, true]);
   });
 
   test('sms: chỉ in Type Customer đã tick, số đã sửa; message có sẵn ngoặc kép không bị nhân đôi', () => {
@@ -102,24 +99,27 @@
     assertEqual(D.sms.sanitizeSms({ customOptions: ['a', 1, null] }, config).customOptions, ['a']);
   });
 
-  test('sms: Estimate Total = giá × Recipients; Recipients không phải số nguyên thì bỏ dòng', () => {
+  test('sms: Estimate Total = Price per SMS × Recipients; Recipients không phải số nguyên thì bỏ dòng', () => {
     const totalLine = (raw) => build({ ...EXAMPLE, ...raw }).split('\n').find(line => line.startsWith('Estimate Total')) || '';
-    assertEqual([totalLine({ recipients: '3,178' }), totalLine({ recipients: '50000', price: '0.08' }), totalLine({ recipients: '7', price: '0.06' })],
-      ['Estimate Total: $63.56', 'Estimate Total: $4,000.00', 'Estimate Total: $0.42']);
+    assertEqual([totalLine({ recipients: '3,178' }), totalLine({ recipients: '50000' }), totalLine({ recipients: '7', message: 'x'.repeat(400) })],
+      ['Estimate Total: $63.56', 'Estimate Total: $1,000.00', 'Estimate Total: $0.42']);   // 400 ký tự => 3 segment => $0.06 × 7
     assertEqual([totalLine({ recipients: 'abc' }), totalLine({ recipients: '' }), totalLine({ recipients: '12.5' })], ['', '', '']);
   });
 
-  test('sms: Segments per SMS đếm trên tin khách nhận (cả tên tiệm, phone, Reply STOP); Estimate Total = giá × Recipients × segment', () => {
-    const lines = (raw) => build({ ...EXAMPLE, ...raw }).split('\n').filter(line => /^(Segments|Estimate Total)/.test(line));
-    // Tin mẫu 126 ký tự: 1 segment. Message dài 150 ký tự => tin 191 ký tự GSM-7 => 2 segment => tổng gấp đôi
+  test('sms: Price per SMS tự chọn = 0.02 × segment của tin khách nhận (cả tên tiệm, phone, Reply STOP); không có dòng Segments; > 4 segment thì báo dài', () => {
+    const lines = (raw) => build({ ...EXAMPLE, ...raw }).split('\n').filter(line => /^(Price per SMS|Segments|Estimate Total)/.test(line));
+    // Tin mẫu 126 ký tự: 1 segment. Message 150 ký tự => tin 191 ký tự GSM-7 => 2 segment => $0.04
     assertEqual([lines({}), lines({ message: 'x'.repeat(150) })],
-      [['Segments per SMS: 1', 'Estimate Total: $63.56'], ['Segments per SMS: 2', 'Estimate Total: $127.12']]);
+      [['Price per SMS: $0.02', 'Estimate Total: $63.56'], ['Price per SMS: $0.04', 'Estimate Total: $127.12']]);
     // Nháy cong ’ => UCS-2 (70 / 67 ký tự): tin mẫu + 5 ký tự (131) thành 2 segment
-    assertEqual(lines({ message: 'It’s ' + EXAMPLE.message }), ['Segments per SMS: 2', 'Estimate Total: $127.12']);
+    assertEqual(lines({ message: 'It’s ' + EXAMPLE.message }), ['Price per SMS: $0.04', 'Estimate Total: $127.12']);
+    const price = (message) => D.smsMessage.smsPrice({ sms: D.sms.sanitizeSms({ ...EXAMPLE, message }, config), config });
+    assertEqual([price(EXAMPLE.message), price('x'.repeat(530)), price('x'.repeat(700))],
+      [{ price: '0.02', cents: 2, segments: 1, tooLong: false }, { price: '0.08', cents: 8, segments: 4, tooLong: false }, { price: '0.10', cents: 10, segments: 5, tooLong: true }]);
     const count = D.smsMessage.promoSegments({ sms: D.sms.sanitizeSms(EXAMPLE, config), config });
     assertEqual([count.encoding, count.units, count.segments], ['GSM-7', 126, 1]);
-    // Ticket (mục Đã support) vẫn không có dòng giá / segment / tổng
-    assertEqual(D.smsMessage.buildSmsDetails({ sms: D.sms.sanitizeSms(EXAMPLE, config), config }).includes('Segments'), false);
+    // Ticket (mục Đã support) vẫn không có dòng giá / tổng
+    assertEqual(D.smsMessage.buildSmsDetails({ sms: D.sms.sanitizeSms(EXAMPLE, config), config }).includes('Price'), false);
   });
 
   test('sms: tin nhắn tiếng Việt; ngôn ngữ lạ / bản cũ chưa có => tiếng Anh', () => {
@@ -127,7 +127,7 @@
     assertEqual(body.split('\n').slice(0, 3), ['Xin chào,', '', 'Anh/chị vui lòng xác nhận thông tin dưới đây trước khi bên em gửi SMS promotion:']);
     assertEqual(body.includes('Số khách nhận: 3178 khách\nNhóm khách:\n- Lần ghé gần nhất <= 365 ngày\n- Số lần ghé từ 1 - 10000\n' +
       'Nội dung tin nhắn:\n"ARIA NAIL BAR (555) 123-4567. This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout"\n' +
-      'Giá mỗi SMS: $0.02\nSố segment mỗi tin: 1\nTổng chi phí dự kiến: $63.56\n\n'), true, body);
+      'Giá mỗi SMS: $0.02\nTổng chi phí dự kiến: $63.56\n\n'), true, body);
     assertEqual([D.sms.sanitizeSms({ lang: 'fr' }, config).lang, D.sms.sanitizeSms(EXAMPLE, config).lang], ['en', 'en']);
   });
 
@@ -174,7 +174,7 @@
 
   test('sms: state bản trước (chưa có sms) => form SMS mặc định, ticket giữ nguyên', () => {
     const { session } = setup({ nav: { group: 'ticket', ticketType: 'request' }, ticket: { summary: 'cũ' } });
-    assertEqual([session.sms().shop, session.sms().price, session.sms().lang, session.ticket().summary], ['', '0.02', 'en', 'cũ']);
+    assertEqual([session.sms().shop, session.sms().lang, session.ticket().summary], ['', 'en', 'cũ']);
   });
 
   test('sms: state bản trước đang ở tab Promotion => mở Hỗ trợ merchant, bật khối SMS, giữ dữ liệu', () => {
@@ -192,14 +192,13 @@
     const { storage, repository, store, sms } = setup(null);
     sms.setEnabled(true);
     sms.setField('shop', 'ARIA');
-    sms.setField('price', '0.06');
     sms.setField('lang', 'vi');
     sms.setCustomerType('visitTimes', true);
     sms.setCustomerValue('visitTimes', 'max', '500');
     repository.save(store.get());
     const saved = storage.data[context.app.storageKey];
-    assertEqual([saved.type, saved.nav.group, saved.sms.enabled, saved.sms.shop, saved.sms.price, saved.sms.lang, saved.sms.customerTypes.visitTimes],
-      ['incident', 'ticket', true, 'ARIA', '0.06', 'vi', { on: true, values: { min: '1', max: '500' } }]);
+    assertEqual([saved.type, saved.nav.group, saved.sms.enabled, saved.sms.shop, saved.sms.lang, saved.sms.customerTypes.visitTimes],
+      ['incident', 'ticket', true, 'ARIA', 'vi', { on: true, values: { min: '1', max: '500' } }]);
     const reopened = setup(saved).session;
     assertEqual([reopened.smsActive(), reopened.sms().customerTypes.visitTimes.values.max], [true, '500']);
   });

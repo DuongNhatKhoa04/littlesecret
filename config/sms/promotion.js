@@ -5,7 +5,10 @@
   const { setSms } = registry;
 
   setSms({
-    prices: ['0.02', '0.04', '0.06', '0.08'],   // giá mỗi SMS ($), chỉ chọn trong danh sách này; giá đầu là mặc định
+    // Price per SMS tự chọn theo số segment của tin khách nhận: segmentPrice × segment (1 = 0.02, 2 = 0.04, 3 = 0.06, 4 = 0.08, 5 = 0.10…).
+    // Tin dài hơn maxSegments thì cảnh báo nên rút ngắn (vẫn tính tiếp).
+    segmentPrice: '0.02',
+    maxSegments: 4,
 
     // Type Customer (chọn nhiều). {tên} = ô số sửa được trên form, `values` = số mặc định.
     // id lưu trong state => không đổi id đang có.
@@ -19,6 +22,8 @@
     labels: {
       toggle: 'SMS Promotion', language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', shopPhone: 'Phone tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message',
       price: 'Price per SMS ($)',
+      priceAuto: '${price} · tự chọn theo {segments} segment × ${segmentPrice}',   // dòng thay cho ô chọn giá
+      priceTooLong: ' · tin dài hơn {max} segment, nên rút ngắn Message',
       // Dòng nhỏ dưới ô Message: đếm trên tin khách nhận (cả tên tiệm, phone, Reply STOP). {units} = ký tự tính theo SMS.
       segmentInfo: '{units} ký tự · {segments} segment · {encoding}',
       segmentUnsupported: ' · thành UCS-2 (70 ký tự/segment) vì: {chars}'
@@ -31,8 +36,8 @@
     ticketSection: 's2',
 
     // Ngôn ngữ tin nhắn, ngôn ngữ đầu là mặc định. id lưu trong state => không đổi id đang có.
-    // lines: từng dòng của tin nhắn. {recipients} {price} lấy từ form, {segments} = số segment của tin khách nhận (đếm như Twilio),
-    //   {total} = giá × Recipients × segment.
+    // lines: từng dòng của tin nhắn. {recipients} lấy từ form, {price} = segmentPrice × số segment của tin khách nhận (đếm như Twilio),
+    //   {total} = {price} × Recipients.
     // customerTypes: câu Type Customer theo ngôn ngữ (cùng {tên} như trên); thiếu id nào thì in `text` ở trên.
     languages: [
       {
@@ -44,7 +49,6 @@
           customerTypes: 'Type Customer:',
           message: 'Message:',
           price: 'Price per SMS: ${price}',
-          segments: 'Segments per SMS: {segments}',
           total: 'Estimate Total: ${total}',
           outro: 'Please carefully review the content of the Promotion message, and only when you are sure that there are no further changes should you text "OK" to this phone number. Have a nice day.'
         }
@@ -58,7 +62,6 @@
           customerTypes: 'Nhóm khách:',
           message: 'Nội dung tin nhắn:',
           price: 'Giá mỗi SMS: ${price}',
-          segments: 'Số segment mỗi tin: {segments}',
           total: 'Tổng chi phí dự kiến: ${total}',
           outro: 'Anh/chị vui lòng xem kỹ nội dung tin nhắn Promotion, khi chắc chắn không cần chỉnh sửa gì thêm thì nhắn "OK" về số điện thoại này. Chúc anh/chị một ngày tốt lành.'
         },

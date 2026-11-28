@@ -3,7 +3,7 @@
   'use strict';
 
   const { createEmptySms } = TW.domain.sms;
-  const EDITABLE_FIELDS = ['lang', 'shop', 'shopPhone', 'recipients', 'message', 'price'];
+  const EDITABLE_FIELDS = ['lang', 'shop', 'shopPhone', 'recipients', 'message'];   // Price per SMS tự tính theo segment, không sửa tay
   const OPTION_FOCUS_KEY = 'smsOption';   // focus.key khi dựng lại form sau khi thêm/xóa option
 
   function createSmsService({ context, store }) {

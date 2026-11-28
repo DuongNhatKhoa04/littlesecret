@@ -19,12 +19,11 @@
 
   const findLanguage = (sms, config) => config.languages.find(language => language.id === sms.lang) || config.languages[0];
 
-  /** Giá × Recipients × số segment, tính theo cent để không lệch số lẻ. Recipients không phải số nguyên => '' (bỏ dòng Estimate Total). */
-  function estimateTotal(sms, segments) {
+  /** Price per SMS × Recipients, tính theo cent để không lệch số lẻ. Recipients không phải số nguyên => '' (bỏ dòng Estimate Total). */
+  function estimateTotal(sms, priceCents) {
     const recipients = sms.recipients.replace(DIGIT_GROUPING, '');
     if (!WHOLE_NUMBER.test(recipients)) return '';
-    const cents = Math.round(Number(sms.price) * 100) * Number(recipients) * segments;
-    return (cents / 100).toLocaleString('en-US', MONEY_FORMAT);
+    return (priceCents * Number(recipients) / 100).toLocaleString('en-US', MONEY_FORMAT);
   }
 
   /** Số Mỹ 10 số (có thể có 1 hoặc +1 đầu), gõ kiểu nào cũng ra (555) 123-4567; không đúng dạng đó (dữ liệu lưu trước khi ô có mask) thì in như đã gõ. */
@@ -42,6 +41,16 @@
    * @returns {{ encoding: string, units: number, segments: number, unsupported: string[] }}
    */
   const promoSegments = ({ sms, config }) => countSegments(buildPromoText({ sms, config }));
+
+  /**
+   * Price per SMS tự chọn theo segment: segmentPrice × số segment của tin khách nhận (Twilio tính tiền theo segment).
+   * @returns {{ price: string, cents: number, segments: number, tooLong: boolean }}   price dạng '0.04'; tooLong: dài hơn config.maxSegments
+   */
+  function smsPrice({ sms, config }) {
+    const { segments } = promoSegments({ sms, config });
+    const cents = Math.round(Number(config.segmentPrice) * 100) * segments;
+    return { price: (cents / 100).toFixed(2), cents, segments, tooLong: segments > config.maxSegments };
+  }
 
   /** Trong tin gửi tiệm: bọc ngoặc kép, đúng như khách sẽ nhận. */
   const promoMessage = (sms, config) => `"${buildPromoText({ sms, config })}"`;
@@ -69,11 +78,11 @@
     ].join('\n');
   }
 
-  /** Price per SMS + Segments + Estimate Total: chỉ có trong tin gửi tiệm, không vào ticket. Không tính được tổng thì bỏ dòng tổng. */
+  /** Price per SMS (tự chọn theo segment) + Estimate Total: chỉ có trong tin gửi tiệm, không vào ticket. Không tính được tổng thì bỏ dòng tổng. */
   function priceLines({ sms, config }, lines) {
-    const { segments } = promoSegments({ sms, config });
-    const total = estimateTotal(sms, segments);
-    return [fillTemplate(lines.price, { price: sms.price }), fillTemplate(lines.segments, { segments: String(segments) }), ...(total ? [fillTemplate(lines.total, { total })] : [])];
+    const { price, cents } = smsPrice({ sms, config });
+    const total = estimateTotal(sms, cents);
+    return [fillTemplate(lines.price, { price }), ...(total ? [fillTemplate(lines.total, { total })] : [])];
   }
 
   /** Tin nhắn gửi tiệm: lời chào, chi tiết, giá, lời dặn. Chưa nhập gì => rỗng. */
@@ -95,5 +104,5 @@
     ].filter(([, missing]) => missing).map(([field]) => config.labels[field]);
   }
 
-  TW.domain.smsMessage = { buildSmsDetails, buildSmsMessage, buildPromoText, buildMessageText, promoSegments, missingSmsFields };
+  TW.domain.smsMessage = { buildSmsDetails, buildSmsMessage, buildPromoText, buildMessageText, promoSegments, smsPrice, missingSmsFields };
 })(window.TW);

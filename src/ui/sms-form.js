@@ -4,16 +4,17 @@
 
   const { el, button, choiceGroup, autoGrow, isComposing, labeledField, textInput, maskPhone } = TW.ui.dom;
   const { splitTemplate, fillTemplate, IMAGE_KEY: SMS_IMAGE_KEY } = TW.domain.sms;
-  const { promoSegments } = TW.domain.smsMessage;
+  const { promoSegments, smsPrice } = TW.domain.smsMessage;
   const { OPTION_FOCUS_KEY } = TW.application.smsService;
 
   const TYPES_HINT = 'Tick nhóm khách cần gửi (chọn nhiều), sửa số nếu promotion khác. Có điều kiện khác thì "+ Thêm option". ' +
     'Ảnh: click ô dán rồi Ctrl+V, hoặc kéo thả vào khối này.';
   const SEGMENT_ID = 'sms_segments';
+  const PRICE_ID = 'sms_price';
   const OPTION_PLACEHOLDER = 'Option khác, vd Birthday in October · Enter: thêm option · Backspace ở ô trống: xóa';
 
   function createSmsForm({ context, session, smsService, imageZone }) {
-    const { labels, customerTypes, prices, languages } = context.sms;
+    const { labels, customerTypes, languages } = context.sms;
     let fields = null;   // phần mở ra khi tick, null khi loại đang mở không có khối SMS
 
     const field = (name, control, ...extra) => labeledField(labels[name], control, ...extra);
@@ -112,12 +113,22 @@
       if (target) target.focus();
     }
 
+    /** Price per SMS không chọn tay: segmentPrice × segment; tin quá dài thì tô màu cảnh báo nhắc rút ngắn. */
+    function renderPrice(line = fields && fields.querySelector('#' + PRICE_ID)) {
+      if (!line) return;
+      const { price, segments, tooLong } = smsPrice({ sms: session.sms(), config: context.sms });
+      const text = fillTemplate(labels.priceAuto, { price, segments: String(segments), segmentPrice: context.sms.segmentPrice });
+      line.textContent = tooLong ? text + fillTemplate(labels.priceTooLong, { max: String(context.sms.maxSegments) }) : text;
+      line.classList.toggle('too-long', tooLong);
+    }
+
     function priceField() {
-      return field('price', choiceGroup({
-        name: 'smsPrice', value: session.sms().price,
-        options: prices.map(price => ({ value: price, label: price })),
-        onChange: (price) => smsService.setField('price', price)
-      }));
+      const line = el('p', 'sms-price');
+      line.id = PRICE_ID;
+      renderPrice(line);
+      const wrap = labeledField(labels.price, line);
+      wrap.querySelector('label').removeAttribute('for');
+      return wrap;
     }
 
     function languageField() {
@@ -153,7 +164,8 @@
 
     /** Ô nhập tự giữ giá trị khi gõ; chỉ cần ẩn / hiện theo ô tick. Ô Message lúc ẩn không đo được chiều cao nên đo lại khi hiện. */
     function sync() {
-      renderSegments();   // Tên tiệm / Phone / Message đổi thì số segment đổi theo
+      renderSegments();   // Tên tiệm / Phone / Message đổi thì số segment, giá đổi theo
+      renderPrice();
       if (!fields || fields.hidden === !session.sms().enabled) return;
       fields.hidden = !fields.hidden;
       if (!fields.hidden) autoGrow(fields.querySelector('textarea'));

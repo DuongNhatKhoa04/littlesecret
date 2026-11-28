@@ -164,7 +164,7 @@ addSetup('setupPax', {   // const { addSetup, NOTE } = registry;
 
 ```js
 setSms({   // const { setSms } = registry;
-  prices: ['0.02', '0.04', '0.06', '0.08'],
+  segmentPrice: '0.02', maxSegments: 4,
   customerTypes: [
     { id: 'lastVisit',  text: 'Last Visit <= {days}',              values: { days: '365' } },
     { id: 'lastVisitAtLeast', text: 'Last Visit >= {days}',        values: { days: '90' } },
@@ -182,14 +182,15 @@ setSms({   // const { setSms } = registry;
 
 | Trường | Ý nghĩa |
 |---|---|
-| `prices` | Giá mỗi SMS được chọn (chuỗi, in nguyên văn sau `$`). Giá đầu là mặc định |
+| `segmentPrice`, `maxSegments` | Price per SMS tự chọn = `segmentPrice` × số segment của tin khách nhận (REQUIREMENTS §16.4); dài hơn `maxSegments` thì cảnh báo nên rút ngắn. Không có ô chọn giá tay |
+| `labels.priceAuto`, `labels.priceTooLong` | Dòng giá trên form: `{price}`, `{segments}`, `{segmentPrice}`; thêm `{max}` khi quá dài |
 | `customerTypes` | Lựa chọn Type Customer theo thứ tự hiện + in ra. `{tên}` trong `text` = ô số trên form; `values` = số mặc định (chuỗi). **Thêm lựa chọn = thêm 1 dòng.** `id` lưu trong state: không đổi id đang có |
 | `labels` | Nhãn trường trên form, cũng dùng trong cảnh báo "Còn thiếu". `toggle` = chữ cạnh ô tick mở khối SMS |
 | `ticketSection` | Key mục của loại ticket có `smsPromotion` nhận chi tiết SMS (Recipients → hết Message, không có giá) khi khối SMS đang bật. Hiện là `s2` (Đã support) |
 | `promoText` | Mẫu tin khách nhận, in trong ngoặc kép dưới dòng Message, giống nhau ở mọi ngôn ngữ. `{shop}`, `{shopPhone}`, `{message}` thay bằng dữ liệu form |
 | `labels.segmentInfo`, `labels.segmentUnsupported` | Dòng đếm dưới ô Message: `{units}` ký tự, `{segments}`, `{encoding}` (GSM-7 / UCS-2); thêm `{chars}` (ký tự làm tin thành UCS-2) khi UCS-2 |
 | `languages` | Ngôn ngữ tin nhắn, theo thứ tự hiện trên form; ngôn ngữ đầu là mặc định. `id` lưu trong state: không đổi id đang có |
-| `languages[].lines` | Câu chữ từng dòng tin nhắn. `{recipients}`, `{price}` thay bằng dữ liệu form, `{segments}` = số segment của tin khách nhận (REQUIREMENTS §16.4), `{total}` = giá × Recipients × segment (dòng `total` tự bỏ khi Recipients không phải số) |
+| `languages[].lines` | Câu chữ từng dòng tin nhắn. `{recipients}` thay bằng dữ liệu form, `{price}` = `segmentPrice` × số segment của tin khách nhận (REQUIREMENTS §16.4), `{total}` = giá × Recipients (dòng `total` tự bỏ khi Recipients không phải số) |
 | `languages[].customerTypes` | Câu Type Customer theo ngôn ngữ, key = `id` của `customerTypes`, cùng chỗ `{tên}`. Thiếu id nào thì in `text` gốc |
 
 ## 4b. SMS Shipping — `config/sms/shipping.js`

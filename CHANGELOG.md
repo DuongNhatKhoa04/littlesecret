@@ -4,6 +4,7 @@ Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu 
 
 ## 2026-11-28
 
+- `v2026-11-28.3` · SMS Promotion: **Price per SMS tự chọn** = 0.02 × segment của tin khách nhận (1 = 0.02 … 4 = 0.08, 5 = 0.10…), bỏ ô chọn giá tay; dài hơn 4 segment thì cảnh báo nên rút ngắn. Estimate Total = giá × Recipients. Bỏ dòng `Segments per SMS` khỏi tin xác nhận. §16.1 §16.2
 - `v2026-11-28.2` · SMS Promotion: tự đếm **segment** của tin khách nhận như Twilio Message Segment Calculator (GSM-7 160/153, UCS-2 70/67); dưới ô Message hiện `<số> ký tự · <số> segment · GSM-7`, UCS-2 thì chỉ ra ký tự gây ra (tô màu cảnh báo, không tự sửa). Tin gửi tiệm thêm dòng `Segments per SMS`, **Estimate Total = giá × Recipients × segment**. §16.2 §16.4
 - `v2026-11-28.1` · SMS Promotion: bỏ dấu `.` cuối câu `Reply STOP To Optout` (tin gửi tiệm, mục Đã support, Copy Confirm SMS). §16
 

@@ -120,3 +120,5 @@
 .pass-jump { margin: -2px 0 0; }   /* nút pass case cho CS ngay dưới hàng Phone */
 .sms-segments { margin: 4px 0 0; }
 .sms-segments.ucs2 { color: var(--warn-ink); font-weight: 600; }   /* UCS-2: tin tốn nhiều segment hơn */
+.sms-price { margin: 0; font-weight: 600; }
+.sms-price.too-long { color: var(--warn-ink); }   /* tin dài hơn maxSegments */
