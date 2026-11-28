@@ -627,14 +627,24 @@
     type($('input[data-option="0"]'), 'Birthday in October');
     await settle();
     check('SMS: tin nhắn đúng + option tự thêm + mở copy', !$('#copySms').disabled && $('#outSms').textContent.includes(
-      'Recipients: 3178 customers\nType Customer:\n- Last Visit <= 365\n- Times visit between 1 - 5000\n- Birthday in October\nMessage:\n"ARIA NAIL BAR (555) 123-4567. Sale 15% Today only Reply STOP To Optout"\nPrice per SMS: $0.06\nEstimate Total: $190.68') &&
+      'Recipients: 3178 customers\nType Customer:\n- Last Visit <= 365\n- Times visit between 1 - 5000\n- Birthday in October\nMessage:\n"ARIA NAIL BAR (555) 123-4567. Sale 15% Today only Reply STOP To Optout"\nPrice per SMS: $0.06\nSegments per SMS: 1\nEstimate Total: $190.68') &&
       $('#outSms').textContent.startsWith('Greeting,\n'),
       $('#outSms').textContent);
+    check('SMS: dưới ô Message đếm ký tự / segment / bảng mã của tin khách nhận', $('#sms_segments').textContent === '70 ký tự · 1 segment · GSM-7', $('#sms_segments').textContent);
+    type($('#sms_message'), 'Sale 15%\nToday only’');
+    await settle();
+    check('SMS: thêm 1 nháy cong ’ => UCS-2 (70 ký tự/segment) => 71 ký tự thành 2 segment, chỉ ra ký tự gây ra', $('#sms_segments').textContent === '71 ký tự · 2 segment · UCS-2 · thành UCS-2 (70 ký tự/segment) vì: ’', $('#sms_segments').textContent);
+    type($('#sms_message'), 'Sale 15% ' + 'x'.repeat(120));
+    await settle();
+    check('SMS: tin dài 2 segment => Estimate Total nhân 2', $('#sms_segments').textContent.startsWith('180 ký tự · 2 segment') &&
+      $('#outSms').textContent.includes('Segments per SMS: 2\nEstimate Total: $381.36'), [$('#sms_segments').textContent, $('#outSms').textContent]);
+    type($('#sms_message'), 'Sale 15%\nToday only');
+    await settle();
     $$('input[name="smsLang"]').find(r => r.value === 'vi').click();
     await settle();
     check('SMS: chọn Tiếng Việt => tin nhắn tiếng Việt', $('#outSms').textContent.startsWith('Xin chào,') &&
-      $('#outSms').textContent.includes('Giá mỗi SMS: $0.06\nTổng chi phí dự kiến: $190.68'), $('#outSms').textContent);
-    const smsDetails = $('#outSms').textContent.split('\n\n')[2].split('\n').slice(0, -2).join('\n');   // Số khách nhận → hết Nội dung tin nhắn, bỏ 2 dòng giá
+      $('#outSms').textContent.includes('Giá mỗi SMS: $0.06\nSố segment mỗi tin: 1\nTổng chi phí dự kiến: $190.68'), $('#outSms').textContent);
+    const smsDetails = $('#outSms').textContent.split('\n\n')[2].split('\n').slice(0, -3).join('\n');   // Số khách nhận → hết Nội dung tin nhắn, bỏ 3 dòng giá / segment / tổng
     check('SMS: Title không đổi, chi tiết SMS (không có giá) in vào Đã support', $('#outTitle').textContent === plainTicket[0] &&
       $('#outBody').textContent === plainTicket[1] + '\n\nĐã support:\n' + smsDetails && !$('#outBody').textContent.includes('Giá mỗi SMS'), $('#outBody').textContent);
     check('SMS: Copy Confirm SMS copy toàn bộ tin gửi tiệm', (await copyAndGet('#copyPromo')) === $('#outSms').textContent);

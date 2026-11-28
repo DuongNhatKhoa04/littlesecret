@@ -3,6 +3,7 @@
   'use strict';
 
   const { fillTemplate } = TW.domain.sms;
+  const { countSegments } = TW.domain.smsSegments;
   const { cleanItems, isBlank, formatPhoneInput } = TW.domain.text;
   const BLOCK_GAP = '\n\n';
   const WRAPPING_QUOTES = /^"([\s\S]*)"$/;
@@ -18,11 +19,11 @@
 
   const findLanguage = (sms, config) => config.languages.find(language => language.id === sms.lang) || config.languages[0];
 
-  /** Giá × Recipients, tính theo cent để không lệch số lẻ. Recipients không phải số nguyên => '' (bỏ dòng Estimate Total). */
-  function estimateTotal(sms) {
+  /** Giá × Recipients × số segment, tính theo cent để không lệch số lẻ. Recipients không phải số nguyên => '' (bỏ dòng Estimate Total). */
+  function estimateTotal(sms, segments) {
     const recipients = sms.recipients.replace(DIGIT_GROUPING, '');
     if (!WHOLE_NUMBER.test(recipients)) return '';
-    const cents = Math.round(Number(sms.price) * 100) * Number(recipients);
+    const cents = Math.round(Number(sms.price) * 100) * Number(recipients) * segments;
     return (cents / 100).toLocaleString('en-US', MONEY_FORMAT);
   }
 
@@ -35,6 +36,12 @@
   /** Tin khách nhận theo mẫu promoText, 1 dòng, không ngoặc kép. */
   const buildPromoText = ({ sms, config }) =>
     fillTemplate(config.promoText, { shop: sms.shop.trim(), shopPhone: formatPhone(sms.shopPhone), message: buildMessageText({ sms }) });
+
+  /**
+   * Segment của tin khách nhận (cả tên tiệm, phone, Reply STOP…): Twilio tính tiền theo segment.
+   * @returns {{ encoding: string, units: number, segments: number, unsupported: string[] }}
+   */
+  const promoSegments = ({ sms, config }) => countSegments(buildPromoText({ sms, config }));
 
   /** Trong tin gửi tiệm: bọc ngoặc kép, đúng như khách sẽ nhận. */
   const promoMessage = (sms, config) => `"${buildPromoText({ sms, config })}"`;
@@ -62,10 +69,11 @@
     ].join('\n');
   }
 
-  /** Price per SMS + Estimate Total: chỉ có trong tin gửi tiệm, không vào ticket. Không tính được tổng thì bỏ dòng tổng. */
-  function priceLines(sms, lines) {
-    const total = estimateTotal(sms);
-    return [fillTemplate(lines.price, { price: sms.price }), ...(total ? [fillTemplate(lines.total, { total })] : [])];
+  /** Price per SMS + Segments + Estimate Total: chỉ có trong tin gửi tiệm, không vào ticket. Không tính được tổng thì bỏ dòng tổng. */
+  function priceLines({ sms, config }, lines) {
+    const { segments } = promoSegments({ sms, config });
+    const total = estimateTotal(sms, segments);
+    return [fillTemplate(lines.price, { price: sms.price }), fillTemplate(lines.segments, { segments: String(segments) }), ...(total ? [fillTemplate(lines.total, { total })] : [])];
   }
 
   /** Tin nhắn gửi tiệm: lời chào, chi tiết, giá, lời dặn. Chưa nhập gì => rỗng. */
@@ -73,7 +81,7 @@
     const details = buildSmsDetails({ sms, config });
     if (!details) return '';
     const { lines } = findLanguage(sms, config);
-    return [lines.greeting, lines.intro, [details, ...priceLines(sms, lines)].join('\n'), lines.outro].join(BLOCK_GAP);
+    return [lines.greeting, lines.intro, [details, ...priceLines({ sms, config }, lines)].join('\n'), lines.outro].join(BLOCK_GAP);
   }
 
   /** Nhãn các trường còn thiếu, theo thứ tự trên form. Type Customer thiếu khi chưa tick / chưa thêm option nào, hoặc mục đã tick còn ô số trống. */
@@ -87,5 +95,5 @@
     ].filter(([, missing]) => missing).map(([field]) => config.labels[field]);
   }
 
-  TW.domain.smsMessage = { buildSmsDetails, buildSmsMessage, buildPromoText, buildMessageText, missingSmsFields };
+  TW.domain.smsMessage = { buildSmsDetails, buildSmsMessage, buildPromoText, buildMessageText, promoSegments, missingSmsFields };
 })(window.TW);

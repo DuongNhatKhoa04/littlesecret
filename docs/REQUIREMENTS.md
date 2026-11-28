@@ -20,7 +20,7 @@ Tài liệu này mô tả **hành vi hiện có** của tool, tới từng câu 
 | 13 | Tính năng bản gốc đã bỏ (`variants`) | Ghi chú lịch sử |
 | 14 | Thay đổi trong đợt tách file so với bản gốc (chọn loại theo cấp, dòng Model, gộp Hỗ trợ merchant…) | **Vẫn hiện hành**; tên mục là lịch sử |
 | 15 | Ghi nhận từ bản gốc | **Chờ người phụ trách xác nhận** |
-| 16–18 | SMS Promotion, Shipping, Xin review | Hiện hành; §16.4, §18.4 **kế hoạch, chưa làm** |
+| 16–18 | SMS Promotion (§16.4 đếm segment), Shipping, Xin review | Hiện hành; §18.4 **kế hoạch, chưa làm** |
 | 19 | Ticket offline | Hiện hành |
 | 20 | Cảnh báo lưu trữ | Hiện hành |
 | 21 | Nhận ảnh iPad / iPhone (phone-upload) | Hiện hành; rủi ro ở SECURITY.md §3 |
@@ -412,7 +412,8 @@ Type Customer:
 Message:
 "<Tên tiệm> <Phone tiệm>. <Message> Reply STOP To Optout"
 Price per SMS: $<giá>
-Estimate Total: $<giá × Recipients>
+Segments per SMS: <số segment>
+Estimate Total: $<giá × Recipients × segment>
 
 Please carefully review the content of the Promotion message, and only when you are sure that there are no further changes should you text "OK" to this phone number. Have a nice day.
 ```
@@ -420,8 +421,9 @@ Please carefully review the content of the Promotion message, and only when you 
 - Type Customer: mục có sẵn đã tick theo thứ tự config (không theo thứ tự tick, số đã trim), rồi tới option tự thêm (bỏ option trống).
 - Dòng trong ngoặc kép là tin khách nhận, ghép theo mẫu `promoText` trong config, giống nhau ở cả 2 ngôn ngữ. Message đã có sẵn cặp ngoặc kép bao ngoài thì bỏ cặp đó, chỉ giữ cặp bao cả dòng. SMS không gửi được xuống dòng → Message có xuống dòng thì nối thành 1 dòng: mỗi chỗ xuống dòng (kể cả dòng trống, khoảng trắng quanh đó) thành 1 space, ở cả tin gửi tiệm và Copy SMS.
 - Chưa nhập gì (Tên tiệm, Phone tiệm, Recipients, Message trống, chưa tick Type Customer) → tin nhắn rỗng.
-- **Estimate Total** = Price per SMS × Recipients, 2 số lẻ, có dấu phẩy hàng nghìn (vd `3178` × `0.02` → `$63.56`, `50000` × `0.08` → `$4,000.00`). Recipients gõ `3,178` vẫn tính được. Recipients trống hoặc không phải số nguyên → bỏ dòng này.
-- **Tiếng Việt**: cùng bố cục, câu chữ tiếng Việt (vd `Xin chào,`, `Số khách nhận: <Recipients> khách`, `Nhóm khách:`, `Lần ghé gần nhất <= 365 ngày`, `Giá mỗi SMS: $<giá>`, `Tổng chi phí dự kiến: $<tổng>`). Option tự thêm in nguyên văn ở cả 2 ngôn ngữ.
+- **Segments per SMS** = số segment của tin khách nhận (dòng trong ngoặc kép, không tính ngoặc), đếm như §16.4.
+- **Estimate Total** = Price per SMS × Recipients × Segments per SMS, 2 số lẻ, có dấu phẩy hàng nghìn (vd 1 segment: `3178` × `0.02` → `$63.56`; 2 segment → `$127.12`; `50000` × `0.08` × 1 → `$4,000.00`). Recipients gõ `3,178` vẫn tính được. Recipients trống hoặc không phải số nguyên → bỏ dòng này.
+- **Tiếng Việt**: cùng bố cục, câu chữ tiếng Việt (vd `Xin chào,`, `Số khách nhận: <Recipients> khách`, `Nhóm khách:`, `Lần ghé gần nhất <= 365 ngày`, `Giá mỗi SMS: $<giá>`, `Số segment mỗi tin: <số>`, `Tổng chi phí dự kiến: $<tổng>`). Option tự thêm in nguyên văn ở cả 2 ngôn ngữ.
 - Câu chữ từng dòng của từng ngôn ngữ nằm trong config (`languages[].lines`), sửa không cần đụng `src/`.
 
 ### 16.3 Khu Kết quả & Copy
@@ -439,24 +441,24 @@ Please carefully review the content of the Promotion message, and only when you 
   Message:
   "<Tên tiệm> <Phone tiệm>. <Message> Reply STOP To Optout"
   ```
-  **Không** in `Price per SMS` và `Estimate Total` vào ticket: 2 dòng này chỉ có trong tin gửi tiệm.
+  **Không** in `Price per SMS`, `Segments per SMS` và `Estimate Total` vào ticket: 3 dòng này chỉ có trong tin gửi tiệm.
 - **Copy SMS** khóa khi tin nhắn rỗng hoặc còn thiếu: Tên tiệm, Phone tiệm, Recipients, Type Customer (chưa tick mục nào và chưa có option tự thêm, hoặc mục đã tick còn ô số trống), Message. Dòng cảnh báo vàng trong khối SMS: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.` SMS thiếu trường không khóa các nút copy của ticket.
 - Khối **Ảnh**: ảnh Type Customer (nhãn `Type Customer`, từ 2 ảnh thì `Type Customer – ảnh n`) hiện sau ảnh ticket khi đang tick, nên cũng nằm trong `Tải tất cả (ZIP)` và `Tải PDF` (§10). Ảnh không ảnh hưởng điều kiện copy.
 - Ctrl+V ảnh khi đứng trong khối Type Customer → vào ảnh Type Customer; không đứng ở ô nào → mục focus gần nhất, không thì mục đầu của ticket.
 - `Ticket mới`: hỏi xác nhận → xóa cả ticket, form SMS (kể cả option tự thêm và ảnh Type Customer) và bỏ tick.
 - Dùng template không đụng form SMS.
 
-### 16.4 Kế hoạch (chưa làm): đếm SMS segment
+### 16.4 Đếm SMS segment (giống Twilio Message Segment Calculator)
 
-- Mục tiêu: biết tin promo tốn mấy segment, giống trang Twilio Message Segment Calculator (https://twiliodeved.github.io/message-segment-calculator/).
-- Không gọi trang đó: không có API, tool chạy `file://` không gọi mạng, và không gửi nội dung merchant ra ngoài (SECURITY.md). Tự đếm trong `src/domain/` (hàm thuần, ~30 dòng, có test so với ví dụ lấy từ trang Twilio).
-- Cách đếm:
-  - **GSM-7**: 160 ký tự / 1 segment; dài hơn thì 153 ký tự / segment. Ký tự mở rộng `^ { } [ ] ~ \ | €` tính 2.
-  - **UCS-2**: có bất kỳ ký tự ngoài GSM-7 (tiếng Việt có dấu, emoji, nháy cong `’`) → 70 ký tự / 1 segment; dài hơn thì 67 / segment.
-- **Đang chờ chốt**:
-  1. Hiện ở đâu. Đề xuất: 1 dòng dưới ô Message, vd `245 ký tự · 2 segment · GSM-7`; rơi vào UCS-2 thì chỉ ra ký tự gây ra.
-  2. ~~`\n` trong bản `Copy Confirm SMS`~~: đã chốt, SMS không có xuống dòng, Message nối thành 1 dòng (§16).
-  3. Estimate Total có nhân số segment không (giá × Recipients × segment).
+Biết tin promo tốn mấy segment để tính đúng Estimate Total, cách đếm giống https://twiliodeved.github.io/message-segment-calculator/ (đã đối chiếu mã nguồn TwilioDevEd/message-segment-calculator: encoding tự chọn, **không** smart encoding).
+
+- Đếm trên **tin khách nhận**: `<Tên tiệm> <Phone tiệm>. <Message> Reply STOP To Optout` (đã nối 1 dòng, không tính ngoặc kép). Tự đếm trong `src/domain/sms-segments.js`, không gọi trang Twilio, không gửi nội dung merchant ra ngoài.
+- **GSM-7** (mọi ký tự trong bảng GSM 03.38): tới 160 ký tự = 1 segment; dài hơn thì 153 ký tự / segment. Ký tự mở rộng `^ { } [ ] ~ \ | €` tính 2.
+- **UCS-2** (có bất kỳ ký tự ngoài GSM-7: tiếng Việt có dấu, emoji, nháy cong `’ “ ”`, gạch dài `–`, chữ + dấu tổ hợp): tới 70 = 1 segment; dài hơn 67 / segment; emoji tính 2 khi chia segment.
+- Ký tự / emoji / cụm ghép không bị cắt đôi giữa 2 segment: không vừa chỗ còn lại thì sang segment mới (có thể tốn hơn phép chia thô).
+- **Dưới ô Message** có dòng `<số> ký tự · <số> segment · GSM-7`. UCS-2 thì thêm ` · thành UCS-2 (70 ký tự/segment) vì: <các ký tự>` và tô màu cảnh báo; **không tự sửa** chữ merchant viết, FRT tự đổi (vd `’` → `'`, `–` → `-`) nếu muốn rẻ hơn. Số ký tự như Twilio: GSM-7 tính ký tự mở rộng là 2, UCS-2 mỗi ký tự nhìn thấy (kể cả emoji) là 1.
+- Cập nhật ngay khi sửa Tên tiệm, Phone tiệm, Message.
+- Câu chữ ở `config/sms/promotion.js`: `labels.segmentInfo`, `labels.segmentUnsupported`, `languages[].lines.segments`.
 
 
 ## 17. SMS Shipping

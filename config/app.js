@@ -5,7 +5,7 @@
   const { setApp } = registry;
 
   setApp({
-    version: 'v2026-11-28.1',      // hiện cuối menu Khác để biết đang mở đúng bản mới
+    version: 'v2026-11-28.2',      // hiện cuối menu Khác để biết đang mở đúng bản mới
     autoCapitalize: true,         // tự viết hoa chữ cái đầu mỗi dòng (bỏ qua link, email, tên file, chữ như iPhone)
     debounceMs: 400,              // độ trễ cập nhật Kết quả (ms)
     offlineTiers: ['0.5', '1', '1.5', '2', '2.5', '3'],   // Tier trong hộp Lưu ticket ra file (chọn 1, bắt buộc)

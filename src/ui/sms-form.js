@@ -3,28 +3,46 @@
   'use strict';
 
   const { el, button, choiceGroup, autoGrow, isComposing, labeledField, textInput, maskPhone } = TW.ui.dom;
-  const { splitTemplate, IMAGE_KEY: SMS_IMAGE_KEY } = TW.domain.sms;
+  const { splitTemplate, fillTemplate, IMAGE_KEY: SMS_IMAGE_KEY } = TW.domain.sms;
+  const { promoSegments } = TW.domain.smsMessage;
   const { OPTION_FOCUS_KEY } = TW.application.smsService;
 
   const TYPES_HINT = 'Tick nhóm khách cần gửi (chọn nhiều), sửa số nếu promotion khác. Có điều kiện khác thì "+ Thêm option". ' +
     'Ảnh: click ô dán rồi Ctrl+V, hoặc kéo thả vào khối này.';
+  const SEGMENT_ID = 'sms_segments';
   const OPTION_PLACEHOLDER = 'Option khác, vd Birthday in October · Enter: thêm option · Backspace ở ô trống: xóa';
 
   function createSmsForm({ context, session, smsService, imageZone }) {
     const { labels, customerTypes, prices, languages } = context.sms;
     let fields = null;   // phần mở ra khi tick, null khi loại đang mở không có khối SMS
 
-    const field = (name, control) => labeledField(labels[name], control);
+    const field = (name, control, ...extra) => labeledField(labels[name], control, ...extra);
 
     /** options: inputMode, format (xem dom.textInput). */
     const textField = (name, options = {}) =>
       field(name, textInput({ id: 'sms_' + name, value: session.sms()[name], onInput: (value) => smsService.setField(name, value), ...options }));
 
+    /**
+     * Dòng dưới ô Message: số ký tự / segment / bảng mã của tin khách nhận; UCS-2 thì chỉ ra ký tự gây ra để FRT tự sửa nếu muốn,
+     * và tô màu cảnh báo (1 ký tự như nháy cong có thể làm tin tốn gấp 2–3 segment).
+     */
+    function renderSegments(line = fields && fields.querySelector('#' + SEGMENT_ID)) {
+      if (!line) return;
+      const count = promoSegments({ sms: session.sms(), config: context.sms });
+      const info = fillTemplate(labels.segmentInfo, { units: String(count.units), segments: String(count.segments), encoding: count.encoding });
+      const isUcs2 = count.unsupported.length > 0;
+      line.textContent = isUcs2 ? info + fillTemplate(labels.segmentUnsupported, { chars: count.unsupported.join(' ') }) : info;
+      line.classList.toggle('ucs2', isUcs2);
+    }
+
     function messageInput() {
       const textarea = el('textarea', 'text sms-message');
       Object.assign(textarea, { id: 'sms_message', rows: 2, value: session.sms().message, spellcheck: false });
       textarea.addEventListener('input', () => { smsService.setField('message', textarea.value); autoGrow(textarea); });
-      return field('message', textarea);
+      const segments = el('p', 'status sms-segments');
+      segments.id = SEGMENT_ID;
+      renderSegments(segments);
+      return field('message', textarea, segments);
     }
 
     function numberInput(type, param) {
@@ -135,6 +153,7 @@
 
     /** Ô nhập tự giữ giá trị khi gõ; chỉ cần ẩn / hiện theo ô tick. Ô Message lúc ẩn không đo được chiều cao nên đo lại khi hiện. */
     function sync() {
+      renderSegments();   // Tên tiệm / Phone / Message đổi thì số segment đổi theo
       if (!fields || fields.hidden === !session.sms().enabled) return;
       fields.hidden = !fields.hidden;
       if (!fields.hidden) autoGrow(fields.querySelector('textarea'));

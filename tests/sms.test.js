@@ -26,13 +26,15 @@
     'Message:',
     '"ARIA NAIL BAR (555) 123-4567. This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout"',
     'Price per SMS: $0.02',
+    'Segments per SMS: 1',
     'Estimate Total: $63.56',
     '',
     'Please carefully review the content of the Promotion message, and only when you are sure that there are no further changes should you text "OK" to this phone number. Have a nice day.'
   ].join('\n');
 
   // Chi tiết in vào Đã support của ticket: Recipients → hết Message, bỏ 2 dòng giá (Price per SMS, Estimate Total)
-  const TICKET_DETAILS = EXPECTED.split('\n\n')[2].split('\n').slice(0, -2).join('\n');
+  // Bỏ các dòng chỉ có trong tin gửi tiệm (giá, segment, tổng), không tính theo số dòng để thêm dòng mới không làm lệch
+  const TICKET_DETAILS = EXPECTED.split('\n\n')[2].split('\n').filter(line => !/^(Price per SMS|Segments per SMS|Estimate Total)/.test(line)).join('\n');
 
   const build = (raw) => D.smsMessage.buildSmsMessage({ sms: D.sms.sanitizeSms(raw, config), config });
   const missing = (raw) => D.smsMessage.missingSmsFields({ sms: D.sms.sanitizeSms(raw, config), config });
@@ -107,12 +109,25 @@
     assertEqual([totalLine({ recipients: 'abc' }), totalLine({ recipients: '' }), totalLine({ recipients: '12.5' })], ['', '', '']);
   });
 
+  test('sms: Segments per SMS đếm trên tin khách nhận (cả tên tiệm, phone, Reply STOP); Estimate Total = giá × Recipients × segment', () => {
+    const lines = (raw) => build({ ...EXAMPLE, ...raw }).split('\n').filter(line => /^(Segments|Estimate Total)/.test(line));
+    // Tin mẫu 126 ký tự: 1 segment. Message dài 150 ký tự => tin 191 ký tự GSM-7 => 2 segment => tổng gấp đôi
+    assertEqual([lines({}), lines({ message: 'x'.repeat(150) })],
+      [['Segments per SMS: 1', 'Estimate Total: $63.56'], ['Segments per SMS: 2', 'Estimate Total: $127.12']]);
+    // Nháy cong ’ => UCS-2 (70 / 67 ký tự): tin mẫu + 5 ký tự (131) thành 2 segment
+    assertEqual(lines({ message: 'It’s ' + EXAMPLE.message }), ['Segments per SMS: 2', 'Estimate Total: $127.12']);
+    const count = D.smsMessage.promoSegments({ sms: D.sms.sanitizeSms(EXAMPLE, config), config });
+    assertEqual([count.encoding, count.units, count.segments], ['GSM-7', 126, 1]);
+    // Ticket (mục Đã support) vẫn không có dòng giá / segment / tổng
+    assertEqual(D.smsMessage.buildSmsDetails({ sms: D.sms.sanitizeSms(EXAMPLE, config), config }).includes('Segments'), false);
+  });
+
   test('sms: tin nhắn tiếng Việt; ngôn ngữ lạ / bản cũ chưa có => tiếng Anh', () => {
     const body = build({ ...EXAMPLE, lang: 'vi' });
     assertEqual(body.split('\n').slice(0, 3), ['Xin chào,', '', 'Anh/chị vui lòng xác nhận thông tin dưới đây trước khi bên em gửi SMS promotion:']);
     assertEqual(body.includes('Số khách nhận: 3178 khách\nNhóm khách:\n- Lần ghé gần nhất <= 365 ngày\n- Số lần ghé từ 1 - 10000\n' +
       'Nội dung tin nhắn:\n"ARIA NAIL BAR (555) 123-4567. This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout"\n' +
-      'Giá mỗi SMS: $0.02\nTổng chi phí dự kiến: $63.56\n\n'), true, body);
+      'Giá mỗi SMS: $0.02\nSố segment mỗi tin: 1\nTổng chi phí dự kiến: $63.56\n\n'), true, body);
     assertEqual([D.sms.sanitizeSms({ lang: 'fr' }, config).lang, D.sms.sanitizeSms(EXAMPLE, config).lang], ['en', 'en']);
   });
 

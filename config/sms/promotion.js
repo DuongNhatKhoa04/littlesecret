@@ -18,7 +18,10 @@
 
     labels: {
       toggle: 'SMS Promotion', language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', shopPhone: 'Phone tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message',
-      price: 'Price per SMS ($)'
+      price: 'Price per SMS ($)',
+      // Dòng nhỏ dưới ô Message: đếm trên tin khách nhận (cả tên tiệm, phone, Reply STOP). {units} = ký tự tính theo SMS.
+      segmentInfo: '{units} ký tự · {segments} segment · {encoding}',
+      segmentUnsupported: ' · thành UCS-2 (70 ký tự/segment) vì: {chars}'
     },
 
     // Tin khách nhận, in trong ngoặc kép dưới dòng Message, giống nhau ở mọi ngôn ngữ. {shop} {shopPhone} {message} lấy từ form.
@@ -28,7 +31,8 @@
     ticketSection: 's2',
 
     // Ngôn ngữ tin nhắn, ngôn ngữ đầu là mặc định. id lưu trong state => không đổi id đang có.
-    // lines: từng dòng của tin nhắn. {recipients} {price} lấy từ form, {total} = giá × Recipients.
+    // lines: từng dòng của tin nhắn. {recipients} {price} lấy từ form, {segments} = số segment của tin khách nhận (đếm như Twilio),
+    //   {total} = giá × Recipients × segment.
     // customerTypes: câu Type Customer theo ngôn ngữ (cùng {tên} như trên); thiếu id nào thì in `text` ở trên.
     languages: [
       {
@@ -40,6 +44,7 @@
           customerTypes: 'Type Customer:',
           message: 'Message:',
           price: 'Price per SMS: ${price}',
+          segments: 'Segments per SMS: {segments}',
           total: 'Estimate Total: ${total}',
           outro: 'Please carefully review the content of the Promotion message, and only when you are sure that there are no further changes should you text "OK" to this phone number. Have a nice day.'
         }
@@ -53,6 +58,7 @@
           customerTypes: 'Nhóm khách:',
           message: 'Nội dung tin nhắn:',
           price: 'Giá mỗi SMS: ${price}',
+          segments: 'Số segment mỗi tin: {segments}',
           total: 'Tổng chi phí dự kiến: ${total}',
           outro: 'Anh/chị vui lòng xem kỹ nội dung tin nhắn Promotion, khi chắc chắn không cần chỉnh sửa gì thêm thì nhắn "OK" về số điện thoại này. Chúc anh/chị một ngày tốt lành.'
         },

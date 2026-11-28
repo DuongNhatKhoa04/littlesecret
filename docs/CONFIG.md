@@ -187,8 +187,9 @@ setSms({   // const { setSms } = registry;
 | `labels` | Nhãn trường trên form, cũng dùng trong cảnh báo "Còn thiếu". `toggle` = chữ cạnh ô tick mở khối SMS |
 | `ticketSection` | Key mục của loại ticket có `smsPromotion` nhận chi tiết SMS (Recipients → hết Message, không có giá) khi khối SMS đang bật. Hiện là `s2` (Đã support) |
 | `promoText` | Mẫu tin khách nhận, in trong ngoặc kép dưới dòng Message, giống nhau ở mọi ngôn ngữ. `{shop}`, `{shopPhone}`, `{message}` thay bằng dữ liệu form |
+| `labels.segmentInfo`, `labels.segmentUnsupported` | Dòng đếm dưới ô Message: `{units}` ký tự, `{segments}`, `{encoding}` (GSM-7 / UCS-2); thêm `{chars}` (ký tự làm tin thành UCS-2) khi UCS-2 |
 | `languages` | Ngôn ngữ tin nhắn, theo thứ tự hiện trên form; ngôn ngữ đầu là mặc định. `id` lưu trong state: không đổi id đang có |
-| `languages[].lines` | Câu chữ từng dòng tin nhắn. `{recipients}`, `{price}` thay bằng dữ liệu form, `{total}` = giá × Recipients (dòng `total` tự bỏ khi Recipients không phải số) |
+| `languages[].lines` | Câu chữ từng dòng tin nhắn. `{recipients}`, `{price}` thay bằng dữ liệu form, `{segments}` = số segment của tin khách nhận (REQUIREMENTS §16.4), `{total}` = giá × Recipients × segment (dòng `total` tự bỏ khi Recipients không phải số) |
 | `languages[].customerTypes` | Câu Type Customer theo ngôn ngữ, key = `id` của `customerTypes`, cùng chỗ `{tên}`. Thiếu id nào thì in `text` gốc |
 
 ## 4b. SMS Shipping — `config/sms/shipping.js`

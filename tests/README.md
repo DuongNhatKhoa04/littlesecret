@@ -31,6 +31,7 @@ Double-click `tests/index.html`. Dòng đầu hiện `PASS x/x` (xanh) hoặc `F
 | `theme.test.js` | Nút giao diện: mặc định Tự động, xoay vòng, lưu lựa chọn. |
 | `phone.test.js` | Nhận ảnh iOS: đọc link máy tính, hỏi hàng chờ, giao ảnh, mất kết nối, link iPad / đổi mã. Mã QR: kích thước, ô tìm vị trí, chọn phiên bản theo độ dài. |
 | `summary-history.test.js` | Gợi ý Tóm tắt: dữ liệu hỏng, mới nhất đầu, không trùng, xóa 1 gợi ý. |
+| `sms-segments.test.js` | Đếm segment SMS như Twilio: GSM-7 160 / 153, ký tự mở rộng tính 2, UCS-2 70 / 67, emoji / cụm ghép không bị cắt đôi, chỉ ra ký tự làm thành UCS-2. |
 | `sms.test.js` | SMS Promotion: tin nhắn đúng mẫu, trường còn thiếu, đọc/lưu state, khối SMS trong Hỗ trợ merchant: chi tiết SMS vào mục Đã support, không đụng title. |
 | `shipping.test.js` | SMS Shipping: tin nhắn đúng mẫu, trường còn thiếu, đọc/lưu state, Kết quả không có title. |
 | `pass-case.test.js` | Chuyển case: tin theo team (Sales / MKT / CS / Tech), GẤP, CBN / FT, VIE / ENG, trường bắt buộc, đọc/lưu state, Kết quả không có title, Ticket mới chỉ xóa form này (về team Tech), tag chỉnh tay theo ca, gợi ý tag riêng từng team (đọc bản cũ), Dán thông tin tiệm (làm sạch dữ liệu, ghi đè trường lấy được). |

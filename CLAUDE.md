@@ -62,7 +62,7 @@ ticket-writer/
 │  ├─ core/                    namespace.js (TW) · registry.js (config đăng ký vào) · ports.js (typedef port)
 │  ├─ domain/                  QUY TẮC NGHIỆP VỤ: hàm thuần, không DOM, không storage
 │  │                           text · title · ticket · checklist · body · validation · navigation · image-slots · image-archive · template · offline-ticket · backup ·
-│  │                           sms · sms-message · shipping · shipping-message · review · review-message · pass-case · pass-case-message · shop-info · telegram-message · phone-link · qr-code
+│  │                           sms · sms-message · sms-segments · shipping · shipping-message · review · review-message · pass-case · pass-case-message · shop-info · telegram-message · phone-link · qr-code
 │  ├─ application/             USE CASE: store + service, điều phối domain và port
 │  │                           context · store · session · session-repository · ticket/navigation/view/image/
 │  │                           output/category/template/offline/backup/sms/shipping/review/pass-case/staff/summary-history/tag-history/notice/theme/palette/telegram/phone-service
