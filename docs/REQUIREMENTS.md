@@ -410,7 +410,7 @@ Type Customer:
 - <lựa chọn đã tick 1>
 - <lựa chọn đã tick 2>
 Message:
-"<Tên tiệm> <Phone tiệm>. <Message> Reply STOP To Optout."
+"<Tên tiệm> <Phone tiệm>. <Message> Reply STOP To Optout"
 Price per SMS: $<giá>
 Estimate Total: $<giá × Recipients>
 
@@ -437,7 +437,7 @@ Please carefully review the content of the Promotion message, and only when you 
   Type Customer:
   - <lựa chọn đã tick>
   Message:
-  "<Tên tiệm> <Phone tiệm>. <Message> Reply STOP To Optout."
+  "<Tên tiệm> <Phone tiệm>. <Message> Reply STOP To Optout"
   ```
   **Không** in `Price per SMS` và `Estimate Total` vào ticket: 2 dòng này chỉ có trong tin gửi tiệm.
 - **Copy SMS** khóa khi tin nhắn rỗng hoặc còn thiếu: Tên tiệm, Phone tiệm, Recipients, Type Customer (chưa tick mục nào và chưa có option tự thêm, hoặc mục đã tick còn ô số trống), Message. Dòng cảnh báo vàng trong khối SMS: `Còn thiếu: <các trường>. Điền đủ rồi mới copy được.` SMS thiếu trường không khóa các nút copy của ticket.

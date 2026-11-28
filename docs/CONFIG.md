@@ -171,7 +171,7 @@ setSms({   // const { setSms } = registry;
     { id: 'visitTimes', text: 'Times visit between {min} - {max}', values: { min: '1', max: '10000' } }
   ],
   labels: { toggle: 'SMS Promotion', language: 'Ngôn ngữ tin nhắn', shop: 'Tên tiệm', shopPhone: 'Phone tiệm', recipients: 'Recipients', customerTypes: 'Type Customer', message: 'Message', price: 'Price per SMS ($)' },
-  promoText: '{shop} {shopPhone}. {message} Reply STOP To Optout.',
+  promoText: '{shop} {shopPhone}. {message} Reply STOP To Optout',
   ticketSection: 's2',
   languages: [
     { id: 'en', label: 'English', lines: { greeting: 'Greeting,', /* intro, recipients, customerTypes, message, price, total, outro */ } },

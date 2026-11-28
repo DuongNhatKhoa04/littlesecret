@@ -627,7 +627,7 @@
     type($('input[data-option="0"]'), 'Birthday in October');
     await settle();
     check('SMS: tin nhắn đúng + option tự thêm + mở copy', !$('#copySms').disabled && $('#outSms').textContent.includes(
-      'Recipients: 3178 customers\nType Customer:\n- Last Visit <= 365\n- Times visit between 1 - 5000\n- Birthday in October\nMessage:\n"ARIA NAIL BAR (555) 123-4567. Sale 15% Today only Reply STOP To Optout."\nPrice per SMS: $0.06\nEstimate Total: $190.68') &&
+      'Recipients: 3178 customers\nType Customer:\n- Last Visit <= 365\n- Times visit between 1 - 5000\n- Birthday in October\nMessage:\n"ARIA NAIL BAR (555) 123-4567. Sale 15% Today only Reply STOP To Optout"\nPrice per SMS: $0.06\nEstimate Total: $190.68') &&
       $('#outSms').textContent.startsWith('Greeting,\n'),
       $('#outSms').textContent);
     $$('input[name="smsLang"]').find(r => r.value === 'vi').click();

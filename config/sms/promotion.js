@@ -22,7 +22,7 @@
     },
 
     // Tin khách nhận, in trong ngoặc kép dưới dòng Message, giống nhau ở mọi ngôn ngữ. {shop} {shopPhone} {message} lấy từ form.
-    promoText: '{shop} {shopPhone}. {message} Reply STOP To Optout.',
+    promoText: '{shop} {shopPhone}. {message} Reply STOP To Optout',
 
     // key mục của loại ticket có smsPromotion: khối SMS đang bật thì chi tiết Recipients → hết Message (không có giá) in thêm cuối mục này
     ticketSection: 's2',

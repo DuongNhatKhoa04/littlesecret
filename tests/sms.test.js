@@ -24,7 +24,7 @@
     '- Last Visit <= 365',
     '- Times visit between 1 - 10000',
     'Message:',
-    '"ARIA NAIL BAR (555) 123-4567. This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout."',
+    '"ARIA NAIL BAR (555) 123-4567. This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout"',
     'Price per SMS: $0.02',
     'Estimate Total: $63.56',
     '',
@@ -54,7 +54,7 @@
       ...EXAMPLE, message: '"Sale 10%"',
       customerTypes: { lastVisit: { on: false, values: { days: '365' } }, visitTimes: { on: true, values: { min: ' 2 ', max: '50' } } }
     });
-    assertEqual(body.includes('Type Customer:\n- Times visit between 2 - 50\nMessage:\n"ARIA NAIL BAR (555) 123-4567. Sale 10% Reply STOP To Optout."\n'), true, body);
+    assertEqual(body.includes('Type Customer:\n- Times visit between 2 - 50\nMessage:\n"ARIA NAIL BAR (555) 123-4567. Sale 10% Reply STOP To Optout"\n'), true, body);
     assertEqual(body.includes('Last Visit'), false);
   });
 
@@ -68,9 +68,9 @@
   test('sms: Message xuống dòng => nối thành 1 dòng (cách 1 space) ở cả tin gửi tiệm và bản Copy SMS (chỉ Message, không ngoặc kép)', () => {
     const raw = (message) => ({ ...EXAMPLE, shop: 'A', message });
     const promo = (message) => D.smsMessage.buildPromoText({ sms: D.sms.sanitizeSms(raw(message), config), config });
-    assertEqual(build(raw('toi la hang thu nhat\ntoi la hang thu hai')).includes('\n"A (555) 123-4567. toi la hang thu nhat toi la hang thu hai Reply STOP To Optout."\n'), true);
-    assertEqual(promo('toi la hang thu nhat\ntoi la hang thu hai'), 'A (555) 123-4567. toi la hang thu nhat toi la hang thu hai Reply STOP To Optout.');
-    assertEqual(promo(' "dong 1  \r\n  dong 2\n\ndong 3" '), 'A (555) 123-4567. dong 1 dong 2 dong 3 Reply STOP To Optout.');
+    assertEqual(build(raw('toi la hang thu nhat\ntoi la hang thu hai')).includes('\n"A (555) 123-4567. toi la hang thu nhat toi la hang thu hai Reply STOP To Optout"\n'), true);
+    assertEqual(promo('toi la hang thu nhat\ntoi la hang thu hai'), 'A (555) 123-4567. toi la hang thu nhat toi la hang thu hai Reply STOP To Optout');
+    assertEqual(promo(' "dong 1  \r\n  dong 2\n\ndong 3" '), 'A (555) 123-4567. dong 1 dong 2 dong 3 Reply STOP To Optout');
     assertEqual(D.smsMessage.buildMessageText({ sms: raw(' "dong 1  \r\n  dong 2" ') }), 'dong 1 dong 2');
   });
 
@@ -111,7 +111,7 @@
     const body = build({ ...EXAMPLE, lang: 'vi' });
     assertEqual(body.split('\n').slice(0, 3), ['Xin chào,', '', 'Anh/chị vui lòng xác nhận thông tin dưới đây trước khi bên em gửi SMS promotion:']);
     assertEqual(body.includes('Số khách nhận: 3178 khách\nNhóm khách:\n- Lần ghé gần nhất <= 365 ngày\n- Số lần ghé từ 1 - 10000\n' +
-      'Nội dung tin nhắn:\n"ARIA NAIL BAR (555) 123-4567. This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout."\n' +
+      'Nội dung tin nhắn:\n"ARIA NAIL BAR (555) 123-4567. This Weekend Special 15% OFF for Pedicure $40+ , 20% Eyelash - Expire 10/18 Reply STOP To Optout"\n' +
       'Giá mỗi SMS: $0.02\nTổng chi phí dự kiến: $63.56\n\n'), true, body);
     assertEqual([D.sms.sanitizeSms({ lang: 'fr' }, config).lang, D.sms.sanitizeSms(EXAMPLE, config).lang], ['en', 'en']);
   });

@@ -2,6 +2,10 @@
 
 Mỗi lần tăng `version` trong `config/app.js` thì thêm 1 dòng ở đầu ngày tương ứng: version · đổi gì (người dùng thấy gì) · mục REQUIREMENTS liên quan. Bản cũ hơn 2026-11-12 chưa ghi version, tóm tắt theo commit.
 
+## 2026-11-28
+
+- `v2026-11-28.1` · SMS Promotion: bỏ dấu `.` cuối câu `Reply STOP To Optout` (tin gửi tiệm, mục Đã support, Copy Confirm SMS). §16
+
 ## 2026-11-27
 
 - `v2026-11-27.4` · Bookmark **Lấy thông tin tiệm**: chạy được trên trang **My Merchant** (Tên tiệm + MID từ dòng `<Tên tiệm> / <MID>`, link trang vào ô Link Lead); **không lấy Business ZIP** nữa ở mọi trang (FRT tự hỏi). Trang Lead vẫn lấy DBA + MID. Phải kéo lại bookmark. §22.4
