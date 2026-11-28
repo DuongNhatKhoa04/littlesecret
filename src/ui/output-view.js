@@ -4,12 +4,14 @@
 
   const { $, flash } = TW.ui.dom;
   const UPDATING = 'Đang cập nhật…';
-  // Alt+1 … Alt+4; blocked = lý do khi nút đang khóa
+  // Alt+1 … Alt+4, Alt+G (Copy để điền); blocked = lý do khi nút đang khóa.
+  // Alt+G cũng là Gửi Telegram ở Chuyển case: ở đó không có Copy để điền (dải ẩn) nên 2 phím không đụng nhau.
   const COPY_SHORTCUTS = {
     1: { selector: '#copyTitle', blocked: () => 'Chưa có title: nhập Loại hoặc Tóm tắt trước.' },
     2: { selector: '#copyBody', blocked: (result) => warningText(result) || 'Chưa có nội dung để copy.' },
     3: { selector: '#copySms', blocked: (result) => smsWarningText(result.sms) || 'Chưa có tin nhắn SMS để copy.' },
-    4: { selector: '#copyPromo', blocked: (result) => smsWarningText(result.sms) || 'Chưa có tin nhắn SMS để copy.' }
+    4: { selector: '#copyPromo', blocked: (result) => smsWarningText(result.sms) || 'Chưa có tin nhắn SMS để copy.' },
+    g: { selector: '#copyFill', blocked: (result) => (result.canCopyTitle ? warningText(result) : '') || 'Chưa có title: nhập Loại hoặc Tóm tắt trước.' }
   };
 
   const missingText = (fields) => `Còn thiếu: ${fields.join(', ')}. Điền đủ rồi mới copy được.`;
@@ -74,7 +76,7 @@
 
     /** Phím tắt bấm nút Copy; nút đang khóa thì báo lý do, vì ở chế độ Nhập không thấy dòng cảnh báo. */
     function onShortcut(event) {
-      const shortcut = COPY_SHORTCUTS[event.key];
+      const shortcut = COPY_SHORTCUTS[event.key.toLowerCase()];
       if (!shortcut || !event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
       event.preventDefault();
       const node = $(shortcut.selector);

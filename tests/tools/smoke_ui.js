@@ -158,8 +158,9 @@
     check('Alt+2 / Alt+1 => bấm Copy nội dung / Copy title', copyClicks.join('|') === '#copyBody|#copyTitle', copyClicks);
 
     // Copy để điền + bookmarklet "Điền ticket": chạy đúng link bookmark trên form giả giống trang ticket thật
-    $('#copyFill').click();
+    key(document, { key: 'g', altKey: true });   // Alt+G = bấm Copy để điền
     await until(() => $('#copyFill').textContent === 'Đã copy ✓', 5000);
+    check('Alt+G = Copy để điền (nút ghi phím tắt)', $('#copyFill').textContent === 'Đã copy ✓' && $('#copyFill').dataset.label === 'Copy để điền (Alt+G)', $('#copyFill').textContent);
     const fillPayload = copiedTexts[copiedTexts.length - 1];
     const ticketForm = document.createElement('form');
     const subjectInput = document.createElement('input');

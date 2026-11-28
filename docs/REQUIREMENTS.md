@@ -201,7 +201,7 @@ Việc cần làm tiếp:
 - **Copy title**: khóa khi title rỗng.
 - **Copy nội dung**: khóa khi (a) nội dung rỗng, (b) thiếu mục đề xuất bắt buộc, hoặc (c) checklist còn mục thiếu ảnh. (b)/(c) hiện dòng cảnh báo vàng nói rõ lý do.
 - Copy xong nút đổi thành `Đã copy ✓` trong 1.5s; lỗi thì báo copy tay.
-- Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung, `Alt+3` = Copy SMS (chỉ Message), `Alt+4` = Copy Confirm SMS (toàn bộ tin gửi tiệm) khi khối SMS Promotion đang bật (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS Shipping không có Title nên `Alt+1` không làm gì.
+- Phím tắt: `Alt+1` = Copy title, `Alt+2` = Copy nội dung, `Alt+G` = Copy để điền (chỉ khi có Title; ở Chuyển case `Alt+G` là Gửi Telegram §24), `Alt+3` = Copy SMS (chỉ Message), `Alt+4` = Copy Confirm SMS (toàn bộ tin gửi tiệm) khi khối SMS Promotion đang bật (chữ trên nút có ghi phím). Chạy ở mọi chế độ xem, kể cả `Nhập`. Nút đang khóa → hộp thông báo lý do (title trống / dòng cảnh báo vàng). SMS Shipping không có Title nên `Alt+1` không làm gì.
 - **Điền vào trang ticket** (chỉ loại ticket có Title; SMS Shipping không có; tin nhắn SMS Promotion không đi kèm):
   - Nút `Copy để điền` (trên khối Title): copy Title + Nội dung vào clipboard (JSON có đánh dấu của Ticket Writer). Khóa khi Copy title hoặc Copy nội dung đang khóa. Không gửi ảnh.
   - Nút `Cài bookmark "Điền ticket"`: hộp hướng dẫn, có nút `Điền ticket` để kéo lên thanh bookmark (bấm ở Ticket Writer thì không làm gì).
@@ -341,7 +341,7 @@ Chỉ thêm thao tác và cách tải ảnh; Title, Nội dung, điều kiện c
 | Ô Loại: đang gõ dở mà bấm `Tab` thì chọn mục đang sáng; chỉ 1 loại, chọn xong sang Tóm tắt | §4 |
 | `Enter` ở Tóm tắt / Phone: sang ô kế tiếp | §4 |
 | Ô dán ảnh không nhận `Tab` (Tab đi thẳng từ mục này sang mục kế) | §6.2 |
-| `Alt+1` / `Alt+2`: Copy title / Copy nội dung; nút đang khóa thì báo lý do | §9 |
+| `Alt+1` / `Alt+2` / `Alt+G`: Copy title / Copy nội dung / Copy để điền; nút đang khóa thì báo lý do | §9 |
 | Nút `Tải PDF`: mọi ảnh thành 1 file PDF, mỗi trang 1 ảnh kèm nhãn mục, giữ nguyên độ nét | §10 |
 | Nút `Chụp màn hình kia` / `⇄ Chụp màn hình này` ở mọi ô dán ảnh: chụp rồi tự thêm ảnh vào mục | §10 |
 | `Copy để điền` + bookmark `Điền ticket`: điền Subject / Description / Comment ở Checklist (`done`) rồi bấm `Upload File(s)` trên trang ticket | §9 |
